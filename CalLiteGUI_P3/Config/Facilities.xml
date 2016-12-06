@@ -19,6 +19,9 @@
 				visible="true">
 				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="4" />
 			</checkbox>
+			<checkbox name="fac_ckb46" id="fac_ckb46" text="San Luis Enlargement" minimumsize="240,20" enabled="true">
+				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="5" />
+			</checkbox>
 		</panel>
 		<panel resizeable="false" visible="true" border="TitledBorder(Conveyance Facility Options)" layout="GridBagLayout">
 			<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="1" />
