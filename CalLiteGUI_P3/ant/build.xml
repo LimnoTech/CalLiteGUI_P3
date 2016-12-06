@@ -1,0 +1,239 @@
+<?xml version ="1.0" ?>
+<project default="main">
+
+	<tstamp>
+		<format property="build.date" pattern="dd MMMM yyyy" />
+	</tstamp>
+
+	<property file="build.properties" />
+
+	<path id="build.classpath">
+		<fileset dir="${lib.dir}">
+		  <include name="jh.jar"/>
+		  </fileset>
+		<fileset dir="${lib.dir}" includes="**/*.jar" />
+	</path>
+
+	<property name="myclasspath" refid="build.classpath"/> 
+	<echo message="Classpath = ${myclasspath}"/>
+	
+	<path id="deploy.classpath">
+		<fileset dir="${deploy.dir}/lib">
+		  <include name="jh.jar"/>
+		  </fileset>
+		<fileset dir="${deploy.dir}/lib" includes="**/*.jar"/>
+	</path>
+
+
+	<target name="main" depends="deploy" />
+
+	<target name="clean">
+
+		<echo>
+			Cleaning up previous build, purging logs...
+		</echo>
+
+		<delete dir="${deploy.dir}" quiet="true"/>
+		<delete file="${logs.dir}/callite-debug.log" quiet="true"/>
+		<delete file="../${DSTAMP}_calgui_deploy.zip" quiet="true"/>
+
+	</target>
+
+
+
+	<target name="make-deploy-dir" depends="clean">
+
+		<mkdir dir="${deploy.dir}" />
+
+		<!--Add dirs -->
+		<mkdir dir="${deploy.dir}/classes" />
+		<mkdir dir="${deploy.dir}/Config" />
+		<mkdir dir="${deploy.dir}/docs" />
+		<mkdir dir="${deploy.dir}/jre6" />
+		<mkdir dir="${deploy.dir}/lib" />
+		<mkdir dir="${deploy.dir}/logs" />
+		<mkdir dir="${deploy.dir}/Scenarios" />
+		<mkdir dir="${deploy.dir}/test" />
+		<mkdir dir="${deploy.dir}/test/testclasses" />
+		<mkdir dir="${deploy.dir}/Model_w2" />
+
+
+		<copy todir="${deploy.dir}/lib">
+
+			<fileset dir="${lib.dir}">
+				<exclude name="junit.jar" />
+				<exclude name="license.jar" />
+			</fileset>
+
+		</copy>
+
+
+		<copy todir="${deploy.dir}/Config">
+
+			<fileset dir="${config.dir}" />
+
+		</copy>
+
+		<copy todir="${deploy.dir}/docs">
+
+			<fileset dir="${docs.dir}" />
+
+		</copy>
+
+
+		<copy todir="${deploy.dir}/jre6">
+
+			<fileset dir="${jre.dir}" />
+		</copy>
+
+		<copy todir="${deploy.dir}/logs">
+
+			<fileset dir="${logs.dir}" />
+
+		</copy>
+
+		<copy todir="${deploy.dir}/Scenarios">
+
+			<fileset dir="${scenario.dir}" />
+
+		</copy>
+
+		<copy todir="${deploy.dir}/Model_w2">
+
+			<fileset dir="${model.dir}" />
+
+		</copy>
+
+		<copy todir="${deploy.dir}/img/images">
+
+			<fileset dir="${img.dir}" />
+
+		</copy>
+
+		<copy file="../log4j/log4j.properties" todir="${deploy.dir}" />
+		<copy file="../src/callite-gui.properties" todir="${deploy.dir}" />
+		<copy file="../cb.dll" todir="${deploy.dir}" />
+		<copy file="../javaHeclib.dll" todir="${deploy.dir}" />
+		<copy file="../rmaUtil.dll" todir="${deploy.dir}" />
+
+	</target>
+
+	<target name="update-properties" depends="make-deploy-dir">
+		<propertyfile file="${src.dir}/callite-gui.properties">
+			<entry key="build.date" value="${build.date}" />
+			<entry key="version.id" value="3.00 (r1145)" />
+		</propertyfile>
+
+		<copy file="${src.dir}/callite-gui.properties" todir="${deploy.dir}" />
+
+	</target>
+	
+		
+	<target name="compile" depends="update-properties">
+
+		<javac srcdir="${src.dir}" destdir="${deploy.dir}/classes" debug="on" compiler="${build.compiler}">
+
+			<classpath refid="build.classpath" />
+			
+
+		</javac>
+
+
+	</target>
+
+	<target name="compile-tests" depends="compile">
+
+		<javac srcdir="${test.dir}" verbose="true" destdir="${deploy.dir}/test/testclasses" debug="on" compiler="${build.compiler}">
+
+			<classpath>
+				<pathelement path="${build.classpath}" />
+				<pathelement path="${deploy.dir}/classes" />
+				<pathelement path="${lib.dir}" />
+				<pathelement location="${lib.dir}/junit.jar" />
+				<pathelement location="${lib.dir}/swixml.jar" />
+				<pathelement location="${lib.dir}/commons-io-2.1.jar" />
+				<pathelement location="${lib.dir}/jdom.jar" />
+				<pathelement location="${lib.dir}/junit-addons-1.4.jar" />
+
+			</classpath>
+
+		</javac>
+
+
+	</target>
+
+
+	<target name="test" depends="compile-tests">
+		<junit printsummary="yes" fork="off" haltonfailure="yes">
+			<formatter type="plain" usefile="false" />
+
+			<classpath>
+				<pathelement path="${build.classpath}" />
+				<pathelement path="${deploy.dir}/classes" />
+				<pathelement path="${deploy.dir}/test/testclasses" />
+				<pathelement path="${lib.dir}" />
+				
+	     		<pathelement location="${lib.dir}/junit.jar" />
+				<pathelement location="${lib.dir}/swixml.jar" />
+				<pathelement location="${lib.dir}/commons-io-2.1.jar" />
+				<pathelement location="${lib.dir}/jdom.jar" />
+				<pathelement location="${lib.dir}/junit-addons-1.4.jar" />
+				<pathelement location="${lib.dir}/junit.jar" />
+				<pathelement location="${lib.dir}/log4j-1.2.17.jar" />
+			</classpath>
+
+			<!-- add your tests here -->
+			<test name="gov.ca.water.calgui.results.TestDSSGrabber" />
+		</junit>
+
+	</target>
+
+
+	<target name="make-jar" depends="test">
+
+		<manifestclasspath property="jar.classpath" jarfile="${deploy.dir}/calgui.jar">
+			<classpath refid="deploy.classpath" />
+
+		</manifestclasspath>
+
+
+		<jar destfile="${deploy.dir}/calgui.jar" basedir="${deploy.dir}/classes">
+
+			<manifest>
+				<attribute name="Manifest-Version" value="1.0" />
+				<attribute name="Main-Class" value="gov.ca.water.calgui.MainMenu" />
+				<attribute name="SplashScreen-Image" value="images/splash.jpg" />
+				<attribute name="Class-Path" value=". ${jar.classpath} docs/helpset.hs" />
+			</manifest>
+
+			<fileset dir="${deploy.dir}/img/" />
+
+		</jar>
+
+	</target>
+	
+	<!-- Blow away compiled code from deploy package after it has been jarred -->
+	<target name="clean-package" depends="make-jar">
+	    <delete dir="${deploy.dir}/classes"/>
+	</target>
+
+
+	<target name="create-shell-script" depends="clean-package">
+
+		<echo file="${deploy.dir}/run-calgui.bat">@echo off
+			PATH =.;./jre6/bin;%PATH%
+			java -version
+			start /min java -jar calgui.jar
+		</echo>
+
+	</target>
+
+	<target name="deploy" depends="create-shell-script">
+
+		<zip destfile="../${DSTAMP}_calgui_deploy.zip" basedir="${deploy.dir}" update="false" excludes="**/test/**">
+		</zip>
+
+	</target>
+
+	
+</project>
