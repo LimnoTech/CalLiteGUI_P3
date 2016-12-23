@@ -67,7 +67,8 @@ import gov.ca.water.calgui.tech_service.impl.AuditSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 
 /**
- * This class is for initializing the Application and adding the Action, Item, Mouse Listener's to the main frame.
+ * This class is for initializing the Application and adding the Action, Item,
+ * Mouse Listener's to the main frame.
  *
  * @author mohan
  *
@@ -109,7 +110,8 @@ public class CalLiteInitClass {
 		ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
 		((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME)).setIconImage(icon.getImage());
 		((JTabbedPane) swingEngine.find("reg_tabbedPane")).addChangeListener(new GlobalChangeListener());
-		((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME)).setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);// EXIT_ON_CLOSE
+		((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME))
+				.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);// EXIT_ON_CLOSE
 		((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME)).addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent we) {
@@ -119,18 +121,20 @@ public class CalLiteInitClass {
 		});
 		// Loading the default cls file.
 		resultSvc.applyClsFile(Constant.SCENARIOS_DIR + Constant.DEFAULT + Constant.CLS_EXT, swingEngine,
-		        seedDataSvc.getTableIdMap());
+				seedDataSvc.getTableIdMap());
 		// check
 		checkForNewUserDefinedTables(xmlParsingSvc.getNewUserDefinedTables(), resultSvc, tableSvc, swingEngine);
 
 		/*
-		 * The following code we are sedtting the SWP and CVP file names as user defined because the table values we are getting it
-		 * from the cls file so we consider them as user defined.
+		 * The following code we are sedtting the SWP and CVP file names as user
+		 * defined because the table values we are getting it from the cls file
+		 * so we consider them as user defined.
 		 */
 		tableSvc.setWsidiForSWPFullFileName(Constant.USER_DEFINED);
 		tableSvc.setWsidiForCVPFullFileName(Constant.USER_DEFINED);
 		auditSvc = AuditSvcImpl.getAuditSvcImplInstance();
-		auditSvc.clearAudit(); // we clear because when we 1st load the cls file we should not have any records.
+		auditSvc.clearAudit(); // we clear because when we 1st load the cls file
+								// we should not have any records.
 		addJTextFieldListener();
 		// Count threads and update selector appropriately
 		int maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors());
@@ -140,14 +144,15 @@ public class CalLiteInitClass {
 		((JSlider) swingEngine.find("run_sldThreads")).setMaximum(maxThreads);
 		((JLabel) swingEngine.find("run_lblThreads")).setText(" " + maxThreads + ((maxThreads > 1) ? " runs" : " run"));
 		((JLabel) swingEngine.find("run_lblThreadsInfo"))
-		        .setText("Simultaneous runs " + ((maxThreads > 1) ? "(1-" + maxThreads + ")" : "(1)"));
+				.setText("Simultaneous runs " + ((maxThreads > 1) ? "(1-" + maxThreads + ")" : "(1)"));
 
 		// For Result part.
 		ResultUtils resultUtils = ResultUtils.getXMLParsingSvcImplInstance(swingEngine);
 		swingEngine.setActionListener(swingEngine.find("Reporting"), new ReportAction(swingEngine));
 		swingEngine.setActionListener(swingEngine.find("externalPDF"), new ReportAction(swingEngine));
 		setCheckBoxorRadioButtonItemListener(swingEngine.find("Reporting"), new ReportListener(swingEngine));
-		setCheckBoxorMouseListener(swingEngine.find("Reporting"), resultUtils);
+		// setCheckBoxorMouseListener(swingEngine.find("Reporting"),
+		// resultUtils);
 
 		// Setup for Reporting page
 		// Set up additional UI elements
@@ -191,20 +196,20 @@ public class CalLiteInitClass {
 		WRIMSGUILinks.setStatus("Initialized.");
 		// PDF Report
 		((JButton) swingEngine.find("btnGetTemplateFile"))
-		        .addActionListener(new FileDialog(null, (JTextField) swingEngine.find("tfTemplateFILE"), "inp"));
+				.addActionListener(new FileDialog(null, (JTextField) swingEngine.find("tfTemplateFILE"), "inp"));
 		((JButton) swingEngine.find("btnGetReportFile1"))
-		        .addActionListener(new FileDialog(null, (JTextField) swingEngine.find("tfReportFILE1")));
+				.addActionListener(new FileDialog(null, (JTextField) swingEngine.find("tfReportFILE1")));
 		((JButton) swingEngine.find("btnGetReportFile2"))
-		        .addActionListener(new FileDialog(null, (JTextField) swingEngine.find("tfReportFILE2")));
+				.addActionListener(new FileDialog(null, (JTextField) swingEngine.find("tfReportFILE2")));
 		((JButton) swingEngine.find("btnGetReportFile3"))
-		        .addActionListener(new FileDialog(null, (JTextField) swingEngine.find("tfReportFILE3"), "PDF"));
+				.addActionListener(new FileDialog(null, (JTextField) swingEngine.find("tfReportFILE3"), "PDF"));
 		// Schematic views
 		new SchematicMain((JPanel) swingEngine.find("schematic_holder"),
-		        "file:///" + System.getProperty("user.dir") + "/Config/callite_merged.svg", swingEngine, 1.19, 0.0, 0.0, 1.19, -8.0,
-		        5.0);
+				"file:///" + System.getProperty("user.dir") + "/Config/callite_merged.svg", swingEngine, 1.19, 0.0, 0.0,
+				1.19, -8.0, 5.0);
 		new SchematicMain((JPanel) swingEngine.find("schematic_holder2"),
-		        "file:///" + System.getProperty("user.dir") + "/Config/callite-massbalance_working.svg", swingEngine, 1.2, 0, 0.0,
-		        1.2, 21.0, 15.0);
+				"file:///" + System.getProperty("user.dir") + "/Config/callite-massbalance_working.svg", swingEngine,
+				1.2, 0, 0.0, 1.2, 21.0, 15.0);
 		swingEngine.setActionListener(swingEngine.find("schematics"), new SchematicAction());
 		setCheckBoxorRadioButtonItemListener(swingEngine.find("schematics"), new SchematicListener(swingEngine));
 
@@ -229,7 +234,8 @@ public class CalLiteInitClass {
 	}
 
 	/**
-	 * This method will check for the new tables which are defined in the gui.xml file and load them.
+	 * This method will check for the new tables which are defined in the
+	 * gui.xml file and load them.
 	 *
 	 * @param newUserDefinedIds
 	 * @param resultSvc
@@ -237,7 +243,7 @@ public class CalLiteInitClass {
 	 * @param swingEngine
 	 */
 	public void checkForNewUserDefinedTables(List<String> newUserDefinedIds, IResultSvc resultSvc, ITableSvc tableSvc,
-	        SwingEngine swingEngine) {
+			SwingEngine swingEngine) {
 		DataTableModle dtm = null;
 		for (String newUserDefinedId : newUserDefinedIds) {
 			if (resultSvc.hasUserDefinedTable(newUserDefinedId)) {
@@ -252,9 +258,9 @@ public class CalLiteInitClass {
 				} catch (CalLiteGUIException ex) {
 					Log.error(ex);
 					errorHandlingSvc.displayErrorMessageBeforeTheUI(new CalLiteGUIException(
-					        "There is a table id " + newUserDefinedId
-					                + " in the gui.xml file but there is no table file with that name. Please provide the file.",
-					        ex));
+							"There is a table id " + newUserDefinedId
+									+ " in the gui.xml file but there is no table file with that name. Please provide the file.",
+							ex));
 				}
 			}
 		}
@@ -277,7 +283,8 @@ public class CalLiteInitClass {
 	}
 
 	/**
-	 * This method will set the max and min values for the {@link JSpinner} object.
+	 * This method will set the max and min values for the {@link JSpinner}
+	 * object.
 	 *
 	 * @param jspn
 	 * @param value
@@ -293,7 +300,8 @@ public class CalLiteInitClass {
 	}
 
 	/**
-	 * This method will set the item listener for the component and for all it's children which are Check Box and radio button.
+	 * This method will set the item listener for the component and for all it's
+	 * children which are Check Box and radio button.
 	 *
 	 * @param component
 	 * @param itemListener
@@ -309,7 +317,8 @@ public class CalLiteInitClass {
 	}
 
 	/**
-	 * This method will set the mouse listener for the component and for all it's children which are Check Box.
+	 * This method will set the mouse listener for the component and for all
+	 * it's children which are Check Box.
 	 *
 	 * @param component
 	 * @param mouseListener
@@ -325,7 +334,8 @@ public class CalLiteInitClass {
 	}
 
 	/**
-	 * This method is to add the listrnrt for the {@link JTextField} for tracking the changes.
+	 * This method is to add the listrnrt for the {@link JTextField} for
+	 * tracking the changes.
 	 */
 	private void addJTextFieldListener() {
 		FocusListener focusListener = new FocusListener() {
