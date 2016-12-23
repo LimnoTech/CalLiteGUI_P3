@@ -1,8 +1,5 @@
 package gov.ca.water.calgui.results;
 
-import hec.heclib.util.HecTime;
-import hec.io.TimeSeriesContainer;
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -30,6 +27,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import calsim.app.MultipleTimeSeries;
+import hec.heclib.util.HecTime;
+import hec.io.TimeSeriesContainer;
 
 //import com.limno.calgui.table.ColumnGroup;
 //import com.limno.calgui.table.GroupableTableHeader;
@@ -65,34 +64,34 @@ public class SummaryTablePanel2 extends JPanel implements ActionListener, Compon
 	// Year, Sac403030, SJR, SHASTA, ?, Feather, ?, ?, dry
 
 	private static int ylt[][] = { { 1920, 2, 2, 1, 1, 0, 3, 2, 0, }, { 1921, 2, 2, 1, 1, 0, 3, 2, 0, },
-	        { 1922, 2, 1, 1, 1, 0, 4, 2, 0, }, { 1923, 3, 2, 3, 1, 0, 4, 3, 0, }, { 1924, 5, 5, 4, 2, 1, 5, 6, 0, },
-	        { 1925, 4, 3, 1, 1, 0, 2, 5, 0, }, { 1926, 4, 4, 3, 1, 0, 4, 5, 0, }, { 1927, 1, 2, 1, 1, 0, 2, 1, 0, },
-	        { 1928, 2, 3, 1, 1, 0, 3, 2, 0, }, { 1929, 5, 5, 3, 1, 0, 5, 6, 1, }, { 1930, 4, 5, 2, 1, 0, 4, 5, 1, },
-	        { 1931, 5, 5, 4, 2, 1, 5, 6, 1, }, { 1932, 4, 2, 4, 1, 0, 4, 5, 1, }, { 1933, 5, 4, 4, 1, 0, 4, 6, 1, },
-	        { 1934, 5, 5, 4, 2, 1, 5, 6, 1, }, { 1935, 3, 2, 1, 1, 0, 4, 3, 0, }, { 1936, 3, 2, 1, 1, 0, 3, 3, 0, },
-	        { 1937, 3, 1, 2, 1, 0, 4, 3, 0, }, { 1938, 1, 1, 1, 1, 0, 1, 1, 0, }, { 1939, 4, 4, 3, 2, 0, 5, 5, 0, },
-	        { 1940, 2, 2, 1, 1, 0, 2, 2, 0, }, { 1941, 1, 1, 1, 1, 0, 1, 1, 0, }, { 1942, 1, 1, 1, 1, 0, 2, 1, 0, },
-	        { 1943, 1, 1, 1, 1, 0, 3, 1, 0, }, { 1944, 4, 3, 3, 1, 0, 5, 5, 0, }, { 1945, 3, 2, 1, 1, 0, 3, 3, 0, },
-	        { 1946, 3, 2, 1, 1, 0, 2, 3, 0, }, { 1947, 4, 4, 3, 1, 0, 4, 5, 0, }, { 1948, 3, 3, 1, 1, 0, 3, 3, 0, },
-	        { 1949, 4, 3, 2, 1, 0, 3, 5, 0, }, { 1950, 3, 3, 2, 1, 0, 4, 3, 0, }, { 1951, 2, 2, 1, 1, 0, 2, 2, 0, },
-	        { 1952, 1, 1, 1, 1, 0, 2, 1, 0, }, { 1953, 1, 3, 1, 1, 0, 2, 1, 0, }, { 1954, 2, 3, 1, 1, 0, 2, 2, 0, },
-	        { 1955, 4, 4, 2, 1, 0, 4, 5, 0, }, { 1956, 1, 1, 1, 1, 0, 1, 1, 0, }, { 1957, 2, 3, 1, 1, 0, 3, 2, 0, },
-	        { 1958, 1, 1, 1, 1, 0, 1, 1, 0, }, { 1959, 3, 4, 1, 1, 0, 3, 3, 0, }, { 1960, 4, 5, 1, 1, 0, 3, 5, 0, },
-	        { 1961, 4, 5, 1, 1, 0, 3, 5, 0, }, { 1962, 3, 3, 1, 1, 0, 3, 3, 0, }, { 1963, 1, 2, 1, 1, 0, 2, 1, 0, },
-	        { 1964, 4, 4, 3, 1, 0, 4, 5, 0, }, { 1965, 1, 1, 1, 1, 0, 2, 1, 0, }, { 1966, 3, 3, 1, 1, 0, 3, 3, 0, },
-	        { 1967, 1, 1, 1, 1, 0, 2, 1, 0, }, { 1968, 3, 4, 1, 1, 0, 3, 3, 0, }, { 1969, 1, 1, 1, 1, 0, 1, 1, 0, },
-	        { 1970, 1, 2, 1, 1, 0, 2, 1, 0, }, { 1971, 1, 3, 1, 1, 0, 2, 1, 0, }, { 1972, 3, 4, 1, 1, 0, 3, 3, 0, },
-	        { 1973, 2, 2, 1, 1, 0, 2, 2, 0, }, { 1974, 1, 1, 1, 1, 0, 1, 1, 0, }, { 1975, 1, 1, 1, 1, 0, 2, 1, 0, },
-	        { 1976, 5, 5, 3, 2, 0, 4, 6, 2, }, { 1977, 5, 5, 4, 2, 1, 5, 7, 2, }, { 1978, 2, 1, 1, 1, 0, 1, 2, 0, },
-	        { 1979, 3, 2, 2, 1, 0, 4, 3, 0, }, { 1980, 2, 1, 1, 1, 0, 2, 2, 0, }, { 1981, 4, 4, 2, 2, 0, 4, 5, 0, },
-	        { 1982, 1, 1, 1, 1, 0, 1, 1, 0, }, { 1983, 1, 1, 1, 1, 0, 1, 1, 0, }, { 1984, 1, 2, 1, 1, 0, 2, 1, 0, },
-	        { 1985, 4, 4, 3, 1, 0, 4, 5, 0, }, { 1986, 1, 1, 1, 1, 0, 2, 1, 0, }, { 1987, 4, 5, 3, 2, 0, 4, 5, 3, },
-	        { 1988, 5, 5, 3, 2, 1, 4, 6, 3, }, { 1989, 4, 5, 1, 1, 0, 3, 5, 3, }, { 1990, 5, 5, 3, 2, 0, 4, 6, 3, },
-	        { 1991, 5, 5, 4, 1, 1, 5, 6, 3, }, { 1992, 5, 5, 4, 2, 0, 4, 6, 3, }, { 1993, 2, 1, 1, 1, 0, 2, 2, 0, },
-	        { 1994, 5, 5, 4, 2, 0, 5, 6, 0, }, { 1995, 1, 1, 1, 1, 0, 1, 0, 0, }, { 1996, 1, 1, 1, 1, 0, 2, 0, 0, },
-	        { 1997, 1, 1, 1, 1, 0, 2, 0, 0, }, { 1998, 1, 1, 1, 1, 0, 1, 0, 0, }, { 1999, 1, 2, 1, 1, 0, 2, 0, 0, },
-	        { 2000, 2, 2, 1, 1, 0, 2, 0, 0, }, { 2001, 4, 4, 1, 2, 0, 4, 0, 0, }, { 2002, 4, 4, 1, 1, 0, 3, 0, 0, },
-	        { 2003, 2, 3, 1, 1, 0, 2, 0, 0, } };
+			{ 1922, 2, 1, 1, 1, 0, 4, 2, 0, }, { 1923, 3, 2, 3, 1, 0, 4, 3, 0, }, { 1924, 5, 5, 4, 2, 1, 5, 6, 0, },
+			{ 1925, 4, 3, 1, 1, 0, 2, 5, 0, }, { 1926, 4, 4, 3, 1, 0, 4, 5, 0, }, { 1927, 1, 2, 1, 1, 0, 2, 1, 0, },
+			{ 1928, 2, 3, 1, 1, 0, 3, 2, 0, }, { 1929, 5, 5, 3, 1, 0, 5, 6, 1, }, { 1930, 4, 5, 2, 1, 0, 4, 5, 1, },
+			{ 1931, 5, 5, 4, 2, 1, 5, 6, 1, }, { 1932, 4, 2, 4, 1, 0, 4, 5, 1, }, { 1933, 5, 4, 4, 1, 0, 4, 6, 1, },
+			{ 1934, 5, 5, 4, 2, 1, 5, 6, 1, }, { 1935, 3, 2, 1, 1, 0, 4, 3, 0, }, { 1936, 3, 2, 1, 1, 0, 3, 3, 0, },
+			{ 1937, 3, 1, 2, 1, 0, 4, 3, 0, }, { 1938, 1, 1, 1, 1, 0, 1, 1, 0, }, { 1939, 4, 4, 3, 2, 0, 5, 5, 0, },
+			{ 1940, 2, 2, 1, 1, 0, 2, 2, 0, }, { 1941, 1, 1, 1, 1, 0, 1, 1, 0, }, { 1942, 1, 1, 1, 1, 0, 2, 1, 0, },
+			{ 1943, 1, 1, 1, 1, 0, 3, 1, 0, }, { 1944, 4, 3, 3, 1, 0, 5, 5, 0, }, { 1945, 3, 2, 1, 1, 0, 3, 3, 0, },
+			{ 1946, 3, 2, 1, 1, 0, 2, 3, 0, }, { 1947, 4, 4, 3, 1, 0, 4, 5, 0, }, { 1948, 3, 3, 1, 1, 0, 3, 3, 0, },
+			{ 1949, 4, 3, 2, 1, 0, 3, 5, 0, }, { 1950, 3, 3, 2, 1, 0, 4, 3, 0, }, { 1951, 2, 2, 1, 1, 0, 2, 2, 0, },
+			{ 1952, 1, 1, 1, 1, 0, 2, 1, 0, }, { 1953, 1, 3, 1, 1, 0, 2, 1, 0, }, { 1954, 2, 3, 1, 1, 0, 2, 2, 0, },
+			{ 1955, 4, 4, 2, 1, 0, 4, 5, 0, }, { 1956, 1, 1, 1, 1, 0, 1, 1, 0, }, { 1957, 2, 3, 1, 1, 0, 3, 2, 0, },
+			{ 1958, 1, 1, 1, 1, 0, 1, 1, 0, }, { 1959, 3, 4, 1, 1, 0, 3, 3, 0, }, { 1960, 4, 5, 1, 1, 0, 3, 5, 0, },
+			{ 1961, 4, 5, 1, 1, 0, 3, 5, 0, }, { 1962, 3, 3, 1, 1, 0, 3, 3, 0, }, { 1963, 1, 2, 1, 1, 0, 2, 1, 0, },
+			{ 1964, 4, 4, 3, 1, 0, 4, 5, 0, }, { 1965, 1, 1, 1, 1, 0, 2, 1, 0, }, { 1966, 3, 3, 1, 1, 0, 3, 3, 0, },
+			{ 1967, 1, 1, 1, 1, 0, 2, 1, 0, }, { 1968, 3, 4, 1, 1, 0, 3, 3, 0, }, { 1969, 1, 1, 1, 1, 0, 1, 1, 0, },
+			{ 1970, 1, 2, 1, 1, 0, 2, 1, 0, }, { 1971, 1, 3, 1, 1, 0, 2, 1, 0, }, { 1972, 3, 4, 1, 1, 0, 3, 3, 0, },
+			{ 1973, 2, 2, 1, 1, 0, 2, 2, 0, }, { 1974, 1, 1, 1, 1, 0, 1, 1, 0, }, { 1975, 1, 1, 1, 1, 0, 2, 1, 0, },
+			{ 1976, 5, 5, 3, 2, 0, 4, 6, 2, }, { 1977, 5, 5, 4, 2, 1, 5, 7, 2, }, { 1978, 2, 1, 1, 1, 0, 1, 2, 0, },
+			{ 1979, 3, 2, 2, 1, 0, 4, 3, 0, }, { 1980, 2, 1, 1, 1, 0, 2, 2, 0, }, { 1981, 4, 4, 2, 2, 0, 4, 5, 0, },
+			{ 1982, 1, 1, 1, 1, 0, 1, 1, 0, }, { 1983, 1, 1, 1, 1, 0, 1, 1, 0, }, { 1984, 1, 2, 1, 1, 0, 2, 1, 0, },
+			{ 1985, 4, 4, 3, 1, 0, 4, 5, 0, }, { 1986, 1, 1, 1, 1, 0, 2, 1, 0, }, { 1987, 4, 5, 3, 2, 0, 4, 5, 3, },
+			{ 1988, 5, 5, 3, 2, 1, 4, 6, 3, }, { 1989, 4, 5, 1, 1, 0, 3, 5, 3, }, { 1990, 5, 5, 3, 2, 0, 4, 6, 3, },
+			{ 1991, 5, 5, 4, 1, 1, 5, 6, 3, }, { 1992, 5, 5, 4, 2, 0, 4, 6, 3, }, { 1993, 2, 1, 1, 1, 0, 2, 2, 0, },
+			{ 1994, 5, 5, 4, 2, 0, 5, 6, 0, }, { 1995, 1, 1, 1, 1, 0, 1, 0, 0, }, { 1996, 1, 1, 1, 1, 0, 2, 0, 0, },
+			{ 1997, 1, 1, 1, 1, 0, 2, 0, 0, }, { 1998, 1, 1, 1, 1, 0, 1, 0, 0, }, { 1999, 1, 2, 1, 1, 0, 2, 0, 0, },
+			{ 2000, 2, 2, 1, 1, 0, 2, 0, 0, }, { 2001, 4, 4, 1, 2, 0, 4, 0, 0, }, { 2002, 4, 4, 1, 1, 0, 3, 0, 0, },
+			{ 2003, 2, 3, 1, 1, 0, 2, 0, 0, } };
 
 	private void update(int i1, int i2, double value, int m) {
 		/*
@@ -133,7 +132,8 @@ public class SummaryTablePanel2 extends JPanel implements ActionListener, Compon
 
 	Vector<String> columns;
 
-	// public SummaryTablePanel2(String title, TimeSeriesContainer tscs[], TimeSeriesContainer stscs[], String tagString, String
+	// public SummaryTablePanel2(String title, TimeSeriesContainer tscs[],
+	// TimeSeriesContainer stscs[], String tagString, String
 	// sName,
 	// DSSGrabber dss_Grabber) {
 	//
@@ -141,7 +141,8 @@ public class SummaryTablePanel2 extends JPanel implements ActionListener, Compon
 	//
 	// }
 	//
-	// public SummaryTablePanel2(String title, TimeSeriesContainer tscs[], TimeSeriesContainer stscs[], String tagString, String
+	// public SummaryTablePanel2(String title, TimeSeriesContainer tscs[],
+	// TimeSeriesContainer stscs[], String tagString, String
 	// sName,
 	// DSSGrabber2 dss_Grabber) {
 	//
@@ -149,7 +150,8 @@ public class SummaryTablePanel2 extends JPanel implements ActionListener, Compon
 	//
 	// }
 	//
-	// public SummaryTablePanel2(String title, TimeSeriesContainer tscs[], TimeSeriesContainer stscs[], String tagString, String
+	// public SummaryTablePanel2(String title, TimeSeriesContainer tscs[],
+	// TimeSeriesContainer stscs[], String tagString, String
 	// sName,
 	// DSSGrabber dss_Grabber, boolean isBase) {
 	//
@@ -157,7 +159,8 @@ public class SummaryTablePanel2 extends JPanel implements ActionListener, Compon
 	//
 	// }
 	//
-	// public SummaryTablePanel2(String title, TimeSeriesContainer tscs[], TimeSeriesContainer stscs[], String tagString, String
+	// public SummaryTablePanel2(String title, TimeSeriesContainer tscs[],
+	// TimeSeriesContainer stscs[], String tagString, String
 	// sName,
 	// DSSGrabber2 dss_Grabber, boolean isBase) {
 	//
@@ -166,12 +169,16 @@ public class SummaryTablePanel2 extends JPanel implements ActionListener, Compon
 	// }
 
 	public SummaryTablePanel2(String title, TimeSeriesContainer[][] results, String summaryTags, String sLabel,
-	        DSSGrabber2 dssGrabber, boolean doBase, MultipleTimeSeries mts) {
-		this(title, results, null, summaryTags, sLabel, null, dssGrabber, doBase, mts); // TODO Auto-generated constructor stub
+			DSSGrabber2 dssGrabber, boolean doBase, MultipleTimeSeries mts) {
+		this(title, results, null, summaryTags, sLabel, null, dssGrabber, doBase, mts); // TODO
+																						// Auto-generated
+																						// constructor
+																						// stub
 	}
 
-	public SummaryTablePanel2(String title, TimeSeriesContainer mtscs[][], TimeSeriesContainer stscs[], String tagString,
-	        String sName, DSSGrabber dss_Grabber, DSSGrabber2 dss_Grabber2, boolean isBase, MultipleTimeSeries mts) {
+	public SummaryTablePanel2(String title, TimeSeriesContainer mtscs[][], TimeSeriesContainer stscs[],
+			String tagString, String sName, DSSGrabber1 dss_Grabber, DSSGrabber2 dss_Grabber2, boolean isBase,
+			MultipleTimeSeries mts) {
 
 		super();
 
@@ -205,8 +212,8 @@ public class SummaryTablePanel2 extends JPanel implements ActionListener, Compon
 			columns.addElement("Sep");
 			columns.addElement("All (TAF)");
 
-			boolean isCFS = dss_Grabber == null ? dss_Grabber2.getOriginalUnits().equals("CFS") : dss_Grabber.getOriginalUnits()
-			        .equals("CFS");
+			boolean isCFS = dss_Grabber == null ? dss_Grabber2.getOriginalUnits().equals("CFS")
+					: dss_Grabber.getOriginalUnits().equals("CFS");
 
 			// loop over all Primary datasets
 
@@ -280,10 +287,11 @@ public class SummaryTablePanel2 extends JPanel implements ActionListener, Compon
 						// Calculate values based on annual totals
 						double value;
 						if (title.contains("Difference"))
-							value = dss_Grabber == null ? dss_Grabber2.getAnnualTAFDiff2(mtsI, t, wy) : dss_Grabber
-							        .getAnnualTAFDiff(t, wy);
+							value = dss_Grabber == null ? dss_Grabber2.getAnnualTAFDiff(mtsI, t, wy)
+									: dss_Grabber.getAnnualTAFDiff(t, wy);
 						else
-							value = dss_Grabber == null ? dss_Grabber2.getAnnualTAF2(mtsI, t, wy) : dss_Grabber.getAnnualTAF(t, wy);
+							value = dss_Grabber == null ? dss_Grabber2.getAnnualTAF(mtsI, t, wy)
+									: dss_Grabber.getAnnualTAF(t, wy);
 
 						update2(0, 0, value, m);
 						update2(1, ylt[ySac403030 - 1920][1], value, m);
@@ -307,7 +315,8 @@ public class SummaryTablePanel2 extends JPanel implements ActionListener, Compon
 				String[] rightPartsclimate = { "", "Wet", "Above", "Normal", "Dry", "Extreme" };
 				String[] rightPartsclimate2 = { "", "Normal", "Below Normal", "Dry", "Critical", "" };
 
-				String[] rightPartsDry = { "All dry periods", "1928-1934", "1976-1977", "1986-1992", "UNKNOWN 4", "UNKNOWN 5" };
+				String[] rightPartsDry = { "All dry periods", "1928-1934", "1976-1977", "1986-1992", "UNKNOWN 4",
+						"UNKNOWN 5" };
 				DecimalFormat df1 = new DecimalFormat("#.#");
 
 				// Calculate results
@@ -316,17 +325,18 @@ public class SummaryTablePanel2 extends JPanel implements ActionListener, Compon
 						for (int i3 = 0; i3 < 14; i3++)
 
 							if ((((i1 == 0) && tagString.contains("All years") && (i2 == 0))
-							        || ((i1 == 1) && tagString.contains("40-30-30")) || ((i1 == 2) && tagString.contains("Shasta"))
-							        || ((i1 == 3) && tagString.contains("Feather"))
-							        || ((i1 == 4) && tagString.contains("SJR Index"))
-							        || ((i1 == 5) && tagString.contains("All dry"))
-							        || ((i1 == 5) && (i2 == 1) && tagString.contains("1934"))
-							        || ((i1 == 5) && (i2 == 2) && tagString.contains("1977")) || ((i1 == 5) && (i2 == 3) && tagString
-							        .contains("1992"))) && (n[i1][i2][i3] > 0)) {
+									|| ((i1 == 1) && tagString.contains("40-30-30"))
+									|| ((i1 == 2) && tagString.contains("Shasta"))
+									|| ((i1 == 3) && tagString.contains("Feather"))
+									|| ((i1 == 4) && tagString.contains("SJR Index"))
+									|| ((i1 == 5) && tagString.contains("All dry"))
+									|| ((i1 == 5) && (i2 == 1) && tagString.contains("1934"))
+									|| ((i1 == 5) && (i2 == 2) && tagString.contains("1977"))
+									|| ((i1 == 5) && (i2 == 3) && tagString.contains("1992"))) && (n[i1][i2][i3] > 0)) {
 
 								avg[i1][i2][i3] = x[i1][i2][i3] / n[i1][i2][i3];
-								sdev[i1][i2][i3] = Math.sqrt(Math.abs(xx[i1][i2][i3] / n[i1][i2][i3] - avg[i1][2][i3]
-								        * avg[i1][2][i3]));
+								sdev[i1][i2][i3] = Math.sqrt(
+										Math.abs(xx[i1][i2][i3] / n[i1][i2][i3] - avg[i1][2][i3] * avg[i1][2][i3]));
 
 								int nmed = n[i1][i2][i3];
 								double[] medx2 = new double[nmed];
@@ -349,14 +359,15 @@ public class SummaryTablePanel2 extends JPanel implements ActionListener, Compon
 							for (int i2 = 0; i2 < 6; i2++)
 
 								if ((((i1 == 0) && tagString.contains("All years") && (i2 == 0))
-								        || ((i1 == 1) && tagString.contains("40-30-30"))
-								        || ((i1 == 2) && tagString.contains("Shasta"))
-								        || ((i1 == 3) && tagString.contains("Feather"))
-								        || ((i1 == 4) && tagString.contains("SJR Index"))
-								        || ((i1 == 5) && tagString.contains("All dry"))
-								        || ((i1 == 5) && (i2 == 1) && tagString.contains("1928"))
-								        || ((i1 == 5) && (i2 == 2) && tagString.contains("1976")) || ((i1 == 5) && (i2 == 3) && tagString
-								        .contains("1986"))) && (n[i1][i2][0] > 0)) {
+										|| ((i1 == 1) && tagString.contains("40-30-30"))
+										|| ((i1 == 2) && tagString.contains("Shasta"))
+										|| ((i1 == 3) && tagString.contains("Feather"))
+										|| ((i1 == 4) && tagString.contains("SJR Index"))
+										|| ((i1 == 5) && tagString.contains("All dry"))
+										|| ((i1 == 5) && (i2 == 1) && tagString.contains("1928"))
+										|| ((i1 == 5) && (i2 == 2) && tagString.contains("1976"))
+										|| ((i1 == 5) && (i2 == 3) && tagString.contains("1986")))
+										&& (n[i1][i2][0] > 0)) {
 
 									groupHasData = true;
 
@@ -371,7 +382,7 @@ public class SummaryTablePanel2 extends JPanel implements ActionListener, Compon
 										rightPart = " " + Integer.toString(i2); // Feather
 									else
 										rightPart = " (" + rightPartsDry[i2] + ")"; // Dry
-										                                            // periods
+																					// periods
 
 									data[t].addElement(leftPart[i1] + rightPart);
 									data[t].addElement(tagStringList[tag]);
@@ -389,7 +400,14 @@ public class SummaryTablePanel2 extends JPanel implements ActionListener, Compon
 
 										switch (tag) {
 										case 0:
-											data[t].addElement(df1.format(avg[i1][i2][i3m])); // * (i3m == 0 ? 12 : 1)));
+											data[t].addElement(df1.format(avg[i1][i2][i3m])); // *
+																								// (i3m
+																								// ==
+																								// 0
+																								// ?
+																								// 12
+																								// :
+																								// 1)));
 											break;
 										case 1:
 											data[t].addElement(df1.format(sdev[i1][i2][i3m]));
@@ -429,8 +447,8 @@ public class SummaryTablePanel2 extends JPanel implements ActionListener, Compon
 				DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) table.getDefaultRenderer(String.class);
 				renderer.setHorizontalAlignment(JLabel.RIGHT);
 
-				String labelText = (mts.getDTSNameAt(mtsI).equals("") ? mts.getBPartAt(mtsI) + "/" + mts.getCPartAt(mtsI) : mts
-				        .getDTSNameAt(mtsI));
+				String labelText = (mts.getDTSNameAt(mtsI).equals("")
+						? mts.getBPartAt(mtsI) + "/" + mts.getCPartAt(mtsI) : mts.getDTSNameAt(mtsI));
 
 				JLabel label = new JLabel();
 				label.setText(labelText + " (" + tsc.units + ") - " + tsc.fileName);
