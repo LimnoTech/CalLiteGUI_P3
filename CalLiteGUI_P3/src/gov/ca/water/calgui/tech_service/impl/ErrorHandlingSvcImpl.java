@@ -189,7 +189,7 @@ public class ErrorHandlingSvcImpl implements IErrorHandlingSvc {
 			JOptionPane.showMessageDialog(mainFrame, scroll, "Error", JOptionPane.ERROR_MESSAGE, icon);
 		}
 		LOG.debug(emailMessage);
-		// sendEmail(emailMessage, mainFrame); TODO uncomment sendEmail
+		sendEmail(emailMessage, mainFrame);
 	}
 
 	/**

@@ -139,19 +139,6 @@ public final class ResultSvcImpl implements IResultSvc {
 			populateClsTableMap(dataTableModelStrList, tableMap);
 		}
 		applyControls(controlStrList, swingEngine);
-		if (((JRadioButton) swingEngine.find("rdbRegQS_UD")) != null
-		        && ((JRadioButton) swingEngine.find("rdbRegQS_UD")).isSelected()) {
-			toggleEnComponentAndChildren(swingEngine.find("regpan1"), true);
-			toggleEnComponentAndChildren(swingEngine.find("regpan2"), true);
-			toggleEnComponentAndChildren(swingEngine.find("regpan2b"), true);
-			toggleEnComponentAndChildren(swingEngine.find("regpan3"), true);
-		} else {
-			toggleEnComponentAndChildren(swingEngine.find("regpan1"), false);
-			toggleEnComponentAndChildren(swingEngine.find("regpan2"), false);
-			toggleEnComponentAndChildren(swingEngine.find("regpan2b"), false);
-			toggleEnComponentAndChildren(swingEngine.find("regpan3"), false);
-		}
-
 		this.isCLSFlag = false;
 	}
 
@@ -342,6 +329,26 @@ public final class ResultSvcImpl implements IResultSvc {
 	}
 
 	/**
+	 * This will delete all the Files and Directory.
+	 *
+	 * @param dirAbsPath
+	 * @throws CalLiteGUIException
+	 */
+	private void deleteDirAndFiles(File dirAbsPath) throws CalLiteGUIException {
+		if (dirAbsPath.listFiles() != null) {
+			String path = "";
+			for (File file : dirAbsPath.listFiles()) {
+				try {
+					path = dirAbsPath.getAbsolutePath();
+					FileDeleteStrategy.FORCE.delete(file);
+				} catch (IOException ex) {
+					throw new CalLiteGUIException("We had a problem when deleting the directory. The directory is " + path, ex);
+				}
+			}
+		}
+	}
+
+	/**
 	 * This will save the current ui state to the tables and scenario directory.
 	 *
 	 * @param fileName
@@ -354,30 +361,25 @@ public final class ResultSvcImpl implements IResultSvc {
 		String runDirAbsPath = Paths.get(Constant.RUN_DETAILS_DIR + fileName + Constant.RUN_DIR).toString();
 		String generatedDirAbsPath = Paths.get(Constant.RUN_DETAILS_DIR + fileName + Constant.GENERATED_DIR).toString();
 		updateSaveStatusFile(runDirAbsPath + Constant.SAVE_FILE + Constant.TXT_EXT,
-		        "Createing the directory and copying the files.");
-		createDirAndCopyFiles(Constant.MODEL_W2_WRESL_DIR, runDirAbsPath);
-		updateSaveStatusFile(runDirAbsPath + Constant.SAVE_FILE + Constant.TXT_EXT, "Deleteing the previous data.");
+		        "Creating the directory and copying the files.");
+
+		if (!Files.isExecutable(Paths.get(Constant.RUN_DETAILS_DIR + fileName))) {
+			createDirAndCopyFiles(Constant.MODEL_W2_WRESL_DIR, runDirAbsPath);
+		}
+		updateSaveStatusFile(runDirAbsPath + Constant.SAVE_FILE + Constant.TXT_EXT, "Deleting the previous data.");
 		File generatedDir = new File(generatedDirAbsPath);
 		// deleting all directory and files under Generate directory.
-		if (generatedDir.listFiles() != null) {
-			for (File file : generatedDir.listFiles()) {
-				try {
-					FileDeleteStrategy.FORCE.delete(file);
-				} catch (IOException ex) {
-					throw new CalLiteGUIException(
-					        "We had a problem when deleteing the directory. The directory is " + generatedDirAbsPath, ex);
-				}
-			}
-		}
-
+		deleteDirAndFiles(generatedDir);
 		// create DSS, Lookup, and external folders
-
 		generatedDir = new File(generatedDirAbsPath, "DSS");
 		generatedDir.mkdirs();
 		generatedDir = new File(generatedDirAbsPath, "Lookup");
 		generatedDir.mkdirs();
 		generatedDir = new File(generatedDirAbsPath, "External");
 		generatedDir.mkdirs();
+
+		File runDir = new File(runDirAbsPath + "//DSS");
+		deleteDirAndFiles(runDir);
 
 		updateSaveStatusFile(runDirAbsPath + Constant.SAVE_FILE + Constant.TXT_EXT, "Copying DSS Files.");
 		// Copy DSS files to "Generated" folder
@@ -388,7 +390,7 @@ public final class ResultSvcImpl implements IResultSvc {
 		copyDSSFileToScenarioDirectory(runDirAbsPath, ((JTextField) swingEngine.find("hyd_DSS_SV")).getText());
 		copyDSSFileToScenarioDirectory(runDirAbsPath, ((JTextField) swingEngine.find("hyd_DSS_Init")).getText());
 
-		updateSaveStatusFile(runDirAbsPath + Constant.SAVE_FILE + Constant.TXT_EXT, "Saveing the table files.");
+		updateSaveStatusFile(runDirAbsPath + Constant.SAVE_FILE + Constant.TXT_EXT, "Saving the table files.");
 		writeToFileIndexAndOption(swingEngine, seedDataBOList, runDirAbsPath + "//Lookup//", generatedDirAbsPath + "//Lookup//");
 		writeUserDefinedTables(seedDataBOList, runDirAbsPath + "//Lookup//", generatedDirAbsPath + "//Lookup//");
 		// Copying demand tables.
@@ -709,6 +711,13 @@ public final class ResultSvcImpl implements IResultSvc {
 				activeData[m][n] = data[m][n];
 			}
 		}
+		for (int m = 0; m < data.length; m++) {
+			if ((boolean) activeData[m][1]) {
+				activeData[m][1] = 1;
+			} else {
+				activeData[m][1] = 0;
+			}
+		}
 		for (int m = 0; m < kmData.length; m++) {
 			kmData[m][0] = m + 1;
 		}
@@ -885,7 +894,7 @@ public final class ResultSvcImpl implements IResultSvc {
 				String index = seedDataBO.getIndex();
 				String option = seedDataBO.getOption();
 				String description = Constant.EXCLAMATION + seedDataBO.getDescription();
-				Component c = swingEngine.find(seedDataBO.getGuiId());
+				Component c = swingEngine.find(seedDataBO.getGuiId().trim());
 				if (c instanceof JTextField || c instanceof NumericTextField || c instanceof JTextArea) {
 					option = ((JTextComponent) c).getText();
 					fileDataStrBuf.append(
@@ -987,6 +996,7 @@ public final class ResultSvcImpl implements IResultSvc {
 			}
 		}
 		List<String> resultTabNames = Arrays.asList("Custom", "externalPDF", "Reporting", "schematics");
+		panelNames.removeAll(resultTabNames);
 		StringBuffer sb = new StringBuffer();
 		panelNames.forEach((panelName) -> {
 			setControlValues(swingEngine.find(panelName), sb);

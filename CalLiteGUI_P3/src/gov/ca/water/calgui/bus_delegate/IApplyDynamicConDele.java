@@ -2,7 +2,7 @@ package gov.ca.water.calgui.bus_delegate;
 
 /**
  * This interface will apply the dynamic behaver which is controlled by the files
- * 
+ *
  * @author mohan
  *
  */
@@ -27,4 +27,17 @@ public interface IApplyDynamicConDele {
 	 */
 	public void applyDynamicControl(String itemName, boolean isSelected, boolean isEnabled, boolean optionFromTheBox);
 
+	/**
+	 * This method will change the sv and init file names and update the table names for the "Operations" tab.
+	 *
+	 * @param optionFromTheBox
+	 *            This is the special field which is used for the popup box result in "run Settings" and "hydroclimate" tabs.
+	 */
+	public void changeSVInitFilesAndTableInOperations(boolean optionFromTheBox);
+
+	/**
+	 * This method will be executed only at the start or load of the cls file. It used DYMANIC_CONTROL_FOR_STARTUP_FILENAME file
+	 * items to apply the dymanic which are turned on.
+	 */
+	public void applyDynamicControlForListFromFile();
 }

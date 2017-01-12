@@ -1,8 +1,5 @@
 package gov.ca.water.calgui.bus_service.impl;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
@@ -11,6 +8,7 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
 
@@ -39,17 +37,26 @@ public final class MonitorSvcImpl implements IMonitorSvc {
 		String scenWSIDIIterationFile = Constant.RUN_DETAILS_DIR + scenarioName + Constant.RUN_DIR + "//wsidi_iteration.log";
 		String infoWSIDI = "";
 		String line = "";
-		if (Paths.get(scenWSIDIIterationFile).toFile().exists())
-			infoWSIDI = "(WSIDI " + lastLine(scenWSIDIIterationFile) + ") ";
-		else
-			infoWSIDI = "(WSIDI) ";
+		if (Paths.get(scenWSIDIIterationFile).toFile().exists()) {
+			String lastLineForI = lastLine(scenWSIDIIterationFile);
+			if (lastLineForI.equalsIgnoreCase("iteration 3/3")) {
+				try {
+					Thread.sleep(30000);
+				} catch (InterruptedException ex) {
+					LOG.error(ex);
+				}
+			}
+			infoWSIDI = "(wsidi " + lastLineForI + ") ";
+		} else {
+			infoWSIDI = "(wsidi) ";
+		}
 		FileTime fileTime = null;
 		try {
 			fileTime = Files.getLastModifiedTime(Paths.get(scenPROGRESSFile));
 		} catch (IOException e) {
 			// no need to handle because the file is not yet there.
 		}
-		if (Paths.get(scenPROGRESSFile).toFile().exists() && (System.currentTimeMillis() - fileTime.toMillis() < 300000)) {
+		if (Paths.get(scenPROGRESSFile).toFile().exists() && (System.currentTimeMillis() - fileTime.toMillis() < 30000)) {
 			line = lastLine(scenPROGRESSFile);
 			line = progressString(line);
 			return scenarioName + " " + infoWSIDI + " - " + line;
@@ -71,7 +78,7 @@ public final class MonitorSvcImpl implements IMonitorSvc {
 		FileTime fileTime = null;
 		try {
 			fileTime = Files.getLastModifiedTime(Paths.get(scenPROGRESSFile));
-		} catch (IOException e) {
+		} catch (IOException ex) {
 			// no need to handle because the file is not yet there.
 		}
 		if (Paths.get(scenPROGRESSFile).toFile().exists() && (System.currentTimeMillis() - fileTime.toMillis() < 300000)) {
@@ -145,15 +152,18 @@ public final class MonitorSvcImpl implements IMonitorSvc {
 	 */
 	public String lastLine(String fileName) {
 		String value = "";
-		File file = Paths.get(fileName).toFile();
-		try {
-			FileReader fileReader = new FileReader(file);
-			BufferedReader br = new BufferedReader(fileReader);
-			List<String> list = br.lines().collect(Collectors.toList());
+		try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
+			List<String> list = stream.collect(Collectors.toList());
 			value = list.get(list.size() - 1);
+		} catch (NoSuchFileException ex) {
+			value = "Loading log file....";
+			LOG.debug(value);
+		} catch (AccessDeniedException ex) {
+			value = "The Access is denied for this file " + fileName;
+			LOG.debug(value);
 		} catch (IOException ex) {
-			LOG.info(ex.getMessage());
 			value = ex.getMessage();
+			LOG.debug(ex.getMessage());
 		}
 		return value;
 	}
@@ -167,18 +177,18 @@ public final class MonitorSvcImpl implements IMonitorSvc {
 	 */
 	public String lastButOneLine(String fileName) {
 		String value = "";
-		try {
-			List<String> list = Files.lines(Paths.get(fileName)).collect(Collectors.toList());
+		try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
+			List<String> list = stream.collect(Collectors.toList());
 			value = list.get(list.size() - 2);
 		} catch (NoSuchFileException ex) {
-			value = "The file is missing. The file path is " + fileName;
-			LOG.info(value);
+			value = "Loading log file....";
+			LOG.debug(value);
 		} catch (AccessDeniedException ex) {
 			value = "The Access is denied for this file " + fileName;
-			LOG.info(value);
+			LOG.debug(value);
 		} catch (IOException ex) {
-			LOG.info(ex.getMessage());
 			value = ex.getMessage();
+			LOG.debug(ex.getMessage());
 		}
 		return value;
 	}

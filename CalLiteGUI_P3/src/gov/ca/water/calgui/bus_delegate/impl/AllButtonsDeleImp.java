@@ -8,16 +8,17 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -29,6 +30,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -43,6 +45,7 @@ import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModle;
 import gov.ca.water.calgui.bo.GuiLinks4BO;
 import gov.ca.water.calgui.bus_delegate.IAllButtonsDele;
+import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
 import gov.ca.water.calgui.bus_service.IBatchRunSvc;
 import gov.ca.water.calgui.bus_service.IDynamicControlSvc;
 import gov.ca.water.calgui.bus_service.IResultSvc;
@@ -68,6 +71,9 @@ import hec.heclib.dss.HecDss;
 
 /**
  * This class is to handle all the button actions in the ui.
+ *
+ * @author mohan
+ *
  */
 public class AllButtonsDeleImp implements IAllButtonsDele {
 	private static final Logger LOG = Logger.getLogger(AllButtonsDeleImp.class.getName());
@@ -81,6 +87,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 	private IAuditSvc auditSvc = AuditSvcImpl.getAuditSvcImplInstance();
 	private IFileSystemSvc fileSystemSvc = new FileSystemSvcImpl();
 	private IDynamicControlSvc dynamicControlSvc = DynamicControlSvcImpl.getDynamicControlSvcImplInstance();
+	private IApplyDynamicConDele applyDynamicConDele = new ApplyDynamicConDeleImp();
 
 	public AllButtonsDeleImp() {
 		try {
@@ -92,13 +99,17 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 
 	@Override
 	public void saveAsButton() {
-		JFileChooser saver = new JFileChooser(Constant.SCENARIOS_DIR);
-		saver.setMultiSelectionEnabled(false);
-		int val = saver.showSaveDialog(swingEngine.find(Constant.MAIN_FRAME_NAME));
+		JFileChooser fileChooser = new JFileChooser(Constant.SCENARIOS_DIR);
+		fileChooser.setMultiSelectionEnabled(false);
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("CLS FILES (.cls)", "cls");
+		fileChooser.setFileFilter(filter);
+		int val = fileChooser.showSaveDialog(swingEngine.find(Constant.MAIN_FRAME_NAME));
 		if (val == JFileChooser.APPROVE_OPTION) {
-			String newScrName = saver.getSelectedFile().getName();
-			newScrName = FilenameUtils.removeExtension(newScrName);
-			if (!saveCurrentStateToFile(newScrName, true)) {
+			String newScrName = fileChooser.getSelectedFile().getName();
+			if (newScrName.toLowerCase().endsWith(".cls")) {
+				newScrName = FilenameUtils.removeExtension(newScrName);
+			}
+			if (!save(newScrName)) {
 				errorHandlingSvc.businessErrorHandler("Unable to save the file.", "Unable to save the file.",
 				        (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME));
 			}
@@ -108,7 +119,41 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 	@Override
 	public boolean saveCurrentStateToFile() {
 		String clsFileName = ((JTextField) swingEngine.find("run_txfScen")).getText();
-		return saveCurrentStateToFile(FilenameUtils.removeExtension(clsFileName), false);
+		return saveCurrentStateToFile(FilenameUtils.removeExtension(clsFileName));
+	}
+
+	@Override
+	public boolean saveCurrentStateToFile(String clsFileName) {
+		if (decisionToSaveOrNot(clsFileName))
+			return save(clsFileName);
+		return true;
+	}
+
+	/**
+	 * TODO
+	 *
+	 * @return
+	 */
+	private boolean decisionToSaveOrNot(String clsFileName) {
+		if (auditSvc.hasValues()) {
+			return true;
+		}
+		if (!Files.isExecutable(Paths.get(Constant.RUN_DETAILS_DIR + clsFileName))) {
+			return true;
+		}
+		ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+		Object[] options = { "Yes", "No" };
+		JOptionPane optionPane = new JOptionPane("The file is up-to-date. Do you want to save again?", JOptionPane.QUESTION_MESSAGE,
+		        JOptionPane.OK_CANCEL_OPTION, null, options, options[0]);
+		JDialog dialog = optionPane.createDialog("CalLite");
+		dialog.setIconImage(icon.getImage());
+		dialog.setResizable(false);
+		dialog.setVisible(true);
+		switch (optionPane.getValue().toString()) {
+		case "Yes":
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -125,21 +170,12 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 	}
 
 	/**
-	 * This method is used to save.
+	 * TODO
 	 *
 	 * @param clsFileName
-	 *            Just the name of the cls file whithout the extension.
-	 * @param isSaveAs
-	 *            Will be true when we want to save the file as save as.
-	 * @return It will return true if the save is successful.
+	 * @return
 	 */
-	private boolean saveCurrentStateToFile(String clsFileName, boolean isSaveAs) {
-		if (!isSaveAs) {
-			if (!auditSvc.hasValues()) {
-				JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "The File is up-to-date");
-				return true;
-			}
-		}
+	private boolean save(String clsFileName) {
 		ProgressFrame progressFrame = ProgressFrame.getProgressFrameInstance();
 		String tempName = Constant.SCENARIOS_DIR + clsFileName + Constant.CLS_EXT;
 		boolean proceed = true;
@@ -192,20 +228,6 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 	}
 
 	@Override
-	public void runSingleBatch() {
-		String clsFileName = ((JTextField) swingEngine.find("run_txfScen")).getText();
-		clsFileName = FilenameUtils.removeExtension(clsFileName);
-		ProgressFrame progressFrame = ProgressFrame.getProgressFrameInstance();
-		boolean isSaved = saveCurrentStateToFile(clsFileName, false);
-		if (isSaved) {
-			List<String> fileName = Arrays.asList(clsFileName);
-			progressFrame.addScenarioNamesAndAction(clsFileName, Constant.BATCH_RUN);
-			progressFrame.makeDialogVisible();
-			batchRunSvc.doBatch(fileName, swingEngine, false);
-		}
-	}
-
-	@Override
 	public void runMultipleBatch() {
 		ProgressFrame progressFrame = ProgressFrame.getProgressFrameInstance();
 		JFileChooser fileChooser = new JFileChooser(Constant.SCENARIOS_DIR);
@@ -217,6 +239,29 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 			List<String> fileNames = new ArrayList<String>();
 			for (File file : fileChooser.getSelectedFiles()) {
 				fileNames.add(FilenameUtils.removeExtension(file.getName()));
+			}
+			List<String> filesWhichAreNotSaved = fileNames.stream()
+			        .filter(fileName -> !Files.isExecutable(Paths.get(Constant.RUN_DETAILS_DIR + fileName)))
+			        .collect(Collectors.toList());
+			if (filesWhichAreNotSaved != null && !filesWhichAreNotSaved.isEmpty()) {
+				ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+				Object[] options = { "Yes", "No" };
+				JOptionPane optionPane = new JOptionPane(
+				        "We can't run the batch for following files because they are not saved.\n"
+				                + filesWhichAreNotSaved.stream().map(name -> name + ".cls").collect(Collectors.joining("\n"))
+				                + "\n Do you still want to run the rest?",
+				        JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, options, options[0]);
+				JDialog dialog = optionPane.createDialog("CalLite");
+				dialog.setIconImage(icon.getImage());
+				dialog.setResizable(false);
+				dialog.setVisible(true);
+				switch (optionPane.getValue().toString()) {
+				case "Yes":
+					fileNames.removeAll(filesWhichAreNotSaved);
+					break;
+				case "No":
+					return;
+				}
 			}
 			progressFrame.addScenarioNamesAndAction(fileNames, Constant.BATCH_RUN);
 			progressFrame.makeDialogVisible();
@@ -273,6 +318,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 			StringSelection stringSelection = new StringSelection(buffer.toString());
 			Clipboard systemClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 			systemClipboard.setContents(stringSelection, stringSelection);
+			auditSvc.addAudit("copy", "", table.getName());
 		} catch (ArrayIndexOutOfBoundsException ex) {
 			errorHandlingSvc.validationeErrorHandler("Please select the field from where you want to copy the data",
 			        "Please select the field from where you want to copy the data",
@@ -332,6 +378,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 					table.repaint();
 				}
 			}
+			auditSvc.addAudit("past", "", table.getName());
 		} catch (ArrayIndexOutOfBoundsException ex) {
 			errorHandlingSvc.validationeErrorHandler("Please select the field from where you want to paste the data",
 			        "Please select the field from where you want to paste the data",
@@ -341,20 +388,6 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 			errorHandlingSvc.businessErrorHandler((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), new CalLiteGUIException(ex));
 		}
 
-	}
-
-	@Override
-	public void runSingleBatchForWsiDi() {
-		String clsFileName = ((JTextField) swingEngine.find("run_txfScen")).getText();
-		clsFileName = FilenameUtils.removeExtension(clsFileName);
-		ProgressFrame progressFrame = ProgressFrame.getProgressFrameInstance();
-		boolean isSaved = saveCurrentStateToFile(clsFileName, false);
-		if (isSaved) {
-			List<String> fileName = Arrays.asList(clsFileName);
-			progressFrame.addScenarioNamesAndAction(clsFileName, Constant.BATCH_RUN_WSIDI);
-			progressFrame.makeDialogVisible();
-			batchRunSvc.doBatch(fileName, swingEngine, true);
-		}
 	}
 
 	@Override
@@ -402,6 +435,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 			        + Paths.get(cvpFullFileName).getFileName().toString() + "]" + Constant.UNEDITED_FORLABEL);
 			JComponent component = (JComponent) swingEngine.find("op_btn1");
 			editButtonOnOperations(component);
+			auditSvc.addAudit("wsi_di tables", "", swpFullFileName);
 		} catch (CalLiteGUIException ex) {
 			errorHandlingSvc.businessErrorHandler((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), ex);
 		}
@@ -437,6 +471,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 			jLabel.setText(labelNames.get(1) + Constant.UNEDITED_FORLABEL);
 			JComponent component = (JComponent) swingEngine.find("op_btn1");
 			editButtonOnOperations(component);
+			auditSvc.addAudit("wsi_di tables", "", swpFullFileName);
 		} catch (NullPointerException ex) {
 			errorHandlingSvc.businessErrorHandler((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME),
 			        new CalLiteGUIException("The data for geting the table name is wrong", ex));
@@ -478,9 +513,35 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 				}
 				showTableOnOperations(dataTableModle);
 			}
+			auditSvc.addAudit("wsi_di tables", "", fileName);
 		} catch (CalLiteGUIException ex) {
 			errorHandlingSvc.businessErrorHandler((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), ex);
 		}
+	}
+
+	@Override
+	public void decisionSVInitFilesAndTableInOperations() {
+		applyDynamicConDele.changeSVInitFilesAndTableInOperations(true);
+		String text = "";
+		if (((JRadioButton) swingEngine.find("hyd_rdb2005")).isSelected()) {
+			text = ((JRadioButton) swingEngine.find("hyd_rdb2005")).getText();
+		}
+		if (((JRadioButton) swingEngine.find("hyd_rdb2030")).isSelected()) {
+			text = ((JRadioButton) swingEngine.find("hyd_rdb2030")).getText();
+		}
+		if (!text.equals("")) {
+			int option = JOptionPane.showConfirmDialog(null,
+			        "You have selected " + text + ".\n  Do you wish to use the WSI/DI curves for this configuration?");
+			if (option == JOptionPane.YES_OPTION) {
+				return;
+			}
+		}
+		/*
+		 * The following code we are setting the SWP and CVP file names as user defined because the table values we are getting it
+		 * from the cls file so we consider them as user defined.
+		 */
+		tableSvc.setWsidiForSWPFullFileName(Constant.USER_DEFINED);
+		tableSvc.setWsidiForCVPFullFileName(Constant.USER_DEFINED);
 	}
 
 	/**
@@ -584,31 +645,31 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 		ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
 		JOptionPane optionPane;
 		if (auditSvc.hasValues()) {
-			Object[] options = { "save & exit", "exit without save", "cancel" };
-			optionPane = new JOptionPane("The state is not saved do you want to save it.", JOptionPane.QUESTION_MESSAGE,
-			        JOptionPane.YES_NO_CANCEL_OPTION, null, options, options[0]);
+			Object[] options = { "Save", "Don't Save", "Cancel" };
+			optionPane = new JOptionPane("Current scenario not saved. Would you like to save before exiting?",
+			        JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION, null, options, options[0]);
 			JDialog dialog = optionPane.createDialog("CalLite");
 			dialog.setIconImage(icon.getImage());
 			dialog.setResizable(false);
 			dialog.setVisible(true);
-			if (optionPane.getValue().toString().equals("save & exit")) {
+			if (optionPane.getValue().toString().equals("Save")) {
 				boolean isSaved = saveCurrentStateToFile();
 				if (!isSaved)
-					errorHandlingSvc.businessErrorHandler("We encounter a problem when saveing the file.", "",
+					errorHandlingSvc.businessErrorHandler("We encounter a problem when saving the file.", "",
 					        (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME));
 				System.exit(0);
-			} else if (optionPane.getValue().toString().equals("exit without save")) {
+			} else if (optionPane.getValue().toString().equals("Don't Save")) {
 				System.exit(0);
 			}
 		} else {
-			Object[] options = { "ok", "cancel" };
-			optionPane = new JOptionPane("Are you sure that you want to exit.", JOptionPane.QUESTION_MESSAGE,
+			Object[] options = { "Ok", "Cancel" };
+			optionPane = new JOptionPane("Are you sure you want to exit ?", JOptionPane.QUESTION_MESSAGE,
 			        JOptionPane.OK_CANCEL_OPTION, null, options, options[0]);
 			JDialog dialog = optionPane.createDialog("CalLite");
 			dialog.setIconImage(icon.getImage());
 			dialog.setResizable(false);
 			dialog.setVisible(true);
-			if (optionPane.getValue().toString().equals("ok")) {
+			if (optionPane.getValue().toString().equals("Ok")) {
 				System.exit(0);
 			}
 		}

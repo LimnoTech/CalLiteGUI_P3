@@ -14,7 +14,9 @@ import org.swixml.SwingEngine;
 
 import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
 import gov.ca.water.calgui.bus_delegate.impl.ApplyDynamicConDeleImp;
+import gov.ca.water.calgui.bus_service.IDynamicControlSvc;
 import gov.ca.water.calgui.bus_service.IResultSvc;
+import gov.ca.water.calgui.bus_service.impl.DynamicControlSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.ResultSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.tech_service.IAuditSvc;
@@ -31,6 +33,7 @@ public class GlobalItemListener implements ItemListener {
 	private static final Logger LOG = Logger.getLogger(GlobalItemListener.class.getName());
 	private IApplyDynamicConDele applyDynamicConDele = new ApplyDynamicConDeleImp();
 	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
+	private IDynamicControlSvc dynamicControlSvc = DynamicControlSvcImpl.getDynamicControlSvcImplInstance();
 	private IAuditSvc auditSvc = AuditSvcImpl.getAuditSvcImplInstance();
 	private IResultSvc resultSvc = ResultSvcImpl.getResultSvcImplInstance();
 	private String oldValue = "";
@@ -43,6 +46,8 @@ public class GlobalItemListener implements ItemListener {
 	@Override
 	public void itemStateChanged(ItemEvent ie) {
 		if (resultSvc.isCLSFileLoading())
+			return;
+		if (dynamicControlSvc.isPreventRoeTrigger())
 			return;
 		String itemName = ((JComponent) ie.getItem()).getName();
 		LOG.debug(itemName);

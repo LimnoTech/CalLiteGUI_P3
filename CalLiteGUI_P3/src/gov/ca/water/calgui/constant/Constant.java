@@ -20,13 +20,14 @@ public class Constant {
 	// File Names.
 	public static final String GUI_XML_FILENAME = System.getProperty("user.dir") + "//Config//GUI.xml";
 	public static final String GUI_LINKS2_FILENAME = System.getProperty("user.dir") + "//Config//GUI_Links2" + CSV_EXT;
-	public static final String GUI_LINKS3_FILENAME = System.getProperty("user.dir") + "//Config//GUI_Links3"
-			+ TABLE_EXT;
+	public static final String GUI_LINKS3_FILENAME = System.getProperty("user.dir") + "//Config//GUI_Links3" + TABLE_EXT;
 	public static final String GUI_LINKS4_FILENAME = System.getProperty("user.dir") + "//Config//GUI_Links4" + CSV_EXT;
+	public static final String DYNAMIC_CONTROL_FOR_STARTUP_FILENAME = System.getProperty("user.dir")
+	        + "//Config//DynamicControlForStartUp" + CSV_EXT;
 	public static final String TRIGGER_ENABLE_DISABLE_FILENAME = System.getProperty("user.dir")
-			+ "//Config//TriggerForDynamicDisplay" + CSV_EXT;
+	        + "//Config//TriggerForDynamicDisplay" + CSV_EXT;
 	public static final String TRIGGER_CHECK_UNCHECK_FILENAME = System.getProperty("user.dir")
-			+ "//Config//TriggerForDynamicSelection" + CSV_EXT;
+	        + "//Config//TriggerForDynamicSelection" + CSV_EXT;
 	public static final String IMAGE_PATH = System.getProperty("user.dir") + "//images//CalLiteIcon.png";
 	public static final String SAVE_FILE = "//save";
 	public static final String BATCH_RUN = "Batch Run";

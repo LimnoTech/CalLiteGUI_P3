@@ -7,7 +7,7 @@ import org.swixml.SwingEngine;
 
 /**
  * This is the interface for parsing the GUI.xml into SwingEngine.
- * 
+ *
  * @author mohan
  */
 public interface IXMLParsingSvc {
@@ -41,4 +41,11 @@ public interface IXMLParsingSvc {
 	 * @return
 	 */
 	public List<String> getNewUserDefinedTables();
+
+	/**
+	 * This is used to get all the Text field ids.
+	 *
+	 * @return
+	 */
+	public List<String> getjTextFieldIds();
 }

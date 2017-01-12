@@ -18,6 +18,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
+import org.apache.commons.io.FilenameUtils;
 import org.swixml.SwingEngine;
 
 import gov.ca.water.calgui.bo.DataTableModle;
@@ -82,7 +83,7 @@ public class ScenarioDeleImp implements IScenarioDele {
 		// This will take the file names and get the Map of each cls file.
 		for (String fileName : fileNames) {
 			clsMapList.add(buildMapOfCLSFile(fileName, swingEngine, seedDataSvc.getTableIdMap()));
-			columnNames[index] = fileName;
+			columnNames[index] = FilenameUtils.removeExtension(fileName);
 			index++;
 		}
 		/*

@@ -186,7 +186,7 @@ public class DSSGrabber1 {
 			// Handle names passed from WRIMS GUI
 			String parts[] = locationName.split("/");
 			title = locationName;
-			primaryDSSName = parts[2] + "/" + parts[3];
+			primaryDSSName = parts[2] + "/" + parts[3] + "/" + parts[6];
 			secondaryDSSName = "";
 			yLabel = "";
 			sLabel = "";

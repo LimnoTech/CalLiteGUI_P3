@@ -286,14 +286,18 @@ public final class TableSvcImpl implements ITableSvc {
 			} else {
 				dtm = getTable(dataTableName, TableSvcImpl::handleTableFileWithColumnNumber);
 			}
-			if (seedDataBOObj.getD1485().equalsIgnoreCase(Constant.N_A)) {
-				tempMapForDataTable.put(dataTableName + Constant.DASH + Constant.D1485, dtm);
-			}
+			boolean flag = true;
 			if (seedDataBOObj.getD1641().equalsIgnoreCase(Constant.N_A)) {
+				flag = false;
 				tempMapForDataTable.put(dataTableName + Constant.DASH + Constant.D1641, dtm);
 			}
+			if (seedDataBOObj.getD1485().equalsIgnoreCase(Constant.N_A)) {
+				if (flag)
+					tempMapForDataTable.put(dataTableName + Constant.DASH + Constant.D1485, dtm);
+			}
 			if (seedDataBOObj.getUserDefined().equalsIgnoreCase(Constant.N_A)) {
-				tempMapForDataTable.put(dataTableName, dtm);
+				if (flag)
+					tempMapForDataTable.put(dataTableName, dtm);
 			}
 		} else {
 			String name = dataTableName.replace("gui_", "");

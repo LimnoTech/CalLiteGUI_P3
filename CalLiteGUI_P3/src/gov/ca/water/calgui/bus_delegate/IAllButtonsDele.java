@@ -6,7 +6,7 @@ import javax.swing.JTable;
 
 /**
  * This interface is to handle all the button actions in the ui.
- * 
+ *
  * @author mohan
  *
  */
@@ -16,6 +16,15 @@ public interface IAllButtonsDele {
 	 * This is to handle the "Save" button on the "Run Settings" tab.
 	 */
 	public boolean saveCurrentStateToFile();
+
+	/**
+	 * This method is used to save.
+	 *
+	 * @param clsFileName
+	 *            Just the name of the cls file whithout the extension.
+	 * @return It will return true if the save is successful.
+	 */
+	public boolean saveCurrentStateToFile(String clsFileName);
 
 	/**
 	 * This is to handle the "Save As" button on the "Run Settings" tab.
@@ -28,11 +37,6 @@ public interface IAllButtonsDele {
 	 * @return It will return true if the save is successful.
 	 */
 	public boolean saveForViewScen();
-
-	/**
-	 * This method is used to run single batch program.
-	 */
-	public void runSingleBatch();
 
 	/**
 	 * This method is used to run multiple batch program at once.
@@ -83,11 +87,6 @@ public interface IAllButtonsDele {
 	public void pasteTableValues(JTable table);
 
 	/**
-	 *
-	 */
-	public void runSingleBatchForWsiDi();
-
-	/**
 	 * This method will handle the read button on the "operations" tab.
 	 */
 	public void readButtonInOperations();
@@ -115,4 +114,9 @@ public interface IAllButtonsDele {
 	 * @return will return true if the files selected by the user and the passed in extension match.
 	 */
 	public boolean verifyTheSelectedFiles(JFileChooser fileChooser, String extension);
+
+	/**
+	 * TODO
+	 */
+	public void decisionSVInitFilesAndTableInOperations();
 }

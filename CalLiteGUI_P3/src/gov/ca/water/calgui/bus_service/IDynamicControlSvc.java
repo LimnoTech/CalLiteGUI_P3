@@ -9,7 +9,7 @@ import gov.ca.water.calgui.bo.TriggerBO;
 
 /**
  * This is the interface for applying the dynamic controls.
- * 
+ *
  * @author mohan
  */
 public interface IDynamicControlSvc {
@@ -61,4 +61,11 @@ public interface IDynamicControlSvc {
 	 * @return
 	 */
 	public List<String> getLabelAndGuiLinks4BOBasedOnTheRadioButtons(SwingEngine swingEngine);
+
+	/**
+	 * This is used to prevent the ItemListener.
+	 *
+	 * @return
+	 */
+	public boolean isPreventRoeTrigger();
 }

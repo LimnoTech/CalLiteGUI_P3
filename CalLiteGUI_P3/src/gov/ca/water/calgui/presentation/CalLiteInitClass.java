@@ -162,7 +162,7 @@ public class CalLiteInitClass {
 		swingEngine.setActionListener(swingEngine.find("Reporting"), new ReportAction(swingEngine));
 		swingEngine.setActionListener(swingEngine.find("externalPDF"), new ReportAction(swingEngine));
 		setCheckBoxorRadioButtonItemListener(swingEngine.find("Reporting"), new ReportListener(swingEngine));
-		setCheckBoxorMouseListener(swingEngine.find("Reporting"), resultUtils);
+		// setCheckBoxorMouseListener(swingEngine.find("Reporting"), );
 		// Setup for Reporting page
 		// Set up additional UI elements
 		JList lstScenarios = (JList) swingEngine.find("SelectedList");
