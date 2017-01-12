@@ -166,6 +166,7 @@ goal savefloodSJR {floodSJRdv=floodSJR}
 } */
 
 ! Estimate Export Capability for use in determining delivery target limitations
+! Taraky 20161005, DWR. Add south of Delta Storage expansion for SWP
 define SWPDelCapEst {
     case January {
         condition month == JAN
@@ -177,7 +178,7 @@ define SWPDelCapEst {
             + max(estSWPExp_Jun, wetSJR*estSWPExp_WetJun)*cfs_taf(5)
             + estSWPExp_JulAug*cfs_taf(6)
             + estSWPExp_JulAug*cfs_taf(7)
-            + S_SLSWP(-1) - buffSWP_JanAug }
+            + S_SLSWP(-1) + S_SLSWPE(-1) - buffSWP_JanAug }
     case February {
         condition month == FEB
         value estSWPExp_Feb*cfs_taf
@@ -187,7 +188,7 @@ define SWPDelCapEst {
             + max(estSWPExp_Jun, wetSJR*estSWPExp_WetJun)*cfs_taf(4)
             + estSWPExp_JulAug*cfs_taf(5)
             + estSWPExp_JulAug*cfs_taf(6)
-            + S_SLSWP(-1) - buffSWP_FebAug }
+            + S_SLSWP(-1) + S_SLSWPE(-1) - buffSWP_FebAug }
     case March {
         condition month == MAR
         value estSWPExp_Mar*cfs_taf
@@ -196,7 +197,7 @@ define SWPDelCapEst {
             + max(estSWPExp_Jun, wetSJR*estSWPExp_WetJun)*cfs_taf(3)
             + estSWPExp_JulAug*cfs_taf(4)
             + estSWPExp_JulAug*cfs_taf(5)
-            + S_SLSWP(-1) - buffSWP_MarAug }
+            + S_SLSWP(-1) + S_SLSWPE(-1) - buffSWP_MarAug }
     case April {
         condition month == APR
         value max(estSWPExp_Apr, wetSJR*estSWPExp_WetApr, floodSJR*estSWPExp_FldApr)*cfs_taf
@@ -204,14 +205,14 @@ define SWPDelCapEst {
             + max(estSWPExp_Jun, wetSJR*estSWPExp_WetJun)*cfs_taf(2)
             + estSWPExp_JulAug*cfs_taf(3)
             + estSWPExp_JulAug*cfs_taf(4)
-            + S_SLSWP(-1) - buffSWP_AprAug }
+            + S_SLSWP(-1) + S_SLSWPE(-1) - buffSWP_AprAug }
     case May {
         condition month == MAY
         value max(estSWPExp_May, wetSJR*estSWPExp_WetMay, floodSJR*estSWPExp_FldMay)*cfs_taf
             + max(estSWPExp_Jun, wetSJR*estSWPExp_WetJun)*cfs_taf(1)
             + estSWPExp_JulAug*cfs_taf(2)
             + estSWPExp_JulAug*cfs_taf(3)
-            + S_SLSWP(-1) - buffSWP_MayAug }
+            + S_SLSWP(-1) + S_SLSWPE(-1) - buffSWP_MayAug }
     case otherwise {
         condition always
         value 0.0 }
@@ -243,10 +244,11 @@ define deltar_expmax {
 define deltar_drymin {
   case MarApr {
     condition month >= MAR .and. month <= APR
-    value     S_SLSWP(-1)/factSWP_AprAug - 55.}
+    ! Taraky 20161005, DWR. Add south of Delta Storage expansion for SWP
+    value     (S_SLSWP(-1) + S_SLSWPE(-1))/factSWP_AprAug - 55.}
   case May {
     condition month == MAY
-    value     S_SLSWP(-1)/factSWP_MayAug - 55.}
+    value     (S_SLSWP(-1) + S_SLSWPE(-1))/factSWP_MayAug - 55.}
   case otherwise {
     condition  always
     value      0}

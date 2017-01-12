@@ -201,6 +201,58 @@ goal area_SLCVP {A_SLCVP=A_SLCVPlast+1000*coefev_SLCVP*S_SLCVP-1000*coefev_SLCVP
 goal evap_SLCVP {E_SLCVP*cfs_af=(evap_S_SLCVP/24)*A_SLCVPlast+(evap_S_SLCVP/24)*A_SLCVP}
 define relcap_SLCVP {select discharge from res_info given storage=1000*S_SLCVP(-1) use linear where res_num=11}
 goal maxrelease_SLCVP {C_SLCVP<relcap_SLCVP}
+! Taraky 20160928, DWR. Start  implementation - South of Delta Storage Expansion for CVP 
+define EnlargeSLSize {
+    case EnlargSL1000 {
+    	condition  EnlargSLOn  == 1. .AND. EnlargSLSize == 1.
+		value 1000.}
+    case EnlargSLUserDefine {
+    	condition  EnlargSLOn  == 1. .AND. EnlargSLSize == 2.
+		value SLE_UserDef}    
+    case other  {
+    	condition   always
+		value 0.}
+}
+define S_SLCVPElevel1 {value 0}
+define S_SLCVPE_1 {std kind 'STORAGE-ZONE' units 'TAF'}
+goal S_SLCVPEZone1 {S_SLCVPE_1 < S_SLCVPElevel1}
+define S_SLCVPElevel2 {value 0}
+define S_SLCVPE_2 {std kind 'STORAGE-ZONE' units 'TAF'}
+goal S_SLCVPEZone2 {S_SLCVPE_2 < S_SLCVPElevel2-S_SLCVPElevel1}
+!define S_SLCVPElevel3 {value 5000}
+define S_SLCVPElevel3 {
+    case enlarge_on {
+    	condition EnlargSLOn == 1. 
+		value EnlargeSLSize*.45}
+    case other  {
+    	condition   always
+		value 0.}
+}
+define S_SLCVPE_3 {std kind 'STORAGE-ZONE' units 'TAF'}
+goal S_SLCVPEZone3 {S_SLCVPE_3 < S_SLCVPElevel3 - S_SLCVPElevel2}
+!define S_SLCVPElevel4 {value 5000}
+define S_SLCVPElevel4 {value EnlargeSLSize}
+define S_SLCVPE_4 {std kind 'STORAGE-ZONE' units 'TAF'}
+goal S_SLCVPEZone4 {S_SLCVPE_4 < S_SLCVPElevel4 - S_SLCVPElevel3}
+!define S_SLCVPElevel5 {value 5000}
+define S_SLCVPElevel5 {value EnlargeSLSize}
+define S_SLCVPE_5 {std kind 'STORAGE-ZONE' units 'TAF'}
+goal S_SLCVPEZone5 {S_SLCVPE_5 < S_SLCVPelevel5 - S_SLCVPelevel4}
+define S_SLCVPE {std kind 'STORAGE' units 'TAF'} ! Additional CVP SAN LUIS RESERVOIR
+goal storage_SLCVPE {S_SLCVPE = S_SLCVPE_1+S_SLCVPE_2+S_SLCVPE_3+S_SLCVPE_4+S_SLCVPE_5}
+define F_SLCVPE {std kind 'FLOW-SPILL-NON-RECOV' units 'CFS'}
+define E_SLCVPE {lower unbounded kind 'EVAPORATION' units 'CFS'}
+define A_SLCVPE {std kind 'SURFACE-AREA' units 'ACRES'}
+define evap_S_SLCVPE {timeseries kind 'EVAPORATION-RATE' units 'IN'}
+define A_SLCVPElast {select area from res_info given storage=1000*S_SLCVPE(-1) use linear where res_num=1100}
+define A_SLCVPEforward {select area from res_info given storage=1050*S_SLCVPE(-1) use linear where res_num=1100}
+define A_SLCVPEback {select area from res_info given storage=950*S_SLCVPE(-1) use linear where res_num=1100}
+define coefev_SLCVPE {value (A_SLCVPEforward - A_SLCVPEback)/(100*max(0.01,S_SLCVPE(-1)))}
+goal area_SLCVPE {A_SLCVPE = A_SLCVPElast+1000*coefev_SLCVPE*S_SLCVPE-1000*coefev_SLCVPE*S_SLCVPE(-1)}
+goal evap_SLCVPE {E_SLCVPE*cfs_af=(evap_S_SLCVPE/24)*A_SLCVPElast+(evap_S_SLCVPE/24)*A_SLCVPE}
+define relcap_SLCVPE {select discharge from res_info given storage=1000*S_SLCVPE(-1) use linear where res_num=1100}
+goal maxrelease_SLCVPE {D_SLCVPE<relcap_SLCVPE}
+! End  implementation - South of Delta Storage Expansion for CVP 
 define S_SLSWPlevel1 {value 55.}
 define S_SLSWP_1 {std kind 'STORAGE-ZONE' units 'TAF'}
 goal S_SLSWPZone1 {S_SLSWP_1 < S_SLSWPlevel1}
@@ -226,3 +278,45 @@ goal area_SLSWP {A_SLSWP=A_SLSWPlast+1000*coefev_SLSWP*S_SLSWP-1000*coefev_SLSWP
 goal evap_SLSWP {E_SLSWP*cfs_af=(evap_S_SLSWP/24)*A_SLSWPlast+(evap_S_SLSWP/24)*A_SLSWP}
 define relcap_SLSWP {select discharge from res_info given storage=1000*S_SLSWP(-1) use linear where res_num=12}
 goal maxrelease_SLSWP {C_SLSWP<relcap_SLSWP}
+! Taraky 20160928, DWR. start  implementation - South of Delta Storage expansion for SWP
+define S_SLSWPElevel1 {value 0}
+define S_SLSWPE_1 {std kind 'STORAGE-ZONE' units 'TAF'}
+goal S_SLSWPEZone1 {S_SLSWPE_1 < S_SLSWPElevel1}
+define S_SLSWPElevel2 {value 0}
+define S_SLSWPE_2 {std kind 'STORAGE-ZONE' units 'TAF'}
+goal S_SLSWPEZone2 {S_SLSWPE_2 < S_SLSWPElevel2-S_SLSWPElevel1}
+!define S_SLSWPElevel3 {value 5000}
+define S_SLSWPElevel3 {
+    case nochange {
+    	condition EnlargSLOn == 1. 
+	value EnlargeSLSize*.55}
+    case other  {
+    	condition   always
+	value 0.}
+}
+define S_SLSWPE_3 {std kind 'STORAGE-ZONE' units 'TAF'}
+goal S_SLSWPEZone3 {S_SLSWPE_3 < S_SLSWPElevel3 - S_SLSWPElevel2}
+!define S_SLSWPElevel4 {value 5000}
+define S_SLSWPElevel4 {value EnlargeSLSize}
+define S_SLSWPE_4 {std kind 'STORAGE-ZONE' units 'TAF'}
+goal S_SLSWPEZone4 {S_SLSWPE_4 < S_SLSWPElevel4 - S_SLSWPElevel3}
+!define S_SLSWPElevel5 {value 5000}
+define S_SLSWPElevel5 {value EnlargeSLSize}
+define S_SLSWPE_5 {std kind 'STORAGE-ZONE' units 'TAF'}
+goal S_SLSWPEZone5 {S_SLSWPE_5 < S_SLSWPElevel5 - S_SLSWPElevel4}
+define S_SLSWPE {std kind 'STORAGE' units 'TAF'} ! Additional CVP SAN LUIS RESERVOIR
+goal storage_SLSWPE {S_SLSWPE = S_SLSWPE_1+S_SLSWPE_2+S_SLSWPE_3+S_SLSWPE_4+S_SLSWPE_5}
+define F_SLSWPE {std kind 'FLOW-SPILL-NON-RECOV' units 'CFS'}
+define E_SLSWPE {lower unbounded kind 'EVAPORATION' units 'CFS'}
+define A_SLSWPE {std kind 'SURFACE-AREA' units 'ACRES'}
+define evap_S_SLSWPE {timeseries kind 'EVAPORATION-RATE' units 'IN'}
+define A_SLSWPElast {select area from res_info given storage=1000*S_SLSWPE(-1) use linear where res_num=1200}
+define A_SLSWPEforward {select area from res_info given storage=1050*S_SLSWPE(-1) use linear where res_num=1200}
+define A_SLSWPEback {select area from res_info given storage=950*S_SLSWPE(-1) use linear where res_num=1200}
+define coefev_SLSWPE {value (A_SLSWPEforward - A_SLSWPEback)/(100*max(0.01,S_SLSWPE(-1)))}
+goal area_SLSWPE {A_SLSWPE=A_SLSWPElast+1000*coefev_SLSWPE*S_SLSWPE-1000*coefev_SLSWPE*S_SLSWPE(-1)}
+goal evap_SLSWPE {E_SLSWPE*cfs_af=(evap_S_SLSWPE/24)*A_SLSWPElast+(evap_S_SLSWPE/24)*A_SLSWPE}
+define relcap_SLSWPE {select discharge from res_info given storage=1000*S_SLSWPE(-1) use linear where res_num=1200}
+!define relcap_SLSWPE {value 999999 }
+goal maxrelease_SLSWPE {D_SLSWPE<relcap_SLSWPE}
+! end implementation - south of delta storage expansion for swp

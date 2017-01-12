@@ -13,3 +13,7 @@ define S_FolsmLevel5 {timeseries kind 'storage-level' units 'taf'}
 define S_SLCVP {std kind 'STORAGE' units 'TAF'}
 define S_SLSWP {std kind 'STORAGE' units 'TAF'}
 
+! Taraky 20161005, DWR. Add definition for South of Delta Storage expansion for CVP and SWP
+define S_SLCVPE {std kind 'STORAGE' units 'TAF'}
+define S_SLSWPE {std kind 'STORAGE' units 'TAF'}
+

@@ -105,7 +105,8 @@ define S_SLSWP_effective {case JantoMar {
 define WSI_SWP {
     case JantoMay {
         condition  month >= JAN .and. month <= MAY
-        value     S_Orovl(-1) + S_SLSWP_effective + frcst_fea  }     ! Previous month storage plus forecast inflow
+        ! Taraky 20161005, DWR. Add South of Delta Storage expansion for SWP
+        value     S_Orovl(-1) + S_SLSWP_effective + S_SLSWPE(-1) + frcst_fea  }     ! Previous month storage plus forecast inflow
     case other {
         condition   always
         value       0.0 }

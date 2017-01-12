@@ -112,7 +112,8 @@ define init_CVPRuleDrainTar {value 90.}  ! EOFeb CVP SL low point target
 define Export_Index_CVP_adj {
     case MartoMay {
             condition month >= MAR .and. month <= MAY
-            value Export_Index_CVP_south + S_SLCVP(PrevFEB) - init_CVPRuleDrainTar + jbypass_del + AnnualBanksCVP}
+            ! Taraky 20161004, DWR. Add South of Delta Storage expansion for CVP
+            value Export_Index_CVP_south + S_SLCVP(PrevFEB) + S_SLCVPE(PrevFEB) - init_CVPRuleDrainTar + jbypass_del + AnnualBanksCVP}
 
     case JuntoFeb {
            condition  always
