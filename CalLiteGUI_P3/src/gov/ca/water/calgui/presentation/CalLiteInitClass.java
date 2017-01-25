@@ -133,6 +133,10 @@ public class CalLiteInitClass {
 		}
 
 		resizeComponents((Container) swingEngine.find("desktop"), "large");
+		((JPanel) swingEngine.find("RunSettings")).setBackground(Color.LIGHT_GRAY); // new
+																					// Color(128,
+																					// 128,
+																					// 128));
 
 		// Set up month spinners
 		JSpinner spnSM1 = (JSpinner) swingEngine.find("spnRunStartMonth");
@@ -310,12 +314,13 @@ public class CalLiteInitClass {
 			if (c instanceof JLabel) {
 				Font font = ((JLabel) c).getFont();
 				Font newFont = font.deriveFont((float) 14.0);
-				JLabel l = (JLabel) c;
-				System.out.println(l.getText() + " " + font.getSize() + " " + font.getFamily());
 				((JLabel) c).setFont(newFont);
 
 			} else if (c instanceof JComponent)
 				((JComponent) c).putClientProperty("JComponent.sizeVariant", size);
+
+			if (c instanceof JTextField)
+				((JTextField) c).setPreferredSize(new Dimension(170, 40));
 
 			if (c instanceof Container)
 				resizeComponents((Container) c, size);
