@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -20,6 +21,7 @@ import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -37,6 +39,8 @@ import javax.swing.SpinnerListModel;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
@@ -113,6 +117,23 @@ public class CalLiteInitClass {
 		IResultSvc resultSvc = ResultSvcImpl.getResultSvcImplInstance();
 		IAllButtonsDele allButtonsDele = new AllButtonsDeleImp();
 		// Set up the GUI
+
+		// Switch to Nimbus look and feel, then force all components to "large"
+
+		try {
+			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+				if ("Nimbus".equals(info.getName())) {
+					UIManager.setLookAndFeel(info.getClassName());
+					break;
+				}
+			}
+		} catch (Exception e) {
+			// If Nimbus is not available, you can set the GUI to another look
+			// and feel.
+		}
+
+		resizeComponents((Container) swingEngine.find("desktop"), "large");
+
 		// Set up month spinners
 		JSpinner spnSM1 = (JSpinner) swingEngine.find("spnRunStartMonth");
 		setMonthModelAndIndex(spnSM1, 9);
@@ -272,6 +293,33 @@ public class CalLiteInitClass {
 		 * default or from the cls file.
 		 * allButtonsDele.decisionSVInitFilesAndTableInOperations();
 		 */
+	}
+
+	/**
+	 * Iterates through all components inside of a component and sets the
+	 * (Nimbus) size property to Large
+	 * 
+	 * @param parent
+	 *            Starting point for iteration
+	 * @param size
+	 *            Nimbus sizeVariant value ("large","regular","medium","small")
+	 */
+	private void resizeComponents(Container parent, String size) {
+		for (Component c : parent.getComponents()) {
+
+			if (c instanceof JLabel) {
+				Font font = ((JLabel) c).getFont();
+				Font newFont = font.deriveFont((float) 14.0);
+				JLabel l = (JLabel) c;
+				System.out.println(l.getText() + " " + font.getSize() + " " + font.getFamily());
+				((JLabel) c).setFont(newFont);
+
+			} else if (c instanceof JComponent)
+				((JComponent) c).putClientProperty("JComponent.sizeVariant", size);
+
+			if (c instanceof Container)
+				resizeComponents((Container) c, size);
+		}
 	}
 
 	/**
