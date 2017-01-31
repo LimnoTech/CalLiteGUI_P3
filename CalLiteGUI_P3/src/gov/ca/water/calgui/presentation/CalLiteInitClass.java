@@ -133,10 +133,7 @@ public class CalLiteInitClass {
 		}
 
 		resizeComponents((Container) swingEngine.find("desktop"), "large");
-		((JPanel) swingEngine.find("RunSettings")).setBackground(Color.LIGHT_GRAY); // new
-																					// Color(128,
-																					// 128,
-																					// 128));
+		((JPanel) swingEngine.find("RunSettings")).setBackground(new Color(192, 192, 196));
 
 		// Set up month spinners
 		JSpinner spnSM1 = (JSpinner) swingEngine.find("spnRunStartMonth");
