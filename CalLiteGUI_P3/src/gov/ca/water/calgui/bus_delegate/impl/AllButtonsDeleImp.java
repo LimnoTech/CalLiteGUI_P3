@@ -42,7 +42,7 @@ import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
 
 import gov.ca.water.calgui.bo.CalLiteGUIException;
-import gov.ca.water.calgui.bo.DataTableModle;
+import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.GuiLinks4BO;
 import gov.ca.water.calgui.bus_delegate.IAllButtonsDele;
 import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
@@ -417,14 +417,14 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 
 		try {
 			// for CVP table
-			DataTableModle cvpDtm = tableSvc.getWsiDiTable(cvpFullFileName);
+			DataTableModel cvpDtm = tableSvc.getWsiDiTable(cvpFullFileName);
 			cvpDtm.setTableName(Constant.USER_DEFINED);
 			cvpDtm.setCellEditable(true);
 			cvpDtm.setSwingEngine(swingEngine);
 			resultSvc.addUserDefinedTable(Constant.CVP_START_FILENAME, cvpDtm);
 			tableSvc.setWsidiForCVPFullFileName(Constant.USER_DEFINED);
 			// for SWP table
-			DataTableModle swpDtm = tableSvc.getWsiDiTable(swpFullFileName);
+			DataTableModel swpDtm = tableSvc.getWsiDiTable(swpFullFileName);
 			swpDtm.setTableName(Constant.USER_DEFINED);
 			swpDtm.setCellEditable(true);
 			swpDtm.setSwingEngine(swingEngine);
@@ -454,14 +454,14 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 			String cvpFullFileName = Constant.MODEL_W2_WRESL_LOOKUP_DIR + "\\WSIDI\\" + Constant.CVP_START_FILENAME
 			        + Constant.UNDER_SCORE + guiLinks4BO.getLookup() + Constant.TABLE_EXT;
 			// To Load CVP table
-			DataTableModle cvpDtm = tableSvc.getWsiDiTable(cvpFullFileName);
+			DataTableModel cvpDtm = tableSvc.getWsiDiTable(cvpFullFileName);
 			cvpDtm.setTableName(FilenameUtils.removeExtension(Paths.get(cvpFullFileName).getFileName().toString()));
 			cvpDtm.setCellEditable(true);
 			cvpDtm.setSwingEngine(swingEngine);
 			resultSvc.addUserDefinedTable(Constant.CVP_START_FILENAME, cvpDtm);
 			tableSvc.setWsidiForCVPFullFileName(cvpFullFileName);
 			// To Load SWP table
-			DataTableModle swpDtm = tableSvc.getWsiDiTable(swpFullFileName);
+			DataTableModel swpDtm = tableSvc.getWsiDiTable(swpFullFileName);
 			swpDtm.setTableName(FilenameUtils.removeExtension(Paths.get(swpFullFileName).getFileName().toString()));
 			swpDtm.setCellEditable(true);
 			swpDtm.setSwingEngine(swingEngine);
@@ -484,7 +484,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 	public void editButtonOnOperations(JComponent component) {
 		String tableName = "";
 		String fileName = "";
-		DataTableModle dataTableModle = null;
+		DataTableModel dataTableModel = null;
 		try {
 			if (component instanceof JButton) {
 				JButton btn = (JButton) component;
@@ -502,16 +502,16 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 					fileName = tableSvc.getWsidiForCVPFullFileName();
 				}
 				if (fileName.equalsIgnoreCase(Constant.USER_DEFINED)) {
-					dataTableModle = resultSvc.getUserDefinedTable(tableName);
-					dataTableModle.setSwingEngine(swingEngine);
+					dataTableModel = resultSvc.getUserDefinedTable(tableName);
+					dataTableModel.setSwingEngine(swingEngine);
 				} else {
-					dataTableModle = tableSvc.getWsiDiTable(fileName);
-					dataTableModle.setTableName(FilenameUtils.removeExtension(Paths.get(fileName).getFileName().toString()));
-					dataTableModle.setCellEditable(true);
-					dataTableModle.setSwingEngine(swingEngine);
-					resultSvc.addUserDefinedTable(tableName, dataTableModle);
+					dataTableModel = tableSvc.getWsiDiTable(fileName);
+					dataTableModel.setTableName(FilenameUtils.removeExtension(Paths.get(fileName).getFileName().toString()));
+					dataTableModel.setCellEditable(true);
+					dataTableModel.setSwingEngine(swingEngine);
+					resultSvc.addUserDefinedTable(tableName, dataTableModel);
 				}
-				showTableOnOperations(dataTableModle);
+				showTableOnOperations(dataTableModel);
 			}
 			auditSvc.addAudit("wsi_di tables", "", fileName);
 		} catch (CalLiteGUIException ex) {
@@ -562,13 +562,13 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 	/**
 	 * This method is used to show the table in the "Operations" tab.
 	 *
-	 * @param dataTableModle
+	 * @param dataTableModel
 	 *            Table data to show.
 	 */
-	private void showTableOnOperations(DataTableModle dataTableModle) {
+	private void showTableOnOperations(DataTableModel dataTableModel) {
 		JComponent component = (JComponent) swingEngine.find("scrOpValues");
 		JTable table = (JTable) swingEngine.find("tblOpValues");
-		table.setModel(dataTableModle);
+		table.setModel(dataTableModel);
 		component.setVisible(true);
 		component.setEnabled(true);
 		table.setVisible(true);

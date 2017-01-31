@@ -27,7 +27,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
 
-import gov.ca.water.calgui.bo.DataTableModle;
+import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bus_delegate.IAllButtonsDele;
 import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
 import gov.ca.water.calgui.bus_delegate.IScenarioDele;
@@ -176,7 +176,7 @@ public class GlobalActionListener implements ActionListener {
 		applyDynamicConDele.changeSVInitFilesAndTableInOperations(true);
 		String[] c1 = new String[0];
 		Object[][] data = new Object[0][0];
-		((JTable) this.swingEngine.find("tblOpValues")).setModel(new DataTableModle("", c1, data, false));
+		((JTable) this.swingEngine.find("tblOpValues")).setModel(new DataTableModel("", c1, data, false));
 		applyDynamicConDele.applyDynamicControlForListFromFile();
 		allButtonsDele.decisionSVInitFilesAndTableInOperations();
 		auditSvc.clearAudit();
@@ -188,7 +188,7 @@ public class GlobalActionListener implements ActionListener {
 	public void loadViewScen() {
 		boolean pro = this.allButtonsDele.saveForViewScen();
 		if (pro) {
-			List<DataTableModle> dtmList = scenarioDele.getScenarioTableData(null);
+			List<DataTableModel> dtmList = scenarioDele.getScenarioTableData(null);
 			ScenarioFrame scenarioFrame = new ScenarioFrame(dtmList);
 			scenarioFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			scenarioFrame.setVisible(true);

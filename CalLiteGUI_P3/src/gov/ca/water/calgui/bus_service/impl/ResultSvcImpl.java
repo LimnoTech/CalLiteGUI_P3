@@ -42,7 +42,7 @@ import org.swixml.SwingEngine;
 import org.swixml.XScrollPane;
 
 import gov.ca.water.calgui.bo.CalLiteGUIException;
-import gov.ca.water.calgui.bo.DataTableModle;
+import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.SeedDataBO;
 import gov.ca.water.calgui.bus_service.IResultSvc;
 import gov.ca.water.calgui.constant.Constant;
@@ -64,7 +64,7 @@ public final class ResultSvcImpl implements IResultSvc {
 	private IFileSystemSvc fileSystemSvc = new FileSystemSvcImpl();
 	private static IResultSvc resultSvc;
 	private int[] regulationoptions = new int[100];
-	private Map<String, DataTableModle> userDefinedTableMap = new HashMap<String, DataTableModle>();
+	private Map<String, DataTableModel> userDefinedTableMap = new HashMap<String, DataTableModel>();
 	private boolean isCLSFlag = true;
 
 	/**
@@ -167,13 +167,13 @@ public final class ResultSvcImpl implements IResultSvc {
 	}
 
 	@Override
-	public DataTableModle getUserDefinedTable(String tableName) {
+	public DataTableModel getUserDefinedTable(String tableName) {
 		return this.userDefinedTableMap.get(tableName);
 	}
 
 	@Override
-	public void addUserDefinedTable(String tableName, DataTableModle dataTableModle) {
-		this.userDefinedTableMap.put(tableName, dataTableModle);
+	public void addUserDefinedTable(String tableName, DataTableModel dataTableModel) {
+		this.userDefinedTableMap.put(tableName, dataTableModel);
 	}
 
 	@Override
@@ -208,7 +208,7 @@ public final class ResultSvcImpl implements IResultSvc {
 					}
 					String[] columnNames = getColumnNamesFromTableId(tableName);
 					userDefinedTableMap.put(tableName,
-					        new DataTableModle(tableName, columnNames, getTableDataFromCLSFile(strArr[1]), true));
+					        new DataTableModel(tableName, columnNames, getTableDataFromCLSFile(strArr[1]), true));
 				} else if (tableId.equals("5")) {
 					tableName = tableMap.get(tableId).getDataTables();
 					String[] tableNames = tableName.split(Constant.PIPELINE_DELIMITER);
@@ -224,13 +224,13 @@ public final class ResultSvcImpl implements IResultSvc {
 					String[] newColumnNames = { columnNames1[0], columnNames1[1], columnNames2[1], columnNames2[2], columnNames2[3],
 					        columnNames2[4], columnNames2[5] };
 					userDefinedTableMap.put(tableName,
-					        new DataTableModle(tableName, newColumnNames, getTableDataFromCLSFile(strArr[1]), true));
+					        new DataTableModel(tableName, newColumnNames, getTableDataFromCLSFile(strArr[1]), true));
 				} else {
 					tableName = tableMap.get(strArr[0]).getDataTables();
 					String[] columnNames = new String[2];
 					columnNames[0] = "wsi";
 					columnNames[1] = "di";
-					DataTableModle dtm = new DataTableModle(tableName, columnNames, getTableDataFromCLSFile(strArr[1]), true);
+					DataTableModel dtm = new DataTableModel(tableName, columnNames, getTableDataFromCLSFile(strArr[1]), true);
 					// We are setting the table name to user defined because it is coming from the cls file.
 					dtm.setTableName(Constant.USER_DEFINED);
 					userDefinedTableMap.put(tableName, dtm);
@@ -676,7 +676,7 @@ public final class ResultSvcImpl implements IResultSvc {
 	        throws CalLiteGUIException {
 		for (String tableName : this.userDefinedTableMap.keySet()) {
 			Map<String, StringBuffer> fileDataMap = new HashMap<String, StringBuffer>();
-			DataTableModle table = this.userDefinedTableMap.get(tableName);
+			DataTableModel table = this.userDefinedTableMap.get(tableName);
 			if (tableName.equals("gui_xchanneldays") || tableName.equals("gui_EIRatio") || tableName.equals("perc_UnimparedFlow")
 			        || tableName.equals(Constant.SWP_START_FILENAME) || tableName.equals(Constant.CVP_START_FILENAME)) {
 				fileDataMap.put(tableName, saveTableLikeTable(tableName, table));
@@ -701,7 +701,7 @@ public final class ResultSvcImpl implements IResultSvc {
 	 * @return
 	 * @throws CalLiteGUIException
 	 */
-	private Map<String, StringBuffer> saveX2Table(DataTableModle table) throws CalLiteGUIException {
+	private Map<String, StringBuffer> saveX2Table(DataTableModel table) throws CalLiteGUIException {
 		Map<String, StringBuffer> map = new HashMap<String, StringBuffer>();
 		Object[][] data = table.getData();
 		Object[][] activeData = new Object[12][2];
@@ -726,8 +726,8 @@ public final class ResultSvcImpl implements IResultSvc {
 				kmData[m][n - 1] = data[m][n];
 			}
 		}
-		map.put("gui_x2active", saveTableLikeTable("gui_x2active", new DataTableModle("", null, activeData, false)));
-		map.put("gui_x2km", saveTableWithColumnNumber("gui_x2km", new DataTableModle("", null, kmData, false)));
+		map.put("gui_x2active", saveTableLikeTable("gui_x2active", new DataTableModel("", null, activeData, false)));
+		map.put("gui_x2km", saveTableWithColumnNumber("gui_x2km", new DataTableModel("", null, kmData, false)));
 		return map;
 	}
 
@@ -739,7 +739,7 @@ public final class ResultSvcImpl implements IResultSvc {
 	 * @return
 	 * @throws CalLiteGUIException
 	 */
-	private StringBuffer saveEisjrTable(String tableName, DataTableModle table) throws CalLiteGUIException {
+	private StringBuffer saveEisjrTable(String tableName, DataTableModel table) throws CalLiteGUIException {
 		StringBuffer fileDataStrBuff = getTheCommentFromFile(tableName);
 		Object[][] tableData = table.getData();
 		int offset = 1;
@@ -780,7 +780,7 @@ public final class ResultSvcImpl implements IResultSvc {
 	 * @return
 	 * @throws CalLiteGUIException
 	 */
-	private StringBuffer saveTableLikeTable(String tableName, DataTableModle table) throws CalLiteGUIException {
+	private StringBuffer saveTableLikeTable(String tableName, DataTableModel table) throws CalLiteGUIException {
 		StringBuffer fileDataStrBuff = getTheCommentFromFile(tableName);
 		Object[][] tableData = table.getData();
 		for (int i = 0; i < tableData.length; i++) {
@@ -810,7 +810,7 @@ public final class ResultSvcImpl implements IResultSvc {
 	 * @return
 	 * @throws CalLiteGUIException
 	 */
-	private StringBuffer saveTableWithColumnNumber(String tableName, DataTableModle table) throws CalLiteGUIException {
+	private StringBuffer saveTableWithColumnNumber(String tableName, DataTableModel table) throws CalLiteGUIException {
 		StringBuffer fileDataStrBuff = getTheCommentFromFile(tableName);
 		Object[][] tableData = table.getData();
 		for (int colNum = 1; colNum < tableData[0].length; colNum++) {
@@ -1028,15 +1028,15 @@ public final class ResultSvcImpl implements IResultSvc {
 	}
 
 	/**
-	 * This method will convert the {@link DataTableModle} object into the table string which is stored in the cls file.
+	 * This method will convert the {@link DataTableModel} object into the table string which is stored in the cls file.
 	 *
 	 * @param tableId
-	 * @param dataTableModle
+	 * @param dataTableModel
 	 * @return
 	 */
-	private String convertTableToString(String tableId, DataTableModle dataTableModle) {
+	private String convertTableToString(String tableId, DataTableModel dataTableModel) {
 		String tableStr = tableId + Constant.PIPELINE;
-		Object[][] data = dataTableModle.getData();
+		Object[][] data = dataTableModel.getData();
 		for (int i = 0; i < data.length; i++) {
 			tableStr += String.valueOf(data[i][0]);
 			for (int j = 1; j < data[0].length; j++) {

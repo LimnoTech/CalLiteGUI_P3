@@ -51,7 +51,7 @@ import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
 import calsim.gui.GuiUtils;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
-import gov.ca.water.calgui.bo.DataTableModle;
+import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bus_delegate.IAllButtonsDele;
 import gov.ca.water.calgui.bus_delegate.IVerifyControlsDele;
 import gov.ca.water.calgui.bus_delegate.impl.AllButtonsDeleImp;
@@ -285,7 +285,7 @@ public class CalLiteInitClass {
 	 */
 	public void checkForNewUserDefinedTables(List<String> newUserDefinedIds, IResultSvc resultSvc, ITableSvc tableSvc,
 			SwingEngine swingEngine) {
-		DataTableModle dtm = null;
+		DataTableModel dtm = null;
 		for (String newUserDefinedId : newUserDefinedIds) {
 			if (resultSvc.hasUserDefinedTable(newUserDefinedId)) {
 				dtm = resultSvc.getUserDefinedTable(newUserDefinedId);

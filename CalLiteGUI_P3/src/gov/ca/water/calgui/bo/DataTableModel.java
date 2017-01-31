@@ -13,8 +13,8 @@ import gov.ca.water.calgui.tech_service.impl.AuditSvcImpl;
 /**
  * This class is used to hold the tables for the application.
  */
-public class DataTableModle extends AbstractTableModel {
-	private static final Logger LOG = Logger.getLogger(DataTableModle.class.getName());
+public class DataTableModel extends AbstractTableModel {
+	private static final Logger LOG = Logger.getLogger(DataTableModel.class.getName());
 	private IAuditSvc auditSvc = AuditSvcImpl.getAuditSvcImplInstance();
 	private String tableName = "";
 	private String[] columnNames;
@@ -22,7 +22,7 @@ public class DataTableModle extends AbstractTableModel {
 	private boolean isCellEditable;
 	private SwingEngine swingEngine;
 
-	public DataTableModle(String tableName, String[] columnName, Object[][] data, boolean isCellEditable) {
+	public DataTableModel(String tableName, String[] columnName, Object[][] data, boolean isCellEditable) {
 		this.tableName = tableName;
 		this.columnNames = columnName;
 		this.data = data;
@@ -42,7 +42,7 @@ public class DataTableModle extends AbstractTableModel {
 				data1[i][j] = this.data[i][j];
 			}
 		}
-		return new DataTableModle(tableName, colNames, data1, this.isCellEditable);
+		return new DataTableModel(tableName, colNames, data1, this.isCellEditable);
 	}
 
 	public String[] getColumnNames() {
