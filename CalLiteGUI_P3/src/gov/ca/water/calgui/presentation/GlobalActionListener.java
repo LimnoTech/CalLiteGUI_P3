@@ -74,12 +74,7 @@ public class GlobalActionListener implements ActionListener {
 		JTable table = null;
 		switch (ae.getActionCommand()) {
 		case "AC_SaveScen":
-			if (FilenameUtils.removeExtension(((JTextField) swingEngine.find("run_txfScen")).getText()).toUpperCase()
-					.equals("DEFAULT")) {
-				JOptionPane.showMessageDialog(null,
-						"The CalLite GUI is not allowed to overwrite DEFAULT.CLS. Please use Save As to save to a different scenario file.");
-			} else
-				this.allButtonsDele.saveCurrentStateToFile();
+			this.allButtonsDele.saveCurrentStateToFile();
 			break;
 		case "AC_SaveScenAs":
 			this.allButtonsDele.saveAsButton();
