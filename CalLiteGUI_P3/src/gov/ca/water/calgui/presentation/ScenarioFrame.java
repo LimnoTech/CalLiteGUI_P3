@@ -18,7 +18,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import gov.ca.water.calgui.bo.DataTableModle;
+import gov.ca.water.calgui.bo.DataTableModel;
 
 /**
  * This frame is used for the "View Scenario Settings" button in the "Run Settings" tab.
@@ -31,7 +31,7 @@ public class ScenarioFrame extends JFrame implements ItemListener {
 	private JPanel comparisonPanel = new JPanel();
 	private JPanel differencePanel = new JPanel();
 
-	public ScenarioFrame(List<DataTableModle> dtmList) {
+	public ScenarioFrame(List<DataTableModel> dtmList) {
 		JRadioButton baseBut = new JRadioButton("Base");
 		JRadioButton comparisonBut = new JRadioButton("Comparison");
 		JRadioButton differenceBut = new JRadioButton("Difference");
@@ -90,12 +90,12 @@ public class ScenarioFrame extends JFrame implements ItemListener {
 	}
 
 	/**
-	 * This method will build the {@link JPanel} with the {@link DataTableModle} passed in.
+	 * This method will build the {@link JPanel} with the {@link DataTableModel} passed in.
 	 *
-	 * @param dataTableModle
+	 * @param dataTableModel
 	 * @return
 	 */
-	private JPanel buildJpanel(DataTableModle dataTableModle) {
+	private JPanel buildJpanel(DataTableModel dataTableModel) {
 		JPanel jPanel = new JPanel();
 		jPanel.setPreferredSize(new Dimension(600, 700));
 		jPanel.setMinimumSize(new Dimension(600, 700));
@@ -108,7 +108,7 @@ public class ScenarioFrame extends JFrame implements ItemListener {
 		c.weightx = 1;
 		c.weighty = 1;
 		JTable scentable = new JTable();
-		scentable.setModel(dataTableModle);
+		scentable.setModel(dataTableModel);
 		JScrollPane scrollingtable = new JScrollPane(scentable);
 		scrollingtable.setPreferredSize(new Dimension(480, 600));
 		jPanel.add(scrollingtable, c);

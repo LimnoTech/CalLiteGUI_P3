@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
 
 import gov.ca.water.calgui.bo.CalLiteGUIException;
-import gov.ca.water.calgui.bo.DataTableModle;
+import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.GuiLinks4BO;
 import gov.ca.water.calgui.bo.SeedDataBO;
 import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
@@ -319,7 +319,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 
 	private boolean loadTableToUI(JTable table, String tableName, int regValue, SeedDataBO seedDataBO, String optionName)
 	        throws CalLiteGUIException, CloneNotSupportedException {
-		DataTableModle dtm = getTable(tableName, regValue, seedDataBO, optionName);
+		DataTableModel dtm = getTable(tableName, regValue, seedDataBO, optionName);
 		if (dtm == null) {
 			changeTheLabel("The table is not available. The table name is " + tableName);
 			return true;
@@ -340,7 +340,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	/**
 	 * This method is only for the "Regulations" tab tables.
 	 *
-	 * This will return the {@link DataTableModle} object based on the values passed in.
+	 * This will return the {@link DataTableModel} object based on the values passed in.
 	 *
 	 * @param tableName
 	 *            just the table name
@@ -354,47 +354,47 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	 * @throws CalLiteGUIException
 	 * @throws CloneNotSupportedException
 	 */
-	private DataTableModle getTable(String tableName, int regValue, SeedDataBO seedDataBO, String optionName)
+	private DataTableModel getTable(String tableName, int regValue, SeedDataBO seedDataBO, String optionName)
 	        throws CalLiteGUIException, CloneNotSupportedException {
-		DataTableModle dataTableModle = null;
+		DataTableModel dataTableModel = null;
 		switch (optionName) {
 		case Constant.D1641:
-			dataTableModle = desideTableNameAndGetTable(tableName, seedDataBO, Constant.D1641);
+			dataTableModel = desideTableNameAndGetTable(tableName, seedDataBO, Constant.D1641);
 			if (resultSvc.hasUserDefinedTable(tableName))
 				resultSvc.removeUserDefinedTable(tableName);
 			break;
 		case Constant.D1485:
-			dataTableModle = desideTableNameAndGetTable(tableName, seedDataBO, Constant.D1485);
+			dataTableModel = desideTableNameAndGetTable(tableName, seedDataBO, Constant.D1485);
 			if (resultSvc.hasUserDefinedTable(tableName))
 				resultSvc.removeUserDefinedTable(tableName);
 			break;
 		case Constant.USER_DEFINED:
 			if (resultSvc.hasUserDefinedTable(tableName)) {
-				dataTableModle = resultSvc.getUserDefinedTable(tableName);
+				dataTableModel = resultSvc.getUserDefinedTable(tableName);
 			} else {
 				if (regValue == 1) {
-					dataTableModle = desideTableNameAndGetTable(tableName, seedDataBO, Constant.D1641);
+					dataTableModel = desideTableNameAndGetTable(tableName, seedDataBO, Constant.D1641);
 				} else if (regValue == 3) {
-					dataTableModle = desideTableNameAndGetTable(tableName, seedDataBO, Constant.D1485);
+					dataTableModel = desideTableNameAndGetTable(tableName, seedDataBO, Constant.D1485);
 				} else if (regValue == 2) {
-					dataTableModle = desideTableNameAndGetTable(tableName, seedDataBO, Constant.USER_DEFINED);
+					dataTableModel = desideTableNameAndGetTable(tableName, seedDataBO, Constant.USER_DEFINED);
 				}
-				if (dataTableModle != null) {
-					dataTableModle = (DataTableModle) dataTableModle.clone();
-					dataTableModle.setCellEditable(true);
-					resultSvc.addUserDefinedTable(tableName, dataTableModle);
+				if (dataTableModel != null) {
+					dataTableModel = (DataTableModel) dataTableModel.clone();
+					dataTableModel.setCellEditable(true);
+					resultSvc.addUserDefinedTable(tableName, dataTableModel);
 				}
 			}
 			break;
 		}
-		return dataTableModle;
+		return dataTableModel;
 	}
 
 	/**
 	 * This method is only for the "Regulations" tab tables.
 	 *
 	 * This method will deside the table name based on the seedDataBo and type passed in and will return the object of
-	 * {@link DataTableModle}.
+	 * {@link DataTableModel}.
 	 *
 	 * @param tableName
 	 *            just the table name
@@ -405,9 +405,9 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	 * @return
 	 * @throws CalLiteGUIException
 	 */
-	private DataTableModle desideTableNameAndGetTable(String tableName, SeedDataBO seedDataBO, String type)
+	private DataTableModel desideTableNameAndGetTable(String tableName, SeedDataBO seedDataBO, String type)
 	        throws CalLiteGUIException {
-		DataTableModle dtm = null;
+		DataTableModel dtm = null;
 		switch (type) {
 		case Constant.D1485:
 			if (seedDataBO.getD1485().equalsIgnoreCase(Constant.N_A)) {

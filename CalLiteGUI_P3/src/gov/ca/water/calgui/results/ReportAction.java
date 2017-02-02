@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
 
 import calsim.gui.DtsTreeModel;
-import gov.ca.water.calgui.bo.DataTableModle;
+import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bus_delegate.IAllButtonsDele;
 import gov.ca.water.calgui.bus_delegate.IScenarioDele;
 import gov.ca.water.calgui.bus_delegate.impl.AllButtonsDeleImp;
@@ -250,7 +250,7 @@ public class ReportAction implements ActionListener {
 				fileNames.add(name.substring(0, name.length() - 7) + Constant.CLS_EXT);
 			}
 			if (pro) {
-				List<DataTableModle> dtmList = scenarioDele.getScenarioTableData(fileNames);
+				List<DataTableModel> dtmList = scenarioDele.getScenarioTableData(fileNames);
 				ScenarioFrame scenarioFrame = new ScenarioFrame(dtmList);
 				scenarioFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				scenarioFrame.setVisible(true);

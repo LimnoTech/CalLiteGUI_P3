@@ -29,7 +29,7 @@ import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
 
 import gov.ca.water.calgui.bo.CalLiteGUIException;
-import gov.ca.water.calgui.bo.DataTableModle;
+import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bus_delegate.IAllButtonsDele;
 import gov.ca.water.calgui.bus_delegate.impl.AllButtonsDeleImp;
 import gov.ca.water.calgui.bus_service.IDynamicControlSvc;
@@ -286,11 +286,11 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 		String wsiDiCvpSwpPath = Paths.get(Constant.RUN_DETAILS_DIR + scenarioName + Constant.RUN_DIR + Constant.LOOKUP_DIR
 		        + Constant.CVP_START_FILENAME + Constant.TABLE_EXT).toString();
 		try {
-			DataTableModle swpDtm = tableSvc.getWsiDiTable(wsiDiSwpPath);
+			DataTableModel swpDtm = tableSvc.getWsiDiTable(wsiDiSwpPath);
 			swpDtm.setCellEditable(true);
 			swpDtm.setTableName(Constant.SWP_START_FILENAME);
 			swpDtm.setSwingEngine(swingEngine);
-			DataTableModle cvpDtm = tableSvc.getWsiDiTable(wsiDiCvpSwpPath);
+			DataTableModel cvpDtm = tableSvc.getWsiDiTable(wsiDiCvpSwpPath);
 			cvpDtm.setCellEditable(true);
 			cvpDtm.setTableName(Constant.CVP_START_FILENAME);
 			cvpDtm.setSwingEngine(swingEngine);

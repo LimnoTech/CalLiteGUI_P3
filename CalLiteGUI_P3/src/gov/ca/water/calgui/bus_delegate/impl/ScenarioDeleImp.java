@@ -21,7 +21,7 @@ import javax.swing.border.TitledBorder;
 import org.apache.commons.io.FilenameUtils;
 import org.swixml.SwingEngine;
 
-import gov.ca.water.calgui.bo.DataTableModle;
+import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.ScenarioDisplayBO;
 import gov.ca.water.calgui.bo.SeedDataBO;
 import gov.ca.water.calgui.bus_delegate.IScenarioDele;
@@ -47,17 +47,17 @@ public class ScenarioDeleImp implements IScenarioDele {
 	private ISeedDataSvc seedDataSvc = SeedDataSvcImpl.getSeedDataSvcImplInstance();
 
 	@Override
-	public List<DataTableModle> getScenarioTableData(List<String> fileNames) {
+	public List<DataTableModel> getScenarioTableData(List<String> fileNames) {
 		if (fileNames == null) {
 			fileNames = new ArrayList<String>();
 		}
 		String currentScenario = Constant.CURRENT_SCENARIO + Constant.CLS_EXT;
 		fileNames.add(0, currentScenario);
-		List<DataTableModle> dtmList = new ArrayList<DataTableModle>();
+		List<DataTableModel> dtmList = new ArrayList<DataTableModel>();
 		if (fileNames.size() > 1) {
-			DataTableModle comparisonDTM = buildScenarioTables(fileNames);
-			DataTableModle baseDTM = builsBaseScenarioTables(comparisonDTM);
-			DataTableModle differenceDTM = differenceScenarioTables(comparisonDTM);
+			DataTableModel comparisonDTM = buildScenarioTables(fileNames);
+			DataTableModel baseDTM = builsBaseScenarioTables(comparisonDTM);
+			DataTableModel differenceDTM = differenceScenarioTables(comparisonDTM);
 			dtmList.add(baseDTM);
 			dtmList.add(comparisonDTM);
 			dtmList.add(differenceDTM);
@@ -68,14 +68,14 @@ public class ScenarioDeleImp implements IScenarioDele {
 	}
 
 	/**
-	 * This method will build the Map's for all the files and then convert them into the {@link DataTableModle}.
+	 * This method will build the Map's for all the files and then convert them into the {@link DataTableModel}.
 	 *
 	 * @param fileNames
 	 *            - names of the cls file.
-	 * @return The Object of {@link DataTableModle} which has the comparison for all the files which are passed in from the @param
+	 * @return The Object of {@link DataTableModel} which has the comparison for all the files which are passed in from the @param
 	 *         fileName. If there is only one file name then it will give the base one.
 	 */
-	private DataTableModle buildScenarioTables(List<String> fileNames) {
+	private DataTableModel buildScenarioTables(List<String> fileNames) {
 		List<Map<String, String>> clsMapList = new ArrayList<Map<String, String>>();
 		String[] columnNames = new String[fileNames.size() + 1];
 		columnNames[0] = "Dashboard Options";
@@ -113,20 +113,20 @@ public class ScenarioDeleImp implements IScenarioDele {
 			tableData[index] = objects;
 			index++;
 		}
-		return new DataTableModle("", columnNames, tableData, false);
+		return new DataTableModel("", columnNames, tableData, false);
 	}
 
 	/**
 	 * This method will give the Object of the current Scenario.
 	 *
-	 * @param dataTableModle
+	 * @param dataTableModel
 	 *            - The whole comparison data Object.
 	 * @return will return the Object of the current Scenario.
 	 */
-	private DataTableModle builsBaseScenarioTables(DataTableModle dataTableModle) {
-		Object[][] oldData = dataTableModle.getData();
+	private DataTableModel builsBaseScenarioTables(DataTableModel dataTableModel) {
+		Object[][] oldData = dataTableModel.getData();
 		Object[][] newData = new Object[oldData.length][2];
-		String[] oldColName = dataTableModle.getColumnNames();
+		String[] oldColName = dataTableModel.getColumnNames();
 		String[] colName = new String[2];
 		colName[0] = oldColName[0];
 		colName[1] = oldColName[1];
@@ -135,18 +135,18 @@ public class ScenarioDeleImp implements IScenarioDele {
 				newData[i][j] = oldData[i][j];
 			}
 		}
-		return new DataTableModle("", colName, newData, false);
+		return new DataTableModel("", colName, newData, false);
 	}
 
 	/**
 	 * This will loop on the data and find the difference between the rows.
 	 *
-	 * @param dataTableModle
+	 * @param dataTableModel
 	 *            - The whole comparison data Object.
 	 * @return The Object has the rows which holds different values.
 	 */
-	private DataTableModle differenceScenarioTables(DataTableModle dataTableModle) {
-		Object[][] data = dataTableModle.getData();
+	private DataTableModel differenceScenarioTables(DataTableModel dataTableModel) {
+		Object[][] data = dataTableModel.getData();
 		Object[][] compData = new Object[data.length][data[0].length];
 		int index = 0;
 		for (int i = 0; i < data.length; i++) {
@@ -165,7 +165,7 @@ public class ScenarioDeleImp implements IScenarioDele {
 		}
 		Object[][] newData = new Object[index][data[0].length];
 		System.arraycopy(compData, 0, newData, 0, index);
-		return new DataTableModle("", dataTableModle.getColumnNames(), newData, false);
+		return new DataTableModel("", dataTableModel.getColumnNames(), newData, false);
 	}
 
 	/**
