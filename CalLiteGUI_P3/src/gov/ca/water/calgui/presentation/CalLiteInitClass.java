@@ -138,6 +138,8 @@ public class CalLiteInitClass {
 				allButtonsDele.windowClosing();
 			}
 		});
+
+		//
 		// Loading the default cls file.
 		resultSvc.applyClsFile(Constant.SCENARIOS_DIR + Constant.DEFAULT + Constant.CLS_EXT, swingEngine,
 				seedDataSvc.getTableIdMap());
@@ -264,6 +266,11 @@ public class CalLiteInitClass {
 		});
 
 		new ApplyDynamicConDeleImp().applyDynamicControlForListFromFile();
+
+		// reweightComponents((Container) swingEngine.find("runsettings"),
+		// null);
+		// reweightComponents((Container) swingEngine.find("Reporting"), null);
+
 		// Display the GUI
 		swingEngine.find(Constant.MAIN_FRAME_NAME).setVisible(true);
 
@@ -273,6 +280,37 @@ public class CalLiteInitClass {
 		 * allButtonsDele.decisionSVInitFilesAndTableInOperations();
 		 */
 	}
+
+	/**
+	 * Iterates through all components inside of a component and sets the
+	 * GridBagConstraints.weightx and weighty to 0.5
+	 * 
+	 * @param parent
+	 *            Starting point for iteration
+	 * 
+	 */
+
+	// private void reweightComponents(Container parent, GridBagLayout layout1)
+	// {
+	// for (Component c : parent.getComponents()) {
+	//
+	// if (c instanceof JPanel) {
+	// if (((JPanel) c).getLayout() instanceof GridBagLayout) {
+	// GridBagLayout layout2 = (GridBagLayout) ((JPanel) c).getLayout();
+	// reweightComponents((Container) c, layout2);
+	// }
+	// } else if (layout1 != null) {
+	// GridBagConstraints gbc = layout1.getConstraints(c);
+	// // gbc.weightx = 0.0;
+	// // gbc.weighty = 0.0;//
+	// gbc.ipadx = 150;
+	// gbc.ipady = 15;
+	// layout1.setConstraints(c, gbc);
+	// System.out.println(c.getName());
+	//
+	// }
+	// }
+	// }
 
 	/**
 	 * This method will check for the new tables which are defined in the
