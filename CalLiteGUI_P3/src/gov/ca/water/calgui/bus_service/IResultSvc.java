@@ -6,7 +6,7 @@ import java.util.Map;
 import org.swixml.SwingEngine;
 
 import gov.ca.water.calgui.bo.CalLiteGUIException;
-import gov.ca.water.calgui.bo.DataTableModle;
+import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.SeedDataBO;
 
 /**
@@ -73,9 +73,9 @@ public interface IResultSvc {
 	 * This will add the {@code tableName} as key and the {@code dataTableModle} as value to the user defined table map.
 	 *
 	 * @param tableName
-	 * @param dataTableModle
+	 * @param dataTableModel
 	 */
-	public void addUserDefinedTable(String tableName, DataTableModle dataTableModle);
+	public void addUserDefinedTable(String tableName, DataTableModel dataTableModel);
 
 	/**
 	 * Will return the user defined table for the given {@code tableName}. if the table is not there it will return null.
@@ -84,7 +84,7 @@ public interface IResultSvc {
 	 *            Just table name as per the gui_link2.table.
 	 * @return
 	 */
-	public DataTableModle getUserDefinedTable(String tableName);
+	public DataTableModel getUserDefinedTable(String tableName);
 
 	/**
 	 * This will tell whether the table name has the user defined table or not.

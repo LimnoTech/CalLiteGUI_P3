@@ -29,7 +29,7 @@ import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
 
 import gov.ca.water.calgui.bo.CalLiteGUIException;
-import gov.ca.water.calgui.bo.DataTableModle;
+import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bus_delegate.IAllButtonsDele;
 import gov.ca.water.calgui.bus_delegate.impl.AllButtonsDeleImp;
 import gov.ca.water.calgui.bus_service.IDynamicControlSvc;
@@ -55,6 +55,7 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 	private static final long serialVersionUID = -606008444073979623L;
 	private static ProgressFrame progressFrame;
 	private JList list;
+	Properties properties = new Properties();
 	private JScrollPane listScroller;
 	private Map<String, String> scenarioNamesAndAction;
 	private IMonitorSvc monitorSvc = new MonitorSvcImpl();
@@ -97,6 +98,7 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 							text = monitorSvc.batchRun(scenarioName);
 							data.add(text);
 							if (text.toLowerCase().endsWith("Run completed".toLowerCase())) {
+								LOG.info(text);
 								ResultUtils.getXMLParsingSvcImplInstance(null).getFdDSSFiles()
 	                                    .addFileToList(new File(Constant.SCENARIOS_DIR + scenarioName + "_DV.DSS"));
 								sleepAfterDisplay = true;
@@ -106,7 +108,8 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 						case Constant.BATCH_RUN_WSIDI:
 							text = monitorSvc.batchRunWsidi(scenarioName);
 							data.add(text);
-							if (text.toLowerCase().endsWith("DONE - run completed".toLowerCase())) {
+							if (text.toLowerCase().endsWith("(wsidi iteration " + properties.getProperty("wsidi.iterations") + "/"
+	                                + properties.getProperty("wsidi.iterations") + ")  - DONE - run completed".toLowerCase())) {
 								sleepAfterDisplay = true;
 								loadGeneratedWSIDI(scenarioName);
 								ResultUtils.getXMLParsingSvcImplInstance(null).getFdDSSFiles()
@@ -194,6 +197,11 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 				progressFrame = null;
 			}
 		});
+		try {
+			properties.load(GlobalActionListener.class.getClassLoader().getResourceAsStream("callite-gui.properties"));
+		} catch (Exception e) {
+			LOG.debug("Problem loading properties. " + e.getMessage());
+		}
 		workerScenarioMonitor.execute();
 	}
 
@@ -273,22 +281,16 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 	 *            The scenario file name which the batch program is run. the name should not have any extension.
 	 */
 	public void loadGeneratedWSIDI(String scenarioName) {
-		Properties properties = new Properties();
-		try {
-			properties.load(GlobalActionListener.class.getClassLoader().getResourceAsStream("callite-gui.properties"));
-		} catch (Exception e) {
-			LOG.debug("Problem loading properties. " + e.getMessage());
-		}
 		String wsiDiSwpPath = Paths.get(Constant.RUN_DETAILS_DIR + scenarioName + Constant.RUN_DIR + Constant.LOOKUP_DIR
 		        + Constant.SWP_START_FILENAME + Constant.TABLE_EXT).toString();
 		String wsiDiCvpSwpPath = Paths.get(Constant.RUN_DETAILS_DIR + scenarioName + Constant.RUN_DIR + Constant.LOOKUP_DIR
 		        + Constant.CVP_START_FILENAME + Constant.TABLE_EXT).toString();
 		try {
-			DataTableModle swpDtm = tableSvc.getWsiDiTable(wsiDiSwpPath);
+			DataTableModel swpDtm = tableSvc.getWsiDiTable(wsiDiSwpPath);
 			swpDtm.setCellEditable(true);
 			swpDtm.setTableName(Constant.SWP_START_FILENAME);
 			swpDtm.setSwingEngine(swingEngine);
-			DataTableModle cvpDtm = tableSvc.getWsiDiTable(wsiDiCvpSwpPath);
+			DataTableModel cvpDtm = tableSvc.getWsiDiTable(wsiDiCvpSwpPath);
 			cvpDtm.setCellEditable(true);
 			cvpDtm.setTableName(Constant.CVP_START_FILENAME);
 			cvpDtm.setSwingEngine(swingEngine);

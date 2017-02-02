@@ -35,6 +35,7 @@ public final class DynamicControlSvcImpl implements IDynamicControlSvc {
 	private Map<String, List<TriggerBO>> triggerMapForCheckUncheck;
 	private static IDynamicControlSvc dynamicControlSvc;
 	private IErrorHandlingSvc errorHandlingSvc;
+	private boolean preventRoeTrigger = false;
 
 	/**
 	 * This method is for implementing the singleton.
@@ -124,10 +125,17 @@ public final class DynamicControlSvcImpl implements IDynamicControlSvc {
 		List<TriggerBO> listForCheckUncheck = this.triggerMapForCheckUncheck
 		        .get(itemName + Constant.DASH + Boolean.toString(isSelected).toUpperCase());
 		if (listForCheckUncheck != null) {
-			listForCheckUncheck.forEach((triggerBO) -> {
-				setComponentSelected(swingEngine.find(triggerBO.getAffectdeGuiId()),
-			            Boolean.valueOf(triggerBO.getAffectdeAction()));
-			});
+			for (TriggerBO triggerBoForCheck : listForCheckUncheck) {
+				if (triggerBoForCheck.getAffectdeGuiId().equals("ckbReg_X2ROE")) {
+					this.preventRoeTrigger = true;
+					setComponentSelected(swingEngine.find(triggerBoForCheck.getAffectdeGuiId()),
+					        Boolean.valueOf(triggerBoForCheck.getAffectdeAction()));
+					this.preventRoeTrigger = false;
+				} else {
+					setComponentSelected(swingEngine.find(triggerBoForCheck.getAffectdeGuiId()),
+					        Boolean.valueOf(triggerBoForCheck.getAffectdeAction()));
+				}
+			}
 		}
 	}
 
@@ -246,6 +254,11 @@ public final class DynamicControlSvcImpl implements IDynamicControlSvc {
 			}
 		}
 		return Arrays.asList(lookup, label);
+	}
+
+	@Override
+	public boolean isPreventRoeTrigger() {
+		return preventRoeTrigger;
 	}
 
 	/**

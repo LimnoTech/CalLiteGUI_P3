@@ -4,8 +4,6 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.GridBagConstraints;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,7 +25,6 @@ import java.util.TimeZone;
 import java.util.Vector;
 
 import javax.swing.JCheckBox;
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JMenuBar;
@@ -68,7 +65,7 @@ import vista.time.Time;
 import vista.time.TimeFactory;
 import vista.time.TimeWindow;
 
-public class ResultUtils implements ChangeListener, MouseListener {
+public class ResultUtils implements ChangeListener {
 	private static final Logger LOG = Logger.getLogger(ResultUtils.class.getName());
 	private String lookups[][];
 	private static ResultUtils resultUtils;
@@ -144,6 +141,19 @@ public class ResultUtils implements ChangeListener, MouseListener {
 		}
 	}
 
+	public void quickDisplay(String cbText, String cbName) {
+		// ----- Quick Results: HANDLE DISPLAY OF SINGLE VARIABLE -----
+		// menu.setCursor(hourglassCursor);
+		JList lstScenarios = (JList) swingEngine.find("SelectedList");
+		if (lstScenarios.getModel().getSize() == 0) {
+			JOptionPane.showMessageDialog(null, "No scenarios loaded", "Error", JOptionPane.ERROR_MESSAGE);
+		} else {
+			DisplayFrame.showDisplayFrames(DisplayFrame.quickState() + ";Locs-" + cbText + ";Index-" + cbName,
+					lstScenarios);
+		}
+
+	}
+
 	public void toggleEnComponentAndChildren(Component component, Boolean b) {
 		component.setEnabled(b);
 		for (Component child : ((Container) component).getComponents()) {
@@ -177,8 +187,10 @@ public class ResultUtils implements ChangeListener, MouseListener {
 				}
 				if (aLine != null) {
 					GuiUtils.getCLGPanel().getDtsTreePanel().getCurrentModel().readData(filename + ".tree.xml", "");
-					Vector<MultipleTimeSeries> mts = GuiUtils.getCLGPanel().getDtsTreePanel().getCurrentModel().getPrjMts();
-					Vector<DerivedTimeSeries> dts = GuiUtils.getCLGPanel().getDtsTreePanel().getCurrentModel().getPrjDts();
+					Vector<MultipleTimeSeries> mts = GuiUtils.getCLGPanel().getDtsTreePanel().getCurrentModel()
+							.getPrjMts();
+					Vector<DerivedTimeSeries> dts = GuiUtils.getCLGPanel().getDtsTreePanel().getCurrentModel()
+							.getPrjDts();
 					Project p = getProject();
 					p.clearMTSList();
 					for (int i = 0; i < mts.size(); i++)
@@ -212,8 +224,8 @@ public class ResultUtils implements ChangeListener, MouseListener {
 			boolean saveFlag = true;
 			if (new File(filename).exists())
 				saveFlag = (JOptionPane.showConfirmDialog(null,
-				        "The display list file '" + filename + "' already exists. Press OK to overwrite.", "CalLite GUI",
-				        JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION);
+						"The display list file '" + filename + "' already exists. Press OK to overwrite.",
+						"CalLite GUI", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION);
 			if (saveFlag) {
 				OutputStream outputStream;
 				try {
@@ -246,7 +258,7 @@ public class ResultUtils implements ChangeListener, MouseListener {
 					pList.add(String.valueOf(mts.getNumberOfDataReferences()));
 					for (int j = 0; j < mts.getNumberOfDataReferences(); j++) {
 						pList.add(mts.getBPartAt(j) + ";" + mts.getCPartAt(j) + ";" + mts.getVarTypeAt(j) + ";"
-						        + mts.getDTSNameAt(i));
+								+ mts.getDTSNameAt(i));
 					}
 				}
 				pList.add(String.valueOf(p.getNumberOfDTS()));
@@ -256,7 +268,7 @@ public class ResultUtils implements ChangeListener, MouseListener {
 					pList.add(String.valueOf(dts.getNumberOfDataReferences()));
 					for (int j = 0; j < dts.getNumberOfDataReferences(); j++) {
 						pList.add(dts.getBPartAt(j) + ";" + dts.getCPartAt(j) + ";" + dts.getVarTypeAt(j) + ";"
-						        + String.valueOf(dts.getOperationIdAt(j)) + ";" + dts.getDTSNameAt(j));
+								+ String.valueOf(dts.getOperationIdAt(j)) + ";" + dts.getDTSNameAt(j));
 					}
 				}
 				try {
@@ -351,7 +363,8 @@ public class ResultUtils implements ChangeListener, MouseListener {
 		}
 	}
 
-	public ArrayList<double[]> buildExceedanceArray(DataReference ref1, DataReference ref2, boolean end_of_sept, TimeWindow tw) {
+	public ArrayList<double[]> buildExceedanceArray(DataReference ref1, DataReference ref2, boolean end_of_sept,
+			TimeWindow tw) {
 		ArrayList<Double> x1 = sort(ref1, end_of_sept, tw);
 		ArrayList<Double> x2 = sort(ref2, end_of_sept, tw);
 		ArrayList<double[]> darray = new ArrayList<double[]>();
@@ -410,8 +423,8 @@ public class ResultUtils implements ChangeListener, MouseListener {
 		}
 	}
 
-	public DataReference getReference(Group group, String path, boolean calculate_dts, ArrayList<PathnameMap> pathname_maps,
-	        int group_no) {
+	public DataReference getReference(Group group, String path, boolean calculate_dts,
+			ArrayList<PathnameMap> pathname_maps, int group_no) {
 		if (calculate_dts) {
 			try {
 				// FIXME: add expression parser to enable any expression
@@ -459,8 +472,10 @@ public class ResultUtils implements ChangeListener, MouseListener {
 	}
 
 	/**
-	 * findpath(g,path,exact=1): this returns an array of matching data references g is the group returned from opendss function
-	 * path is the dsspathname e.g. '//C6/FLOW-CHANNEL////' exact means that the exact string is matched as opposed to the reg. exp.
+	 * findpath(g,path,exact=1): this returns an array of matching data
+	 * references g is the group returned from opendss function path is the
+	 * dsspathname e.g. '//C6/FLOW-CHANNEL////' exact means that the exact
+	 * string is matched as opposed to the reg. exp.
 	 *
 	 * @param g
 	 * @param path
@@ -509,7 +524,8 @@ public class ResultUtils implements ChangeListener, MouseListener {
 
 	public String formatTimeWindowAsWaterYear(TimeWindow tw) {
 		SubTimeFormat year_format = new SubTimeFormat("yyyy");
-		return tw.getStartTime().__add__("3MON").format(year_format) + "-" + tw.getEndTime().__add__("3MON").format(year_format);
+		return tw.getStartTime().__add__("3MON").format(year_format) + "-"
+				+ tw.getEndTime().__add__("3MON").format(year_format);
 	}
 
 	public String getExceedancePlotTitle(PathnameMap path_map) {
@@ -569,7 +585,8 @@ public class ResultUtils implements ChangeListener, MouseListener {
 	}
 
 	/**
-	 * Reads GUI_Links3.table into the String array lookups[][] (controls Quick Results display)
+	 * Reads GUI_Links3.table into the String array lookups[][] (controls Quick
+	 * Results display)
 	 *
 	 * @return
 	 */
@@ -674,8 +691,8 @@ public class ResultUtils implements ChangeListener, MouseListener {
 	 * @param changelistener
 	 *            - True is a ChangeListener is to be assigned
 	 */
-	public static void SetNumberModelAndIndex(JSpinner jspn, int val, int min, int max, int step, String format, Object obj,
-	        boolean changelistener) {
+	public static void SetNumberModelAndIndex(JSpinner jspn, int val, int min, int max, int step, String format,
+			Object obj, boolean changelistener) {
 
 		SpinnerModel spnmod = new SpinnerNumberModel(val, min, max, step);
 		jspn.setModel(spnmod);
@@ -764,50 +781,52 @@ public class ResultUtils implements ChangeListener, MouseListener {
 		}
 	}
 
-	@Override
-	public void mouseClicked(MouseEvent e) {
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// Handles mouse presses for results tabs
-		JComponent component = (JComponent) e.getComponent();
-		String cName = component.getName();
-		int button = e.getButton();
-		Integer iClickCount = e.getClickCount();
-		if (button != MouseEvent.NOBUTTON && button != MouseEvent.BUTTON1) {
-			// Nothing for right mousepress
-		} else {
-			// Double Click
-			if (iClickCount == 2) {
-				if (cName.startsWith("ckbp")) {
-					// ----- Quick Results: HANDLE DISPLAY OF SINGLE VARIABLE -----
-					// menu.setCursor(hourglassCursor);
-					JList lstScenarios = (JList) swingEngine.find("SelectedList");
-					if (lstScenarios.getModel().getSize() == 0) {
-						JOptionPane.showMessageDialog(null, "No scenarios loaded", "Error", JOptionPane.ERROR_MESSAGE);
-					} else {
-						lstScenarios = (JList) swingEngine.find("SelectedList");
-						JCheckBox chk = (JCheckBox) component;
-						DisplayFrame.showDisplayFrames(
-						        DisplayFrame.quickState() + ";Locs-" + chk.getText() + ";Index-" + chk.getName(), lstScenarios);
-						// menu.setCursor(normalCursor);
-					}
-					// Placeholder for future handling of double-clicks
-				}
-			}
-		}
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-	}
+	// @Override
+	// public void mouseClicked(MouseEvent e) {
+	// }
+	//
+	// @Override
+	// public void mouseEntered(MouseEvent e) {
+	// }
+	//
+	// @Override
+	// public void mouseExited(MouseEvent e) {
+	// }
+	//
+	// @Override
+	// public void mousePressed(MouseEvent e) {
+	// // Handles mouse presses for results tabs
+	// JComponent component = (JComponent) e.getComponent();
+	// String cName = component.getName();
+	// int button = e.getButton();
+	// Integer iClickCount = e.getClickCount();
+	// if (button != MouseEvent.NOBUTTON && button != MouseEvent.BUTTON1) {
+	// // Nothing for right mousepress
+	// } else {
+	// // Double Click
+	// if (iClickCount == 2) {
+	// if (cName.startsWith("ckbp")) {
+	// // ----- Quick Results: HANDLE DISPLAY OF SINGLE VARIABLE -----
+	// // menu.setCursor(hourglassCursor);
+	// JList lstScenarios = (JList) swingEngine.find("SelectedList");
+	// if (lstScenarios.getModel().getSize() == 0) {
+	// JOptionPane.showMessageDialog(null, "No scenarios loaded", "Error",
+	// JOptionPane.ERROR_MESSAGE);
+	// } else {
+	// lstScenarios = (JList) swingEngine.find("SelectedList");
+	// JCheckBox chk = (JCheckBox) component;
+	// DisplayFrame.showDisplayFrames(
+	// DisplayFrame.quickState() + ";Locs-" + chk.getText() + ";Index-" +
+	// chk.getName(), lstScenarios);
+	// // menu.setCursor(normalCursor);
+	// }
+	// // Placeholder for future handling of double-clicks
+	// }
+	// }
+	// }
+	// }
+	//
+	// @Override
+	// public void mouseReleased(MouseEvent e) {
+	// }
 }

@@ -26,7 +26,8 @@ import gov.ca.water.calgui.constant.Constant;
 
 /**
  *
- * Methods for updating Project values in the WRIMS GUI object space from CalLite GUI
+ * Methods for updating Project values in the WRIMS GUI object space from
+ * CalLite GUI
  *
  * @author tslawecki
  *
@@ -44,7 +45,8 @@ public class WRIMSGUILinks {
 	}
 
 	/**
-	 * Builds the WRIMS GUI panel for use in CalLite GUI while extracting a reference to the status label.
+	 * Builds the WRIMS GUI panel for use in CalLite GUI while extracting a
+	 * reference to the status label.
 	 *
 	 * @param p
 	 */
@@ -53,7 +55,7 @@ public class WRIMSGUILinks {
 		p.setSize(900, 650);
 
 		CalLiteGUIPanelWrapper pw = new CalLiteGUIPanelWrapper(
-		        (JFrame) ResultUtils.getXMLParsingSvcImplInstance(null).getSwix().find(Constant.MAIN_FRAME_NAME));
+				(JFrame) ResultUtils.getXMLParsingSvcImplInstance(null).getSwix().find(Constant.MAIN_FRAME_NAME));
 		pw.getPanel().setSize(900, 650);
 		p.add(pw.getPanel(), BorderLayout.NORTH);
 		JPanel statusPanel = GuiUtils.getStatusPanel();
@@ -140,7 +142,8 @@ public class WRIMSGUILinks {
 	}
 
 	/**
-	 * Finds scenario's SV file by looking up SV file name in scenario (.cls) file
+	 * Finds scenario's SV file by looking up SV file name in scenario (.cls)
+	 * file
 	 *
 	 * @param dvFileName
 	 * @return Full name of SV file including path
@@ -172,11 +175,15 @@ public class WRIMSGUILinks {
 
 		if (!svFileName.equals("")) {
 
-			// Found in CLS - Build string pointing to "Scenarios/Run_Details/scenarioname/Run/DSS/svfilename"
+			// Found in CLS - Build string pointing to
+			// "Scenarios/Run_Details/scenarioname/Run/DSS/svfilename"
 
-			String svPathString = dvFileName.substring(0, dvFileName.length() - 7); // Strip out "_DV.DSS"
+			String svPathString = dvFileName.substring(0, dvFileName.length() - 7); // Strip
+																					// out
+																					// "_DV.DSS"
 			int i = svPathString.lastIndexOf("\\"); // find rightmost "/"
-			svFileName = svPathString.substring(0, i) + "\\Run_Details" + svPathString.substring(i) + "\\Run\\DSS\\" + svFileName;
+			svFileName = svPathString.substring(0, i) + "\\Run_Details" + svPathString.substring(i) + "\\Run\\DSS\\"
+					+ svFileName;
 
 		} else {
 

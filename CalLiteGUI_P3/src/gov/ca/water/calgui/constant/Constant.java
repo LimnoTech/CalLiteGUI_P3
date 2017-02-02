@@ -23,6 +23,8 @@ public class Constant {
 	public static final String GUI_LINKS3_FILENAME = System.getProperty("user.dir") + "//Config//GUI_Links3"
 			+ TABLE_EXT;
 	public static final String GUI_LINKS4_FILENAME = System.getProperty("user.dir") + "//Config//GUI_Links4" + CSV_EXT;
+	public static final String DYNAMIC_CONTROL_FOR_STARTUP_FILENAME = System.getProperty("user.dir")
+	        + "//Config//DynamicControlForStartUp" + CSV_EXT;
 	public static final String TRIGGER_ENABLE_DISABLE_FILENAME = System.getProperty("user.dir")
 			+ "//Config//TriggerForDynamicDisplay" + CSV_EXT;
 	public static final String TRIGGER_CHECK_UNCHECK_FILENAME = System.getProperty("user.dir")

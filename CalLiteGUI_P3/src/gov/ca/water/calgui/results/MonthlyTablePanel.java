@@ -40,7 +40,7 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 	final String CELL_BREAK = "\t";
 	final Clipboard CLIPBOARD = Toolkit.getDefaultToolkit().getSystemClipboard();
 
-	public MonthlyTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs, DSSGrabber dss_Grabber,
+	public MonthlyTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs, DSSGrabber1 dss_Grabber,
 	        String sName) {
 		this(title, tscs, stscs, dss_Grabber, null, sName, false);
 
@@ -52,7 +52,7 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 
 	}
 
-	public MonthlyTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs, DSSGrabber dss_Grabber,
+	public MonthlyTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs, DSSGrabber1 dss_Grabber,
 	        String sName, boolean isBase) {
 		this(title, tscs, stscs, dss_Grabber, null, sName, isBase);
 	}
@@ -62,7 +62,7 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 		this(title, tscs, stscs, null, dss_Grabber, sName, isBase);
 	}
 
-	public MonthlyTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs, DSSGrabber dss_Grabber,
+	public MonthlyTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs, DSSGrabber1 dss_Grabber,
 	        DSSGrabber2 dss_Grabber2, String sName, boolean isBase) {
 
 		super();

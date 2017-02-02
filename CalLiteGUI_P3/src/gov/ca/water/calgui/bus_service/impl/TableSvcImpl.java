@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 
 import gov.ca.water.calgui.bo.CalLiteGUIException;
-import gov.ca.water.calgui.bo.DataTableModle;
+import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.SeedDataBO;
 import gov.ca.water.calgui.bus_service.ITableSvc;
 import gov.ca.water.calgui.constant.Constant;
@@ -33,7 +33,7 @@ public final class TableSvcImpl implements ITableSvc {
 	private static ITableSvc tableSvc;
 	private IFileSystemSvc fileSystemSvc;
 	private IErrorHandlingSvc errorHandlingSvc;
-	private Map<String, DataTableModle> map;
+	private Map<String, DataTableModel> map;
 	private String wsidiForSWPFullFileName = Constant.USER_DEFINED; // We are using this to know whether the user modify the value
 	                                                                // of not.
 	private String wsidiForCVPFullFileName = Constant.USER_DEFINED; // We are using this to know whether the user modify the value
@@ -53,7 +53,7 @@ public final class TableSvcImpl implements ITableSvc {
 	}
 
 	@Override
-	public DataTableModle getWsiDiTable(String fileName) throws CalLiteGUIException {
+	public DataTableModel getWsiDiTable(String fileName) throws CalLiteGUIException {
 		String errorData = "";
 		fileName = Paths.get(fileName).toString();
 		try {
@@ -66,7 +66,7 @@ public final class TableSvcImpl implements ITableSvc {
 			lines = lines.stream().filter(line -> isDouble(line.split(Constant.TAB_OR_SPACE_DELIMITER)[0]))
 			        .collect(Collectors.toList());
 			data = handleTableFileLikeTable(lines, 2, errorData);
-			return new DataTableModle(fileName, columnName, data, false);
+			return new DataTableModel(fileName, columnName, data, false);
 		} catch (NullPointerException ex) {
 			throw new CalLiteGUIException(
 			        "The data in the table is incorrect and the data is \"" + errorData + "\". The table name is = " + fileName,
@@ -82,7 +82,7 @@ public final class TableSvcImpl implements ITableSvc {
 	}
 
 	@Override
-	public DataTableModle getTable(String tableName, ThreeFunction<List<String>, Integer, String, String[][]> function)
+	public DataTableModel getTable(String tableName, ThreeFunction<List<String>, Integer, String, String[][]> function)
 	        throws CalLiteGUIException {
 		String errorData = "";
 		String fileName = Paths.get(Constant.MODEL_W2_WRESL_LOOKUP_DIR + tableName + Constant.TABLE_EXT).toString();
@@ -94,7 +94,7 @@ public final class TableSvcImpl implements ITableSvc {
 			lines = lines.stream().filter(line -> isDouble(line.split(Constant.TAB_OR_SPACE_DELIMITER)[0]))
 			        .collect(Collectors.toList());
 			data = function.apply(lines, columnName.length, errorData);
-			return new DataTableModle(tableName, columnName, data, false);
+			return new DataTableModel(tableName, columnName, data, false);
 		} catch (NullPointerException ex) {
 			throw new CalLiteGUIException(
 			        "The data in the table is incorrect and the data is \"" + errorData + "\". The table name is = " + fileName,
@@ -147,8 +147,8 @@ public final class TableSvcImpl implements ITableSvc {
 	}
 
 	@Override
-	public DataTableModle getTable(String tableName) throws CalLiteGUIException {
-		DataTableModle dtm = map.get(tableName);
+	public DataTableModel getTable(String tableName) throws CalLiteGUIException {
+		DataTableModel dtm = map.get(tableName);
 		if (dtm == null) {
 			LOG.info("The data table is not available. the table name is " + tableName);
 		}
@@ -181,7 +181,7 @@ public final class TableSvcImpl implements ITableSvc {
 	private TableSvcImpl(List<SeedDataBO> seedDataBOList) {
 		LOG.info("Building TableSvcImpl Object.");
 		this.fileSystemSvc = new FileSystemSvcImpl();
-		this.map = new HashMap<String, DataTableModle>();
+		this.map = new HashMap<String, DataTableModel>();
 		this.errorHandlingSvc = new ErrorHandlingSvcImpl();
 		generateMapForTables(seedDataBOList);
 	}
@@ -228,10 +228,10 @@ public final class TableSvcImpl implements ITableSvc {
 	 * @throws CalLiteGUIException
 	 *             If anything wrong about the file then it will throw a exception with the information about it.
 	 */
-	private Map<String, DataTableModle> handleX2table(String tableName1, String tableName2) throws CalLiteGUIException {
-		Map<String, DataTableModle> tempMapForDataTable = new HashMap<String, DataTableModle>();
-		DataTableModle dtm1 = null;
-		DataTableModle dtm2 = null;
+	private Map<String, DataTableModel> handleX2table(String tableName1, String tableName2) throws CalLiteGUIException {
+		Map<String, DataTableModel> tempMapForDataTable = new HashMap<String, DataTableModel>();
+		DataTableModel dtm1 = null;
+		DataTableModel dtm2 = null;
 		// Getting the two tables.
 		if (tableName1.equals("gui_x2active")) {
 			dtm1 = getTable(tableName1, TableSvcImpl::handleTableFileLikeTable);
@@ -261,7 +261,7 @@ public final class TableSvcImpl implements ITableSvc {
 				newData[i][j] = data2[i][j - 1];
 			}
 		}
-		DataTableModle newDtm = new DataTableModle(tableName1 + Constant.PIPELINE + tableName2, newColNames, newData, false);
+		DataTableModel newDtm = new DataTableModel(tableName1 + Constant.PIPELINE + tableName2, newColNames, newData, false);
 		tempMapForDataTable.put(tableName1 + Constant.PIPELINE + tableName2 + Constant.DASH + Constant.D1641, newDtm);
 		return tempMapForDataTable;
 	}
@@ -274,10 +274,10 @@ public final class TableSvcImpl implements ITableSvc {
 	 * @throws CalLiteGUIException
 	 *             If anything wrong about the file then it will throw a exception with the information about it.
 	 */
-	private Map<String, DataTableModle> getAllTypesOfTableForATableName(SeedDataBO seedDataBOObj) throws CalLiteGUIException {
-		Map<String, DataTableModle> tempMapForDataTable = new HashMap<String, DataTableModle>();
+	private Map<String, DataTableModel> getAllTypesOfTableForATableName(SeedDataBO seedDataBOObj) throws CalLiteGUIException {
+		Map<String, DataTableModel> tempMapForDataTable = new HashMap<String, DataTableModel>();
 		String dataTableName = seedDataBOObj.getDataTables();
-		DataTableModle dtm = null;
+		DataTableModel dtm = null;
 		if (seedDataBOObj.getD1485D1641().equals(Constant.N_A)) {
 			if (dataTableName.equals("gui_EIRatio") || dataTableName.equals("perc_UnimparedFlow")) {
 				dtm = getTable(dataTableName, TableSvcImpl::handleTableFileLikeTable);
@@ -286,18 +286,22 @@ public final class TableSvcImpl implements ITableSvc {
 			} else {
 				dtm = getTable(dataTableName, TableSvcImpl::handleTableFileWithColumnNumber);
 			}
-			if (seedDataBOObj.getD1485().equalsIgnoreCase(Constant.N_A)) {
-				tempMapForDataTable.put(dataTableName + Constant.DASH + Constant.D1485, dtm);
-			}
+			boolean flag = true;
 			if (seedDataBOObj.getD1641().equalsIgnoreCase(Constant.N_A)) {
+				flag = false;
 				tempMapForDataTable.put(dataTableName + Constant.DASH + Constant.D1641, dtm);
 			}
+			if (seedDataBOObj.getD1485().equalsIgnoreCase(Constant.N_A)) {
+				if (flag)
+					tempMapForDataTable.put(dataTableName + Constant.DASH + Constant.D1485, dtm);
+			}
 			if (seedDataBOObj.getUserDefined().equalsIgnoreCase(Constant.N_A)) {
-				tempMapForDataTable.put(dataTableName, dtm);
+				if (flag)
+					tempMapForDataTable.put(dataTableName, dtm);
 			}
 		} else {
 			String name = dataTableName.replace("gui_", "");
-			List<DataTableModle> dtmList = new ArrayList<DataTableModle>();
+			List<DataTableModel> dtmList = new ArrayList<DataTableModel>();
 			if (dataTableName.equals("gui_xchanneldays") || dataTableName.equals("gui_RioVista")) {
 				dtmList = handleTableFileWithTwoTableData(name);
 				if (seedDataBOObj.getD1485().equalsIgnoreCase(Constant.N_A)) {
@@ -428,15 +432,15 @@ public final class TableSvcImpl implements ITableSvc {
 	 * @param tableName
 	 *            Just the Table Name without the extension and path. This will by default take the extension as ".table" and the
 	 *            path as lookup under the model_w2.
-	 * @return This will return the {@link DataTableModle} object of the table.
+	 * @return This will return the {@link DataTableModel} object of the table.
 	 * @throws CalLiteGUIException
 	 *             If anything wrong about the file then it will throw a exception with the information about it.
 	 */
-	private List<DataTableModle> handleTableFileWithTwoTableData(String tableName) throws CalLiteGUIException {
+	private List<DataTableModel> handleTableFileWithTwoTableData(String tableName) throws CalLiteGUIException {
 		String errorData = "";
 		String fileName = Paths.get(Constant.MODEL_W2_WRESL_LOOKUP_DIR + tableName + Constant.TABLE_EXT).toString();
 		try {
-			List<DataTableModle> tempDataTableList = new ArrayList<DataTableModle>();
+			List<DataTableModel> tempDataTableList = new ArrayList<DataTableModel>();
 			Object[][] dataForD1641 = null;
 			Object[][] dataForD1485 = null;
 			List<String> lines = fileSystemSvc.getFileDataForTables(fileName);
@@ -479,8 +483,8 @@ public final class TableSvcImpl implements ITableSvc {
 					dataForD1485[index - 1][1] = temp.get(2);
 				}
 			}
-			tempDataTableList.add(new DataTableModle(tableName + Constant.DASH + Constant.D1641, columnName, dataForD1641, false));
-			tempDataTableList.add(new DataTableModle(tableName + Constant.DASH + Constant.D1485, columnName, dataForD1485, false));
+			tempDataTableList.add(new DataTableModel(tableName + Constant.DASH + Constant.D1641, columnName, dataForD1641, false));
+			tempDataTableList.add(new DataTableModel(tableName + Constant.DASH + Constant.D1485, columnName, dataForD1485, false));
 			return tempDataTableList;
 		} catch (NullPointerException ex) {
 			throw new CalLiteGUIException(

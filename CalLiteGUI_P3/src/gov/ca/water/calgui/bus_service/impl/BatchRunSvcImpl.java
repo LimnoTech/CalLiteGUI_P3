@@ -202,7 +202,7 @@ public final class BatchRunSvcImpl implements IBatchRunSvc {
 				String batchText = "%~dp0\\Model_w2\\runConfig_calgui " + configFilePath + " " + scenarioName;
 				if (isParallel && i < scenarioFileName.size() - 1) {
 					batchFilePW.println("start /min " + batchText);
-					batchFilePW.println("timeout 3");
+					batchFilePW.println("timeout 20");
 				} else {
 					batchFilePW.println("@title = \"" + batchText + "\"");
 					batchFilePW.println(batchText);

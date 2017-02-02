@@ -126,7 +126,7 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 	Vector<String> columns;
 
 	public SummaryTablePanel(String title, TimeSeriesContainer tscs[], TimeSeriesContainer stscs[], String tagString, String sName,
-	        DSSGrabber dss_Grabber) {
+	        DSSGrabber1 dss_Grabber) {
 
 		this(title, tscs, stscs, tagString, sName, dss_Grabber, null, false);
 
@@ -140,7 +140,7 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 	}
 
 	public SummaryTablePanel(String title, TimeSeriesContainer tscs[], TimeSeriesContainer stscs[], String tagString, String sName,
-	        DSSGrabber dss_Grabber, boolean isBase) {
+	        DSSGrabber1 dss_Grabber, boolean isBase) {
 
 		this(title, tscs, stscs, tagString, sName, dss_Grabber, null, isBase);
 
@@ -154,7 +154,7 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 	}
 
 	public SummaryTablePanel(String title, TimeSeriesContainer tscs[], TimeSeriesContainer stscs[], String tagString, String sName,
-	        DSSGrabber dss_Grabber, DSSGrabber2 dss_Grabber2, boolean isBase) {
+	        DSSGrabber1 dss_Grabber, DSSGrabber2 dss_Grabber2, boolean isBase) {
 
 		super();
 

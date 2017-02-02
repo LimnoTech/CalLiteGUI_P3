@@ -201,28 +201,31 @@ define estCVPExp_JulAug {
 define CVPDelCapEst {
     case March {
         condition month==MAR
+        ! Taraky 20161005, DWR. Added South of Delta Storage expansion for CVP
         value estCVPExp_Mar*cfs_taf
             + estCVPExp_Apr*cfs_taf(1)
             + estCVPExp_May*cfs_taf(2)
             + estCVPExp_Jun*cfs_taf(3)
             + estCVPExp_JulAug*cfs_taf(4)
             + estCVPExp_JulAug*cfs_taf(5)
-            + S_SLCVP(-1) - buffCVP_MarAug + jbypass_del + AnnualBanksCVP }
+            + S_SLCVP(-1) + S_SLCVPE(-1) - buffCVP_MarAug + jbypass_del + AnnualBanksCVP }
     case April {
         condition month == APR
+        ! Taraky 20161005, DWR. Added South of Delta Storage expansion for CVP
         value estCVPExp_Apr*cfs_taf
             + estCVPExp_May*cfs_taf(1)
             + estCVPExp_Jun*cfs_taf(2)
             + estCVPExp_JulAug*cfs_taf(3)
             + estCVPExp_JulAug*cfs_taf(4)
-            + S_SLCVP(-1) - buffCVP_AprAug + jbypass_del + AnnualBanksCVP }
+            + S_SLCVP(-1) + S_SLCVPE(-1) - buffCVP_AprAug + jbypass_del + AnnualBanksCVP }
     case May {
         condition month == MAY
+        ! Taraky 20161005, DWR. Added South of Delta Storage expansion for CVP
         value estCVPExp_May*cfs_taf
             + estCVPExp_Jun*cfs_taf(1)
             + estCVPExp_JulAug*cfs_taf(2)
             + estCVPExp_JulAug*cfs_taf(3)
-            + S_SLCVP(-1) - buffCVP_MayAug + jbypass_del + AnnualBanksCVP }
+            + S_SLCVP(-1) + S_SLCVPE(-1) - buffCVP_MayAug + jbypass_del + AnnualBanksCVP }
     case otherwise {
         condition always
         value 0.0 }

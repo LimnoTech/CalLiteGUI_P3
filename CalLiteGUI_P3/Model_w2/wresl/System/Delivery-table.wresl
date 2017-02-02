@@ -117,6 +117,8 @@ define D_OFBSWP {std kind 'FLOW-DELIVERY' units 'CFS'}
 define D_OFBCVP {std kind 'FLOW-DELIVERY' units 'CFS'}
 define D_SLCVP_P {std kind 'FLOW-DELIVERY' units 'CFS'} !Project Diversion from San Luis CVP reservoir
 define D_SLCVP {std kind 'FLOW-DELIVERY' units 'CFS'} !Diversion from San Luis CVP reservoir
+define D_SLCVPE {lower 0.00 upper unbounded kind 'FLOW-DELIVERY' units 'CFS'} !Taraky 201610928, DWR. DIV FROM additional CVP SAN LUIS RESERVOIR
+define D_SLSWPE {lower 0.00 upper unbounded kind 'FLOW-DELIVERY' units 'CFS'} !Taraky 201610928, DWR. DIV FROM additional SWP SAN LUIS RESERVOIR
 goal Diversion_SLCVP {D_SLCVP=D_SLCVP_P}
 define D_CVPJU_LDMC_P {std kind 'FLOW-DELIVERY' units 'CFS'} !Project Diversion from CVPJU_LDMC
 define D_CVPJU_LDMC {std kind 'FLOW-DELIVERY' units 'CFS'} !Diversion from CVPJU_LDMC

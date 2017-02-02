@@ -1,6 +1,8 @@
 package gov.ca.water.calgui.bus_service.impl;
 
 import java.awt.Component;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +10,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.swing.JCheckBox;
+import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 
 import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
@@ -37,6 +41,7 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 	private IErrorHandlingSvc errorHandlingSvc;
 	private Map<String, String> compNameIdMap;
 	private List<String> newUserDefinedTables;
+	private List<String> jTextFieldIds;
 
 	/**
 	 * This method is for implementing the singleton.
@@ -59,6 +64,7 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 		this.errorHandlingSvc = new ErrorHandlingSvcImpl();
 		this.fileSystemSvc = new FileSystemSvcImpl();
 		this.compNameIdMap = new HashMap<String, String>();
+		this.jTextFieldIds = new ArrayList<>();
 		this.swingEngine = new SwingEngine();
 		swingEngine.getTaglib().registerTag("numtextfield", NumericTextField.class);
 		try {
@@ -76,6 +82,13 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 				this.compNameIdMap.put(((JCheckBox) component).getText(), compId);
 			}
 		});
+		List<String> temp = compIds.stream().filter((compId) -> swingEngine.find(compId) instanceof JTextField)
+		        .collect(Collectors.toList());
+		for (String string : temp) {
+			if (checkIsItFromResultPart(string)) {
+				jTextFieldIds.add(string);
+			}
+		}
 		this.newUserDefinedTables = compIds.stream().filter((compId) -> swingEngine.find(compId) instanceof JTable)
 		        .collect(Collectors.toList());
 		this.newUserDefinedTables.remove("tblRegValues");
@@ -83,6 +96,45 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 		this.newUserDefinedTables.remove("tblIF3");
 		this.newUserDefinedTables.remove("tblIF2");
 		this.newUserDefinedTables.remove("tblIF1");
+	}
+
+	/**
+	 * This method will tell whether the id is from the result part or not.
+	 *
+	 * @param compId
+	 * @return
+	 */
+	private boolean checkIsItFromResultPart(String compId) {
+		List<String> resultTabNames = Arrays.asList("Custom", "externalPDF", "Reporting", "schematics");
+		List<String> names = new java.util.ArrayList<String>();
+		getAllThePanelNamesOfParent(swingEngine.find(compId).getParent(), names);
+		boolean con = false;
+		for (String string : resultTabNames) {
+			con = con || names.contains(string);
+		}
+		return !con;
+	}
+
+	/**
+	 * This will get all the {@code JPanel} parent of the {@code Component}
+	 *
+	 * @param component
+	 * @param names
+	 */
+	private void getAllThePanelNamesOfParent(Component component, List<String> names) {
+		if (component instanceof JPanel) {
+			if (((JPanel) component).getName() != null) {
+				names.add(((JPanel) component).getName());
+			}
+		}
+		if (component.getParent() != null) {
+			getAllThePanelNamesOfParent(component.getParent(), names);
+		}
+	}
+
+	@Override
+	public List<String> getjTextFieldIds() {
+		return jTextFieldIds;
 	}
 
 	@Override

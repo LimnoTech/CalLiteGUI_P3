@@ -42,7 +42,7 @@ import org.swixml.SwingEngine;
 import org.swixml.XScrollPane;
 
 import gov.ca.water.calgui.bo.CalLiteGUIException;
-import gov.ca.water.calgui.bo.DataTableModle;
+import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.SeedDataBO;
 import gov.ca.water.calgui.bus_service.IResultSvc;
 import gov.ca.water.calgui.constant.Constant;
@@ -64,7 +64,7 @@ public final class ResultSvcImpl implements IResultSvc {
 	private IFileSystemSvc fileSystemSvc = new FileSystemSvcImpl();
 	private static IResultSvc resultSvc;
 	private int[] regulationoptions = new int[100];
-	private Map<String, DataTableModle> userDefinedTableMap = new HashMap<String, DataTableModle>();
+	private Map<String, DataTableModel> userDefinedTableMap = new HashMap<String, DataTableModel>();
 	private boolean isCLSFlag = true;
 
 	/**
@@ -139,19 +139,6 @@ public final class ResultSvcImpl implements IResultSvc {
 			populateClsTableMap(dataTableModelStrList, tableMap);
 		}
 		applyControls(controlStrList, swingEngine);
-		if (((JRadioButton) swingEngine.find("rdbRegQS_UD")) != null
-		        && ((JRadioButton) swingEngine.find("rdbRegQS_UD")).isSelected()) {
-			toggleEnComponentAndChildren(swingEngine.find("regpan1"), true);
-			toggleEnComponentAndChildren(swingEngine.find("regpan2"), true);
-			toggleEnComponentAndChildren(swingEngine.find("regpan2b"), true);
-			toggleEnComponentAndChildren(swingEngine.find("regpan3"), true);
-		} else {
-			toggleEnComponentAndChildren(swingEngine.find("regpan1"), false);
-			toggleEnComponentAndChildren(swingEngine.find("regpan2"), false);
-			toggleEnComponentAndChildren(swingEngine.find("regpan2b"), false);
-			toggleEnComponentAndChildren(swingEngine.find("regpan3"), false);
-		}
-
 		this.isCLSFlag = false;
 	}
 
@@ -180,13 +167,13 @@ public final class ResultSvcImpl implements IResultSvc {
 	}
 
 	@Override
-	public DataTableModle getUserDefinedTable(String tableName) {
+	public DataTableModel getUserDefinedTable(String tableName) {
 		return this.userDefinedTableMap.get(tableName);
 	}
 
 	@Override
-	public void addUserDefinedTable(String tableName, DataTableModle dataTableModle) {
-		this.userDefinedTableMap.put(tableName, dataTableModle);
+	public void addUserDefinedTable(String tableName, DataTableModel dataTableModel) {
+		this.userDefinedTableMap.put(tableName, dataTableModel);
 	}
 
 	@Override
@@ -221,7 +208,7 @@ public final class ResultSvcImpl implements IResultSvc {
 					}
 					String[] columnNames = getColumnNamesFromTableId(tableName);
 					userDefinedTableMap.put(tableName,
-					        new DataTableModle(tableName, columnNames, getTableDataFromCLSFile(strArr[1]), true));
+					        new DataTableModel(tableName, columnNames, getTableDataFromCLSFile(strArr[1]), true));
 				} else if (tableId.equals("5")) {
 					tableName = tableMap.get(tableId).getDataTables();
 					String[] tableNames = tableName.split(Constant.PIPELINE_DELIMITER);
@@ -237,13 +224,13 @@ public final class ResultSvcImpl implements IResultSvc {
 					String[] newColumnNames = { columnNames1[0], columnNames1[1], columnNames2[1], columnNames2[2], columnNames2[3],
 					        columnNames2[4], columnNames2[5] };
 					userDefinedTableMap.put(tableName,
-					        new DataTableModle(tableName, newColumnNames, getTableDataFromCLSFile(strArr[1]), true));
+					        new DataTableModel(tableName, newColumnNames, getTableDataFromCLSFile(strArr[1]), true));
 				} else {
 					tableName = tableMap.get(strArr[0]).getDataTables();
 					String[] columnNames = new String[2];
 					columnNames[0] = "wsi";
 					columnNames[1] = "di";
-					DataTableModle dtm = new DataTableModle(tableName, columnNames, getTableDataFromCLSFile(strArr[1]), true);
+					DataTableModel dtm = new DataTableModel(tableName, columnNames, getTableDataFromCLSFile(strArr[1]), true);
 					// We are setting the table name to user defined because it is coming from the cls file.
 					dtm.setTableName(Constant.USER_DEFINED);
 					userDefinedTableMap.put(tableName, dtm);
@@ -342,6 +329,26 @@ public final class ResultSvcImpl implements IResultSvc {
 	}
 
 	/**
+	 * This will delete all the Files and Directory.
+	 *
+	 * @param dirAbsPath
+	 * @throws CalLiteGUIException
+	 */
+	private void deleteDirAndFiles(File dirAbsPath) throws CalLiteGUIException {
+		if (dirAbsPath.listFiles() != null) {
+			String path = "";
+			for (File file : dirAbsPath.listFiles()) {
+				try {
+					path = dirAbsPath.getAbsolutePath();
+					FileDeleteStrategy.FORCE.delete(file);
+				} catch (IOException ex) {
+					throw new CalLiteGUIException("We had a problem when deleting the directory. The directory is " + path, ex);
+				}
+			}
+		}
+	}
+
+	/**
 	 * This will save the current ui state to the tables and scenario directory.
 	 *
 	 * @param fileName
@@ -354,30 +361,25 @@ public final class ResultSvcImpl implements IResultSvc {
 		String runDirAbsPath = Paths.get(Constant.RUN_DETAILS_DIR + fileName + Constant.RUN_DIR).toString();
 		String generatedDirAbsPath = Paths.get(Constant.RUN_DETAILS_DIR + fileName + Constant.GENERATED_DIR).toString();
 		updateSaveStatusFile(runDirAbsPath + Constant.SAVE_FILE + Constant.TXT_EXT,
-		        "Createing the directory and copying the files.");
-		createDirAndCopyFiles(Constant.MODEL_W2_WRESL_DIR, runDirAbsPath);
-		updateSaveStatusFile(runDirAbsPath + Constant.SAVE_FILE + Constant.TXT_EXT, "Deleteing the previous data.");
+		        "Creating the directory and copying the files.");
+
+		if (!Files.isExecutable(Paths.get(Constant.RUN_DETAILS_DIR + fileName))) {
+			createDirAndCopyFiles(Constant.MODEL_W2_WRESL_DIR, runDirAbsPath);
+		}
+		updateSaveStatusFile(runDirAbsPath + Constant.SAVE_FILE + Constant.TXT_EXT, "Deleting the previous data.");
 		File generatedDir = new File(generatedDirAbsPath);
 		// deleting all directory and files under Generate directory.
-		if (generatedDir.listFiles() != null) {
-			for (File file : generatedDir.listFiles()) {
-				try {
-					FileDeleteStrategy.FORCE.delete(file);
-				} catch (IOException ex) {
-					throw new CalLiteGUIException(
-					        "We had a problem when deleteing the directory. The directory is " + generatedDirAbsPath, ex);
-				}
-			}
-		}
-
+		deleteDirAndFiles(generatedDir);
 		// create DSS, Lookup, and external folders
-
 		generatedDir = new File(generatedDirAbsPath, "DSS");
 		generatedDir.mkdirs();
 		generatedDir = new File(generatedDirAbsPath, "Lookup");
 		generatedDir.mkdirs();
 		generatedDir = new File(generatedDirAbsPath, "External");
 		generatedDir.mkdirs();
+
+		File runDir = new File(runDirAbsPath + "//DSS");
+		deleteDirAndFiles(runDir);
 
 		updateSaveStatusFile(runDirAbsPath + Constant.SAVE_FILE + Constant.TXT_EXT, "Copying DSS Files.");
 		// Copy DSS files to "Generated" folder
@@ -388,7 +390,7 @@ public final class ResultSvcImpl implements IResultSvc {
 		copyDSSFileToScenarioDirectory(runDirAbsPath, ((JTextField) swingEngine.find("hyd_DSS_SV")).getText());
 		copyDSSFileToScenarioDirectory(runDirAbsPath, ((JTextField) swingEngine.find("hyd_DSS_Init")).getText());
 
-		updateSaveStatusFile(runDirAbsPath + Constant.SAVE_FILE + Constant.TXT_EXT, "Saveing the table files.");
+		updateSaveStatusFile(runDirAbsPath + Constant.SAVE_FILE + Constant.TXT_EXT, "Saving the table files.");
 		writeToFileIndexAndOption(swingEngine, seedDataBOList, runDirAbsPath + "//Lookup//", generatedDirAbsPath + "//Lookup//");
 		writeUserDefinedTables(seedDataBOList, runDirAbsPath + "//Lookup//", generatedDirAbsPath + "//Lookup//");
 		// Copying demand tables.
@@ -674,7 +676,7 @@ public final class ResultSvcImpl implements IResultSvc {
 	        throws CalLiteGUIException {
 		for (String tableName : this.userDefinedTableMap.keySet()) {
 			Map<String, StringBuffer> fileDataMap = new HashMap<String, StringBuffer>();
-			DataTableModle table = this.userDefinedTableMap.get(tableName);
+			DataTableModel table = this.userDefinedTableMap.get(tableName);
 			if (tableName.equals("gui_xchanneldays") || tableName.equals("gui_EIRatio") || tableName.equals("perc_UnimparedFlow")
 			        || tableName.equals(Constant.SWP_START_FILENAME) || tableName.equals(Constant.CVP_START_FILENAME)) {
 				fileDataMap.put(tableName, saveTableLikeTable(tableName, table));
@@ -699,7 +701,7 @@ public final class ResultSvcImpl implements IResultSvc {
 	 * @return
 	 * @throws CalLiteGUIException
 	 */
-	private Map<String, StringBuffer> saveX2Table(DataTableModle table) throws CalLiteGUIException {
+	private Map<String, StringBuffer> saveX2Table(DataTableModel table) throws CalLiteGUIException {
 		Map<String, StringBuffer> map = new HashMap<String, StringBuffer>();
 		Object[][] data = table.getData();
 		Object[][] activeData = new Object[12][2];
@@ -707,6 +709,13 @@ public final class ResultSvcImpl implements IResultSvc {
 		for (int m = 0; m < data.length; m++) {
 			for (int n = 0; n < 2; n++) {
 				activeData[m][n] = data[m][n];
+			}
+		}
+		for (int m = 0; m < data.length; m++) {
+			if ((boolean) activeData[m][1]) {
+				activeData[m][1] = 1;
+			} else {
+				activeData[m][1] = 0;
 			}
 		}
 		for (int m = 0; m < kmData.length; m++) {
@@ -717,8 +726,8 @@ public final class ResultSvcImpl implements IResultSvc {
 				kmData[m][n - 1] = data[m][n];
 			}
 		}
-		map.put("gui_x2active", saveTableLikeTable("gui_x2active", new DataTableModle("", null, activeData, false)));
-		map.put("gui_x2km", saveTableWithColumnNumber("gui_x2km", new DataTableModle("", null, kmData, false)));
+		map.put("gui_x2active", saveTableLikeTable("gui_x2active", new DataTableModel("", null, activeData, false)));
+		map.put("gui_x2km", saveTableWithColumnNumber("gui_x2km", new DataTableModel("", null, kmData, false)));
 		return map;
 	}
 
@@ -730,7 +739,7 @@ public final class ResultSvcImpl implements IResultSvc {
 	 * @return
 	 * @throws CalLiteGUIException
 	 */
-	private StringBuffer saveEisjrTable(String tableName, DataTableModle table) throws CalLiteGUIException {
+	private StringBuffer saveEisjrTable(String tableName, DataTableModel table) throws CalLiteGUIException {
 		StringBuffer fileDataStrBuff = getTheCommentFromFile(tableName);
 		Object[][] tableData = table.getData();
 		int offset = 1;
@@ -771,7 +780,7 @@ public final class ResultSvcImpl implements IResultSvc {
 	 * @return
 	 * @throws CalLiteGUIException
 	 */
-	private StringBuffer saveTableLikeTable(String tableName, DataTableModle table) throws CalLiteGUIException {
+	private StringBuffer saveTableLikeTable(String tableName, DataTableModel table) throws CalLiteGUIException {
 		StringBuffer fileDataStrBuff = getTheCommentFromFile(tableName);
 		Object[][] tableData = table.getData();
 		for (int i = 0; i < tableData.length; i++) {
@@ -801,7 +810,7 @@ public final class ResultSvcImpl implements IResultSvc {
 	 * @return
 	 * @throws CalLiteGUIException
 	 */
-	private StringBuffer saveTableWithColumnNumber(String tableName, DataTableModle table) throws CalLiteGUIException {
+	private StringBuffer saveTableWithColumnNumber(String tableName, DataTableModel table) throws CalLiteGUIException {
 		StringBuffer fileDataStrBuff = getTheCommentFromFile(tableName);
 		Object[][] tableData = table.getData();
 		for (int colNum = 1; colNum < tableData[0].length; colNum++) {
@@ -885,7 +894,7 @@ public final class ResultSvcImpl implements IResultSvc {
 				String index = seedDataBO.getIndex();
 				String option = seedDataBO.getOption();
 				String description = Constant.EXCLAMATION + seedDataBO.getDescription();
-				Component c = swingEngine.find(seedDataBO.getGuiId());
+				Component c = swingEngine.find(seedDataBO.getGuiId().trim());
 				if (c instanceof JTextField || c instanceof NumericTextField || c instanceof JTextArea) {
 					option = ((JTextComponent) c).getText();
 					fileDataStrBuf.append(
@@ -987,6 +996,7 @@ public final class ResultSvcImpl implements IResultSvc {
 			}
 		}
 		List<String> resultTabNames = Arrays.asList("Custom", "externalPDF", "Reporting", "schematics");
+		panelNames.removeAll(resultTabNames);
 		StringBuffer sb = new StringBuffer();
 		panelNames.forEach((panelName) -> {
 			setControlValues(swingEngine.find(panelName), sb);
@@ -1018,15 +1028,15 @@ public final class ResultSvcImpl implements IResultSvc {
 	}
 
 	/**
-	 * This method will convert the {@link DataTableModle} object into the table string which is stored in the cls file.
+	 * This method will convert the {@link DataTableModel} object into the table string which is stored in the cls file.
 	 *
 	 * @param tableId
-	 * @param dataTableModle
+	 * @param dataTableModel
 	 * @return
 	 */
-	private String convertTableToString(String tableId, DataTableModle dataTableModle) {
+	private String convertTableToString(String tableId, DataTableModel dataTableModel) {
 		String tableStr = tableId + Constant.PIPELINE;
-		Object[][] data = dataTableModle.getData();
+		Object[][] data = dataTableModel.getData();
 		for (int i = 0; i < data.length; i++) {
 			tableStr += String.valueOf(data[i][0]);
 			for (int j = 1; j < data[0].length; j++) {
