@@ -45,7 +45,8 @@ import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.results.ResultUtils;
 
 /**
- * This frame is used for displaying the monitor status of batch run and save.
+ * This frame is used for displaying updated status during long-duration
+ * activities like saving scenarios and running CalLite.
  *
  * @author mohan
  */
@@ -54,7 +55,7 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 	private static final Logger LOG = Logger.getLogger(ProgressFrame.class.getName());
 	private static final long serialVersionUID = -606008444073979623L;
 	private static ProgressFrame progressFrame;
-	private JList list;
+	private JList<String> list;
 	Properties properties = new Properties();
 	private JScrollPane listScroller;
 	private Map<String, String> scenarioNamesAndAction;
@@ -82,6 +83,7 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 				if (scenarioNamesAndAction.isEmpty()) {
 					listData = new String[1];
 					listData[0] = "No active scenarios";
+					setBtnText(Constant.STATUS_BTN_TEXT_CLOSE);
 				} else {
 
 					for (String scenarioName : scenarioNamesAndAction.keySet()) {
@@ -100,7 +102,7 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 							if (text.toLowerCase().endsWith("Run completed".toLowerCase())) {
 								LOG.info(text);
 								ResultUtils.getXMLParsingSvcImplInstance(null).getFdDSSFiles()
-	                                    .addFileToList(new File(Constant.SCENARIOS_DIR + scenarioName + "_DV.DSS"));
+										.addFileToList(new File(Constant.SCENARIOS_DIR + scenarioName + "_DV.DSS"));
 								sleepAfterDisplay = true;
 								scenarioNamesAndAction.remove(scenarioName);
 							}
@@ -108,12 +110,14 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 						case Constant.BATCH_RUN_WSIDI:
 							text = monitorSvc.batchRunWsidi(scenarioName);
 							data.add(text);
-							if (text.toLowerCase().endsWith("(wsidi iteration " + properties.getProperty("wsidi.iterations") + "/"
-	                                + properties.getProperty("wsidi.iterations") + ")  - DONE - run completed".toLowerCase())) {
+							if (text.toLowerCase()
+									.endsWith("(wsidi iteration " + properties.getProperty("wsidi.iterations") + "/"
+											+ properties.getProperty("wsidi.iterations")
+											+ ")  - DONE - run completed".toLowerCase())) {
 								sleepAfterDisplay = true;
 								loadGeneratedWSIDI(scenarioName);
 								ResultUtils.getXMLParsingSvcImplInstance(null).getFdDSSFiles()
-	                                    .addFileToList(new File(Constant.SCENARIOS_DIR + scenarioName + "_DV.DSS"));
+										.addFileToList(new File(Constant.SCENARIOS_DIR + scenarioName + "_DV.DSS"));
 								scenarioNamesAndAction.remove(scenarioName);
 							}
 							break;
@@ -154,6 +158,17 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 		return progressFrame;
 	}
 
+	private JButton btnClose;
+
+	/**
+	 * Sets the text for the button at the botom of the dialog
+	 * 
+	 * @param text
+	 */
+	public void setBtnText(String text) {
+		btnClose.setText(text);
+	}
+
 	/**
 	 * This will prepare the Dialog box to show.
 	 *
@@ -167,7 +182,7 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 		setLayout(new BorderLayout(5, 5));
 		setTitle(title);
 		String[] data = { "No scenarios active" };
-		list = new JList(data);
+		list = new JList<String>(data);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.setLayoutOrientation(JList.VERTICAL);
 		list.setVisibleRowCount(-1);
@@ -178,7 +193,7 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 		listScroller.setMinimumSize(new Dimension(350, 150));
 		listScroller.setVisible(true);
 		add(BorderLayout.PAGE_START, listScroller);
-		JButton btnClose = new JButton("Stop all runs");
+		btnClose = new JButton(Constant.STATUS_BTN_TEXT_CLOSE);
 		btnClose.setPreferredSize(new Dimension(50, 20));
 		btnClose.setMinimumSize(new Dimension(50, 20));
 		btnClose.addActionListener(this);
@@ -212,8 +227,8 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 
 		// this.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
 		setVisible(true);
-		// repaint();
-		paintComponents(this.getGraphics());
+		repaint();
+		// paintComponents(this.getGraphics());
 		// print(this.getGraphics());
 		// paintAll(getGraphics());
 	}
@@ -228,8 +243,8 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 			listScroller.setVisible(true);
 		}
 		list.setListData(listData);
-		// repaint();
-		paintComponents(this.getGraphics());
+		repaint();
+		// paintComponents(this.getGraphics());
 		// print(this.getGraphics());
 		// paintAll(getGraphics());
 	}
@@ -244,6 +259,8 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 	 */
 	public void addScenarioNamesAndAction(String key, String type) {
 		scenarioNamesAndAction.put(key, type);
+		if (listScroller.isVisible())
+			invalidate();
 	}
 
 	/**
@@ -256,6 +273,8 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 	 */
 	public void addScenarioNamesAndAction(List<String> keys, String type) {
 		keys.forEach(key -> scenarioNamesAndAction.put(key, type));
+		if (listScroller.isVisible())
+			invalidate();
 	}
 
 	@Override
@@ -263,28 +282,35 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 		if ("Go".equals(ae.getActionCommand())) {
 			this.setVisible(true);
 		} else if ("Stop".equals(ae.getActionCommand())) {
-			Runtime rt = Runtime.getRuntime();
-			Process proc;
-			try {
-				proc = rt.exec("taskkill /f /t /fi \"WINDOWTITLE eq CalLiteRun*\" ");
-				scenarioNamesAndAction.clear();
-			} catch (IOException ex) {
-				LOG.error(ex);
+			if (btnClose.getText().equals(Constant.STATUS_BTN_TEXT_CLOSE))
+				this.setVisible(false);
+			else {
+				Runtime rt = Runtime.getRuntime();
+				Process proc;
+				try {
+					proc = rt.exec("taskkill /f /t /fi \"WINDOWTITLE eq CalLiteRun*\" ");
+					scenarioNamesAndAction.clear();
+					setBtnText(Constant.STATUS_BTN_TEXT_CLOSE);
+				} catch (IOException ex) {
+					LOG.error(ex);
+				}
 			}
 		}
 	}
 
 	/**
-	 * After the WSIDI batch runs this method is called to load the tables in the "Operations" tab.
+	 * After the WSIDI batch runs this method is called to load the tables in
+	 * the "Operations" tab.
 	 *
 	 * @param scenarioName
-	 *            The scenario file name which the batch program is run. the name should not have any extension.
+	 *            The scenario file name which the batch program is run. the
+	 *            name should not have any extension.
 	 */
 	public void loadGeneratedWSIDI(String scenarioName) {
 		String wsiDiSwpPath = Paths.get(Constant.RUN_DETAILS_DIR + scenarioName + Constant.RUN_DIR + Constant.LOOKUP_DIR
-		        + Constant.SWP_START_FILENAME + Constant.TABLE_EXT).toString();
-		String wsiDiCvpSwpPath = Paths.get(Constant.RUN_DETAILS_DIR + scenarioName + Constant.RUN_DIR + Constant.LOOKUP_DIR
-		        + Constant.CVP_START_FILENAME + Constant.TABLE_EXT).toString();
+				+ Constant.SWP_START_FILENAME + Constant.TABLE_EXT).toString();
+		String wsiDiCvpSwpPath = Paths.get(Constant.RUN_DETAILS_DIR + scenarioName + Constant.RUN_DIR
+				+ Constant.LOOKUP_DIR + Constant.CVP_START_FILENAME + Constant.TABLE_EXT).toString();
 		try {
 			DataTableModel swpDtm = tableSvc.getWsiDiTable(wsiDiSwpPath);
 			swpDtm.setCellEditable(true);
@@ -297,8 +323,9 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 			resultSvc.addUserDefinedTable(Constant.SWP_START_FILENAME, swpDtm);
 			resultSvc.addUserDefinedTable(Constant.CVP_START_FILENAME, cvpDtm);
 			/*
-			 * The following code we are sedtting the SWP and CVP file names as user defined because the table values we are getting
-			 * after the batch run we consider them as user defined.
+			 * The following code we are sedtting the SWP and CVP file names as
+			 * user defined because the table values we are getting after the
+			 * batch run we consider them as user defined.
 			 */
 			tableSvc.setWsidiForSWPFullFileName(Constant.USER_DEFINED);
 			tableSvc.setWsidiForCVPFullFileName(Constant.USER_DEFINED);
@@ -306,8 +333,8 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 			allButtonsDele.editButtonOnOperations(component);
 			List<String> value = dynamicControlSvc.getLabelAndGuiLinks4BOBasedOnTheRadioButtons(swingEngine);
 			JLabel jLabel = (JLabel) swingEngine.find("op_WSIDI_Status");
-			jLabel.setText(value.get(1) + " (Generated via " + Integer.parseInt(properties.getProperty("wsidi.iterations"))
-			        + " iterations)");
+			jLabel.setText(value.get(1) + " (Generated via "
+					+ Integer.parseInt(properties.getProperty("wsidi.iterations")) + " iterations)");
 		} catch (CalLiteGUIException ex) {
 			LOG.error(ex);
 		}

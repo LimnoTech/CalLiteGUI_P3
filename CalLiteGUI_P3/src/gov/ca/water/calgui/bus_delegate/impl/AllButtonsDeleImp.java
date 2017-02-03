@@ -280,6 +280,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 				}
 			}
 			progressFrame.addScenarioNamesAndAction(fileNames, Constant.BATCH_RUN);
+			progressFrame.setBtnText(Constant.STATUS_BTN_TEXT_STOP);
 			progressFrame.makeDialogVisible();
 			batchRunSvc.doBatch(fileNames, swingEngine, false);
 		}

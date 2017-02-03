@@ -24,7 +24,7 @@ public class Constant {
 			+ TABLE_EXT;
 	public static final String GUI_LINKS4_FILENAME = System.getProperty("user.dir") + "//Config//GUI_Links4" + CSV_EXT;
 	public static final String DYNAMIC_CONTROL_FOR_STARTUP_FILENAME = System.getProperty("user.dir")
-	        + "//Config//DynamicControlForStartUp" + CSV_EXT;
+			+ "//Config//DynamicControlForStartUp" + CSV_EXT;
 	public static final String TRIGGER_ENABLE_DISABLE_FILENAME = System.getProperty("user.dir")
 			+ "//Config//TriggerForDynamicDisplay" + CSV_EXT;
 	public static final String TRIGGER_CHECK_UNCHECK_FILENAME = System.getProperty("user.dir")
@@ -81,5 +81,9 @@ public class Constant {
 	public static final int ZERO = 0;
 	public static final int MIN_YEAR = 1921;
 	public static final int MAX_YEAR = 2003;
+
+	// Status window
+	public static final String STATUS_BTN_TEXT_CLOSE = "Close this status window";
+	public static final String STATUS_BTN_TEXT_STOP = "Stop all runs";
 
 }
