@@ -49,8 +49,7 @@ import gov.ca.water.calgui.tech_service.impl.FileSystemSvcImpl;
  *	2. TriggerForDymanicSelection.csv
  * </pre>
  *
- * @author mohan
- *
+ * @author Mohan
  */
 public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	private static final Logger LOG = Logger.getLogger(ApplyDynamicConDeleImp.class.getName());
@@ -193,7 +192,9 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	 * @param isSelected
 	 *            weather the item is selected or not.
 	 * @throws CalLiteGUIException
+	 *             see {@link CalLiteGUIException}
 	 * @throws CloneNotSupportedException
+	 *             see {@link CloneNotSupportedException}
 	 */
 	private void regulations(String itemName, boolean isSelected)
 			throws CalLiteGUIException, CloneNotSupportedException {
@@ -335,6 +336,27 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 			scrRegValues.setVisible(false);
 	}
 
+	/**
+	 * This method will display the table to the ui.
+	 * 
+	 * @param table
+	 *            This is the object of the {@link JTable} to display the table
+	 *            data.
+	 * @param tableName
+	 *            The name of the table which should be displayed.
+	 * @param regValue
+	 *            The regId from gui_link2.csv file which tells us what is the
+	 *            option for user defined table.
+	 * @param seedDataBO
+	 *            The seed data object for loading the table data.
+	 * @param optionName
+	 *            The shared option that is from the "Regulations" tab.
+	 * @return Will return true if the loading of the table is successful
+	 * @throws CalLiteGUIException
+	 *             see {@link CalLiteGUIException}
+	 * @throws CloneNotSupportedException
+	 *             see {@link CloneNotSupportedException}
+	 */
 	private boolean loadTableToUI(JTable table, String tableName, int regValue, SeedDataBO seedDataBO,
 			String optionName) throws CalLiteGUIException, CloneNotSupportedException {
 		DataTableModel dtm = getTable(tableName, regValue, seedDataBO, optionName);
@@ -350,6 +372,12 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 		return false;
 	}
 
+	/**
+	 * This method will set the label value.
+	 * 
+	 * @param label
+	 *            The value to be set.
+	 */
 	private void changeTheLabel(String label) {
 		JLabel lab = (JLabel) swingEngine.find("labReg");
 		lab.setText(label);
@@ -372,7 +400,9 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	 *            The shared option that is from the "Regulations" tab.
 	 * @return
 	 * @throws CalLiteGUIException
+	 *             see {@link CalLiteGUIException}
 	 * @throws CloneNotSupportedException
+	 *             see {@link CloneNotSupportedException}
 	 */
 	private DataTableModel getTable(String tableName, int regValue, SeedDataBO seedDataBO, String optionName)
 			throws CalLiteGUIException, CloneNotSupportedException {
@@ -422,8 +452,9 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	 *            seedData of the selected object.
 	 * @param type
 	 *            The type from the "Regulations" tab.
-	 * @return
+	 * @return Will return the table data in {@link DataTableModel} object.
 	 * @throws CalLiteGUIException
+	 *             see {@link CalLiteGUIException}
 	 */
 	private DataTableModel desideTableNameAndGetTable(String tableName, SeedDataBO seedDataBO, String type)
 			throws CalLiteGUIException {
@@ -459,7 +490,8 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	 * in.
 	 *
 	 * @param component
-	 * @return
+	 *            The component from which we need to get the table name.
+	 * @return Will return the table name from the component which is passed in.
 	 */
 	private String getTableNameFromTheConponent(Component component) {
 		if (component instanceof JTable) {
@@ -478,6 +510,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	 * visible based on the seedData passed in.
 	 *
 	 * @param seedDataBO
+	 *            It is used to show which radio button is to display.
 	 */
 	private void makeRBVisible(SeedDataBO seedDataBO) {
 		swingEngine.find(Constant.PANEL_RB_D1485).setVisible(false);

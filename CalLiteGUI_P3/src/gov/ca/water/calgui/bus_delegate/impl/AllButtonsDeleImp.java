@@ -70,10 +70,10 @@ import gov.ca.water.calgui.tech_service.impl.FileSystemSvcImpl;
 import hec.heclib.dss.HecDss;
 
 /**
- * This class is to handle all the button actions in the ui.
+ * This class is to handle all the button actions in the ui like Load Scenario,
+ * Save Scenario etc.
  *
- * @author mohan
- *
+ * @author Mohan
  */
 public class AllButtonsDeleImp implements IAllButtonsDele {
 	private static final Logger LOG = Logger.getLogger(AllButtonsDeleImp.class.getName());
@@ -143,9 +143,9 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 	}
 
 	/**
-	 * TODO
+	 * This method will tell whether to save the existing gui state to the file.
 	 *
-	 * @return
+	 * @return Will return true if we need to save to the file.
 	 */
 	private boolean decisionToSaveOrNot(String clsFileName) {
 		if (auditSvc.hasValues()) {
@@ -183,10 +183,12 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 	}
 
 	/**
-	 * TODO
+	 * This method will save the current state of the ui to the cls file name
+	 * given.
 	 *
 	 * @param clsFileName
-	 * @return
+	 *            The cls file name to save the currnt state of the ui.
+	 * @return Will return true if the save is successful.
 	 */
 	private boolean save(String clsFileName) {
 		ProgressFrame progressFrame = ProgressFrame.getProgressFrameInstance();
