@@ -3,7 +3,7 @@ package gov.ca.water.calgui.bus_service;
 /**
  * This is the interface for Monitor the process which is done behind the seen.
  * 
- * @author mohan
+ * @author Mohan
  */
 public interface IMonitorSvc {
 
@@ -12,7 +12,7 @@ public interface IMonitorSvc {
 	 *
 	 * @param scenarioName
 	 *            Just the scenario name.
-	 * @return
+	 * @return Will return the string to be displayed.
 	 */
 	public String save(String scenarioName);
 
@@ -21,7 +21,7 @@ public interface IMonitorSvc {
 	 *
 	 * @param scenarioName
 	 *            Just the scenario name.
-	 * @return
+	 * @return Will return the string to be displayed.
 	 */
 	public String batchRun(String scenarioName);
 
@@ -30,7 +30,7 @@ public interface IMonitorSvc {
 	 *
 	 * @param scenarioName
 	 *            Just the scenario name.
-	 * @return
+	 * @return Will return the string to be displayed.
 	 */
 	public String batchRunWsidi(String scenarioName);
 }

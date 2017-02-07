@@ -8,9 +8,10 @@ import org.swixml.SwingEngine;
 import gov.ca.water.calgui.bo.TriggerBO;
 
 /**
- * This is the interface for applying the dynamic controls.
+ * This is the interface for applying the dynamic controls like enabling,
+ * disabling etc.
  *
- * @author mohan
+ * @author Mohan
  */
 public interface IDynamicControlSvc {
 
@@ -23,49 +24,65 @@ public interface IDynamicControlSvc {
 	 * </pre>
 	 *
 	 * @param itemName
+	 *            The item name
 	 * @param isSelected
+	 *            Whether it is selected or not.
 	 * @param isEnabled
+	 *            Whether it is enabled or not.
 	 * @param swingEngine
+	 *            The object of the GUI.
 	 */
 	public void doDynamicControl(String itemName, boolean isSelected, boolean isEnabled, SwingEngine swingEngine);
 
 	/**
-	 * This will return the first {@link TriggerBO} object for the given {@code id}.
+	 * This will return the first {@link TriggerBO} object for the given
+	 * {@code id}.
 	 *
 	 * @param id
-	 * @return
+	 *            The id of the trigger.
+	 * @return Will return the first {@link TriggerBO} object for the given
+	 *         {@code id}.
 	 */
 	public TriggerBO getTriggerBOById(String id);
 
 	/**
-	 * This method is used for making components visible and non-visible the component and it's children.
+	 * This method is used for making components visible or non-visible and it's
+	 * children.
 	 *
 	 * @param component
+	 *            The component.
 	 * @param isVisible
+	 *            value to be set.
 	 */
 	public void toggleVisComponentAndChildren(Component component, Boolean isVisible);
 
 	/**
-	 * This method is used for making components enabling and disabling the component and it's children.
+	 * This method is used for making components enabling and disabling the
+	 * component and it's children.
 	 *
 	 * @param component
-	 * @param b
+	 *            The component.
+	 * @param isEnable
+	 *            to enable or not.
 	 */
 	public void toggleEnComponentAndChildren(Component component, boolean isEnable);
 
 	/**
-	 * This method is used to decide what is the lookup value for Gui_Link4 and the label for the Operations tab. This will return
-	 * the list of strings in which the 1st is the lookup value and the 2nd is the label.
+	 * This method is used to decide what is the lookup value for Gui_Link4 and
+	 * the label for the Operations tab. This will return the list of strings in
+	 * which the 1st is the lookup value and the 2nd is the label.
 	 *
 	 * @param swingEngine
-	 * @return
+	 *            The object of the GUI.
+	 * @return Will return the list of strings in which the 1st is the lookup
+	 *         value and the 2nd is the label.
 	 */
 	public List<String> getLabelAndGuiLinks4BOBasedOnTheRadioButtons(SwingEngine swingEngine);
 
 	/**
 	 * This is used to prevent the ItemListener.
 	 *
-	 * @return
+	 * @return Will return the roe trigger value.
 	 */
 	public boolean isPreventRoeTrigger();
 }

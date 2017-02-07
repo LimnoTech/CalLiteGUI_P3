@@ -8,21 +8,23 @@ import org.swixml.SwingEngine;
 /**
  * This is the interface for parsing the GUI.xml into SwingEngine.
  *
- * @author mohan
+ * @author Mohan
  */
 public interface IXMLParsingSvc {
 
 	/**
 	 * This method will return the object of current {@link SwingEngine}.
 	 *
-	 * @return
+	 * @return Will return the {@link SwingEngine}.
 	 */
 	public SwingEngine getSwingEngine();
 
 	/**
-	 * This will return the control Id which are Visible in the {@link SwingEngine} Object.
+	 * This will return the control Id which are Visible in the
+	 * {@link SwingEngine} Object.
 	 *
-	 * @return
+	 * @return Will return the control Id which are Visible in the
+	 *         {@link SwingEngine} Object.
 	 */
 	public Set<String> getIdFromXML();
 
@@ -31,21 +33,22 @@ public interface IXMLParsingSvc {
 	 *
 	 * @param name
 	 *            Name of the component.
-	 * @return
+	 * @return Will return the Id of the component passed in.
 	 */
 	public String getcompIdfromName(String name);
 
 	/**
-	 * This will return the table id which are defined by the user. It will exclude some default table ids.
+	 * This will return the table id which are defined by the user. It will
+	 * exclude some default table ids.
 	 *
-	 * @return
+	 * @return Will return the table id which are defined by the user.
 	 */
 	public List<String> getNewUserDefinedTables();
 
 	/**
 	 * This is used to get all the Text field ids.
 	 *
-	 * @return
+	 * @return Will return all the text fields ids.
 	 */
 	public List<String> getjTextFieldIds();
 }
