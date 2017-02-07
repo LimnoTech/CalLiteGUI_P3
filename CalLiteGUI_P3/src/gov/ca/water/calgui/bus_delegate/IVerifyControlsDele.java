@@ -1,9 +1,10 @@
 package gov.ca.water.calgui.bus_delegate;
 
 /**
- * This interface is used for verifying the data before the application is started.
+ * This interface is used for verifying the data before the application is
+ * started.
  * 
- * @author mohan
+ * @author Mohan
  *
  */
 public interface IVerifyControlsDele {

@@ -35,10 +35,10 @@ import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.presentation.NumericTextField;
 
 /**
- * This class is used to show the Scenario state of the application and also compare to the saved files if provided.
+ * This class is used to show the Scenario state of the application and also
+ * compare to the saved files if provided.
  *
- * @author mohan
- *
+ * @author Mohan
  */
 public class ScenarioDeleImp implements IScenarioDele {
 	private IXMLParsingSvc xmlParsingSvc = XMLParsingSvcImpl.getXMLParsingSvcImplInstance();
@@ -68,12 +68,14 @@ public class ScenarioDeleImp implements IScenarioDele {
 	}
 
 	/**
-	 * This method will build the Map's for all the files and then convert them into the {@link DataTableModel}.
+	 * This method will build the Map's for all the files and then convert them
+	 * into the {@link DataTableModel}.
 	 *
 	 * @param fileNames
-	 *            - names of the cls file.
-	 * @return The Object of {@link DataTableModel} which has the comparison for all the files which are passed in from the @param
-	 *         fileName. If there is only one file name then it will give the base one.
+	 *            Names of the cls file.
+	 * @return The Object of {@link DataTableModel} which has the comparison for
+	 *         all the files which are passed in from the @param fileName. If
+	 *         there is only one file name then it will give the base one.
 	 */
 	private DataTableModel buildScenarioTables(List<String> fileNames) {
 		List<Map<String, String>> clsMapList = new ArrayList<Map<String, String>>();
@@ -87,8 +89,9 @@ public class ScenarioDeleImp implements IScenarioDele {
 			index++;
 		}
 		/*
-		 * This will take all map's of the cls file and make a linear structure of the file. we are using List because we don't know
-		 * the no of rows. It may vary based on file.
+		 * This will take all map's of the cls file and make a linear structure
+		 * of the file. we are using List because we don't know the no of rows.
+		 * It may vary based on file.
 		 */
 		List<Object[]> data = new ArrayList<Object[]>();
 		Map<String, String> firstMap = clsMapList.get(0);
@@ -106,7 +109,8 @@ public class ScenarioDeleImp implements IScenarioDele {
 			}
 			data.add(temp);
 		}
-		// This will change the data into the structure which the DataTableModle accepts.
+		// This will change the data into the structure which the DataTableModle
+		// accepts.
 		Object[][] tableData = new Object[data.size()][];
 		index = 0;
 		for (Object[] objects : data) {
@@ -120,8 +124,8 @@ public class ScenarioDeleImp implements IScenarioDele {
 	 * This method will give the Object of the current Scenario.
 	 *
 	 * @param dataTableModel
-	 *            - The whole comparison data Object.
-	 * @return will return the Object of the current Scenario.
+	 *            The whole comparison data Object.
+	 * @return Will return the Object of the current Scenario.
 	 */
 	private DataTableModel builsBaseScenarioTables(DataTableModel dataTableModel) {
 		Object[][] oldData = dataTableModel.getData();
@@ -142,7 +146,7 @@ public class ScenarioDeleImp implements IScenarioDele {
 	 * This will loop on the data and find the difference between the rows.
 	 *
 	 * @param dataTableModel
-	 *            - The whole comparison data Object.
+	 *            The whole comparison data Object.
 	 * @return The Object has the rows which holds different values.
 	 */
 	private DataTableModel differenceScenarioTables(DataTableModel dataTableModel) {
@@ -169,23 +173,27 @@ public class ScenarioDeleImp implements IScenarioDele {
 	}
 
 	/**
-	 * This will read in the cls file and from that it will convert the cls file data into the Map.
+	 * This will read in the cls file and from that it will convert the cls file
+	 * data into the Map.
 	 *
 	 * @param fileName
-	 *            - names of the cls file.
+	 *            Names of the cls file.
 	 * @param swingEngine
-	 *            - The instance of Swing Engine.
+	 *            The instance of Swing Engine.
 	 * @param tableMap
-	 *            - Map of the table data and the key is the table Id.
-	 * @return will return the map of whole cls file.
+	 *            Map of the table data and the key is the table Id.
+	 * @return Will return the map of whole cls file.
 	 */
-	private Map<String, String> buildMapOfCLSFile(String fileName, SwingEngine swingEngine, Map<String, SeedDataBO> tableMap) {
+	private Map<String, String> buildMapOfCLSFile(String fileName, SwingEngine swingEngine,
+			Map<String, SeedDataBO> tableMap) {
 		List<String> controlStrList = new ArrayList<String>();
 		List<String> dataTableModelStrList = new ArrayList<String>();
 		List<String> regulationoptionsStr = new ArrayList<String>();
 		// Read in the cls file data.
-		resultSvc.getCLSData(Constant.SCENARIOS_DIR + fileName, controlStrList, dataTableModelStrList, regulationoptionsStr);
-		// This will build all the component data into list of ScenarioDisplayBO.
+		resultSvc.getCLSData(Constant.SCENARIOS_DIR + fileName, controlStrList, dataTableModelStrList,
+				regulationoptionsStr);
+		// This will build all the component data into list of
+		// ScenarioDisplayBO.
 		List<ScenarioDisplayBO> componentData = buildCompDataIntoScenarioDisplayBOs(controlStrList, swingEngine);
 		// This will convert the table Data in the cls file to the map.
 		Map<String, String> tableData = buildTableDataInCLSIntoMap(dataTableModelStrList, swingEngine, tableMap);
@@ -193,19 +201,19 @@ public class ScenarioDeleImp implements IScenarioDele {
 	}
 
 	/**
-	 * This will convert the Table Data in the cls file into the map. the table rows have the key as the following format
-	 * "Empty-dataTable name-RowNo".
+	 * This will convert the Table Data in the cls file into the map. the table
+	 * rows have the key as the following format "Empty-dataTable name-RowNo".
 	 *
 	 * @param dataTableModelStrList
-	 *            - The table Data list from the cls file.
+	 *            The table Data list from the cls file.
 	 * @param swingEngine
-	 *            - The instance of Swing Engine.
+	 *            The instance of Swing Engine.
 	 * @param tableMap
-	 *            - Map of the table data and the key is the table Id.
+	 *            Map of the table data and the key is the table Id.
 	 * @return This contain all the table Data as a map.
 	 */
 	private Map<String, String> buildTableDataInCLSIntoMap(List<String> dataTableModelStrList, SwingEngine swingEngine,
-	        Map<String, SeedDataBO> tableMap) {
+			Map<String, SeedDataBO> tableMap) {
 		Map<String, String> allTableData = new LinkedHashMap<String, String>();
 		String tableName = "";
 		for (String dataTableStr : dataTableModelStrList) {
@@ -220,7 +228,8 @@ public class ScenarioDeleImp implements IScenarioDele {
 			String[] tableData = arr[1].split(Constant.SEMICOLON);
 			int index = 1;
 			for (int i = 0; i < tableData.length; i++) {
-				allTableData.put(Constant.EMPTY + Constant.DASH + tableName.toUpperCase() + Constant.DASH + index, tableData[i]);
+				allTableData.put(Constant.EMPTY + Constant.DASH + tableName.toUpperCase() + Constant.DASH + index,
+						tableData[i]);
 				index++;
 			}
 		}
@@ -228,16 +237,17 @@ public class ScenarioDeleImp implements IScenarioDele {
 	}
 
 	/**
-	 * This method will convert the component Data into the map and add the table Data map into the generated map.
+	 * This method will convert the component Data into the map and add the
+	 * table Data map into the generated map.
 	 *
 	 * @param componentData
-	 *            - The list of {@link ScenarioDisplayBO} Objects.
+	 *            The list of {@link ScenarioDisplayBO} Objects.
 	 * @param tableData
-	 *            - Map of the Table Data.
+	 *            Map of the Table Data.
 	 * @return This will return the map of all the values in the cls file.
 	 */
 	private Map<String, String> buildDisplayBOsAndTableDataIntoMap(List<ScenarioDisplayBO> componentData,
-	        Map<String, String> tableData) {
+			Map<String, String> tableData) {
 		String parent1 = "";
 		String parent2 = "";
 		String currentParent = "";
@@ -286,16 +296,19 @@ public class ScenarioDeleImp implements IScenarioDele {
 	}
 
 	/**
-	 * This method will take the control strings from the cls file and convert them into the {@link ScenarioDisplayBO} Object. This
-	 * method will also remove all the unwanted control from the cls file for the scenario display.
+	 * This method will take the control strings from the cls file and convert
+	 * them into the {@link ScenarioDisplayBO} Object. This method will also
+	 * remove all the unwanted control from the cls file for the scenario
+	 * display.
 	 *
 	 * @param controlStrList
-	 *            - The control Data list from the cls file.
+	 *            The control Data list from the cls file.
 	 * @param swingEngine
-	 *            - The instance of Swing Engine.
+	 *            The instance of Swing Engine.
 	 * @return This will return the list of {@link ScenarioDisplayBO}.
 	 */
-	private List<ScenarioDisplayBO> buildCompDataIntoScenarioDisplayBOs(List<String> controlStrList, SwingEngine swingEngine) {
+	private List<ScenarioDisplayBO> buildCompDataIntoScenarioDisplayBOs(List<String> controlStrList,
+			SwingEngine swingEngine) {
 		List<ScenarioDisplayBO> componentData = new ArrayList<ScenarioDisplayBO>();
 		for (String controlStr : controlStrList) {
 			String[] arr = controlStr.split(Constant.PIPELINE_DELIMITER);
@@ -386,10 +399,11 @@ public class ScenarioDeleImp implements IScenarioDele {
 	}
 
 	/**
-	 * This method will go to the root parent and list them as a string with separated as "|".
+	 * This method will go to the root parent and list them as a string with
+	 * separated as "|".
 	 *
 	 * @param component
-	 *            - The component in the SwingEngine
+	 *            The component in the SwingEngine
 	 * @return The string of the parents which is separated with "|".
 	 */
 	private String getControlParents(Component component) {
