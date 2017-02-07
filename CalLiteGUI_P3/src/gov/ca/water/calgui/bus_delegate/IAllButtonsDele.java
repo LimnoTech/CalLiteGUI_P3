@@ -15,6 +15,8 @@ public interface IAllButtonsDele {
 
 	/**
 	 * This is to handle the "Save" button on the "Run Settings" tab.
+	 * 
+	 * @return Will return true if the save is successful.
 	 */
 	public boolean saveCurrentStateToFile();
 

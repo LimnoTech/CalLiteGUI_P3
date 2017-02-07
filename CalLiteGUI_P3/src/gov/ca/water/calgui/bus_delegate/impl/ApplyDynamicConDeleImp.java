@@ -398,7 +398,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	 *            seedData of the selected object.
 	 * @param optionName
 	 *            The shared option that is from the "Regulations" tab.
-	 * @return
+	 * @return Will return the {@link DataTableModel} object based on the values passed in.
 	 * @throws CalLiteGUIException
 	 *             see {@link CalLiteGUIException}
 	 * @throws CloneNotSupportedException

@@ -541,7 +541,7 @@ public final class TableSvcImpl implements ITableSvc {
 	 * @param data
 	 *            The table data.
 	 * @return columns names as {@link String} Array.
-	 * @throws CalLiteGUIException
+	 * @throws CalLiteGUIException see {@link CalLiteGUIException}
 	 */
 	private String[] getColumnName(List<String> data) throws CalLiteGUIException {
 		try {

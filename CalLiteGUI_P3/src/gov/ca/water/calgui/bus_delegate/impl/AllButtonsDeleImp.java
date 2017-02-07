@@ -147,6 +147,13 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 	 *
 	 * @return Will return true if we need to save to the file.
 	 */
+	/**
+	 * This method will tell whether to save the existing gui state to the file.
+	 * 
+	 * @param clsFileName
+	 *            The cls file name.
+	 * @return Will return true if we need to save to the file.
+	 */
 	private boolean decisionToSaveOrNot(String clsFileName) {
 		if (auditSvc.hasValues()) {
 			return true;

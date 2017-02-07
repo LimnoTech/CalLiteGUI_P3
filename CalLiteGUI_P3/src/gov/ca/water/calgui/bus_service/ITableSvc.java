@@ -72,8 +72,8 @@ public interface ITableSvc {
 	/**
 	 * This will set the full path of the CVP file name which is to load in the
 	 * Operations tab.
-	 *
-	 * @param wsidiFileSuffix
+	 * 
+	 * @param wsidiForCVPFullFileName
 	 *            This is the full path of the CVP file name.
 	 */
 	public void setWsidiForCVPFullFileName(String wsidiForCVPFullFileName);
