@@ -29,7 +29,7 @@ import gov.ca.water.calgui.tech_service.impl.FileSystemSvcImpl;
 /**
  * This class will parse the gui.xml into the Swing Engine.
  *
- * @author mohan
+ * @author Mohan
  *
  */
 public final class XMLParsingSvcImpl implements IXMLParsingSvc {
@@ -44,9 +44,11 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 	private List<String> jTextFieldIds;
 
 	/**
-	 * This method is for implementing the singleton.
+	 * This method is for implementing the singleton. It will return the
+	 * instance of this class if it is empty it will create one.
 	 *
-	 * @return
+	 * @return Will return the instance of this class if it is empty it will
+	 *         create one.
 	 */
 	public static IXMLParsingSvc getXMLParsingSvcImplInstance() {
 		if (xmlParsingSvc == null) {
@@ -55,9 +57,10 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 		return xmlParsingSvc;
 	}
 
-	/**
-	 * In this we 1st build the SwingEngine from the Gui.xml file. We build the newUserDefinedTables list by getting all the JTable
-	 * component id and exclude the default ones.
+	/*
+	 * In this we 1st build the SwingEngine from the Gui.xml file. We build the
+	 * newUserDefinedTables list by getting all the JTable component id and
+	 * exclude the default ones.
 	 */
 	private XMLParsingSvcImpl() {
 		LOG.debug("Building XMLParsingSvcImpl Object.");
@@ -72,8 +75,8 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 		} catch (CalLiteGUIException ex) {
 			errorHandlingSvc.displayErrorMessageBeforeTheUI(ex);
 		} catch (Exception ex) {
-			errorHandlingSvc.displayErrorMessageBeforeTheUI(
-			        new CalLiteGUIException("This is from Swing Engine : " + Constant.NEW_LINE + ex.getMessage(), ex, true));
+			errorHandlingSvc.displayErrorMessageBeforeTheUI(new CalLiteGUIException(
+					"This is from Swing Engine : " + Constant.NEW_LINE + ex.getMessage(), ex, true));
 		}
 		Set<String> compIds = this.getIdFromXML();
 		compIds.stream().forEach((compId) -> {
@@ -83,14 +86,14 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 			}
 		});
 		List<String> temp = compIds.stream().filter((compId) -> swingEngine.find(compId) instanceof JTextField)
-		        .collect(Collectors.toList());
+				.collect(Collectors.toList());
 		for (String string : temp) {
 			if (checkIsItFromResultPart(string)) {
 				jTextFieldIds.add(string);
 			}
 		}
 		this.newUserDefinedTables = compIds.stream().filter((compId) -> swingEngine.find(compId) instanceof JTable)
-		        .collect(Collectors.toList());
+				.collect(Collectors.toList());
 		this.newUserDefinedTables.remove("tblRegValues");
 		this.newUserDefinedTables.remove("tblOpValues");
 		this.newUserDefinedTables.remove("tblIF3");
@@ -102,7 +105,8 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 	 * This method will tell whether the id is from the result part or not.
 	 *
 	 * @param compId
-	 * @return
+	 *            The ID of the component.
+	 * @return Will check whether the id is from the result part of the ui.
 	 */
 	private boolean checkIsItFromResultPart(String compId) {
 		List<String> resultTabNames = Arrays.asList("Custom", "externalPDF", "Reporting", "schematics");
@@ -119,7 +123,9 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 	 * This will get all the {@code JPanel} parent of the {@code Component}
 	 *
 	 * @param component
+	 *            The component to which we need the parent names.
 	 * @param names
+	 *            This method will populate the parent names into this field.
 	 */
 	private void getAllThePanelNamesOfParent(Component component, List<String> names) {
 		if (component instanceof JPanel) {

@@ -1,28 +1,91 @@
 package gov.ca.water.calgui.bo;
 
 /**
- * This is used to hold the information of GUI_Link2.table in memory.
+ * This is used to hold the information of GUI_Link2.table in memory. Please
+ * refer GUI_Link2.table for more information.
+ * 
+ * @author Mohan
  */
 public class SeedDataBO {
+	/**
+	 * The id of the gui from GUI_Link2.table. This is control value from the
+	 * gui.xml file.
+	 */
 	private String guiId;
+	/**
+	 * The table name from GUI_Link2.table. This is the file name which the
+	 * index and option are going to be stored.
+	 */
 	private String tableName;
+	/**
+	 * The index from GUI_Link2.table. The value which is return to the table
+	 * name file.
+	 */
 	private String index;
+	/**
+	 * The option from GUI_Link2.table. The value which is return to the table
+	 * name file.
+	 */
 	private String option;
+	/**
+	 * The description from GUI_Link2.table. The value which is return to the
+	 * table name file.
+	 */
 	private String description;
+	/**
+	 * The dashboard from GUI_Link2.table. This will tell this control belong to
+	 * which dashboard.
+	 */
 	private String dashboard;
+	/**
+	 * The dataTables from GUI_Link2.table. Please refer GUI_Link2.table for
+	 * more information.
+	 */
 	private String dataTables;
+	/**
+	 * The switchID from GUI_Link2.table. Please refer GUI_Link2.table for more
+	 * information.
+	 */
 	private String switchID;
+	/**
+	 * The tableID from GUI_Link2.table. Please refer GUI_Link2.table for more
+	 * information.
+	 */
 	private String tableID;
+	/**
+	 * The d1485d1641 from GUI_Link2.table. Please refer GUI_Link2.table for
+	 * more information.
+	 */
 	private String d1485d1641;
+	/**
+	 * The d1641 from GUI_Link2.table. Please refer GUI_Link2.table for more
+	 * information.
+	 */
 	private String d1641;
+	/**
+	 * The noregulation from GUI_Link2.table. Please refer GUI_Link2.table for
+	 * more information.
+	 */
 	private String noregulation;
+	/**
+	 * The userDefined from GUI_Link2.table. Please refer GUI_Link2.table for
+	 * more information.
+	 */
 	private String userDefined;
+	/**
+	 * The d1485 from GUI_Link2.table. Please refer GUI_Link2.table for more
+	 * information.
+	 */
 	private String d1485;
+	/**
+	 * The regID from GUI_Link2.table. Please refer GUI_Link2.table for more
+	 * information.
+	 */
 	private String regID;
 
 	public SeedDataBO(String guiId, String tableName, String index, String option, String description, String dashboard,
-	        String dataTables, String switchID, String tableID, String d1485d1641, String d1641, String noregulation,
-	        String userDefined, String d1485, String regID) {
+			String dataTables, String switchID, String tableID, String d1485d1641, String d1641, String noregulation,
+			String userDefined, String d1485, String regID) {
 		this.guiId = guiId;
 		this.tableName = tableName;
 		this.index = index;

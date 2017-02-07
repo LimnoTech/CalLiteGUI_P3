@@ -1,23 +1,70 @@
 package gov.ca.water.calgui.bo;
 
 /**
- * This is used to hold the information of GUI_Link4.table in memory.
+ * This is used to hold the information of GUI_Link4.table in memory. Please
+ * refer GUI_Link4.table for more information.
+ * 
+ * @author Mohan
  */
 public class GuiLinks4BO {
+	/**
+	 * The RunBasis_ID from GUI_Link4.table. Please refer GUI_Link4.table for
+	 * more information.
+	 */
 	private String runBasisID;
+	/**
+	 * The LOD_ID from GUI_Link4.table. Please refer GUI_Link4.table for more
+	 * information.
+	 */
 	private String lodId;
+	/**
+	 * The CCProject_ID from GUI_Link4.table. Please refer GUI_Link4.table for
+	 * more information.
+	 */
 	private String ccprojectId;
+	/**
+	 * The CCModel_ID from GUI_Link4.table. Please refer GUI_Link4.table for
+	 * more information.
+	 */
 	private String ccmodelId;
+	/**
+	 * The SV_File from GUI_Link4.table. Please refer GUI_Link4.table for more
+	 * information.
+	 */
 	private String svFile;
+	/**
+	 * The F_PartSV from GUI_Link4.table. Please refer GUI_Link4.table for more
+	 * information.
+	 */
 	private String fPartSV1;
+	/**
+	 * The Init_File from GUI_Link4.table. Please refer GUI_Link4.table for more
+	 * information.
+	 */
 	private String initFile;
+	/**
+	 * The F_PartSV from GUI_Link4.table. Please refer GUI_Link4.table for more
+	 * information.
+	 */
 	private String fPartSV2;
+	/**
+	 * The CVP_WSI_DI from GUI_Link4.table. Please refer GUI_Link4.table for
+	 * more information.
+	 */
 	private String cvpWsiDi;
+	/**
+	 * The SWP_WSI_DI from GUI_Link4.table. Please refer GUI_Link4.table for
+	 * more information.
+	 */
 	private String swpWsiDi;
+	/**
+	 * The Lookup from GUI_Link4.table. Please refer GUI_Link4.table for more
+	 * information.
+	 */
 	private String lookup;
 
-	public GuiLinks4BO(String runBasisID, String lodId, String ccprojectId, String ccmodelId, String svFile, String fPartSV1,
-	        String initFile, String fPartSV2, String cvpWsiDi, String swpWsiDi, String lookup) {
+	public GuiLinks4BO(String runBasisID, String lodId, String ccprojectId, String ccmodelId, String svFile,
+			String fPartSV1, String initFile, String fPartSV2, String cvpWsiDi, String swpWsiDi, String lookup) {
 		super();
 		this.runBasisID = runBasisID;
 		this.lodId = lodId;

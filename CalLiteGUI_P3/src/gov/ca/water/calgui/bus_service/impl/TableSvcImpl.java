@@ -25,7 +25,7 @@ import gov.ca.water.calgui.tech_service.impl.FileSystemSvcImpl;
 /**
  * This is the class for handling all the tables.
  *
- * @author mohan
+ * @author Mohan
  */
 public final class TableSvcImpl implements ITableSvc {
 
@@ -40,10 +40,11 @@ public final class TableSvcImpl implements ITableSvc {
 	                                                                // of not.
 
 	/**
-	 * This method is for implementing the singleton.
+	 * This method is for implementing the singleton. It will return the instance of this class if it is empty it will create one.
 	 *
-	 * @param list
-	 * @return
+	 * @param list 
+	 * 			This is the list of user defined tables to load.
+	 * @return Will return the instance of this class if it is empty it will create one.
 	 */
 	public static ITableSvc getTableSvcImplInstance(List<SeedDataBO> list) {
 		if (tableSvc == null) {
@@ -189,7 +190,8 @@ public final class TableSvcImpl implements ITableSvc {
 	/**
 	 * This will build the map of tables with the seed data.
 	 *
-	 * @param seedDataBOList
+	 * @param seedDataBOList 
+	 * 				The list of seed data objects.
 	 */
 	private void generateMapForTables(List<SeedDataBO> seedDataBOList) {
 		List<String> list1 = new ArrayList<String>();
@@ -269,7 +271,8 @@ public final class TableSvcImpl implements ITableSvc {
 	/**
 	 * This will take the {@link SeedDataBO} object and build the table map depending on the {@link SeedDataBO}.
 	 *
-	 * @param seedDataBOObj
+	 * @param seedDataBOObj 
+	 * 				The list of seed data objects.
 	 * @return This will return the Map of tables with the table name as key and table data as value.
 	 * @throws CalLiteGUIException
 	 *             If anything wrong about the file then it will throw a exception with the information about it.
@@ -503,8 +506,8 @@ public final class TableSvcImpl implements ITableSvc {
 	/**
 	 * This method is used to get the real values from the array passed in.
 	 *
-	 * @param lineData
-	 * @return
+	 * @param lineData data in the line.
+	 * @return Will return the real values.
 	 */
 	private static List<String> removeAllEmptyFromArray(String[] lineData) {
 		List<String> temp = new ArrayList<String>();
@@ -519,8 +522,9 @@ public final class TableSvcImpl implements ITableSvc {
 	/**
 	 * This method will return true if all the data sent in as list are Double.
 	 *
-	 * @param data
-	 * @return
+	 * @param data 
+	 * 			The data that should be checked.
+	 * @return Will return whether the list is double or not.
 	 */
 	private static boolean isDouble(List<String> data) {
 		for (String intValue : data) {
@@ -559,7 +563,8 @@ public final class TableSvcImpl implements ITableSvc {
 	/**
 	 * This will take the table data and return how many rows in that table.
 	 *
-	 * @param data
+	 * @param data 
+	 * 			The table data.
 	 * @return Number of rows.
 	 */
 	private static int getRowNumbers(List<String> data) {
@@ -575,8 +580,9 @@ public final class TableSvcImpl implements ITableSvc {
 	/**
 	 * This method will take the string and tell whether it's Double or not.
 	 *
-	 * @param value
-	 * @return
+	 * @param value 
+	 * 			String value.
+	 * @return Will return true if the string value is Double.
 	 */
 	private static boolean isDouble(String value) {
 		try {
