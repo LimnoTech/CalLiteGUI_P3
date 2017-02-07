@@ -189,7 +189,6 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 	 * @return
 	 */
 	private boolean save(String clsFileName) {
-
 		ProgressFrame progressFrame = ProgressFrame.getProgressFrameInstance();
 		String tempName = Constant.SCENARIOS_DIR + clsFileName + Constant.CLS_EXT;
 		boolean proceed = true;
@@ -281,6 +280,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 				}
 			}
 			progressFrame.addScenarioNamesAndAction(fileNames, Constant.BATCH_RUN);
+			progressFrame.setBtnText(Constant.STATUS_BTN_TEXT_STOP);
 			progressFrame.makeDialogVisible();
 			batchRunSvc.doBatch(fileNames, swingEngine, false);
 		}
@@ -388,7 +388,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 						(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME));
 				return;
 			}
-			// populate data.
+			// poplute data.
 			StringTokenizer st1 = new StringTokenizer(totalData, Constant.NEW_LINE);
 			for (int i = 0; st1.hasMoreTokens(); i++) {
 				String rowstring = st1.nextToken();
@@ -674,16 +674,22 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 			Object[] options = { "Save", "Don't Save", "Cancel" };
 			optionPane = new JOptionPane("Current scenario not saved. Would you like to save before exiting?",
 					JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION, null, options, options[0]);
-			JDialog dialog = optionPane.createDialog("CalLite");
+			JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "CalLite");
 			dialog.setIconImage(icon.getImage());
 			dialog.setResizable(false);
 			dialog.setVisible(true);
 			if (optionPane.getValue().toString().equals("Save")) {
-				boolean isSaved = saveCurrentStateToFile();
-				if (!isSaved)
-					errorHandlingSvc.businessErrorHandler("We encounter a problem when saving the file.", "",
-							(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME));
-				System.exit(0);
+				if (((JTextField) swingEngine.find("run_txfScen")).getText().toUpperCase().equals("DEFAULT.CLS")) {
+					JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
+							"The CalLite GUI is not allowed to overwrite DEFAULT.CLS. Please use the Save As command to save your changes before exiting.");
+
+				} else {
+					boolean isSaved = saveCurrentStateToFile();
+					if (!isSaved)
+						errorHandlingSvc.businessErrorHandler("We encounter a problem when saving the file.", "",
+								(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME));
+					System.exit(0);
+				}
 			} else if (optionPane.getValue().toString().equals("Don't Save")) {
 				System.exit(0);
 			}

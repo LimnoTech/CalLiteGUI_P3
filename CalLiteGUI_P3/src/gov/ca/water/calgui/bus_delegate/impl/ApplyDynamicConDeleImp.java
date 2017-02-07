@@ -41,7 +41,8 @@ import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.FileSystemSvcImpl;
 
 /**
- * This class will apply the dynamic behaver which is controlled by the files listed bellow.
+ * This class will apply the dynamic behaver which is controlled by the files
+ * listed bellow.
  *
  * <pre>
  *	1. TriggerForDymanicSelection.csv
@@ -66,19 +67,23 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	public void applyDynamicControlForListFromFile() {
 		try {
 			List<String> controlIds = fileSystemSvc.getFileData(Constant.DYNAMIC_CONTROL_FOR_STARTUP_FILENAME, false,
-			        line -> !line.startsWith(Constant.EXCLAMATION));
+					line -> !line.startsWith(Constant.EXCLAMATION));
 
 			List<JCheckBox> checkBoxList = controlIds.stream().filter(id -> swingEngine.find(id) instanceof JCheckBox)
-			        .map(id -> (JCheckBox) swingEngine.find(id)).filter(JCheckBox::isSelected).collect(Collectors.toList());
+					.map(id -> (JCheckBox) swingEngine.find(id)).filter(JCheckBox::isSelected)
+					.collect(Collectors.toList());
 
-			List<JRadioButton> radioButtonList = controlIds.stream().filter(id -> swingEngine.find(id) instanceof JRadioButton)
-			        .map(id -> (JRadioButton) swingEngine.find(id)).filter(JRadioButton::isSelected).collect(Collectors.toList());
+			List<JRadioButton> radioButtonList = controlIds.stream()
+					.filter(id -> swingEngine.find(id) instanceof JRadioButton)
+					.map(id -> (JRadioButton) swingEngine.find(id)).filter(JRadioButton::isSelected)
+					.collect(Collectors.toList());
 			for (JRadioButton jRadioButton : radioButtonList) {
-				dynamicControlSvc.doDynamicControl(jRadioButton.getName(), jRadioButton.isSelected(), jRadioButton.isEnabled(),
-				        swingEngine);
+				dynamicControlSvc.doDynamicControl(jRadioButton.getName(), jRadioButton.isSelected(),
+						jRadioButton.isEnabled(), swingEngine);
 			}
 			for (JCheckBox jCheckBox : checkBoxList) {
-				dynamicControlSvc.doDynamicControl(jCheckBox.getName(), jCheckBox.isSelected(), jCheckBox.isEnabled(), swingEngine);
+				dynamicControlSvc.doDynamicControl(jCheckBox.getName(), jCheckBox.isSelected(), jCheckBox.isEnabled(),
+						swingEngine);
 			}
 		} catch (CalLiteGUIException ex) {
 			LOG.error(ex);
@@ -93,7 +98,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 		} catch (CloneNotSupportedException ex) {
 			LOG.error(ex);
 			errorHandlingSvc.businessErrorHandler((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME),
-			        new CalLiteGUIException("Unable to clone the table class.", ex));
+					new CalLiteGUIException("Unable to clone the table class.", ex));
 		} catch (CalLiteGUIException ex) {
 			LOG.error(ex);
 			errorHandlingSvc.businessErrorHandler((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), ex);
@@ -102,15 +107,18 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 			((JRadioButton) swingEngine.find("fac_rdb0")).setSelected(true);
 		}
 		dynamicControlSvc.doDynamicControl(itemName, isSelected, isEnabled, swingEngine);
-		// This is for changing the "SV" and "Init" Files in the "Hydroclimate" tab.
-		List<String> controlIdForChangeOfSVInitFiles = Arrays.asList("run_rdbD1485", "run_rdbD1641", "run_rdbBO", "hyd_rdb2005",
-		        "hyd_rdb2030", "hyd_rdbCCEL", "hyd_rdbCCLL", "hyd_ckb1", "hyd_ckb2", "hyd_ckb3", "hyd_ckb4", "hyd_ckb5");
+		// This is for changing the "SV" and "Init" Files in the "Hydroclimate"
+		// tab.
+		List<String> controlIdForChangeOfSVInitFiles = Arrays.asList("run_rdbD1485", "run_rdbD1641", "run_rdbBO",
+				"hyd_rdb2005", "hyd_rdb2030", "hyd_rdbCCEL", "hyd_rdbCCLL", "hyd_ckb1", "hyd_ckb2", "hyd_ckb3",
+				"hyd_ckb4", "hyd_ckb5");
 		if (isSelected && controlIdForChangeOfSVInitFiles.contains(itemName)) {
 			changeSVInitFilesAndTableInOperations(optionFromTheBox);
 		}
-		// This is for changing the "San Joaquin River Restoration flows" in the "Regulations" tab.
+		// This is for changing the "San Joaquin River Restoration flows" in the
+		// "Regulations" tab.
 		List<String> controlIdForChangeOfPanelInRegulations = Arrays.asList("hyd_rdb2005", "hyd_rdb2030", "hyd_rdbCCEL",
-		        "hyd_rdbCCLL");
+				"hyd_rdbCCLL");
 		if (isSelected && controlIdForChangeOfPanelInRegulations.contains(itemName)) {
 			changePanelInRegulationsBasedOnId(itemName);
 		}
@@ -118,16 +126,20 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 			changeSVInitFilesAndTableInOperations(false);
 		}
 		if (isSelected && itemName.equals("btnDSS_Manual")) {
-			((JTextField) swingEngine.find("hyd_DSS_SV")).setText(((JTextField) swingEngine.find("txf_Manual_SV")).getText());
-			((JTextField) swingEngine.find("hyd_DSS_SV_F")).setText(((JTextField) swingEngine.find("txf_Manual_SV_F")).getText());
-			((JTextField) swingEngine.find("hyd_DSS_Init")).setText(((JTextField) swingEngine.find("txf_Manual_Init")).getText());
+			((JTextField) swingEngine.find("hyd_DSS_SV"))
+					.setText(((JTextField) swingEngine.find("txf_Manual_SV")).getText());
+			((JTextField) swingEngine.find("hyd_DSS_SV_F"))
+					.setText(((JTextField) swingEngine.find("txf_Manual_SV_F")).getText());
+			((JTextField) swingEngine.find("hyd_DSS_Init"))
+					.setText(((JTextField) swingEngine.find("txf_Manual_Init")).getText());
 			((JTextField) swingEngine.find("hyd_DSS_Init_F"))
-			        .setText(((JTextField) swingEngine.find("txf_Manual_Init_F")).getText());
+					.setText(((JTextField) swingEngine.find("txf_Manual_Init_F")).getText());
 		}
 	}
 
 	/**
-	 * This method is used for controling the panel in the "Regulations" tab based on the "Hydroclimate" tab.
+	 * This method is used for controlling the panel in the "Regulations" tab
+	 * based on the "Hydroclimate" tab.
 	 *
 	 * @param itemName
 	 *            The item name of the control.
@@ -159,17 +171,17 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 			}
 			if (optionFromTheBox) {
 				String lookup = guiLinks4BO.getLookup();
-				tableSvc.setWsidiForSWPFullFileName(Constant.MODEL_W2_WRESL_LOOKUP_DIR + "\\WSIDI\\" + Constant.SWP_START_FILENAME
-				        + Constant.UNDER_SCORE + lookup + Constant.TABLE_EXT);
-				tableSvc.setWsidiForCVPFullFileName(Constant.MODEL_W2_WRESL_LOOKUP_DIR + "\\WSIDI\\" + Constant.CVP_START_FILENAME
-				        + Constant.UNDER_SCORE + lookup + Constant.TABLE_EXT);
+				tableSvc.setWsidiForSWPFullFileName(Constant.MODEL_W2_WRESL_LOOKUP_DIR + "\\WSIDI\\"
+						+ Constant.SWP_START_FILENAME + Constant.UNDER_SCORE + lookup + Constant.TABLE_EXT);
+				tableSvc.setWsidiForCVPFullFileName(Constant.MODEL_W2_WRESL_LOOKUP_DIR + "\\WSIDI\\"
+						+ Constant.CVP_START_FILENAME + Constant.UNDER_SCORE + lookup + Constant.TABLE_EXT);
 				// Change WSI/DI Status Label
 				JLabel jLabel = (JLabel) swingEngine.find("op_WSIDI_Status");
 				jLabel.setText(labelValues.get(1) + Constant.UNEDITED_FORLABEL);
 			}
 		} catch (NullPointerException ex) {
 			errorHandlingSvc.businessErrorHandler((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME),
-			        new CalLiteGUIException("The data for geting the table name is wrong", ex));
+					new CalLiteGUIException("The data for geting the table name is wrong", ex));
 		}
 	}
 
@@ -183,7 +195,8 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	 * @throws CalLiteGUIException
 	 * @throws CloneNotSupportedException
 	 */
-	private void regulations(String itemName, boolean isSelected) throws CalLiteGUIException, CloneNotSupportedException {
+	private void regulations(String itemName, boolean isSelected)
+			throws CalLiteGUIException, CloneNotSupportedException {
 		List<SeedDataBO> seedDataList = seedDataSvc.getRegulationsTabData();
 		int[] regFlags = resultSvc.getRegulationoptions();
 		String tableName = "";
@@ -198,7 +211,8 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 					regFlags[Integer.parseInt(seedDataBO.getRegID())] = 3;
 					// } else if (seedDataBO.getD1641().equals(Constant.N_A)) {
 					// regFlags[Integer.parseInt(seedDataBO.getRegID())] = 1;
-					// } else if (seedDataBO.getUserDefined().equals(Constant.N_A)) {
+					// } else if
+					// (seedDataBO.getUserDefined().equals(Constant.N_A)) {
 					// regFlags[Integer.parseInt(seedDataBO.getRegID())] = 4;
 					// }
 					if (!seedDataBO.getDataTables().equals(Constant.N_A)) {
@@ -206,13 +220,14 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 					}
 				}
 			} else if (isSelected && itemName.equals(Constant.QUICK_SELECT_RB_D1641)
-			        || itemName.equals(Constant.QUICK_SELECT_RB_D1641_BO)) {
+					|| itemName.equals(Constant.QUICK_SELECT_RB_D1641_BO)) {
 				for (SeedDataBO seedDataBO : seedDataList) {
 					// if (seedDataBO.getD1641().equals(Constant.N_A)) {
 					regFlags[Integer.parseInt(seedDataBO.getRegID())] = 1;
 					// } else if (seedDataBO.getD1485().equals(Constant.N_A)) {
 					// regFlags[Integer.parseInt(seedDataBO.getRegID())] = 3;
-					// } else if (seedDataBO.getUserDefined().equals(Constant.N_A)) {
+					// } else if
+					// (seedDataBO.getUserDefined().equals(Constant.N_A)) {
 					// regFlags[Integer.parseInt(seedDataBO.getRegID())] = 4;
 					// }
 					if (!seedDataBO.getDataTables().equals(Constant.N_A)) {
@@ -225,10 +240,10 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 				String panelId = dynamicControlSvc.getTriggerBOById(itemName).getAffectdeGuiId();
 				String guiTableName = getTableNameFromTheConponent(swingEngine.find(panelId));
 				((TitledBorder) ((JPanel) this.swingEngine.find(panelId)).getBorder())
-				        .setTitle(((JCheckBox) this.swingEngine.find(itemName)).getText());
+						.setTitle(((JCheckBox) this.swingEngine.find(itemName)).getText());
 				if (!isSelected) {
 					((TitledBorder) ((JPanel) this.swingEngine.find(panelId)).getBorder())
-					        .setTitle(((JCheckBox) this.swingEngine.find(itemName)).getText() + " (not selected)");
+							.setTitle(((JCheckBox) this.swingEngine.find(itemName)).getText() + " (not selected)");
 				}
 				((JPanel) this.swingEngine.find(panelId)).repaint();
 				if (isSelected) {
@@ -262,8 +277,8 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 					if (!seedDataBO.getDataTables().equals(Constant.N_A)) {
 						tableName = seedDataBO.getDataTables();
 						scrRegValues.setVisible(true);
-						toDisplayMessage = loadTableToUI((JTable) this.swingEngine.find(guiTableName), tableName, regFlags[regId],
-						        seedDataBO, optionName);
+						toDisplayMessage = loadTableToUI((JTable) this.swingEngine.find(guiTableName), tableName,
+								regFlags[regId], seedDataBO, optionName);
 					} else {
 						String valueToDisplay = "Access regulation table by selecting or right-clicking on item at left";
 						if (itemName.equals("ckbReg_VAMP")) {
@@ -275,7 +290,8 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 			} else if (isSelected && itemName.startsWith("btnReg")) {
 				JRadioButton radioButton = ((JRadioButton) this.swingEngine.find(itemName));
 				TitledBorder titledBorder = (TitledBorder) ((JPanel) radioButton.getParent()).getBorder();
-				SeedDataBO seedData = seedDataSvc.getObjByGuiId(xmlParsingSvc.getcompIdfromName(titledBorder.getTitle()));
+				SeedDataBO seedData = seedDataSvc
+						.getObjByGuiId(xmlParsingSvc.getcompIdfromName(titledBorder.getTitle()));
 				String guiTableName = getTableNameFromTheConponent(radioButton.getParent());
 				tableName = seedData.getDataTables();
 				if (itemName.endsWith(Constant.D1641)) {
@@ -288,8 +304,8 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 				int regId = Integer.parseInt(seedData.getRegID());
 				if (!tableName.equals(Constant.N_A)) {
 					scrRegValues.setVisible(true);
-					toDisplayMessage = loadTableToUI((JTable) this.swingEngine.find(guiTableName), tableName, regFlags[regId],
-					        seedData, optionName);
+					toDisplayMessage = loadTableToUI((JTable) this.swingEngine.find(guiTableName), tableName,
+							regFlags[regId], seedData, optionName);
 				} else {
 					String valueToDisplay = "Access regulation table by selecting or right-clicking on item at left";
 					if (seedData.getGuiId().equals("ckbReg_VAMP")) {
@@ -298,7 +314,8 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 					changeTheLabel(valueToDisplay);
 				}
 				/*
-				 * setting the regFlag cann't be done in the above if else statement. Please see the getTable method in this class.
+				 * setting the regFlag cann't be done in the above if else
+				 * statement. Please see the getTable method in this class.
 				 */
 				if (itemName.endsWith(Constant.D1641)) {
 					regFlags[regId] = 1;
@@ -310,15 +327,16 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 			}
 			// }
 		} catch (NullPointerException ex) {
-			errorHandlingSvc.businessErrorHandler((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), new CalLiteGUIException(
-			        "The control id " + itemName + " don't have the proper data in the TriggerForDynamicDisplay File", ex));
+			errorHandlingSvc.businessErrorHandler((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME),
+					new CalLiteGUIException("The control id " + itemName
+							+ " don't have the proper data in the TriggerForDynamicDisplay File", ex));
 		}
 		if (toDisplayMessage)
 			scrRegValues.setVisible(false);
 	}
 
-	private boolean loadTableToUI(JTable table, String tableName, int regValue, SeedDataBO seedDataBO, String optionName)
-	        throws CalLiteGUIException, CloneNotSupportedException {
+	private boolean loadTableToUI(JTable table, String tableName, int regValue, SeedDataBO seedDataBO,
+			String optionName) throws CalLiteGUIException, CloneNotSupportedException {
 		DataTableModel dtm = getTable(tableName, regValue, seedDataBO, optionName);
 		if (dtm == null) {
 			changeTheLabel("The table is not available. The table name is " + tableName);
@@ -340,12 +358,14 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	/**
 	 * This method is only for the "Regulations" tab tables.
 	 *
-	 * This will return the {@link DataTableModel} object based on the values passed in.
+	 * This will return the {@link DataTableModel} object based on the values
+	 * passed in.
 	 *
 	 * @param tableName
 	 *            just the table name
 	 * @param regValue
-	 *            The regId from gui_link2.csv file which tells us what is the option for user defined table.
+	 *            The regId from gui_link2.csv file which tells us what is the
+	 *            option for user defined table.
 	 * @param seedDataBO
 	 *            seedData of the selected object.
 	 * @param optionName
@@ -355,7 +375,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	 * @throws CloneNotSupportedException
 	 */
 	private DataTableModel getTable(String tableName, int regValue, SeedDataBO seedDataBO, String optionName)
-	        throws CalLiteGUIException, CloneNotSupportedException {
+			throws CalLiteGUIException, CloneNotSupportedException {
 		DataTableModel dataTableModel = null;
 		switch (optionName) {
 		case Constant.D1641:
@@ -393,8 +413,8 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	/**
 	 * This method is only for the "Regulations" tab tables.
 	 *
-	 * This method will deside the table name based on the seedDataBo and type passed in and will return the object of
-	 * {@link DataTableModel}.
+	 * This method will deside the table name based on the seedDataBo and type
+	 * passed in and will return the object of {@link DataTableModel}.
 	 *
 	 * @param tableName
 	 *            just the table name
@@ -406,7 +426,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	 * @throws CalLiteGUIException
 	 */
 	private DataTableModel desideTableNameAndGetTable(String tableName, SeedDataBO seedDataBO, String type)
-	        throws CalLiteGUIException {
+			throws CalLiteGUIException {
 		DataTableModel dtm = null;
 		switch (type) {
 		case Constant.D1485:
@@ -435,7 +455,8 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	}
 
 	/**
-	 * This method will return the table name from the component which is passed in.
+	 * This method will return the table name from the component which is passed
+	 * in.
 	 *
 	 * @param component
 	 * @return
@@ -453,7 +474,8 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	}
 
 	/**
-	 * This method will make the shared radio buttons in the "Regulations" tab visible based on the seedData passed in.
+	 * This method will make the shared radio buttons in the "Regulations" tab
+	 * visible based on the seedData passed in.
 	 *
 	 * @param seedDataBO
 	 */

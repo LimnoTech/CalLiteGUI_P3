@@ -250,6 +250,7 @@ public class GlobalActionListener implements ActionListener {
 		if (decisionBeforeTheBatchRun()) {
 			List<String> fileName = Arrays.asList(clsFileName);
 			progressFrame.addScenarioNamesAndAction(clsFileName, Constant.BATCH_RUN);
+			progressFrame.setBtnText(Constant.STATUS_BTN_TEXT_STOP);
 			progressFrame.makeDialogVisible();
 			batchRunSvc.doBatch(fileName, swingEngine, false);
 		}
@@ -265,6 +266,7 @@ public class GlobalActionListener implements ActionListener {
 		if (decisionBeforeTheBatchRun()) {
 			List<String> fileName = Arrays.asList(clsFileName);
 			progressFrame.addScenarioNamesAndAction(clsFileName, Constant.BATCH_RUN_WSIDI);
+			progressFrame.setBtnText(Constant.STATUS_BTN_TEXT_STOP);
 			progressFrame.makeDialogVisible();
 			batchRunSvc.doBatch(fileName, swingEngine, true);
 		}
