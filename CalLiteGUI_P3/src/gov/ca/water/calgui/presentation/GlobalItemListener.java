@@ -101,8 +101,14 @@ public class GlobalItemListener implements ItemListener {
 				}
 			}
 
-			List<String> controlIdForDialogBox = Arrays.asList("run_rdbD1485", "run_rdbD1641", "run_rdbBO",
-					"hyd_rdb2005", "hyd_rdb2030");
+			List<String> controlIdForDialogBox;
+			if (!oldValue.equals("hyd_rdbCCEL") && !oldValue.equals("hyd_rdbCCLL"))
+				controlIdForDialogBox = Arrays.asList("run_rdbD1485", "run_rdbD1641", "run_rdbBO", "hyd_rdb2005",
+						"hyd_rdb2030", "hyd_rdbCCLL", "hyd_rdbCCEL");
+			else
+				controlIdForDialogBox = Arrays.asList("run_rdbD1485", "run_rdbD1641", "run_rdbBO", "hyd_rdb2005",
+						"hyd_rdb2030");
+
 			List<String> controlIdOfCPP = Arrays.asList("hyd_rdbCCEL", "hyd_rdbCCLL", "hyd_ckb1", "hyd_ckb2",
 					"hyd_ckb3", "hyd_ckb4", "hyd_ckb5");
 			List<String> controlIdForOldValue = Arrays.asList("run_rdbD1485", "run_rdbD1641", "run_rdbBO",
