@@ -1,11 +1,26 @@
 package gov.ca.water.calgui.bo;
 
 /**
- * This will hold the intermediate information used for building the Scenario Display.
+ * This will hold the intermediate information used for building the Scenario
+ * Display.
+ * 
+ * @author Mohan
  */
 public class ScenarioDisplayBO {
+	/**
+	 * This field will hold the text of the component to display it in
+	 * "View Scenario Settings".
+	 */
 	String componentText;
+	/**
+	 * This field will hold the parent text of the component to display it in
+	 * "View Scenario Settings".
+	 */
 	String componentParents;
+	/**
+	 * This field will hold the value of the component to display it in
+	 * "View Scenario Settings". ex Default.cls, Default_dv.dss.
+	 */
 	String componentValue;
 
 	public ScenarioDisplayBO(String componentText, String componentParents, String componentValue) {
