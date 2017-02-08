@@ -125,14 +125,29 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 			changeSVInitFilesAndTableInOperations(false);
 		}
 		if (isSelected && itemName.equals("btnDSS_Manual")) {
-			((JTextField) swingEngine.find("hyd_DSS_SV"))
-					.setText(((JTextField) swingEngine.find("txf_Manual_SV")).getText());
-			((JTextField) swingEngine.find("hyd_DSS_SV_F"))
-					.setText(((JTextField) swingEngine.find("txf_Manual_SV_F")).getText());
-			((JTextField) swingEngine.find("hyd_DSS_Init"))
-					.setText(((JTextField) swingEngine.find("txf_Manual_Init")).getText());
-			((JTextField) swingEngine.find("hyd_DSS_Init_F"))
-					.setText(((JTextField) swingEngine.find("txf_Manual_Init_F")).getText());
+
+			if (((JTextField) swingEngine.find("txf_Manual_SV")).getText().toUpperCase().equals("NOT SET")) {
+				// If the manual values have not been set, use the current auto
+				// values
+				((JTextField) swingEngine.find("txf_Manual_SV"))
+						.setText(((JTextField) swingEngine.find("hyd_DSS_SV")).getText());
+				((JTextField) swingEngine.find("txf_Manual_SV_F"))
+						.setText(((JTextField) swingEngine.find("hyd_DSS_SV_F")).getText());
+				((JTextField) swingEngine.find("txf_Manual_Init"))
+						.setText(((JTextField) swingEngine.find("hyd_DSS_Init")).getText());
+				((JTextField) swingEngine.find("txf_Manual_Init_F"))
+						.setText(((JTextField) swingEngine.find("hyd_DSS_Init_F")).getText());
+
+			} else {
+				((JTextField) swingEngine.find("hyd_DSS_SV"))
+						.setText(((JTextField) swingEngine.find("txf_Manual_SV")).getText());
+				((JTextField) swingEngine.find("hyd_DSS_SV_F"))
+						.setText(((JTextField) swingEngine.find("txf_Manual_SV_F")).getText());
+				((JTextField) swingEngine.find("hyd_DSS_Init"))
+						.setText(((JTextField) swingEngine.find("txf_Manual_Init")).getText());
+				((JTextField) swingEngine.find("hyd_DSS_Init_F"))
+						.setText(((JTextField) swingEngine.find("txf_Manual_Init_F")).getText());
+			}
 		}
 	}
 
@@ -398,7 +413,8 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	 *            seedData of the selected object.
 	 * @param optionName
 	 *            The shared option that is from the "Regulations" tab.
-	 * @return Will return the {@link DataTableModel} object based on the values passed in.
+	 * @return Will return the {@link DataTableModel} object based on the values
+	 *         passed in.
 	 * @throws CalLiteGUIException
 	 *             see {@link CalLiteGUIException}
 	 * @throws CloneNotSupportedException
