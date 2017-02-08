@@ -89,8 +89,7 @@ import vista.set.Group;
  * This class is for initializing the Application and adding the Action, Item,
  * Mouse Listener's to the main frame.
  *
- * @author mohan
- *
+ * @author Mohan
  */
 public class CalLiteInitClass {
 	private static final Logger LOG = Logger.getLogger(CalLiteInitClass.class.getName());
@@ -138,8 +137,6 @@ public class CalLiteInitClass {
 				allButtonsDele.windowClosing();
 			}
 		});
-
-		//
 		// Loading the default cls file.
 		resultSvc.applyClsFile(Constant.SCENARIOS_DIR + Constant.DEFAULT + Constant.CLS_EXT, swingEngine,
 				seedDataSvc.getTableIdMap());
@@ -264,7 +261,6 @@ public class CalLiteInitClass {
 				SwingUtilities.updateComponentTreeUI(event.getComponent());
 			}
 		});
-
 		new ApplyDynamicConDeleImp().applyDynamicControlForListFromFile();
 
 		// reweightComponents((Container) swingEngine.find("runsettings"),
@@ -273,12 +269,6 @@ public class CalLiteInitClass {
 
 		// Display the GUI
 		swingEngine.find(Constant.MAIN_FRAME_NAME).setVisible(true);
-
-		/**
-		 * This will ask the user to select the wsidi tables whether to use the
-		 * default or from the cls file.
-		 * allButtonsDele.decisionSVInitFilesAndTableInOperations();
-		 */
 	}
 
 	/**
@@ -289,7 +279,6 @@ public class CalLiteInitClass {
 	 *            Starting point for iteration
 	 * 
 	 */
-
 	// private void reweightComponents(Container parent, GridBagLayout layout1)
 	// {
 	// for (Component c : parent.getComponents()) {
@@ -317,9 +306,13 @@ public class CalLiteInitClass {
 	 * gui.xml file and load them.
 	 *
 	 * @param newUserDefinedIds
+	 *            This is the id's of the new tables defined in gui.xml file.
 	 * @param resultSvc
+	 *            The Object of {@link ResultSvcImpl}.
 	 * @param tableSvc
+	 *            The Object of {@link TableSvcImpl}.
 	 * @param swingEngine
+	 *            The Object of {@link SwingEngine}.
 	 */
 	public void checkForNewUserDefinedTables(List<String> newUserDefinedIds, IResultSvc resultSvc, ITableSvc tableSvc,
 			SwingEngine swingEngine) {
@@ -349,7 +342,9 @@ public class CalLiteInitClass {
 	 * This method is for loading the strings in the {@link JSpinneer}.
 	 *
 	 * @param jspn
+	 *            The {@link JSpinneer} to load.
 	 * @param idx
+	 *            The month value which we should be displaying.
 	 */
 	public void setMonthModelAndIndex(JSpinner jspn, int idx) {
 		String[] monthNames = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
@@ -366,11 +361,17 @@ public class CalLiteInitClass {
 	 * object.
 	 *
 	 * @param jspn
+	 *            The {@link JSpinneer} object.
 	 * @param value
+	 *            the current value of the {@link JSpinneer}.
 	 * @param min
+	 *            the first number in the sequence
 	 * @param max
+	 *            the last number in the sequence
 	 * @param step
+	 *            the difference between elements of the sequence
 	 * @param format
+	 *            The format that the {@link JSpinneer} should look like.
 	 */
 	public void setNumberModelAndIndex(JSpinner jspn, int value, int min, int max, int step, String format) {
 		SpinnerModel spnmod = new SpinnerNumberModel(value, min, max, step);
@@ -383,6 +384,7 @@ public class CalLiteInitClass {
 	 * children which are Check Box and radio button.
 	 *
 	 * @param component
+	 *            The component to which you want to set the itemListener.
 	 * @param itemListener
 	 *            Object of the Item Listener.
 	 */
@@ -400,6 +402,7 @@ public class CalLiteInitClass {
 	 * it's children which are Check Box.
 	 *
 	 * @param component
+	 *            The component to which you want to set the MouseListener.
 	 * @param mouseListener
 	 *            Object of the Mouse Listener.
 	 */
@@ -415,6 +418,10 @@ public class CalLiteInitClass {
 	/**
 	 * This method is to add the listrnrt for the {@link JTextField} for
 	 * tracking the changes.
+	 * 
+	 * @param listOfNames
+	 *            The list of names to which we want to add the
+	 *            JTextFieldListener.
 	 */
 	private void addJTextFieldListener(List<String> listOfNames) {
 		FocusListener focusListenerForTextField = new FocusListener() {

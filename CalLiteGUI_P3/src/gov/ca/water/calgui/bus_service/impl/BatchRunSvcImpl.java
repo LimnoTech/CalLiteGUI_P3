@@ -274,9 +274,10 @@ public final class BatchRunSvcImpl implements IBatchRunSvc {
 
 	/**
 	 * Checks if date selection is valid for scenario currently in memory
-	 *
+	 * 
 	 * @param swingEngine
 	 *            The {@link SwingEngine} Object.
+	 * @return Will return true if the selected value is valid.
 	 */
 	private boolean dateSelectionIsValid(SwingEngine swingEngine) {
 		String startMon = ((String) ((JSpinner) swingEngine.find("spnRunStartMonth")).getValue()).trim();

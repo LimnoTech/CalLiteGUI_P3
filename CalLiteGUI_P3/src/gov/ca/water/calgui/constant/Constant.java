@@ -1,5 +1,11 @@
 package gov.ca.water.calgui.constant;
 
+/**
+ * This class is used to hold all the constant values required for the
+ * application.
+ * 
+ * @author Mohan
+ */
 public class Constant {
 
 	public static final String CLS_EXT = ".CLS";
@@ -85,5 +91,4 @@ public class Constant {
 	// Status window
 	public static final String STATUS_BTN_TEXT_CLOSE = "Close this status window";
 	public static final String STATUS_BTN_TEXT_STOP = "Stop all runs";
-
 }

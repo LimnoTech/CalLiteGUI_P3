@@ -48,7 +48,7 @@ import gov.ca.water.calgui.results.ResultUtils;
  * This frame is used for displaying updated status during long-duration
  * activities like saving scenarios and running CalLite.
  *
- * @author mohan
+ * @author Mohan
  */
 public final class ProgressFrame extends JFrame implements ActionListener {
 
@@ -147,9 +147,11 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 	};
 
 	/**
-	 * This method is for implementing the singleton.
+	 * This method is for implementing the singleton. It will return the
+	 * instance of this class if it is empty it will create one.
 	 *
-	 * @return
+	 * @return Will return the instance of this class if it is empty it will
+	 *         create one.
 	 */
 	public static ProgressFrame getProgressFrameInstance() {
 		if (progressFrame == null) {
@@ -163,7 +165,7 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 	/**
 	 * Sets the text for the button at the botom of the dialog
 	 * 
-	 * @param text
+	 * @param text 
 	 */
 	public void setBtnText(String text) {
 		btnClose.setText(text);
@@ -172,7 +174,7 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 	/**
 	 * This will prepare the Dialog box to show.
 	 *
-	 * @param title
+	 * @param title The title of the frame.
 	 */
 	private ProgressFrame(String title) {
 		this.scenarioNamesAndAction = new HashMap<String, String>();
@@ -236,7 +238,7 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 	/**
 	 * This will set the listData to the monitor window.
 	 *
-	 * @param listData
+	 * @param listData The list of values to be displayed.
 	 */
 	public void setList(String[] listData) {
 		if (!listScroller.isVisible()) {
@@ -269,7 +271,7 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 	 * @param keys
 	 *            The names of which we should monitor.
 	 * @param type
-	 *            which type.
+	 *            which type like save or batch run.
 	 */
 	public void addScenarioNamesAndAction(List<String> keys, String type) {
 		keys.forEach(key -> scenarioNamesAndAction.put(key, type));
