@@ -254,12 +254,20 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 				SeedDataBO seedDataBO = seedDataSvc.getObjByGuiId(itemName);
 				makeRBVisible(seedDataBO);
 				String panelId = dynamicControlSvc.getTriggerBOById(itemName).getAffectdeGuiId();
-				String guiTableName = getTableNameFromTheConponent(swingEngine.find(panelId));
+				String guiTableName = getTableNameFromTheComponent(swingEngine.find(panelId));
+
 				((TitledBorder) ((JPanel) this.swingEngine.find(panelId)).getBorder())
 						.setTitle(((JCheckBox) this.swingEngine.find(itemName)).getText());
 				if (!isSelected) {
 					((TitledBorder) ((JPanel) this.swingEngine.find(panelId)).getBorder())
 							.setTitle(((JCheckBox) this.swingEngine.find(itemName)).getText() + " (not selected)");
+					if (!seedDataBO.getDataTables().equals(Constant.N_A)) {
+						((JPanel) this.swingEngine.find(panelId)).setVisible(true);
+						((JPanel) this.swingEngine.find(panelId + "Placeholder")).setVisible(false);
+					} else {
+						((JPanel) this.swingEngine.find(panelId)).setVisible(false);
+						((JPanel) this.swingEngine.find(panelId + "Placeholder")).setVisible(true);
+					}
 				}
 				((JPanel) this.swingEngine.find(panelId)).repaint();
 				if (isSelected) {
@@ -291,11 +299,16 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 						optionName = Constant.USER_DEFINED;
 					}
 					if (!seedDataBO.getDataTables().equals(Constant.N_A)) {
+						((JPanel) this.swingEngine.find(panelId)).setVisible(true);
+						((JPanel) this.swingEngine.find(panelId + "Placeholder")).setVisible(false);
 						tableName = seedDataBO.getDataTables();
 						scrRegValues.setVisible(true);
 						toDisplayMessage = loadTableToUI((JTable) this.swingEngine.find(guiTableName), tableName,
 								regFlags[regId], seedDataBO, optionName);
 					} else {
+						((JPanel) this.swingEngine.find(panelId)).setVisible(false);
+						((JPanel) this.swingEngine.find(panelId + "Placeholder")).setVisible(true);
+
 						String valueToDisplay = "Access regulation table by selecting or right-clicking on item at left";
 						if (itemName.equals("ckbReg_VAMP")) {
 							valueToDisplay = "If D1485 is selected, take VAMP D1641 hydrology with a D1485 run.";
@@ -308,7 +321,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 				TitledBorder titledBorder = (TitledBorder) ((JPanel) radioButton.getParent()).getBorder();
 				SeedDataBO seedData = seedDataSvc
 						.getObjByGuiId(xmlParsingSvc.getcompIdfromName(titledBorder.getTitle()));
-				String guiTableName = getTableNameFromTheConponent(radioButton.getParent());
+				String guiTableName = getTableNameFromTheComponent(radioButton.getParent());
 				tableName = seedData.getDataTables();
 				if (itemName.endsWith(Constant.D1641)) {
 					optionName = Constant.D1641;
@@ -509,12 +522,12 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	 *            The component from which we need to get the table name.
 	 * @return Will return the table name from the component which is passed in.
 	 */
-	private String getTableNameFromTheConponent(Component component) {
+	private String getTableNameFromTheComponent(Component component) {
 		if (component instanceof JTable) {
 			return component.getName();
 		}
 		for (Component child : ((Container) component).getComponents()) {
-			String value = getTableNameFromTheConponent(child);
+			String value = getTableNameFromTheComponent(child);
 			if (!value.equals(""))
 				return value;
 		}
