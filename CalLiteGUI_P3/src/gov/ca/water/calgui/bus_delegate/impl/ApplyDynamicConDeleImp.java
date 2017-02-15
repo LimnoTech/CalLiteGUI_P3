@@ -227,7 +227,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 					regFlags[Integer.parseInt(seedDataBO.getRegID())] = 3;
 					// } else if (seedDataBO.getD1641().equals(Constant.N_A)) {
 					// regFlags[Integer.parseInt(seedDataBO.getRegID())] = 1;
-					// } else if
+					// } else ifx`
 					// (seedDataBO.getUserDefined().equals(Constant.N_A)) {
 					// regFlags[Integer.parseInt(seedDataBO.getRegID())] = 4;
 					// }
@@ -268,7 +268,12 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 						((JPanel) this.swingEngine.find(panelId)).setVisible(false);
 						((JPanel) this.swingEngine.find(panelId + "Placeholder")).setVisible(true);
 					}
+
 				}
+				Component c = this.swingEngine.find(itemName).getParent();
+				((JRadioButton) swingEngine.find(Constant.PANEL_RB_D1641))
+						.setText(c.getName().equals("Others") ? "Default" : "D1641");
+
 				((JPanel) this.swingEngine.find(panelId)).repaint();
 				if (isSelected) {
 					int regId = Integer.parseInt(seedDataBO.getRegID());

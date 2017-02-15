@@ -131,7 +131,6 @@ public class CalLiteInitClass {
 		ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
 		((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME)).setIconImage(icon.getImage());
 		((JTabbedPane) swingEngine.find("reg_tabbedPane")).addChangeListener(new GlobalChangeListener());
-		((JCheckBox) swingEngine.find("ckbRegbo1")).addFocusListener(new GlobalFocusListener());
 
 		((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME))
 				.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);// EXIT_ON_CLOSE

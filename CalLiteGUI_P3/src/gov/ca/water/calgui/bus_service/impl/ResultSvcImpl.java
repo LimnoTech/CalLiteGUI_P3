@@ -975,7 +975,18 @@ public final class ResultSvcImpl implements IResultSvc {
 						if (seedDataBO.getGuiId().startsWith("ckbReg")) {
 							if (!seedDataBO.getRegID().equals("n/a")) {
 								int rID = Integer.parseInt(seedDataBO.getRegID());
-								option = String.valueOf(this.regulationoptions[rID]);
+								if (tableName.equals("GUI_RPAsOtherRegs.table")
+										&& !seedDataBO.getSwitchID().equals(Constant.N_A)) {
+
+									// Special case for tables under Other regs:
+									// Option = 1 for default
+									// Option = 2 for user-defined
+
+									option = String.valueOf(this.regulationoptions[rID] - 1);
+
+								} else {
+									option = String.valueOf(this.regulationoptions[rID]);
+								}
 							}
 						} else {
 							option = "1";
