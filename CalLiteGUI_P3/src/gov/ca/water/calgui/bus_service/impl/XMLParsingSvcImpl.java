@@ -42,6 +42,7 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 	private Map<String, String> compNameIdMap;
 	private List<String> newUserDefinedTables;
 	private List<String> jTextFieldIds;
+	private List<String> jCheckBoxIDs; // Checkboxes on regulations screen
 
 	/**
 	 * This method is for implementing the singleton. It will return the
@@ -68,6 +69,8 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 		this.fileSystemSvc = new FileSystemSvcImpl();
 		this.compNameIdMap = new HashMap<String, String>();
 		this.jTextFieldIds = new ArrayList<>();
+		this.jCheckBoxIDs = new ArrayList<>();
+
 		this.swingEngine = new SwingEngine();
 		swingEngine.getTaglib().registerTag("numtextfield", NumericTextField.class);
 		try {
@@ -90,6 +93,13 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 		for (String string : temp) {
 			if (checkIsItFromResultPart(string)) {
 				jTextFieldIds.add(string);
+			}
+		}
+		temp = compIds.stream().filter((compId) -> swingEngine.find(compId) instanceof JCheckBox)
+				.collect(Collectors.toList());
+		for (String string : temp) {
+			if (checkIsItFromRegulationPart(string)) {
+				jCheckBoxIDs.add(string);
 			}
 		}
 		this.newUserDefinedTables = compIds.stream().filter((compId) -> swingEngine.find(compId) instanceof JTable)
@@ -120,6 +130,19 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 	}
 
 	/**
+	 * This method will tell whether the id is from the regulations part or not.
+	 *
+	 * @param compId
+	 *            The ID of the component.
+	 * @return Will check whether the id is from the result part of the ui.
+	 */
+	private boolean checkIsItFromRegulationPart(String compId) {
+		List<String> names = new java.util.ArrayList<String>();
+		getAllThePanelNamesOfParent(swingEngine.find(compId).getParent(), names);
+		return names.contains("regulations");
+	}
+
+	/**
 	 * This will get all the {@code JPanel} parent of the {@code Component}
 	 *
 	 * @param component
@@ -141,6 +164,11 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 	@Override
 	public List<String> getjTextFieldIds() {
 		return jTextFieldIds;
+	}
+
+	@Override
+	public List<String> getjCheckBoxIDs() {
+		return jCheckBoxIDs;
 	}
 
 	@Override

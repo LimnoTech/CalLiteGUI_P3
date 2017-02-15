@@ -6,6 +6,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -34,6 +35,12 @@ public class GlobalChangeListener implements ChangeListener {
 		if (lcName.equals("reg_tabbedpane")) {
 			((JComponent) swingEngine.find("scrRegValues")).setVisible(false);
 			((JPanel) swingEngine.find("reg_panTab")).setBorder(BorderFactory.createTitledBorder("Values"));
+			boolean showTablePanel = ((JRadioButton) swingEngine.find("rdbRegQS_UD")).isSelected();
+			// Hide/show reg_panTab as needed and selected - will be updated by
+			// focus control
+			((JPanel) this.swingEngine.find("reg_panTab")).setVisible(showTablePanel);
+			((JPanel) this.swingEngine.find("reg_panTabPlaceholder")).setVisible(!showTablePanel);
+
 		} else if (lcName.equals("run_sldthreads")) {
 			BatchRunSvcImpl.simultaneousRuns = ((JSlider) changeEvent.getSource()).getValue();
 			((JLabel) swingEngine.find("run_lblThreads")).setText(" " + BatchRunSvcImpl.simultaneousRuns + " run"

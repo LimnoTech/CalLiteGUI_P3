@@ -51,4 +51,11 @@ public interface IXMLParsingSvc {
 	 * @return Will return all the text fields ids.
 	 */
 	public List<String> getjTextFieldIds();
+
+	/**
+	 * This is used to get all the regulation checkbox IDs.
+	 *
+	 * @return Will return all the text fields ids.
+	 */
+	List<String> getjCheckBoxIDs();
 }

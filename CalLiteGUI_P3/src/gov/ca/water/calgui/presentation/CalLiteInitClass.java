@@ -52,7 +52,9 @@ import calsim.app.MultipleTimeSeries;
 import calsim.gui.GuiUtils;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
+import gov.ca.water.calgui.bo.SeedDataBO;
 import gov.ca.water.calgui.bus_delegate.IAllButtonsDele;
+import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
 import gov.ca.water.calgui.bus_delegate.IVerifyControlsDele;
 import gov.ca.water.calgui.bus_delegate.impl.AllButtonsDeleImp;
 import gov.ca.water.calgui.bus_delegate.impl.ApplyDynamicConDeleImp;
@@ -129,6 +131,8 @@ public class CalLiteInitClass {
 		ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
 		((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME)).setIconImage(icon.getImage());
 		((JTabbedPane) swingEngine.find("reg_tabbedPane")).addChangeListener(new GlobalChangeListener());
+		((JCheckBox) swingEngine.find("ckbRegbo1")).addFocusListener(new GlobalFocusListener());
+
 		((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME))
 				.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);// EXIT_ON_CLOSE
 		((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME)).addWindowListener(new WindowAdapter() {
@@ -146,7 +150,7 @@ public class CalLiteInitClass {
 		auditSvc.clearAudit(); // we clear because when we 1st load the cls file
 								// we should not have any records.
 		addJTextFieldListener(xmlParsingSvc.getjTextFieldIds());
-		addJSpinnerListener();
+		addJCheckBoxListener(xmlParsingSvc.getjCheckBoxIDs());
 		// Count threads and update selector appropriately
 		int maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors());
 		BatchRunSvcImpl.simultaneousRuns = maxThreads;
@@ -413,6 +417,45 @@ public class CalLiteInitClass {
 		for (Component child : ((Container) component).getComponents()) {
 			setCheckBoxorMouseListener(child, mouseListener);
 		}
+	}
+
+	/**
+	 * This method is to add focus listeners to regulations checkboxes tracking
+	 * the changes.
+	 * 
+	 * @param listOfNames
+	 *            The list of names to which we want to add the
+	 *            JTextFieldListener.
+	 */
+	private void addJCheckBoxListener(List<String> listOfNames) {
+		FocusListener focusListenerForCheckBox = new FocusListener() {
+
+			@Override
+			public void focusLost(FocusEvent e) {
+
+			}
+
+			@Override
+			public void focusGained(FocusEvent e) {
+				boolean showTablePanel = ((JRadioButton) swingEngine.find("rdbRegQS_UD")).isSelected();
+				if (showTablePanel) {
+					SeedDataBO seedDataBO = SeedDataSvcImpl.getSeedDataSvcImplInstance()
+							.getObjByGuiId(e.getComponent().getName());
+					showTablePanel = !seedDataBO.getDataTables().equals(Constant.N_A);
+
+					((JPanel) swingEngine.find("reg_panTab")).setVisible(showTablePanel);
+					((JPanel) swingEngine.find("reg_panTabPlaceholder")).setVisible(!showTablePanel);
+					IApplyDynamicConDele applyDynamicConDele = new ApplyDynamicConDeleImp();
+					JCheckBox c = (JCheckBox) e.getComponent();
+					applyDynamicConDele.applyDynamicControl(c.getName(), c.isSelected(), c.isEnabled(), false);
+
+				}
+			}
+		};
+		for (String name : listOfNames) {
+			((JCheckBox) swingEngine.find(name)).addFocusListener(focusListenerForCheckBox);
+		}
+
 	}
 
 	/**
