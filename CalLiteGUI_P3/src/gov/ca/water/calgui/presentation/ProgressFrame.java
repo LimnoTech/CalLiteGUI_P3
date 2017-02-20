@@ -165,7 +165,7 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 	/**
 	 * Sets the text for the button at the botom of the dialog
 	 * 
-	 * @param text 
+	 * @param text
 	 */
 	public void setBtnText(String text) {
 		btnClose.setText(text);
@@ -174,7 +174,8 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 	/**
 	 * This will prepare the Dialog box to show.
 	 *
-	 * @param title The title of the frame.
+	 * @param title
+	 *            The title of the frame.
 	 */
 	private ProgressFrame(String title) {
 		this.scenarioNamesAndAction = new HashMap<String, String>();
@@ -219,6 +220,10 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 		} catch (Exception e) {
 			LOG.debug("Problem loading properties. " + e.getMessage());
 		}
+
+		setVisible(true);
+		list.invalidate();
+		repaint();
 		workerScenarioMonitor.execute();
 	}
 
@@ -229,6 +234,7 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 
 		// this.getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
 		setVisible(true);
+		list.invalidate();
 		repaint();
 		// paintComponents(this.getGraphics());
 		// print(this.getGraphics());
@@ -238,7 +244,8 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 	/**
 	 * This will set the listData to the monitor window.
 	 *
-	 * @param listData The list of values to be displayed.
+	 * @param listData
+	 *            The list of values to be displayed.
 	 */
 	public void setList(String[] listData) {
 		if (!listScroller.isVisible()) {

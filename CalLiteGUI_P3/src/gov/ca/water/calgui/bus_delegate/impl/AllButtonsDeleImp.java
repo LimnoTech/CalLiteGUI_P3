@@ -198,7 +198,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 	 * @return Will return true if the save is successful.
 	 */
 	private boolean save(String clsFileName) {
-		ProgressFrame progressFrame = ProgressFrame.getProgressFrameInstance();
+
 		String tempName = Constant.SCENARIOS_DIR + clsFileName + Constant.CLS_EXT;
 		boolean proceed = true;
 		if ((new File(tempName)).exists())
@@ -209,7 +209,6 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 		if (proceed) {
 			((JTextField) swingEngine.find("run_txfScen")).setText(clsFileName + Constant.CLS_EXT);
 			((JTextField) swingEngine.find("run_txfoDSS")).setText(clsFileName + Constant.DV_NAME + Constant.DSS_EXT);
-			progressFrame.addScenarioNamesAndAction(clsFileName, Constant.SAVE);
 			/*
 			 * The following code is for checking whether the tables in the
 			 * "Operations" tab is up to data or not and if not updating the
@@ -240,6 +239,8 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 					return false;
 				}
 			}
+			ProgressFrame progressFrame = ProgressFrame.getProgressFrameInstance();
+			progressFrame.addScenarioNamesAndAction(clsFileName, Constant.SAVE);
 			progressFrame.makeDialogVisible();
 			proceed = ResultSvcImpl.getResultSvcImplInstance().save(clsFileName,
 					XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine(),
@@ -253,7 +254,6 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 
 	@Override
 	public void runMultipleBatch() {
-		ProgressFrame progressFrame = ProgressFrame.getProgressFrameInstance();
 		JFileChooser fileChooser = new JFileChooser(Constant.SCENARIOS_DIR);
 		fileChooser.setMultiSelectionEnabled(true);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("CLS FILES (.cls)", "cls");
@@ -288,6 +288,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 					return;
 				}
 			}
+			ProgressFrame progressFrame = ProgressFrame.getProgressFrameInstance();
 			progressFrame.addScenarioNamesAndAction(fileNames, Constant.BATCH_RUN);
 			progressFrame.setBtnText(Constant.STATUS_BTN_TEXT_STOP);
 			progressFrame.makeDialogVisible();
