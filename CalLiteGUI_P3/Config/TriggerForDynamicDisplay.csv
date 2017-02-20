@@ -365,3 +365,6 @@ fac_ckb9,on,fac_pan5,hide
 fac_ckb9,on,fac_pan6,hide
 fac_ckb9,on,fac_pan7,hide
 fac_ckb9,on,fac_pan8,hide
+fac_rdb4,on,fac_txf41,off
+fac_rdb5,on,fac_txf41,off
+fac_rdb6,on,fac_txf41,on
