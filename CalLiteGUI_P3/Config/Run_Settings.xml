@@ -149,7 +149,7 @@
 		<panel border="TitledBorder(Batch runs)" enabled="True" layout="GridBagLayout">
 			<gridbagconstraints anchor="GridBagConstraints.NORTHWEST"
 				gridx="0" gridy="70" gridwidth="2" />
-			<button text=" Select Scenarios ... " ActionCommand="AC_BATCH"
+			<button text=" Select and Run Multiple Scenarios ... " ActionCommand="AC_BATCH"
 				name="run_btnBatchSel" id="run_btnBatchSel">
 				<gridbagconstraints gridx="0" gridy="1"
 					gridwidth="3" />
