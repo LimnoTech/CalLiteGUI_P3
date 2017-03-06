@@ -17,8 +17,8 @@ public class LinkedSlider extends JSlider {
 	private float maximum;
 	private float lVal;
 	private float rVal;
-	private String lTextBoxID;
-	private String rTextBoxID;
+	private String lTextBoxID = "";
+	private String rTextBoxID = "";
 
 	public LinkedSlider() {
 	}
