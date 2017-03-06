@@ -45,6 +45,22 @@ public class GlobalChangeListener implements ChangeListener {
 			BatchRunSvcImpl.simultaneousRuns = ((JSlider) changeEvent.getSource()).getValue();
 			((JLabel) swingEngine.find("run_lblThreads")).setText(" " + BatchRunSvcImpl.simultaneousRuns + " run"
 					+ ((BatchRunSvcImpl.simultaneousRuns > 1) ? "s" : ""));
+
+		} else if (changeEvent.getSource() instanceof LinkedSlider) {
+
+			// Handle LinkedSlider ...
+
+			String sldrName = ((Component) changeEvent.getSource()).getName();
+			LinkedSlider sldr = (LinkedSlider) swingEngine.find(sldrName);
+			if (sldr.getRTextBoxID() != "") {
+				JLabel txtfR = (JLabel) swingEngine.find(sldr.getRTextBoxID());
+				txtfR.setText(Integer.toString(sldr.getValue()));
+			}
+			if (sldr.getLTextBoxID() != "") {
+				JLabel txtfL = (JLabel) swingEngine.find(sldr.getLTextBoxID());
+				int leftVal = sldr.getMaximum() - sldr.getValue();
+				txtfL.setText(Integer.toString(leftVal));
+			}
 		}
 	}
 }
