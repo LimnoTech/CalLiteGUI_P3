@@ -124,10 +124,12 @@ public class CalLiteInitClass {
 		setNumberModelAndIndex(spnSY1, 1921, Constant.MIN_YEAR, Constant.MAX_YEAR, 1, "####");
 		JSpinner spnEY1 = (JSpinner) swingEngine.find("spnRunEndYear");
 		setNumberModelAndIndex(spnEY1, 2003, Constant.MIN_YEAR, Constant.MAX_YEAR, 1, "####");
+		addJSpinnerListener();
 		// Setting up all the Listener's.
 		swingEngine.setActionListener(swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalActionListener());
 		setCheckBoxorMouseListener(swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalMouseListener());
 		setCheckBoxorRadioButtonItemListener(swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalItemListener());
+		setLinkedSliderChangeListener(swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalChangeListener());
 		ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
 		((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME)).setIconImage(icon.getImage());
 		((JTabbedPane) swingEngine.find("reg_tabbedPane")).addChangeListener(new GlobalChangeListener());
@@ -383,6 +385,23 @@ public class CalLiteInitClass {
 	}
 
 	/**
+	 * This method will set the change listener for the component and for all
+	 * its children which are LinkedSliders.
+	 *
+	 * @param component
+	 * @param changeListener
+	 *            Object of the Item Listener.
+	 */
+	public void setLinkedSliderChangeListener(Component component, Object changeListener) {
+		if (component instanceof JLinkedSlider) {
+			((JLinkedSlider) component).addChangeListener((ChangeListener) changeListener);
+		}
+		for (Component child : ((Container) component).getComponents()) {
+			setLinkedSliderChangeListener(child, changeListener);
+		}
+	}
+
+	/**
 	 * This method will set the item listener for the component and for all it's
 	 * children which are Check Box and radio button.
 	 *
@@ -532,8 +551,8 @@ public class CalLiteInitClass {
 	}
 
 	/**
-	 * This method is to add the listrnrt for the {@link JSpinner} for tracking
-	 * the changes.
+	 * This method is to add the listener for selected {@link JSpinner} for
+	 * tracking the changes.
 	 */
 	private void addJSpinnerListener() {
 		ChangeListener listener = new ChangeListener() {
