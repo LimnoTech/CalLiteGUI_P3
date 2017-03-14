@@ -50,6 +50,16 @@ public interface IXMLParsingSvc {
 	 *
 	 * @return Will return all the text fields ids.
 	 */
+
+	public List<String> getjTextFieldIdsForLinkedSliders();
+
+	/**
+	 * This is used to get all the Text field ids.
+	 *
+	 * @return Will return all the text fields ids which are linked to from a
+	 *         JLinkedSlider.
+	 */
+
 	public List<String> getjTextFieldIds();
 
 	/**

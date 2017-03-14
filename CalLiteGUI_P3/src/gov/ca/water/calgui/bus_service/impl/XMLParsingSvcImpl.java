@@ -20,6 +20,7 @@ import org.swixml.SwingEngine;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bus_service.IXMLParsingSvc;
 import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.presentation.JLinkedSlider;
 import gov.ca.water.calgui.presentation.NumericTextField;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.IFileSystemSvc;
@@ -42,6 +43,7 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 	private Map<String, String> compNameIdMap;
 	private List<String> newUserDefinedTables;
 	private List<String> jTextFieldIds;
+	private List<String> jTextFieldIdsForLinkedSliders;
 	private List<String> jCheckBoxIDs; // Checkboxes on regulations screen
 
 	/**
@@ -70,9 +72,12 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 		this.compNameIdMap = new HashMap<String, String>();
 		this.jTextFieldIds = new ArrayList<>();
 		this.jCheckBoxIDs = new ArrayList<>();
+		this.jTextFieldIdsForLinkedSliders = new ArrayList<>();
 
 		this.swingEngine = new SwingEngine();
 		swingEngine.getTaglib().registerTag("numtextfield", NumericTextField.class);
+		swingEngine.getTaglib().registerTag("linkedslider", JLinkedSlider.class);
+
 		try {
 			swingEngine.render(fileSystemSvc.getXMLDocument());
 		} catch (CalLiteGUIException ex) {
@@ -95,6 +100,21 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 				jTextFieldIds.add(string);
 			}
 		}
+
+		// Build a list of TextBoxes that are referenced by JLinkedSliders
+
+		temp = compIds.stream().filter((compId) -> swingEngine.find(compId) instanceof JLinkedSlider)
+				.collect(Collectors.toList());
+		for (String string : temp) {
+			if (checkIsItFromResultPart(string)) {
+				JLinkedSlider ls = (JLinkedSlider) swingEngine.find(string);
+				if (!ls.getLTextBoxID().equals(""))
+					jTextFieldIdsForLinkedSliders.add(ls.getLTextBoxID());
+				if (!ls.getRTextBoxID().equals(""))
+					jTextFieldIdsForLinkedSliders.add(ls.getRTextBoxID());
+			}
+		}
+
 		temp = compIds.stream().filter((compId) -> swingEngine.find(compId) instanceof JCheckBox)
 				.collect(Collectors.toList());
 		for (String string : temp) {
@@ -164,6 +184,11 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 	@Override
 	public List<String> getjTextFieldIds() {
 		return jTextFieldIds;
+	}
+
+	@Override
+	public List<String> getjTextFieldIdsForLinkedSliders() {
+		return jTextFieldIdsForLinkedSliders;
 	}
 
 	@Override
