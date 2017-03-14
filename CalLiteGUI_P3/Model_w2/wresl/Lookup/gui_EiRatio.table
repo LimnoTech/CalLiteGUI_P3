@@ -2,7 +2,6 @@
 ! ===========================================
 ! 10/01/2010 created by Z.Q. Richard Chen DWR
 ! ===========================================
-!	headers	month	ratio
 gui_EIRatio
 MONTH   ratio
 1 0.65

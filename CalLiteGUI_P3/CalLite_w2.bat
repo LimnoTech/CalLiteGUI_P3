@@ -1,8 +1,9 @@
-@title=CalLiteRunTest
-del /F /Q P:\CalGUI_20161109\Scenarios\Run_Details\Test\run\progress.txt
-del /F /Q P:\CalGUI_20161109\Scenarios\Run_Details\Test\run\"=WreslCheck_main=.log"
-del /F /Q P:\CalGUI_20161109\Scenarios\Run_Details\Test\run\"=WreslCheck_main_wsidi=.log"
-del /F /Q P:\CalGUI_20161109\Scenarios\Run_Details\Test\run\wsidi_iteration.log
+del /F /Q D:\git\WMA\CalLiteGUI_P3\CalLiteGUI_P3\Scenarios\Run_Details\test\run\wsidi_iteration.log
+del /F /Q D:\git\WMA\CalLiteGUI_P3\CalLiteGUI_P3\Scenarios\Run_Details\test\run\progress.txt
+del /F /Q D:\git\WMA\CalLiteGUI_P3\CalLiteGUI_P3\Scenarios\Run_Details\test\run\"=WreslCheck_main=.log"
+del /F /Q D:\git\WMA\CalLiteGUI_P3\CalLiteGUI_P3\Scenarios\Run_Details\test\run\"=WreslCheck_main_wsidi=.log"
 
+start /wait /min group_0.bat
 
-Model_w2\vscript.bat Model_w2\vscript\Main.py "P:\CalGUI_20161109\Scenarios\Run_Details\Test\Test_wsidi.config" 3
+exit
+

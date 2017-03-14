@@ -29,7 +29,6 @@ Include 'Sacramento\KeswickPower.wresl'
 Include 'Sacramento\RedBluff_bypassflow.wresl'
 Include 'Sacramento\ncp_relax.wresl' 
 INCLUDE 'Sacramento\setdailyadjmif.wresl'
-
 Include 'Feather\feather_special.wresl'
 Include 'Feather\OroRuleCurv.wresl'
 Include 'Feather\ThermalitoPower.wresl'
