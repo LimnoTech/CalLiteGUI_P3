@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSlider;
+import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -46,18 +47,18 @@ public class GlobalChangeListener implements ChangeListener {
 			((JLabel) swingEngine.find("run_lblThreads")).setText(" " + BatchRunSvcImpl.simultaneousRuns + " run"
 					+ ((BatchRunSvcImpl.simultaneousRuns > 1) ? "s" : ""));
 
-		} else if (changeEvent.getSource() instanceof LinkedSlider) {
+		} else if (changeEvent.getSource() instanceof JLinkedSlider) {
 
 			// Handle LinkedSlider ...
 
 			String sldrName = ((Component) changeEvent.getSource()).getName();
-			LinkedSlider sldr = (LinkedSlider) swingEngine.find(sldrName);
+			JLinkedSlider sldr = (JLinkedSlider) swingEngine.find(sldrName);
 			if (sldr.getRTextBoxID() != "") {
-				JLabel txtfR = (JLabel) swingEngine.find(sldr.getRTextBoxID());
+				JTextField txtfR = (JTextField) swingEngine.find(sldr.getRTextBoxID());
 				txtfR.setText(Integer.toString(sldr.getValue()));
 			}
 			if (sldr.getLTextBoxID() != "") {
-				JLabel txtfL = (JLabel) swingEngine.find(sldr.getLTextBoxID());
+				JTextField txtfL = (JTextField) swingEngine.find(sldr.getLTextBoxID());
 				int leftVal = sldr.getMaximum() - sldr.getValue();
 				txtfL.setText(Integer.toString(leftVal));
 			}

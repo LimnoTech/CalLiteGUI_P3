@@ -177,6 +177,7 @@ public class GlobalActionListener implements ActionListener {
 			this.allButtonsDele.editButtonOnOperations((JComponent) ae.getSource());
 			break;
 		case "Op_Generate":
+
 			runSingleBatchForWsiDi();
 			break;
 		case "Op_Read":
@@ -245,8 +246,8 @@ public class GlobalActionListener implements ActionListener {
 	public void runSingleBatch() {
 		String clsFileName = ((JTextField) swingEngine.find("run_txfScen")).getText();
 		clsFileName = FilenameUtils.removeExtension(clsFileName);
-		ProgressFrame progressFrame = ProgressFrame.getProgressFrameInstance();
 		if (decisionBeforeTheBatchRun()) {
+			ProgressFrame progressFrame = ProgressFrame.getProgressFrameInstance();
 			List<String> fileName = Arrays.asList(clsFileName);
 			progressFrame.addScenarioNamesAndAction(clsFileName, Constant.BATCH_RUN);
 			progressFrame.setBtnText(Constant.STATUS_BTN_TEXT_STOP);
@@ -261,8 +262,8 @@ public class GlobalActionListener implements ActionListener {
 	public void runSingleBatchForWsiDi() {
 		String clsFileName = ((JTextField) swingEngine.find("run_txfScen")).getText();
 		clsFileName = FilenameUtils.removeExtension(clsFileName);
-		ProgressFrame progressFrame = ProgressFrame.getProgressFrameInstance();
 		if (decisionBeforeTheBatchRun()) {
+			ProgressFrame progressFrame = ProgressFrame.getProgressFrameInstance();
 			List<String> fileName = Arrays.asList(clsFileName);
 			progressFrame.addScenarioNamesAndAction(clsFileName, Constant.BATCH_RUN_WSIDI);
 			progressFrame.setBtnText(Constant.STATUS_BTN_TEXT_STOP);
@@ -279,6 +280,11 @@ public class GlobalActionListener implements ActionListener {
 	 */
 	public boolean decisionBeforeTheBatchRun() {
 		String clsFileName = FilenameUtils.removeExtension(((JTextField) swingEngine.find("run_txfScen")).getText());
+		if (clsFileName.toUpperCase().equals(Constant.DEFAULT)) {
+			JOptionPane.showMessageDialog(null,
+					"The CalLite GUI is not allowed to modify the default scenario 'DEFAULT.CLS'. Please use Save As to save to a different scenario file.");
+			return false;
+		}
 		if (!Files.isExecutable(Paths.get(Constant.RUN_DETAILS_DIR + clsFileName))) {
 			ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
 			Object[] options = { "Yes", "No" };
