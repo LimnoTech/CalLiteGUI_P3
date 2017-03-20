@@ -45,8 +45,8 @@ import gov.ca.water.calgui.tech_service.impl.FileSystemSvcImpl;
  * listed bellow.
  *
  * <pre>
- *	1. TriggerForDymanicSelection.csv
- *	2. TriggerForDymanicSelection.csv
+ *	1. TriggerForDynamicSelection.csv
+ *	2. TriggerForDynamicSelection.csv
  * </pre>
  *
  * @author Mohan
@@ -148,6 +148,10 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 				((JTextField) swingEngine.find("hyd_DSS_Init_F"))
 						.setText(((JTextField) swingEngine.find("txf_Manual_Init_F")).getText());
 			}
+		}
+		// (inefficiently) disable slider-linked text fields
+		for (String s : xmlParsingSvc.getjTextFieldIdsForLinkedSliders()) {
+			((JTextField) swingEngine.find(s)).setEnabled(false);
 		}
 	}
 
@@ -477,7 +481,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	/**
 	 * This method is only for the "Regulations" tab tables.
 	 *
-	 * This method will deside the table name based on the seedDataBo and type
+	 * This method will decide the table name based on the seedDataBo and type
 	 * passed in and will return the object of {@link DataTableModel}.
 	 *
 	 * @param tableName
