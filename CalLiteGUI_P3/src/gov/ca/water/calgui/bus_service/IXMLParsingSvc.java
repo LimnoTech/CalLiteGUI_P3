@@ -51,7 +51,7 @@ public interface IXMLParsingSvc {
 	 * @return Will return all the text fields ids.
 	 */
 
-	public List<String> getjTextFieldIdsForLinkedSliders();
+	public List<String> getjTextFieldIds();
 
 	/**
 	 * This is used to get all the Text field ids.
@@ -60,7 +60,7 @@ public interface IXMLParsingSvc {
 	 *         JLinkedSlider.
 	 */
 
-	public List<String> getjTextFieldIds();
+	public List<String> getjTextFieldIdsForLinkedSliders();
 
 	/**
 	 * This is used to get all the regulation checkbox IDs.
