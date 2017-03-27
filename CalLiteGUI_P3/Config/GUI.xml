@@ -10,6 +10,7 @@
 <!ENTITY customresults SYSTEM "Config/Custom_Results.xml">
 <!ENTITY mapview SYSTEM "Config/Map_View.xml">
 <!ENTITY externalpdf SYSTEM "Config/External_PDF.xml">
+<!ENTITY dataAnalysis SYSTEM "Config/Data_Analysis.xml">
 <!ENTITY dynamic SYSTEM "Config/Dynamic.xml">
 ]>
 <frame id="desktop" name="desktop" size="1024,768"
@@ -67,8 +68,8 @@
 			<scrollpane name="Map View">
 				&mapview;
 			</scrollpane>
-			<scrollpane name="External PDF">
-				&externalpdf;
+			<scrollpane name="Data Analysis">
+				&dataAnalysis;
 			</scrollpane>
 			<scrollpane name="Dynamic">
 				&dynamic;

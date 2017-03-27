@@ -73,7 +73,7 @@ public class VerifyControlsDeleImp implements IVerifyControlsDele {
 		getTheIds(xmlParsingSvc.getSwingEngine().find("Reporting"), removeList);
 		getTheIds(xmlParsingSvc.getSwingEngine().find("Custom"), removeList);
 		getTheIds(xmlParsingSvc.getSwingEngine().find("schematics"), removeList);
-		getTheIds(xmlParsingSvc.getSwingEngine().find("externalPDF"), removeList);
+		getTheIds(xmlParsingSvc.getSwingEngine().find("dataAnalysis"), removeList);
 		getTheIds(xmlParsingSvc.getSwingEngine().find("dynamic"), removeList);
 
 		for (String id : controlIds) {
