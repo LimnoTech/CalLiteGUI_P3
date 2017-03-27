@@ -6,6 +6,7 @@ Z.Q. Richard Chen DWR  9/14/2010
              corrected  1/5/2011
 Add User defined OMR flow requirement, Richard Chen 4/20/2011
 Hao Xie 9/22/2011 change D408_limit caculation
+Chris Quan DWR 11/23/2016 added Scenario 6 option
 *************************************/
 !include 'OMR\OMR_constraint.wresl'
 /*
@@ -30,7 +31,7 @@ define D408_VC_max {
         value 0.}
 }        
 */
-
+!define TpulseON {timeseries kind 'TRIGGER' units 'NONE'}  
 
 ! Get the minimum flow required at OMR
 define OMR_req1 {
@@ -40,13 +41,19 @@ define OMR_req1 {
 
 define OMR_req1dv {alias OMR_req1 kind 'FLOW' units 'CFS'}
 
-
+/*
 ! Get number of days after triggering of pulse
 define OMR_DecDays {
        select       DecDays
        from         OMRiverFlowDecDays
        where        wateryear=wateryear}
-
+*/     
+! Get number of days after triggering of pulse
+define OMR_DecDays {
+!       select       DecDays
+!       from         OMRiverFlowDecDays
+!       where        wateryear=wateryear}
+        value TPulseON}
 
 !Get minimum flow required at OMR based on SJR flow
 define OMR_req2 {
@@ -118,9 +125,11 @@ define OMR_req {
 
 define OMR_reqdv {alias OMR_req kind 'FLOW' units 'CFS'}
 define OMR_RPA_LF {value -99999.}
+!define OMR_RPA {value max(OMR_RPA_FWS,OMR_RPA_LF,OMR_req)}  
+
 define OMR_RPA {
-    case IF_ {
-    	condition 	int(IF_SWPorCVP_OnOff) == 1
+    case S6on {
+    	condition 	int(S6_ON)==1          !int(IF_SWPorCVP_OnOff) == 1
 		value		max(OMR_RPA_FWS,OMR_RPA_LF,OMR_req)}
 	case otherwise {
 		condition	always
@@ -185,22 +194,23 @@ define C408_limit_init {
      case Jun{
           condition month==JUN .and. OMR_RPA >= -12000.
           value OMR_RPA}
-	 case IF_On{
-			condition int(IF_SWPorCVP_OnOff)==1
-			value OMR_RPA}
+     case S6_On{  
+	  condition int(S6_ON)==1
+	  value OMR_RPA}     
+/*   case IF_On{  
+	condition int(IF_SWPorCVP_OnOff)==1
+	value OMR_RPA}*/
      case otherwise{
           condition always
           value -99999.}
 }
 !
-
-!
 ! **********************************************************************************************
 !
 define Qsod_HandS { value max(jonesminpump + banksminpump,HandS_minpump) + D408D416_est*CCWDFraction + netDICU_SOD}
-define Qomr_HandS { value coefA*AD_SJR_VAMP+coefb*Qsod_HandS+coefc}
+define Qomr_HandS { value coefA*AD_SJR_VAMP+coefb*Qsod_HandS+coefc}   
 define Qomr_HandSdv {alias Qomr_HandS kind 'FLOW-CHANNEL' units 'CFS'}
-define Qomr_noExp { value coefA*AD_SJR_VAMP+coefb*Qsod_noExp+coefc}
+define Qomr_noExp { value coefA*AD_SJR_VAMP+coefb*Qsod_noExp+coefc}   
 define Qomr_noExpdv {alias Qomr_noExp kind 'FLOW-CHANNEL' units 'CFS'}
 !define C408_limit {value min(C408_limit_init,Qomr_HandS)}
 define SOD_Q_NoExp {value D_CCWDVCOR[BASE] + netDICU_SOD}
@@ -320,17 +330,28 @@ goal bound_D418 {
 goal bound_D419 {
   lhs     D_Banks_swp_TD
   case FWSBOActions {
-  condition   month>=dec .and.  month<=jun .and. int(OMRBOON)==1 
+  condition   month>=dec .and.  month<=jun .and. int(OMRBOON)==1 .and. int(S6_ON)==0
     rhs     D_Banks_swp_TD[base] - swp_exp_dec - 0.5*comb_exp_dec
     lhs>rhs    penalty 1285
     lhs<rhs penalty    0}
-}
+  case FWSBOActions_S6 {  
+  condition   month>=oct .and.  month<=jun .and. int(OMRBOON)==1 .and. int(S6_ON)==1
+    rhs     D_Banks_swp_TD[base] - swp_exp_dec - 0.5*comb_exp_dec
+    lhs>rhs    penalty 1285
+    lhs<rhs penalty    0}
+}  
+
 
 !Implement shared export capacity under the OMR constraint for CVP exports.
 goal bound_D418 {
-  lhs     D_Jones_TD !+ D_Banks_CVPDEDEX1TD
+  lhs     D_Jones_TD
   case FWSBOActionsJo {
-    condition   month>=dec .and.  month<=jun .and. int(OMRBOON)==1     
+    condition   month>=dec .and.  month<=jun .and. int(OMRBOON)==1 .and. int(S6_ON)==0
+    rhs     D_Jones_TD[base] - cvp_exp_dec - 0.5*comb_exp_dec
+    lhs>rhs    penalty 1285
+    lhs<rhs penalty    0}
+  case FWSBOActionsJo_S6 {  
+    condition   month>=oct .and.  month<=jun .and. int(OMRBOON)==1 .and. int(S6_ON)==1  
     rhs     D_Jones_TD[base] - cvp_exp_dec - 0.5*comb_exp_dec
     lhs>rhs    penalty 1285
     lhs<rhs penalty    0}

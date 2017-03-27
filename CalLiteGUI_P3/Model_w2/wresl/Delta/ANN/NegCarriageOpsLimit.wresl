@@ -56,13 +56,12 @@ if int(CH_DLTSW)==3 {
 
 	goal target_sac{
 	  lhs C_Hood_ANN - C_Hood_Reop
-	!/* Don't use this goal if IF is available as alternate export pathway
-	  case NegCarriageBoth{
-		condition EM_m_sv >= 1.0 .or. RS_m_1_sv >= 1.0 .or. AN_m_sv >= 1.0 .or. CH_m_sv >= 1.0
+	  case NegCarriageBoth{ !Don't use this goal if IF is available as alternate export pathway
+		condition (EM_m_sv >= 1.0 .or. RS_m_1_sv >= 1.0 .or. AN_m_sv >= 1.0 .or. CH_m_sv >= 1.0).and. IF_SWPorCVP_OnOff ==0.
 		rhs max(est_req_sac_em,est_req_sac_rs,est_req_sac_an,est_req_sac_ch)
 		lhs>rhs penalty 1000
 		lhs<rhs penalty 0}
-	!*/
+
 	  case Normal {
 		condition always
 		rhs 0.
@@ -73,16 +72,15 @@ if int(CH_DLTSW)==3 {
 
 if int(CH_DLTSW) == 0 .or. int(AN_DLTSW) == 0 {
 	goal target_sac{
-	  lhs C_Hood_ANN - C_Hood_Reop
-	!/* Don't use this goal if IF is available as alternate export pathway
-	  case NegCarriageBoth{
-		condition EM_m_sv >= 1.0 .or. RS_m_1_sv >= 1.0 
+	  lhs C_Hood_ANN - C_Hood_Reop	  
+	  case NegCarriageBoth{ !Don't use this goal if IF is available as alternate export pathway
+		condition (EM_m_sv >= 1.0 .or. RS_m_1_sv >= 1.0 ) .and. IF_SWPorCVP_OnOff ==0.
 		rhs max(est_req_sac_em,est_req_sac_rs)
 		lhs>rhs penalty 1000
 		lhs<rhs penalty 0}
-	!*/
+		
 	  case Normal {
-		condition always
+		condition always 
 		rhs 0.
 		lhs>rhs penalty 0
 		lhs<rhs penalty 0}

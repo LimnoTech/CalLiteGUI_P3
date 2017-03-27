@@ -22,6 +22,7 @@ define SWP_Rule_Cap_Oroville {
   from    SWPrule_cap_Oroville
   given   oroville = S_Orovl(-1)
   use     linear}
+
 define SWP_rule_Cap {alias SWP_Rule_Cap_Oroville units 'NONE'}
 
 define OroDrainAmt4SL {value min(max(S_Orovl(-1) - OroSepTarg, 0.),
@@ -144,6 +145,7 @@ define SWPRuleCalc1 {
   case other {
     condition always
     value max(S_SLSWPlevel2,min(SWPRuleCalc,S_SLSWPlevel4))}
+ 	
 !    value max(S_SLSWPlevel2,min(SWPRuleCalc,SWP_Rule_Cap_Oroville,S_SLSWPlevel4))}
 }
 define SWPRuleCalc1_DV {alias SWPRuleCalc1 kind 'DEBUG' units 'NONE'}

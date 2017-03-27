@@ -10,7 +10,7 @@ define set_DI_SWP {
      case OCT {
           condition      month == JAN
           ! Taraky 20161004, DWR. Add South of Delta Storage Expansion for SWP
-          value          calendar_del - prvactdel_pin + S_Orovl(prevSEP) /*+ S31(prevSEP)*/ + S_SLSWP(prevSEP) + S_SLSWPE(prevSEP)}
+          value          calendar_del - prvactdel_pin + S_Orovl(prevSEP) /*+ S31(prevSEP)*/ + S_SLSWP(prevSEP) + S_SLSWPE(prevSEP)} 
 
      case other {
           condition      always

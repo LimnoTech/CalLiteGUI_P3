@@ -62,9 +62,14 @@ define C_DXC_GEO {std kind 'FLOW-GEORGIANA' units 'CFS'}
 define C_DXC_DXC {std kind 'FLOW-DXC' units 'CFS'}
 goal splitC_DXC {C_DXC = C_DXC_GEO + C_DXC_DXC}
 
-goal GeorgSlough {C_DXC_GEO = 0.1321*C_Hood + 1087.0}  
+if int(SLR_DLTSW)==1 .or. int(SLR_DLTSW)==2 {
+goal GeorgSlough {C_DXC_GEO = 0.1316*C_Hood + 1102.0}   ! 15 cm and 45 cm SLR
+}
+else {
+goal GeorgSlough {C_DXC_GEO = 0.1321*C_Hood + 1087.0}
+}
 !goal GeorgSlough {C_DXC_GEO = 0.1339*C_Hood + 745.0}  ! Implements equation described above
-
+define C_DXC_GEO_DV {alias C_DXC_GEO kind 'debug' units 'cfs'}
 !define WQCP_days_open   {select days_open from xchanneldays where month=month}  ! Number of days in each month that the DXC gate is open
 define WQCP_days_open   {       !DCC_DLTSW switch added 10/04/2010 by Z.Q. Richard Chen, DWR
     case USERDEF {

@@ -8,7 +8,6 @@
 !      "offset" + "multiplier" * SJR Inflow at Vernalis
 ! wyt -- The Sacramento valley 40-30-30 Index for water year types (wyt_SAC)
 !=====================================
-!	headers	month	W-offset	W-multiplier	AN-offset	AN-multiplier	BN-offset	BN-multiplier	D-offset	D-multiplier	CD-offset	CD-multiplier
 gui_eisjr			
 month  wyT_Sac 	offset	multiplier
 1	1	0.0	99.0
