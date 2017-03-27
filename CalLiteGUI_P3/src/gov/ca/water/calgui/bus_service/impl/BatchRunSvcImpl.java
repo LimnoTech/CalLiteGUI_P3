@@ -155,6 +155,7 @@ public final class BatchRunSvcImpl implements IBatchRunSvc {
 	 *            The number of iterations.
 	 */
 	public static void setupMainBatchFileWSIDI(String batFileName, String scenarioFileName, final int iterations) {
+
 		if (batFileName == null || batFileName.isEmpty())
 			batFileName = "CalLite_w2.bat";
 		String del = "";

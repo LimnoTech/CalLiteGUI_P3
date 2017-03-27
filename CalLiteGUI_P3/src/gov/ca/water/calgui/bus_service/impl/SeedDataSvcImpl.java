@@ -51,9 +51,9 @@ public final class SeedDataSvcImpl implements ISeedDataSvc {
 	}
 
 	/*
-	 * This will read the gui_link2.table and build the list of
-	 * {@link SeedDataBO} objects and read the gui_link4.table and build the
-	 * list of {@link GuiLinks4BO} objects.
+	 * This will read the gui_link2.table and build the list of {@link
+	 * SeedDataBO} objects and read the gui_link4.table and build the list of
+	 * {@link GuiLinks4BO} objects.
 	 */
 	private SeedDataSvcImpl() {
 		LOG.debug("Building SeedDataSvcImpl Object.");
@@ -84,7 +84,7 @@ public final class SeedDataSvcImpl implements ISeedDataSvc {
 						tableIdMap.put(seedDataBO.getTableID(), seedDataBO);
 					} else {
 						errorHandlingSvc.displayErrorMessageBeforeTheUI(
-								new CalLiteGUIException("The Table Id is same for there two controls - "
+								new CalLiteGUIException("The Table Id is same for these two controls - "
 										+ tableIdMap.get(seedDataBO.getTableID()).getGuiId() + " , "
 										+ seedDataBO.getGuiId(), true));
 					}
@@ -93,7 +93,7 @@ public final class SeedDataSvcImpl implements ISeedDataSvc {
 						regIdMap.put(seedDataBO.getRegID(), seedDataBO);
 					} else {
 						errorHandlingSvc.displayErrorMessageBeforeTheUI(
-								new CalLiteGUIException("The RegId is same for there two controls - "
+								new CalLiteGUIException("The RegId is same for these two controls - "
 										+ regIdMap.get(seedDataBO.getRegID()).getGuiId() + " , "
 										+ seedDataBO.getGuiId(), true));
 					}

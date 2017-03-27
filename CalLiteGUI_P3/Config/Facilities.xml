@@ -72,15 +72,29 @@
 			</textfield>
 			<panel layout="GridBagLayout">
 				<gridbagconstraints insets="0,15,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="1" />
-				<label text="CVP (50%)">
-					<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="0" />
+				<textfield id="fac_lstbL1" name="fac_lstbL1" enabled="false"
+					text="50"
+					HorizontalAlignment="LEFT">
+					<gridbagconstraints insets="0,0,5,5"
+						fill="GridBagConstraints.HORIZONTAL" anchor="GridBagConstraints.WEST"
+						gridx="1" gridy="0" gridwidth="1" />
+				</textfield>>	
+				<linkedslider name="fac_sldr1" id="fac_sldr1" minimum="0" maximum="100" value="50"
+					LTextBoxID="fac_lstbL1" RTextBoxID="fac_lstbR1"  orientation="0">
+					<gridbagconstraints insets="0,0,5,5" gridx="2"
+						gridy="0" />
+				</linkedslider>
+				<label text="SWP(%):">
+					<gridbagconstraints insets="0,0,5,5"
+						anchor="GridBagConstraints.NORTHWEST" gridx="3" gridy="0" />
 				</label>
-				<slider>
-					<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="0" />
-				</slider>
-				<label text="SWP (50%)">
-					<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="2" gridy="0" />
-				</label>
+				<textfield id="fac_lstbR1" name="fac_lstbR1" visible= "false" enabled="false"
+					text="50"
+					HorizontalAlignment="RIGHT">
+					<gridbagconstraints insets="0,0,5,5"
+						fill="GridBagConstraints.HORIZONTAL" anchor="GridBagConstraints.WEST"
+						gridx="5" gridy="0" gridwidth="1" />
+				</textfield>
 			</panel>
 			<label id="fac_txf2_t" text="GCID Canal Maximum Diversion Capacity for NODOS (cfs)">
 				<gridbagconstraints insets="0,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="3" />

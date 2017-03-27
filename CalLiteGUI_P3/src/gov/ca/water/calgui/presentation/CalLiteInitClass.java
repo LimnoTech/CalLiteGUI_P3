@@ -169,7 +169,7 @@ public class CalLiteInitClass {
 		// setCheckBoxorMouseListener(swingEngine.find("Reporting"), );
 		// Setup for Reporting page
 		// Set up additional UI elements
-		JList lstScenarios = (JList) swingEngine.find("SelectedList");
+		JList<?> lstScenarios = (JList<?>) swingEngine.find("SelectedList");
 		JRadioButton rdb1 = (JRadioButton) swingEngine.find("rdbp001");
 		JRadioButton rdb2 = (JRadioButton) swingEngine.find("rdbp002");
 		FileDialog fdDSSFiles = new FileDialog(lstScenarios, (JLabel) swingEngine.find("lblBase"), rdb1, rdb2, true);
@@ -193,7 +193,7 @@ public class CalLiteInitClass {
 		JSpinner spnEY = (JSpinner) swingEngine.find("spnEndYear");
 		resultUtils.SetNumberModelAndIndex(spnEY, 2003, 1921, 2003, 1, "####", resultUtils, true);
 		// Set up report list
-		JList lstReports = (JList) swingEngine.find("lstReports");
+		JList<?> lstReports = (JList<?>) swingEngine.find("lstReports");
 		lstReports.setBorder(new LineBorder(Color.gray, 1));
 		lstReports.setVisible(true);
 		// for Custom Results.
@@ -574,7 +574,7 @@ public class CalLiteInitClass {
 	 *
 	 */
 	void retrieve() {
-		JList lstScenarios = (JList) swingEngine.find("SelectedList");
+		JList<?> lstScenarios = (JList<?>) swingEngine.find("SelectedList");
 		if (!AppUtils.baseOn) {
 			JOptionPane.showMessageDialog(null, "The Base DSS files need to be selected", "DSS Not Selected",
 					JOptionPane.WARNING_MESSAGE);
@@ -627,7 +627,7 @@ public class CalLiteInitClass {
 	 */
 
 	void retrieve2() {
-		JList lstScenarios = (JList) swingEngine.find("SelectedList");
+		JList<?> lstScenarios = (JList<?>) swingEngine.find("SelectedList");
 		WRIMSGUILinks.setStatus("Retrieve2");
 
 		if (!AppUtils.baseOn) {

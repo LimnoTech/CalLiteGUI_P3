@@ -47,7 +47,7 @@ public class DSSGrabber1 {
 	static final double CFS_2_TAF_DAY = 0.001983471;
 	static final double TAF_DAY_2_CFS = 504.166667;
 
-	protected final JList lstScenarios;
+	protected final JList<?> lstScenarios;
 
 	protected String baseName;
 	protected String primaryDSSName;
@@ -1070,8 +1070,8 @@ public class DSSGrabber1 {
 		return primaryDSSName;
 	}
 
-	private void setPrimaryDSSName(String primaryDSSName) {
-		this.primaryDSSName = primaryDSSName;
-	}
+	// private void setPrimaryDSSName(String primaryDSSName) {
+	// this.primaryDSSName = primaryDSSName;
+	// }
 
 }
