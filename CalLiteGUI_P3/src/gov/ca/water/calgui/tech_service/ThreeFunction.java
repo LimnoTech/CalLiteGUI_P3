@@ -3,10 +3,10 @@ package gov.ca.water.calgui.tech_service;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 
 /**
- * This is a functional Interface which takes three parameters and one return
- * type. This interface is used for passing the lambda function
+ * This is a functional Interface which takes three parameters and one return type. This interface is used for passing the lambda
+ * function
  *
- * @author Mohan
+ * @author mohan
  *
  * @param <A>
  *            1st parameter

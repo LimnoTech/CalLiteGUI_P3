@@ -7,7 +7,7 @@ import org.swixml.SwingEngine;
 /**
  * This is the interface for Batch Run.
  * 
- * @author Mohan
+ * @author mohan
  */
 public interface IBatchRunSvc {
 	/**
