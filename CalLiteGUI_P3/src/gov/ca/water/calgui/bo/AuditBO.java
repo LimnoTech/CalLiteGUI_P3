@@ -2,21 +2,10 @@ package gov.ca.water.calgui.bo;
 
 /**
  * This is holding the information for Audit.
- * 
- * @author Mohan
  */
 public class AuditBO {
-	/**
-	 * The countro Id of the record.
-	 */
 	private String controlId;
-	/**
-	 * The old value of the control id.
-	 */
 	private String oldValue;
-	/**
-	 * The new value of the control id.
-	 */
 	private String newValue;
 
 	public AuditBO(String controlId, String oldValue, String newValue) {

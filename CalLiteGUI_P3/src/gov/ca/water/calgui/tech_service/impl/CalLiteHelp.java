@@ -13,20 +13,16 @@ import org.apache.log4j.Logger;
 
 /**
  * Generates help window allowing search of Cal-Lite user's manual.
- * 
- * @author Mohan
  */
 public class CalLiteHelp {
 	private static final Logger LOG = Logger.getLogger(CalLiteHelp.class.getName());
 	private static Properties properties = new Properties();
 
 	/**
-	 * This method will show the help dialg box for which ever label that is
-	 * passed in. Ex Run Settings, Hydroclimate..
+	 * Renders help dialog
 	 *
 	 * @param label
-	 *            Takes calling dashboard's title which is mapped to help html
-	 *            docs via docs/map.xml
+	 *            Takes calling dashboard's title which is mapped to help html docs via docs/map.xml
 	 */
 	public void showHelp(String label) {
 		try {

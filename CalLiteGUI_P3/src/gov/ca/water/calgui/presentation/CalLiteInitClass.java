@@ -52,9 +52,7 @@ import calsim.app.MultipleTimeSeries;
 import calsim.gui.GuiUtils;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
-import gov.ca.water.calgui.bo.SeedDataBO;
 import gov.ca.water.calgui.bus_delegate.IAllButtonsDele;
-import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
 import gov.ca.water.calgui.bus_delegate.IVerifyControlsDele;
 import gov.ca.water.calgui.bus_delegate.impl.AllButtonsDeleImp;
 import gov.ca.water.calgui.bus_delegate.impl.ApplyDynamicConDeleImp;
@@ -91,7 +89,8 @@ import vista.set.Group;
  * This class is for initializing the Application and adding the Action, Item,
  * Mouse Listener's to the main frame.
  *
- * @author Mohan
+ * @author mohan
+ *
  */
 public class CalLiteInitClass {
 	private static final Logger LOG = Logger.getLogger(CalLiteInitClass.class.getName());
@@ -124,16 +123,13 @@ public class CalLiteInitClass {
 		setNumberModelAndIndex(spnSY1, 1921, Constant.MIN_YEAR, Constant.MAX_YEAR, 1, "####");
 		JSpinner spnEY1 = (JSpinner) swingEngine.find("spnRunEndYear");
 		setNumberModelAndIndex(spnEY1, 2003, Constant.MIN_YEAR, Constant.MAX_YEAR, 1, "####");
-		addJSpinnerListener();
 		// Setting up all the Listener's.
 		swingEngine.setActionListener(swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalActionListener());
 		setCheckBoxorMouseListener(swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalMouseListener());
 		setCheckBoxorRadioButtonItemListener(swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalItemListener());
-		setLinkedSliderChangeListener(swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalChangeListener());
 		ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
 		((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME)).setIconImage(icon.getImage());
 		((JTabbedPane) swingEngine.find("reg_tabbedPane")).addChangeListener(new GlobalChangeListener());
-
 		((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME))
 				.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);// EXIT_ON_CLOSE
 		((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME)).addWindowListener(new WindowAdapter() {
@@ -142,6 +138,8 @@ public class CalLiteInitClass {
 				allButtonsDele.windowClosing();
 			}
 		});
+
+		//
 		// Loading the default cls file.
 		resultSvc.applyClsFile(Constant.SCENARIOS_DIR + Constant.DEFAULT + Constant.CLS_EXT, swingEngine,
 				seedDataSvc.getTableIdMap());
@@ -151,7 +149,7 @@ public class CalLiteInitClass {
 		auditSvc.clearAudit(); // we clear because when we 1st load the cls file
 								// we should not have any records.
 		addJTextFieldListener(xmlParsingSvc.getjTextFieldIds());
-		addJCheckBoxListener(xmlParsingSvc.getjCheckBoxIDs());
+		addJSpinnerListener();
 		// Count threads and update selector appropriately
 		int maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors());
 		BatchRunSvcImpl.simultaneousRuns = maxThreads;
@@ -169,7 +167,7 @@ public class CalLiteInitClass {
 		// setCheckBoxorMouseListener(swingEngine.find("Reporting"), );
 		// Setup for Reporting page
 		// Set up additional UI elements
-		JList<?> lstScenarios = (JList<?>) swingEngine.find("SelectedList");
+		JList lstScenarios = (JList) swingEngine.find("SelectedList");
 		JRadioButton rdb1 = (JRadioButton) swingEngine.find("rdbp001");
 		JRadioButton rdb2 = (JRadioButton) swingEngine.find("rdbp002");
 		FileDialog fdDSSFiles = new FileDialog(lstScenarios, (JLabel) swingEngine.find("lblBase"), rdb1, rdb2, true);
@@ -193,7 +191,7 @@ public class CalLiteInitClass {
 		JSpinner spnEY = (JSpinner) swingEngine.find("spnEndYear");
 		resultUtils.SetNumberModelAndIndex(spnEY, 2003, 1921, 2003, 1, "####", resultUtils, true);
 		// Set up report list
-		JList<?> lstReports = (JList<?>) swingEngine.find("lstReports");
+		JList lstReports = (JList) swingEngine.find("lstReports");
 		lstReports.setBorder(new LineBorder(Color.gray, 1));
 		lstReports.setVisible(true);
 		// for Custom Results.
@@ -266,6 +264,7 @@ public class CalLiteInitClass {
 				SwingUtilities.updateComponentTreeUI(event.getComponent());
 			}
 		});
+
 		new ApplyDynamicConDeleImp().applyDynamicControlForListFromFile();
 
 		// reweightComponents((Container) swingEngine.find("runsettings"),
@@ -274,6 +273,12 @@ public class CalLiteInitClass {
 
 		// Display the GUI
 		swingEngine.find(Constant.MAIN_FRAME_NAME).setVisible(true);
+
+		/**
+		 * This will ask the user to select the wsidi tables whether to use the
+		 * default or from the cls file.
+		 * allButtonsDele.decisionSVInitFilesAndTableInOperations();
+		 */
 	}
 
 	/**
@@ -284,6 +289,7 @@ public class CalLiteInitClass {
 	 *            Starting point for iteration
 	 * 
 	 */
+
 	// private void reweightComponents(Container parent, GridBagLayout layout1)
 	// {
 	// for (Component c : parent.getComponents()) {
@@ -311,13 +317,9 @@ public class CalLiteInitClass {
 	 * gui.xml file and load them.
 	 *
 	 * @param newUserDefinedIds
-	 *            This is the id's of the new tables defined in gui.xml file.
 	 * @param resultSvc
-	 *            The Object of {@link ResultSvcImpl}.
 	 * @param tableSvc
-	 *            The Object of {@link TableSvcImpl}.
 	 * @param swingEngine
-	 *            The Object of {@link SwingEngine}.
 	 */
 	public void checkForNewUserDefinedTables(List<String> newUserDefinedIds, IResultSvc resultSvc, ITableSvc tableSvc,
 			SwingEngine swingEngine) {
@@ -347,9 +349,7 @@ public class CalLiteInitClass {
 	 * This method is for loading the strings in the {@link JSpinneer}.
 	 *
 	 * @param jspn
-	 *            The {@link JSpinneer} to load.
 	 * @param idx
-	 *            The month value which we should be displaying.
 	 */
 	public void setMonthModelAndIndex(JSpinner jspn, int idx) {
 		String[] monthNames = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
@@ -366,17 +366,11 @@ public class CalLiteInitClass {
 	 * object.
 	 *
 	 * @param jspn
-	 *            The {@link JSpinneer} object.
 	 * @param value
-	 *            the current value of the {@link JSpinneer}.
 	 * @param min
-	 *            the first number in the sequence
 	 * @param max
-	 *            the last number in the sequence
 	 * @param step
-	 *            the difference between elements of the sequence
 	 * @param format
-	 *            The format that the {@link JSpinneer} should look like.
 	 */
 	public void setNumberModelAndIndex(JSpinner jspn, int value, int min, int max, int step, String format) {
 		SpinnerModel spnmod = new SpinnerNumberModel(value, min, max, step);
@@ -385,28 +379,10 @@ public class CalLiteInitClass {
 	}
 
 	/**
-	 * This method will set the change listener for the component and for all
-	 * its children which are LinkedSliders.
-	 *
-	 * @param component
-	 * @param changeListener
-	 *            Object of the Item Listener.
-	 */
-	public void setLinkedSliderChangeListener(Component component, Object changeListener) {
-		if (component instanceof JLinkedSlider) {
-			((JLinkedSlider) component).addChangeListener((ChangeListener) changeListener);
-		}
-		for (Component child : ((Container) component).getComponents()) {
-			setLinkedSliderChangeListener(child, changeListener);
-		}
-	}
-
-	/**
 	 * This method will set the item listener for the component and for all it's
 	 * children which are Check Box and radio button.
 	 *
 	 * @param component
-	 *            The component to which you want to set the itemListener.
 	 * @param itemListener
 	 *            Object of the Item Listener.
 	 */
@@ -424,7 +400,6 @@ public class CalLiteInitClass {
 	 * it's children which are Check Box.
 	 *
 	 * @param component
-	 *            The component to which you want to set the MouseListener.
 	 * @param mouseListener
 	 *            Object of the Mouse Listener.
 	 */
@@ -438,51 +413,8 @@ public class CalLiteInitClass {
 	}
 
 	/**
-	 * This method is to add focus listeners to regulations checkboxes tracking
-	 * the changes.
-	 * 
-	 * @param listOfNames
-	 *            The list of names to which we want to add the
-	 *            JTextFieldListener.
-	 */
-	private void addJCheckBoxListener(List<String> listOfNames) {
-		FocusListener focusListenerForCheckBox = new FocusListener() {
-
-			@Override
-			public void focusLost(FocusEvent e) {
-
-			}
-
-			@Override
-			public void focusGained(FocusEvent e) {
-				boolean showTablePanel = ((JRadioButton) swingEngine.find("rdbRegQS_UD")).isSelected();
-				if (showTablePanel) {
-					SeedDataBO seedDataBO = SeedDataSvcImpl.getSeedDataSvcImplInstance()
-							.getObjByGuiId(e.getComponent().getName());
-					showTablePanel = !seedDataBO.getDataTables().equals(Constant.N_A);
-
-					((JPanel) swingEngine.find("reg_panTab")).setVisible(showTablePanel);
-					((JPanel) swingEngine.find("reg_panTabPlaceholder")).setVisible(!showTablePanel);
-					IApplyDynamicConDele applyDynamicConDele = new ApplyDynamicConDeleImp();
-					JCheckBox c = (JCheckBox) e.getComponent();
-					applyDynamicConDele.applyDynamicControl(c.getName(), c.isSelected(), c.isEnabled(), false);
-
-				}
-			}
-		};
-		for (String name : listOfNames) {
-			((JCheckBox) swingEngine.find(name)).addFocusListener(focusListenerForCheckBox);
-		}
-
-	}
-
-	/**
 	 * This method is to add the listrnrt for the {@link JTextField} for
 	 * tracking the changes.
-	 * 
-	 * @param listOfNames
-	 *            The list of names to which we want to add the
-	 *            JTextFieldListener.
 	 */
 	private void addJTextFieldListener(List<String> listOfNames) {
 		FocusListener focusListenerForTextField = new FocusListener() {
@@ -551,8 +483,8 @@ public class CalLiteInitClass {
 	}
 
 	/**
-	 * This method is to add the listener for selected {@link JSpinner} for
-	 * tracking the changes.
+	 * This method is to add the listrnrt for the {@link JSpinner} for tracking
+	 * the changes.
 	 */
 	private void addJSpinnerListener() {
 		ChangeListener listener = new ChangeListener() {
@@ -574,7 +506,7 @@ public class CalLiteInitClass {
 	 *
 	 */
 	void retrieve() {
-		JList<?> lstScenarios = (JList<?>) swingEngine.find("SelectedList");
+		JList lstScenarios = (JList) swingEngine.find("SelectedList");
 		if (!AppUtils.baseOn) {
 			JOptionPane.showMessageDialog(null, "The Base DSS files need to be selected", "DSS Not Selected",
 					JOptionPane.WARNING_MESSAGE);
@@ -627,7 +559,7 @@ public class CalLiteInitClass {
 	 */
 
 	void retrieve2() {
-		JList<?> lstScenarios = (JList<?>) swingEngine.find("SelectedList");
+		JList lstScenarios = (JList) swingEngine.find("SelectedList");
 		WRIMSGUILinks.setStatus("Retrieve2");
 
 		if (!AppUtils.baseOn) {

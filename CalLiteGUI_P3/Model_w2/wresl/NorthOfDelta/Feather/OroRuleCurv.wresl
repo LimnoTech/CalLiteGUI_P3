@@ -69,11 +69,6 @@ define OroRuleCalcdv {alias OroRuleCalc kind 'RULE' units 'TAF'}
 define S_OrovlLevel3adj {value min(max(OroRuleCalc,S_OrovlLevel2),S_OrovlLevel4)}
 define S_OrovlLevel3dv {alias S_OrovlLevel3adj kind 'STORAGE-LEVEL' units 'TAF'}
 
-if int(ESO_ON)==1 {  
-	define OroFish {value 2000.}
-	define OroFishdv {alias OroFish kind 'RULE' units 'TAF'}
-}
-
 goal S_OrovlZone3 {S_Orovl_3 < max(S_OrovlLevel3adj - S_OrovlLevel2,0.)}
 goal S_OrovlZone4 {S_Orovl_4 < max(S_OrovlLevel4 - S_OrovlLevel3adj,0.)}
 goal S_OrovlZone5 {S_Orovl_5 < max(S_OrovlLevel5 - S_OrovlLevel4,0.)}

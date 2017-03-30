@@ -87,7 +87,6 @@ define Action_4_1_2       {select Option from GUI_RPAsOtherRegs where Index=2} !
 define Action_4_2_1       {select Option from GUI_RPAsOtherRegs where Index=3} !Export_Ops\NMFS_SALMON_BO_SJR.wresl 
 define OMRBOON            {select Option from GUI_RPAsOtherRegs where Index=4} !whether implement FWS Action : no action: value=0; action: value=1
 define ClearCrkBOswitch   {select Option from GUI_RPAsOtherRegs where Index=5} !BO and B2Actions\B2Action1Repeat.wresl
-!define ESO_ON             {select Option from GUI_RPAsOtherRegs where Index=16}
 
 /*NON-D1641 Delta Flow Switches     */ 
 define QOMR_DLTSW   {select OPTION from GUI_RPAsOtherRegs where Index = 6}
@@ -111,7 +110,7 @@ define CVPDedBanksSwitch  {value 0} ! use as place holder
 !define SWPShastaSwitch    {value 0} ! use as place holder
  
 /* Water Management Action*/
-define fremont_notch_on   {select Option from GUI_BDCP_FacilityControl where Index=5}  !hydrology\WEIRS\weir_steps_dailyops.wresl
+define fremont_notch_on   {value 0}  !hydrology\WEIRS\weir_steps_dailyops.wresl
  
  /* San Joaquin Switches */
 define VAMP_Flow          {select Option from GUI_SJR where Index=1} !VAMP_Flow -  VAMP pulse flows (Apr 15-May 15)
@@ -129,7 +128,7 @@ define EnlargShastaSize  {select Option from GUI_EnlargedShasta where Index=2}
 define EnlargSLOn    {select Option from GUI_EnlargedSanLuis where Index=1} ! Taraky 20161109, BDO, DWR. San Luis Switch on/off
 define EnlargSLSize  {select Option from GUI_EnlargedSanLuis where Index=2} ! Taraky 20161109, BDO, DWR. San Luis enlargement size
 define SLE_UserDef	{select Option from GUI_EnlargedSanLuis where Index =3} ! Taraky 20161109, BDO, DWR. San Luis enlargement size, user defined
-define TDExports       	 {select Option from GUI_BDCP_FacilityControl where Index = 4}
+define TDExports       	 {value 1}
 define LVEM_Cap			{select Option from GUI_LosVaqueros where Index = 2} ! - Los Vaqueros Maximum Capacity [160 TAF]
 define LVEM_VC			{select Option from GUI_LosVaqueros where Index = 3} ! - Alternate Intake (Victoria Canal) Diversion Capacity [250 cfs] 
 define LVEM_OR			{select Option from GUI_LosVaqueros where Index = 4} ! - Old RIver Diversion Capacity [250 cfs]

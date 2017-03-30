@@ -26,8 +26,6 @@ import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 
 /**
  * This class will handle the batch run.
- * 
- * @author Mohan
  */
 public final class BatchRunSvcImpl implements IBatchRunSvc {
 
@@ -50,13 +48,12 @@ public final class BatchRunSvcImpl implements IBatchRunSvc {
 	public void doBatch(List<String> scenarioNamesList, SwingEngine swingEngine, boolean isWsidi) {
 		if (scenarioNamesList.isEmpty() || scenarioNamesList == null) {
 			errorHandlingSvc.validationeErrorHandler("The scenario name list is empty to run the batch program.",
-					"The scenario name list is empty to run the batch program.",
-					(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME));
+			        "The scenario name list is empty to run the batch program.",
+			        (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME));
 		}
 		if (!dateSelectionIsValid(swingEngine)) {
 			errorHandlingSvc.validationeErrorHandler("The End Date should be greater then the start date",
-					"The End Date should be greater then the start date",
-					(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME));
+			        "The End Date should be greater then the start date", (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME));
 		}
 		// Disable run button
 		JButton btn = (JButton) swingEngine.find("run_btnRun");
@@ -66,7 +63,7 @@ public final class BatchRunSvcImpl implements IBatchRunSvc {
 		if (isWsidi) {
 			if (scenarioNamesList.size() > 1) {
 				JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-						"WSIDI generation only allowed for a single hydroclimate realization.");
+				        "WSIDI generation only allowed for a single hydroclimate realization.");
 			} else {
 				setupMainBatchFileWSIDI(null, scenarioNamesList.get(0), wsdiIterations);
 				runBatch();
@@ -84,7 +81,7 @@ public final class BatchRunSvcImpl implements IBatchRunSvc {
 				deleteDirectory(subBatchFile);
 				List<String> groupScenFileNameList = new ArrayList<String>();
 				for (int i = j * numberOfSimultaneousRun; i < Math.min((j + 1) * numberOfSimultaneousRun,
-						scenarioNamesList.size()); i++) {
+				        scenarioNamesList.size()); i++) {
 					String scenFileName = scenarioNamesList.get(i);
 					groupScenFileNameList.add(scenFileName);
 				}
@@ -102,8 +99,7 @@ public final class BatchRunSvcImpl implements IBatchRunSvc {
 	 * This will generate the main .bat file depending on the values passed in.
 	 *
 	 * @param batFileName
-	 *            The batch file name. If it is empty or null it will take the
-	 *            default batch file name.
+	 *            The batch file name. If it is empty or null it will take the default batch file name.
 	 * @param scenarioNamesList
 	 *            The list of scenario names in this run.
 	 * @param subBatchFileNameArray
@@ -118,8 +114,7 @@ public final class BatchRunSvcImpl implements IBatchRunSvc {
 			String wsidilogFilePath = new File(scenarioPath, "run\\wsidi_iteration.log").getAbsolutePath();
 			String progressFilePath = new File(scenarioPath, "run\\progress.txt").getAbsolutePath();
 			String wreslCheckFilePath = new File(scenarioPath, "run\\\"=WreslCheck_main=.log\"").getAbsolutePath();
-			String wreslCheckWsidiFilePath = new File(scenarioPath, "run\\\"=WreslCheck_main_wsidi=.log\"")
-					.getAbsolutePath();
+			String wreslCheckWsidiFilePath = new File(scenarioPath, "run\\\"=WreslCheck_main_wsidi=.log\"").getAbsolutePath();
 			del = del + "del /F /Q " + wsidilogFilePath + "\r\n";
 			del = del + "del /F /Q " + progressFilePath + "\r\n";
 			del = del + "del /F /Q " + wreslCheckFilePath + "\r\n";
@@ -147,15 +142,13 @@ public final class BatchRunSvcImpl implements IBatchRunSvc {
 	 * This will generate the main .bat file for WSI-DI.
 	 *
 	 * @param batFileName
-	 *            The batch file name. If it is empty or null it will take the
-	 *            default batch file name.
+	 *            The batch file name. If it is empty or null it will take the default batch file name.
 	 * @param scenarioFileName
 	 *            The list of scenario names in this run.
 	 * @param iterations
 	 *            The number of iterations.
 	 */
 	public static void setupMainBatchFileWSIDI(String batFileName, String scenarioFileName, final int iterations) {
-
 		if (batFileName == null || batFileName.isEmpty())
 			batFileName = "CalLite_w2.bat";
 		String del = "";
@@ -163,8 +156,7 @@ public final class BatchRunSvcImpl implements IBatchRunSvc {
 		String scenarioPath = new File(Constant.RUN_DETAILS_DIR + scenarioName).getAbsolutePath();
 		String progressFilePath = new File(scenarioPath, "run\\progress.txt").getAbsolutePath();
 		String wreslCheckFilePath = new File(scenarioPath, "run\\\"=WreslCheck_main=.log\"").getAbsolutePath();
-		String wreslCheckWsidiFilePath = new File(scenarioPath, "run\\\"=WreslCheck_main_wsidi=.log\"")
-				.getAbsolutePath();
+		String wreslCheckWsidiFilePath = new File(scenarioPath, "run\\\"=WreslCheck_main_wsidi=.log\"").getAbsolutePath();
 		String wsidiIterationLogPath = new File(scenarioPath, "run\\wsidi_iteration.log").getAbsolutePath();
 		del = del + "del /F /Q " + progressFilePath + "\r\n";
 		del = del + "del /F /Q " + wreslCheckFilePath + "\r\n";
@@ -174,7 +166,7 @@ public final class BatchRunSvcImpl implements IBatchRunSvc {
 		batchFile = new File(System.getProperty("user.dir"), batFileName);
 		PrintWriter batchFilePW;
 		String cmd = "Model_w2\\vscript.bat Model_w2\\vscript\\Main.py " + "\""
-				+ new File(scenarioPath, scenarioName + "_wsidi.config").getAbsolutePath() + "\" " + iterations;
+		        + new File(scenarioPath, scenarioName + "_wsidi.config").getAbsolutePath() + "\" " + iterations;
 		try {
 			batchFilePW = new PrintWriter(new BufferedWriter(new FileWriter(batchFile)));
 			batchFilePW.println("@title=CalLiteRun" + scenarioName);
@@ -192,11 +184,8 @@ public final class BatchRunSvcImpl implements IBatchRunSvc {
 	 * This will generate the main .bat file for single run.
 	 *
 	 * @param batFileName
-	 *            The batch file name
 	 * @param scenarioFileName
-	 *            The scenario file name
 	 * @param isParallel
-	 *            whether it is parallel or not.
 	 */
 	private void setupBatchFile(String batFileName, List<String> scenarioFileName, boolean isParallel) {
 		if (batFileName == null || batFileName.isEmpty())
@@ -233,8 +222,7 @@ public final class BatchRunSvcImpl implements IBatchRunSvc {
 	private static void runBatch() {
 		try {
 			Runtime rt = Runtime.getRuntime();
-			Process proc = rt
-					.exec("cmd /c start /min \"CalLiteRun\" " + System.getProperty("user.dir") + "\\CalLite_w2.bat");
+			Process proc = rt.exec("cmd /c start /min \"CalLiteRun\" " + System.getProperty("user.dir") + "\\CalLite_w2.bat");
 			int exitVal = proc.waitFor();
 			LOG.debug("Return from batch run " + exitVal);
 		} catch (Throwable t) {
@@ -275,10 +263,9 @@ public final class BatchRunSvcImpl implements IBatchRunSvc {
 
 	/**
 	 * Checks if date selection is valid for scenario currently in memory
-	 * 
+	 *
 	 * @param swingEngine
 	 *            The {@link SwingEngine} Object.
-	 * @return Will return true if the selected value is valid.
 	 */
 	private boolean dateSelectionIsValid(SwingEngine swingEngine) {
 		String startMon = ((String) ((JSpinner) swingEngine.find("spnRunStartMonth")).getValue()).trim();
@@ -295,7 +282,7 @@ public final class BatchRunSvcImpl implements IBatchRunSvc {
 	 * Convert the month name to the int value of it.
 	 *
 	 * @param month
-	 *            The month name which you want to convert.
+	 *            - The month name which you want to convert.
 	 * @return The int value of the month.
 	 */
 	public static int monthToInt(String month) {

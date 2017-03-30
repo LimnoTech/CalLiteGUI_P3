@@ -35,7 +35,7 @@ goal set_DI_CVP_sys {
      case MAR {
           condition      month == MAR
           ! Taraky 20161004, DWR. Add South of Delta Storage Expansion for CVP
-          rhs            tot_del_cvp_n + tot_del_cvp_s + S_TRNTY(prevSEP) + S_SHSTA(prevSEP) + S_SHSTAE(prevSEP) + S_FOLSM(prevSEP) + S_SLCVP(prevSEP)+ S_SLCVPE(prevSEP) }
+          rhs            tot_del_cvp_n + tot_del_cvp_s + S_TRNTY(prevSEP) + S_SHSTA(prevSEP) + S_SHSTAE(prevSEP) + S_FOLSM(prevSEP) + S_SLCVP(prevSEP) + S_SLCVPE(prevSEP) }
 
      case other {
           condition      always

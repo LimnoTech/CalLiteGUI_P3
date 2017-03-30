@@ -29,10 +29,9 @@ import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 
 /**
- * This is the class for handling different type of error like validatione,
- * business, system and also used for displaying the error messages.
+ * This class will handle errors.
  *
- * @author Mohan
+ * @author mohan
  */
 public class ErrorHandlingSvcImpl implements IErrorHandlingSvc {
 
@@ -134,14 +133,12 @@ public class ErrorHandlingSvcImpl implements IErrorHandlingSvc {
 	}
 
 	/**
-	 * This method will change the layered exceptions into the message string
-	 * and also have the stack trace as a string.
+	 * This method will change the layered exceptions into the message string and also have the stack trace as a string.
 	 *
 	 * @param aThrowable
-	 *            An exception class which has all messages in layer and the
-	 *            stack trace.
-	 * @return In the list the 1st value will be the error message and the 2nd
-	 *         value will be the stack trace of the {@link Exception}.
+	 *            An exception class which has all messages in layer and the stack trace.
+	 * @return In the list the 1st value will be the error message and the 2nd value will be the stack trace of the
+	 *         {@link Exception}.
 	 */
 	private List<String> getMessageAndStackTraceFromLayeredError(Throwable aThrowable) {
 		StringBuffer errorMessage = new StringBuffer();
@@ -162,11 +159,10 @@ public class ErrorHandlingSvcImpl implements IErrorHandlingSvc {
 	}
 
 	/**
-	 * This method will display the message to the user in the JOptionPane and
-	 * send email.
+	 * This method will display the message to the user in the JOptionPane and send email.
 	 *
 	 * @param displayMessage
-	 *            Message to display the user.
+	 *            Message message to display to the user.
 	 * @param detailMessage
 	 *            Detail message with stack trace for additional information.
 	 * @param mainFrame
@@ -202,7 +198,6 @@ public class ErrorHandlingSvcImpl implements IErrorHandlingSvc {
 	 * @param message
 	 *            The detail message which is send in the email.
 	 * @param mainFrame
-	 *            For displaying the message when we have a error.
 	 */
 	private void sendEmail(String message, JFrame mainFrame) {
 		Properties props = new Properties();

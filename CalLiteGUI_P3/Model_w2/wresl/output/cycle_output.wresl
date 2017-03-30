@@ -133,10 +133,6 @@ define[local] C_SACRV_EXCBASE {alias C_SACRV_EXC[BASE] kind 'debug' units 'CFS'}
 
 define[local] C_THERM_MIFUP {alias C_THERM_MIF[UPSTREAM] kind 'debug' units 'CFS'}
 define[local] C_THERM_MIFBASE {alias C_THERM_MIF[BASE] kind 'debug' units 'CFS'}
-define[local] C_THERM_MIFB2BO {alias C_THERM_MIF[B2_BO] kind 'debug' units 'CFS'}
-define[local] C_THERM_MIFLFSDO1 {alias C_THERM_MIF[LFS_DO1] kind 'debug' units 'CFS'}
-define[local] C_THERM_MIFLFSDO2 {alias C_THERM_MIF[LFS_DO2] kind 'debug' units 'CFS'}
-
 define[local] C_THERM_EXCUP {alias C_THERM_EXC[UPSTREAM] kind 'debug' units 'CFS'}
 define[local] C_THERM_EXCBASE {alias C_THERM_EXC[BASE] kind 'debug' units 'CFS'}
 
@@ -228,29 +224,5 @@ define[local] C_Orovl_EXP_U {alias C_Orovl_EXP[UPSTREAM] kind 'debug' units 'cfs
 
 define[local] dxc_daysopenUP	{alias dxc_daysopen [UPSTREAM] kind 'debug' units 'NONE'}
 define[local] C_SacSJRUP	{alias C_SacSJR [UPSTREAM] kind 'debug' units 'CFS'}
-define[local] C_SacSJRBASE	{alias C_SacSJR [BASE] kind 'debug' units 'CFS'}
-define[local] C_SacSJRB2BO	{alias C_SacSJR [B2_BO] kind 'debug' units 'CFS'}
-define[local] C_SacSJRLFSDO1	{alias C_SacSJR [LFS_DO1] kind 'debug' units 'CFS'}
-define[local] C_SacSJRLFSDO2	{alias C_SacSJR [LFS_DO2] kind 'debug' units 'CFS'}
 
-if int(ESO_ON)==1 {
-define[local] Oro_relmaxUP       {alias Oro_relmax[UPSTREAM] kind 'debug' units 'cfs'}
-define[local] Oro_relmaxBASE     {alias Oro_relmax[BASE] kind 'debug' units 'cfs'}
-define[local] Oro_relmaxB2BO     {alias Oro_relmax[B2_BO] kind 'debug' units 'cfs'}
-define[local] D_ExpTDB2BO     {alias D_ExpTD[B2_BO] kind 'debug' units 'cfs'}
-define[local] D_ExpTDLFSDO1     {alias D_ExpTD[LFS_DO1] kind 'debug' units 'cfs'}
-define[local] D_ExpTDLFSDO2     {alias D_ExpTD[LFS_DO2] kind 'debug' units 'cfs'}
-define[local] D_BanksLFSDO1  {alias D_Banks[LFS_DO1]     KIND 'debug' UNITS 'CFS'}
-define[local] D_BanksLFSDO2  {alias D_Banks[LFS_DO2]     KIND 'debug' UNITS 'CFS'}
-define[local] D_BanksB2BO  {alias D_Banks[B2_BO]     KIND 'debug' UNITS 'CFS'}
-define[local] D_JonesB2BO  {alias D_Jones[B2_BO]     KIND 'debug' UNITS 'CFS'}
-define[local] D_JonesLFSDO1  {alias D_Jones[LFS_DO1]     KIND 'debug' UNITS 'CFS'}
-define[local] D_JonesLFSDO2  {alias D_Jones[LFS_DO2]     KIND 'debug' UNITS 'CFS'}
-define[local] OrofishB2BO  {alias Orofish[B2_BO]     KIND 'debug' UNITS 'CFS'}
-define ORO_relfish_LFS_DO2 {alias ORO_relfishdv[LFS_DO2] kind 'FLOW-MAX' units 'CFS'}
-define ORO_relmax_LFS_DO2 {alias ORO_relmaxdv[LFS_DO2] kind 'FLOW-MAX' units 'CFS'}
-define DOreqflowfish_LFS_DO2 {alias DOreqflowfish2dv[LFS_DO2] KIND 'FLOW-REQ' UNITS 'CFS'}
-define onoff_Fish_DO_LFS_DO2 {alias onoff_Fish_DOdv[LFS_DO2] kind 'DEBUG' units 'SWITCH'}
-define onoff_Oro_DO_LFS_DO2 {alias onoff_Oro_DOdv[LFS_DO2] kind 'DEBUG' units 'SWITCH'}
-define ORO_maxrelfsh_LFS_DO2 {alias ORO_maxrelfishdv[LFS_DO2] kind 'DEBUG' units 'CFS'}
-}
+

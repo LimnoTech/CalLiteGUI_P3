@@ -19,6 +19,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
@@ -30,8 +31,7 @@ import javax.swing.event.ListDataListener;
 import org.apache.log4j.Logger;
 
 /**
- * Supports selection of different types of CalLite files from customized
- * JFileChoosers.
+ * Supports selection of different types of CalLite files from customized JFileChoosers.
  *
  * @author tslawecki
  *
@@ -70,8 +70,7 @@ public class FileDialog implements ActionListener {
 	}
 
 	/**
-	 * Constructor for use with DSS files, result is appended to list and placed
-	 * in textfield.
+	 * Constructor for use with DSS files, result is appended to list and placed in textfield.
 	 *
 	 * @param aList
 	 * @param aTextField
@@ -84,8 +83,7 @@ public class FileDialog implements ActionListener {
 	}
 
 	/**
-	 * Constructor for use with arbitrary files, result is appended to list and
-	 * placed in textfield.
+	 * Constructor for use with arbitrary files, result is appended to list and placed in textfield.
 	 *
 	 * @param aList
 	 * @param aTextField
@@ -99,8 +97,7 @@ public class FileDialog implements ActionListener {
 	}
 
 	/**
-	 * Constructor for use with arbitrary files, result is appended to list and
-	 * placed in textfield.
+	 * Constructor for use with arbitrary files, result is appended to list and placed in textfield.
 	 *
 	 * @param aList
 	 * @param aTextField
@@ -116,8 +113,7 @@ public class FileDialog implements ActionListener {
 	}
 
 	/**
-	 * Constructor used for DSS files, result is appended to list, radiobuttons
-	 * are enabled when list length > 1
+	 * Constructor used for DSS files, result is appended to list, radiobuttons are enabled when list length > 1
 	 *
 	 * @param aList
 	 * @param aLabel
@@ -158,8 +154,7 @@ public class FileDialog implements ActionListener {
 				fc.setCurrentDirectory(new File(".//Config"));
 		}
 
-		// If a list is specified, create customized JList for handling of
-		// files.
+		// If a list is specified, create customized JList for handling of files.
 
 		if (aList != null) {
 
@@ -210,8 +205,7 @@ public class FileDialog implements ActionListener {
 	}
 
 	/**
-	 * Custom ListDataListener to enable/disable controls based on number of
-	 * files in list.
+	 * Custom ListDataListener to enable/disable controls based on number of files in list.
 	 *
 	 * @author tslawecki
 	 *
@@ -246,10 +240,8 @@ public class FileDialog implements ActionListener {
 		Object obj = null;
 		if (e != null)
 			obj = e.getSource();
-		if ((obj != null) && (((Component) obj).getName() != null)
-				&& ((Component) obj).getName().equals("btnDelScenario")) {
-			// If invoked by QR DelScenario button, delete a scenario from Quick
-			// Results scenario list
+		if ((obj != null) && (((Component) obj).getName() != null) && ((Component) obj).getName().equals("btnDelScenario")) {
+			// If invoked by QR DelScenario button, delete a scenario from Quick Results scenario list
 			if ((theList != null) && lmScenNames.getSize() > 0) {
 				int todel = -1;
 				for (int i = 0; i < lmScenNames.getSize(); i++)
@@ -308,8 +300,7 @@ public class FileDialog implements ActionListener {
 	}
 
 	/**
-	 * Adds file to list of scenarios if not already in list. Currently used to
-	 * manage list of scenarios on Quick Result dashboard
+	 * Adds file to list of scenarios if not already in list. Currently used to manage list of scenarios on Quick Result dashboard
 	 *
 	 * @param file
 	 */
@@ -319,16 +310,10 @@ public class FileDialog implements ActionListener {
 			RBListItem rbli = (RBListItem) lmScenNames.getElementAt(i);
 			match = match | (rbli.toString().equals(file.getPath()));
 		}
-
 		if (match)
-
-			// Per client request, don't alert.
-
-			// JOptionPane.showMessageDialog(null,
-			// "Scenario \"" + file.getPath() + "\"\n" + "and will not be added.
-			// It is already in the Scenarios list.",
-			// "Alert", JOptionPane.ERROR_MESSAGE);
-			;
+			JOptionPane.showMessageDialog(null,
+			        "Scenario \"" + file.getPath() + "\"\n" + "and will not be added. It is already in the Scenarios list.",
+			        "Alert", JOptionPane.ERROR_MESSAGE);
 		else {
 			lmScenNames.addElement(new RBListItem(file.getPath(), file.getName()));
 			if (lmScenNames.getSize() == 1)
@@ -359,15 +344,11 @@ public class FileDialog implements ActionListener {
 
 		@Override
 		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
-				boolean cellHasFocus) {
+		        boolean cellHasFocus) {
 			JLabel lbl = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 			if (!theOwner.toolTipFlag) {
 				theToolTips.clear();
-				File folder = new File(System.getProperty("user.dir") + "\\Scenarios"); // change
-																						// to
-																						// read
-																						// current
-																						// directory
+				File folder = new File(System.getProperty("user.dir") + "\\Scenarios"); // change to read current directory
 				File[] listOfFiles = folder.listFiles();
 
 				for (int i = 0; i < listOfFiles.length; i++) {
@@ -387,8 +368,7 @@ public class FileDialog implements ActionListener {
 
 						}
 					}
-					theOwner.toolTipFlag = true; // need to flag when directory
-													// changes
+					theOwner.toolTipFlag = true; // need to flag when directory changes
 				}
 			}
 			File file = new File(String.valueOf(value));
@@ -404,8 +384,7 @@ public class FileDialog implements ActionListener {
 	}
 
 	/**
-	 * Custom FileChooser that puts scenario description for *.cls (assumedin
-	 * *.txt) in tooltip
+	 * Custom FileChooser that puts scenario description for *.cls (assumedin *.txt) in tooltip
 	 *
 	 * @author tslawecki
 	 *
@@ -447,8 +426,7 @@ public class FileDialog implements ActionListener {
 	 */
 	private class RBListRenderer extends JRadioButton implements ListCellRenderer {
 		@Override
-		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
-				boolean hasFocus) {
+		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean hasFocus) {
 			setEnabled(list.isEnabled());
 			setSelected(((RBListItem) value).isSelected());
 			setFont(list.getFont());

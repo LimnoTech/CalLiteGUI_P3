@@ -36,14 +36,14 @@ import gov.ca.water.calgui.presentation.ScenarioFrame;
 
 public class ReportAction implements ActionListener {
 	private final SwingEngine swix;
-	private final JList<String> lstScenarios;
+	private final JList lstScenarios;
 	private static Logger log = Logger.getLogger(ReportAction.class.getName());
 	static DtsTreeModel dtm;
 	private IAllButtonsDele allButtonsDele = new AllButtonsDeleImp();
 
 	public ReportAction(SwingEngine swix) {
 		this.swix = swix;
-		lstScenarios = (JList<String>) swix.find("SelectedList");
+		lstScenarios = (JList) swix.find("SelectedList");
 	}
 
 	private void clearCheckboxes(String panelName) {
@@ -82,28 +82,25 @@ public class ReportAction implements ActionListener {
 			}
 		} else if (e.getActionCommand().startsWith("AC_GenReport")) {
 			if (((JTextField) swix.find("tfReportFILE1")).getText().isEmpty()
-					|| ((JTextField) swix.find("tfReportFILE2")).getText().isEmpty()
-					|| ((JTextField) swix.find("tfReportFILE3")).getText().isEmpty()) {
-				JOptionPane.showMessageDialog(null, "You must specify the source DSS files and the output PDF file",
-						"Error", JOptionPane.ERROR_MESSAGE);
+			        || ((JTextField) swix.find("tfReportFILE2")).getText().isEmpty()
+			        || ((JTextField) swix.find("tfReportFILE3")).getText().isEmpty()) {
+				JOptionPane.showMessageDialog(null, "You must specify the source DSS files and the output PDF file", "Error",
+				        JOptionPane.ERROR_MESSAGE);
 			} else {
 				try {
 					// Create an inputstream from template file;
-					FileInputStream fin = new FileInputStream(
-							((JTextField) swix.find("tfTemplateFILE")).getToolTipText());
+					FileInputStream fin = new FileInputStream(((JTextField) swix.find("tfTemplateFILE")).getToolTipText());
 					BufferedReader br = new BufferedReader(new InputStreamReader(fin));
 					// Open the template file
 					String theText = br.readLine() + "\n";
 					theText = theText + br.readLine() + "\n";
 					theText = theText + br.readLine() + "\n";
 					br.readLine();
-					theText = theText + "FILE_BASE\t" + ((JTextField) swix.find("tfReportFILE1")).getToolTipText()
-							+ "\n";
+					theText = theText + "FILE_BASE\t" + ((JTextField) swix.find("tfReportFILE1")).getToolTipText() + "\n";
 					br.readLine();
 					theText = theText + "NAME_BASE\t\"" + ((JTextField) swix.find("tfReportNAME1")).getText() + "\"\n";
 					br.readLine();
-					theText = theText + "FILE_ALT\t" + ((JTextField) swix.find("tfReportFILE2")).getToolTipText()
-							+ "\n";
+					theText = theText + "FILE_ALT\t" + ((JTextField) swix.find("tfReportFILE2")).getToolTipText() + "\n";
 					br.readLine();
 					theText = theText + "NAME_ALT\t\"" + ((JTextField) swix.find("tfReportNAME2")).getText() + "\"\n";
 					br.readLine();
@@ -111,8 +108,7 @@ public class ReportAction implements ActionListener {
 					br.readLine();
 					theText = theText + "NOTE\t\"" + ((JTextArea) swix.find("taReportNOTES")).getText() + "\"\n";
 					br.readLine();
-					theText = theText + "ASSUMPTIONS\t\"" + ((JTextArea) swix.find("taReportASSUMPTIONS")).getText()
-							+ "\"\n";
+					theText = theText + "ASSUMPTIONS\t\"" + ((JTextArea) swix.find("taReportASSUMPTIONS")).getText() + "\"\n";
 					br.readLine();
 					theText = theText + "MODELER\t\"" + ((JTextField) swix.find("tfReportMODELER")).getText() + "\"\n";
 
@@ -130,13 +126,10 @@ public class ReportAction implements ActionListener {
 						Report report = new Report(bs, ((JTextField) swix.find("tfReportFILE3")).getToolTipText());
 						report.execute();
 					} catch (IOException e1) {
-						log.debug(e1.getMessage()); // Not sure - should catch
-													// thread problems like
-													// already-open PDF?
+						log.debug(e1.getMessage()); // Not sure - should catch thread problems like already-open PDF?
 					}
 				} catch (IOException e1) {
-					log.debug(e1.getMessage()); // Failure to open template file
-												// (?)
+					log.debug(e1.getMessage()); // Failure to open template file (?)
 				}
 			}
 
@@ -170,7 +163,7 @@ public class ReportAction implements ActionListener {
 			}
 		} else if (e.getActionCommand().startsWith("Rep_AddList")) {
 			// Store previous list items
-			JList<String> lstReports = (JList<String>) swix.find("lstReports");
+			JList lstReports = (JList) swix.find("lstReports");
 			int size = lstReports.getModel().getSize(); // 4
 			int n;
 			n = 0;
@@ -188,8 +181,7 @@ public class ReportAction implements ActionListener {
 			}
 			String cSTOR = ";Locs-";
 			String cSTORIdx = ";Index-";
-			// TODO: replace with iterator over panel components of tabbedpane
-			// "variables"
+			// TODO: replace with iterator over panel components of tabbedpane "variables"
 			String[] panelIDs = { "presets", "SJR Results", "shortage", "WMA", "DShort" };
 			for (String panelID : panelIDs) {
 				JPanel panel = (JPanel) swix.find(panelID);
@@ -212,7 +204,7 @@ public class ReportAction implements ActionListener {
 			}
 		} else if (e.getActionCommand().startsWith("Rep_ClearList")) {
 
-			JList<String> lstReports = (JList<String>) swix.find("lstReports");
+			JList lstReports = (JList) swix.find("lstReports");
 			String[] lstArray1 = new String[0];
 			lstReports.setListData(lstArray1);
 
@@ -243,8 +235,7 @@ public class ReportAction implements ActionListener {
 				JOptionPane.showMessageDialog(null, "No display group selected", "Error", JOptionPane.ERROR_MESSAGE);
 			} else {
 
-				DisplayFrame.showDisplayFrames((String) ((JList) swix.find("lstReports")).getSelectedValue(),
-						lstScenarios);
+				DisplayFrame.showDisplayFrames((String) ((JList) swix.find("lstReports")).getSelectedValue(), lstScenarios);
 			}
 		} else if (e.getActionCommand().startsWith("Time_SELECT")) {
 
@@ -254,8 +245,8 @@ public class ReportAction implements ActionListener {
 			JList lstScenarios = (JList) swix.find("SelectedList");
 			List<String> fileNames = new ArrayList<>();
 			for (int i = 0; i < ((DefaultListModel) lstScenarios.getModel()).getSize(); i++) {
-				String name = Paths.get(((DefaultListModel) lstScenarios.getModel()).getElementAt(i).toString())
-						.getFileName().toString();
+				String name = Paths.get(((DefaultListModel) lstScenarios.getModel()).getElementAt(i).toString()).getFileName()
+				        .toString();
 				fileNames.add(name.substring(0, name.length() - 7) + Constant.CLS_EXT);
 			}
 			if (pro) {

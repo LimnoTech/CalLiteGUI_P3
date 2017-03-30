@@ -17,8 +17,7 @@ import javax.swing.ListSelectionModel;
 import org.apache.log4j.Logger;
 
 /**
- * This frame is used for displaying the monitored status of run and save
- * operations.
+ * This frame is used for displaying the monitor status of batch run and save.
  *
  * @author mohan
  */

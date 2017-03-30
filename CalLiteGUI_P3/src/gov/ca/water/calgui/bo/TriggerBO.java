@@ -2,28 +2,11 @@ package gov.ca.water.calgui.bo;
 
 /**
  * This is used to hold the information of Trigger*.table in memory.
- * 
- * @author Mohan
  */
 public class TriggerBO {
-	/**
-	 * The trigger gui id is the one which says the id for the Dynamic action.
-	 */
 	private String triggerGuiId;
-	/**
-	 * The tarigger action is the one which says whether it's selected or
-	 * not-selected for the trigger gui id.
-	 */
 	private String triggerAction;
-	/**
-	 * The affectde gui id is the one which says the id for which the Dynamic
-	 * action is going to apply.
-	 */
 	private String affectdeGuiId;
-	/**
-	 * The affectde action is the one which says what should happend for the
-	 * affectde gui id.
-	 */
 	private String affectdeAction;
 
 	public TriggerBO(String triggerGuiId, String triggerAction, String affectdeGuiId, String affectdeAction) {

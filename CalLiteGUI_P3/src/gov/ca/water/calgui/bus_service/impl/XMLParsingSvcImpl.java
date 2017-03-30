@@ -20,7 +20,6 @@ import org.swixml.SwingEngine;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bus_service.IXMLParsingSvc;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.presentation.JLinkedSlider;
 import gov.ca.water.calgui.presentation.NumericTextField;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.IFileSystemSvc;
@@ -30,7 +29,7 @@ import gov.ca.water.calgui.tech_service.impl.FileSystemSvcImpl;
 /**
  * This class will parse the gui.xml into the Swing Engine.
  *
- * @author Mohan
+ * @author mohan
  *
  */
 public final class XMLParsingSvcImpl implements IXMLParsingSvc {
@@ -43,15 +42,11 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 	private Map<String, String> compNameIdMap;
 	private List<String> newUserDefinedTables;
 	private List<String> jTextFieldIds;
-	private List<String> jTextFieldIdsForLinkedSliders;
-	private List<String> jCheckBoxIDs; // Checkboxes on regulations screen
 
 	/**
-	 * This method is for implementing the singleton. It will return the
-	 * instance of this class if it is empty it will create one.
+	 * This method is for implementing the singleton.
 	 *
-	 * @return Will return the instance of this class if it is empty it will
-	 *         create one.
+	 * @return
 	 */
 	public static IXMLParsingSvc getXMLParsingSvcImplInstance() {
 		if (xmlParsingSvc == null) {
@@ -60,10 +55,9 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 		return xmlParsingSvc;
 	}
 
-	/*
-	 * In this we 1st build the SwingEngine from the Gui.xml file. We build the
-	 * newUserDefinedTables list by getting all the JTable component id and
-	 * exclude the default ones.
+	/**
+	 * In this we 1st build the SwingEngine from the Gui.xml file. We build the newUserDefinedTables list by getting all the JTable
+	 * component id and exclude the default ones.
 	 */
 	private XMLParsingSvcImpl() {
 		LOG.debug("Building XMLParsingSvcImpl Object.");
@@ -71,20 +65,15 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 		this.fileSystemSvc = new FileSystemSvcImpl();
 		this.compNameIdMap = new HashMap<String, String>();
 		this.jTextFieldIds = new ArrayList<>();
-		this.jCheckBoxIDs = new ArrayList<>();
-		this.jTextFieldIdsForLinkedSliders = new ArrayList<>();
-
 		this.swingEngine = new SwingEngine();
 		swingEngine.getTaglib().registerTag("numtextfield", NumericTextField.class);
-		swingEngine.getTaglib().registerTag("linkedslider", JLinkedSlider.class);
-
 		try {
 			swingEngine.render(fileSystemSvc.getXMLDocument());
 		} catch (CalLiteGUIException ex) {
 			errorHandlingSvc.displayErrorMessageBeforeTheUI(ex);
 		} catch (Exception ex) {
-			errorHandlingSvc.displayErrorMessageBeforeTheUI(new CalLiteGUIException(
-					"This is from Swing Engine : " + Constant.NEW_LINE + ex.getMessage(), ex, true));
+			errorHandlingSvc.displayErrorMessageBeforeTheUI(
+			        new CalLiteGUIException("This is from Swing Engine : " + Constant.NEW_LINE + ex.getMessage(), ex, true));
 		}
 		Set<String> compIds = this.getIdFromXML();
 		compIds.stream().forEach((compId) -> {
@@ -94,36 +83,14 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 			}
 		});
 		List<String> temp = compIds.stream().filter((compId) -> swingEngine.find(compId) instanceof JTextField)
-				.collect(Collectors.toList());
+		        .collect(Collectors.toList());
 		for (String string : temp) {
 			if (checkIsItFromResultPart(string)) {
 				jTextFieldIds.add(string);
 			}
 		}
-
-		// Build a list of TextBoxes that are referenced by JLinkedSliders
-
-		temp = compIds.stream().filter((compId) -> swingEngine.find(compId) instanceof JLinkedSlider)
-				.collect(Collectors.toList());
-		for (String string : temp) {
-			if (checkIsItFromResultPart(string)) {
-				JLinkedSlider ls = (JLinkedSlider) swingEngine.find(string);
-				if (!ls.getLTextBoxID().equals(""))
-					jTextFieldIdsForLinkedSliders.add(ls.getLTextBoxID());
-				if (!ls.getRTextBoxID().equals(""))
-					jTextFieldIdsForLinkedSliders.add(ls.getRTextBoxID());
-			}
-		}
-
-		temp = compIds.stream().filter((compId) -> swingEngine.find(compId) instanceof JCheckBox)
-				.collect(Collectors.toList());
-		for (String string : temp) {
-			if (checkIsItFromRegulationPart(string)) {
-				jCheckBoxIDs.add(string);
-			}
-		}
 		this.newUserDefinedTables = compIds.stream().filter((compId) -> swingEngine.find(compId) instanceof JTable)
-				.collect(Collectors.toList());
+		        .collect(Collectors.toList());
 		this.newUserDefinedTables.remove("tblRegValues");
 		this.newUserDefinedTables.remove("tblOpValues");
 		this.newUserDefinedTables.remove("tblIF3");
@@ -135,8 +102,7 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 	 * This method will tell whether the id is from the result part or not.
 	 *
 	 * @param compId
-	 *            The ID of the component.
-	 * @return Will check whether the id is from the result part of the ui.
+	 * @return
 	 */
 	private boolean checkIsItFromResultPart(String compId) {
 		List<String> resultTabNames = Arrays.asList("Custom", "externalPDF", "Reporting", "schematics");
@@ -150,25 +116,10 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 	}
 
 	/**
-	 * This method will tell whether the id is from the regulations part or not.
-	 *
-	 * @param compId
-	 *            The ID of the component.
-	 * @return Will check whether the id is from the result part of the ui.
-	 */
-	private boolean checkIsItFromRegulationPart(String compId) {
-		List<String> names = new java.util.ArrayList<String>();
-		getAllThePanelNamesOfParent(swingEngine.find(compId).getParent(), names);
-		return names.contains("regulations");
-	}
-
-	/**
 	 * This will get all the {@code JPanel} parent of the {@code Component}
 	 *
 	 * @param component
-	 *            The component to which we need the parent names.
 	 * @param names
-	 *            This method will populate the parent names into this field.
 	 */
 	private void getAllThePanelNamesOfParent(Component component, List<String> names) {
 		if (component instanceof JPanel) {
@@ -184,16 +135,6 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 	@Override
 	public List<String> getjTextFieldIds() {
 		return jTextFieldIds;
-	}
-
-	@Override
-	public List<String> getjTextFieldIdsForLinkedSliders() {
-		return jTextFieldIdsForLinkedSliders;
-	}
-
-	@Override
-	public List<String> getjCheckBoxIDs() {
-		return jCheckBoxIDs;
 	}
 
 	@Override

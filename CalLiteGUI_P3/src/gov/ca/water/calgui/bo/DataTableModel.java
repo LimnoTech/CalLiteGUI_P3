@@ -12,34 +12,14 @@ import gov.ca.water.calgui.tech_service.impl.AuditSvcImpl;
 
 /**
  * This class is used to hold the tables for the application.
- * 
- * @author Mohan
  */
 public class DataTableModel extends AbstractTableModel {
 	private static final Logger LOG = Logger.getLogger(DataTableModel.class.getName());
-	/**
-	 * see {@link AuditSvcImpl}
-	 */
 	private IAuditSvc auditSvc = AuditSvcImpl.getAuditSvcImplInstance();
-	/**
-	 * This will hold the value of the table name in this table.
-	 */
 	private String tableName = "";
-	/**
-	 * This will hold all the column names in this table.
-	 */
 	private String[] columnNames;
-	/**
-	 * This will hold all the data values that will be displayed in the table.
-	 */
 	private Object[][] data;
-	/**
-	 * This will tell whether the table can be modify or not.
-	 */
 	private boolean isCellEditable;
-	/**
-	 * The object of the GUI.
-	 */
 	private SwingEngine swingEngine;
 
 	public DataTableModel(String tableName, String[] columnName, Object[][] data, boolean isCellEditable) {
@@ -112,7 +92,7 @@ public class DataTableModel extends AbstractTableModel {
 	@Override
 	public void setValueAt(Object value, int row, int col) {
 		auditSvc.addAudit(tableName + Constant.DASH + row + Constant.DASH + col, String.valueOf(getValueAt(row, col)),
-				String.valueOf(value));
+		        String.valueOf(value));
 		if (tableName.toLowerCase().startsWith("wsi") || tableName.equals(Constant.USER_DEFINED)) {
 			try {
 				JLabel jLabel = (JLabel) swingEngine.find("op_WSIDI_Status");

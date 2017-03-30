@@ -2,15 +2,12 @@ package gov.ca.water.calgui.bo;
 
 /**
  * I am the root exception for CalLiteGUI.
- * 
- * @author Mohan
  */
 public class CalLiteGUIException extends Exception {
 
 	private static final long serialVersionUID = 1L;
-	/**
-	 * This flag is for knowing the exception is required to close the
-	 * application or not.
+	/*
+	 * This flag is for knowing the exception is required to close the application or not.
 	 */
 	private boolean isRequiredToExit = false;
 
@@ -25,7 +22,7 @@ public class CalLiteGUIException extends Exception {
 	 * The Constructor.
 	 *
 	 * @param message
-	 *            The message to store in the exception.
+	 *            The message
 	 */
 	public CalLiteGUIException(String message) {
 		super(message);
@@ -81,13 +78,6 @@ public class CalLiteGUIException extends Exception {
 		super(cause);
 	}
 
-	/**
-	 * This method will return is the value required to close the application or
-	 * not.
-	 * 
-	 * @return Will return is the value required to close the application or
-	 *         not.
-	 */
 	public boolean isRequiredToExit() {
 		return isRequiredToExit;
 	}

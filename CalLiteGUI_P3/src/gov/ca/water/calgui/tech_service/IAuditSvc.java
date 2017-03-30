@@ -1,14 +1,13 @@
 package gov.ca.water.calgui.tech_service;
 
 /**
- * This is the interface for processing all the Audit records like adding,
- * delete etc.
+ * This is the interface for Audit records.
  * 
- * @author Mohan
+ * @author mohan
  */
 public interface IAuditSvc {
 	/**
-	 * This will add the value to the Audit record.
+	 * This will add add the value to the Audit record.
 	 *
 	 * @param controlId
 	 *            The id of the control.
@@ -27,7 +26,7 @@ public interface IAuditSvc {
 	/**
 	 * This will tell whether the Audit is empty or not.
 	 *
-	 * @return Will return false if the audit is empty and vise versa.
+	 * @return
 	 */
 	public boolean hasValues();
 }

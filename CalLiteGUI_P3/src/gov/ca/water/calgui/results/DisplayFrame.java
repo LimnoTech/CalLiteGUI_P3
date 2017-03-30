@@ -418,18 +418,25 @@ public class DisplayFrame {
 		}
 
 		// Exceedance Plot
-		// Modify processing to reflect deprecation of "Exceedance plot"
-		// checkbox - Tad 2/23/17
-
-		String cST = "";
-		for (Component c : ((JPanel) swix.find("controls2")).getComponents()) {
-			if (c instanceof JCheckBox) {
-				cST = cST + (((JCheckBox) c).isSelected() ? "," + ((JCheckBox) c).getText() : "");
+		JPanel controls2 = (JPanel) swix.find("controls2");
+		Component[] components = controls2.getComponents();
+		ckb = (JCheckBox) swix.find("RepckbExceedancePlot");
+		if (ckb.isSelected()) {
+			String cST;
+			cST = ";EX-";
+			for (int i = 0; i < components.length; i++) {
+				if (components[i] instanceof JCheckBox) {
+					JCheckBox c = (JCheckBox) components[i];
+					boolean b = c.isSelected();
+					if (b == true) {
+						String cName = c.getText();
+						// TODO Need different naming convention.
+						cST = cST + "," + cName;
+					}
+				}
 			}
+			cAdd = cAdd + cST;
 		}
-		if (!cST.equals(""))
-			cAdd = cAdd + ";EX-" + cST;
-
 		// Boxplot
 		if (((JCheckBox) swix.find("RepckbBAWPlot")).isSelected()) {
 			cAdd = cAdd + ";BP";
@@ -442,9 +449,10 @@ public class DisplayFrame {
 
 		// Summary Table
 		JPanel controls3 = (JPanel) swix.find("controls3");
-		Component components[] = controls3.getComponents();
+		components = controls3.getComponents();
 		ckb = (JCheckBox) swix.find("RepckbSummaryTable");
 		if (ckb.isSelected()) {
+			String cST;
 			cST = ";ST-";
 			for (int i = 0; i < components.length; i++) {
 				if (components[i] instanceof JCheckBox) {

@@ -38,8 +38,6 @@ define[local] aprmayexpctrlBASE     {alias aprmayexpctrl[BASE]      KIND 'debug'
 define[local] aprmaybanksctrlBASE       {alias aprmaybanksctrl[BASE]      KIND 'debug' units 'cfs'}
 define[local] aprmayjonesctrlBASE       {alias aprmayjonesctrl[BASE]      KIND 'debug' units 'cfs'}
 
-define[local] D_BanksB2BO  {alias D_Banks[B2_BO]     KIND 'debug' UNITS 'CFS'}
-
 define[local] c_kswck_mUP   {alias c_kswck_m[UPSTREAM]  KIND 'debug' UNITS 'CFS'}
 define[local] c_nimbus_mUP  {alias c_nimbus_m[UPSTREAM] KIND 'debug' UNITS 'CFS'}
 define[local] c_wkytn_mUP   {alias c_wkytn_m[UPSTREAM]  KIND 'debug' UNITS 'CFS'}
@@ -135,7 +133,6 @@ define[local] C_SACRV_EXCBASE {alias C_SACRV_EXC[BASE] kind 'debug' units 'CFS'}
 
 define[local] C_THERM_MIFUP {alias C_THERM_MIF[UPSTREAM] kind 'debug' units 'CFS'}
 define[local] C_THERM_MIFBASE {alias C_THERM_MIF[BASE] kind 'debug' units 'CFS'}
-define[local] C_THERM_MIFB2BO {alias C_THERM_MIF[B2_BO] kind 'debug' units 'CFS'}
 define[local] C_THERM_EXCUP {alias C_THERM_EXC[UPSTREAM] kind 'debug' units 'CFS'}
 define[local] C_THERM_EXCBASE {alias C_THERM_EXC[BASE] kind 'debug' units 'CFS'}
 

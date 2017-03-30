@@ -16,10 +16,7 @@ import gov.ca.water.calgui.bus_service.IMonitorSvc;
 import gov.ca.water.calgui.constant.Constant;
 
 /**
- * This class is used for getting the String for Monitor the process which is
- * done behind the seen.
- * 
- * @author Mohan
+ * This class is used for getting the String for Monitor the process which is done behind the seen.
  */
 public final class MonitorSvcImpl implements IMonitorSvc {
 
@@ -27,8 +24,8 @@ public final class MonitorSvcImpl implements IMonitorSvc {
 
 	@Override
 	public String save(String scenarioName) {
-		return scenarioName + " - Saving - " + lastLine(
-				Constant.RUN_DETAILS_DIR + scenarioName + Constant.RUN_DIR + Constant.SAVE_FILE + Constant.TXT_EXT);
+		return scenarioName + " - Saving - "
+		        + lastLine(Constant.RUN_DETAILS_DIR + scenarioName + Constant.RUN_DIR + Constant.SAVE_FILE + Constant.TXT_EXT);
 
 	}
 
@@ -36,9 +33,8 @@ public final class MonitorSvcImpl implements IMonitorSvc {
 	public String batchRunWsidi(String scenarioName) {
 		String scenPROGRESSFile = Constant.RUN_DETAILS_DIR + scenarioName + Constant.RUN_DIR + "//PROGRESS.txt";
 		String scenWRESLCheckWSIDIFile = Constant.RUN_DETAILS_DIR + scenarioName + Constant.RUN_DIR
-				+ "//=WreslCheck_main_wsidi=.log";
-		String scenWSIDIIterationFile = Constant.RUN_DETAILS_DIR + scenarioName + Constant.RUN_DIR
-				+ "//wsidi_iteration.log";
+		        + "//=WreslCheck_main_wsidi=.log";
+		String scenWSIDIIterationFile = Constant.RUN_DETAILS_DIR + scenarioName + Constant.RUN_DIR + "//wsidi_iteration.log";
 		String infoWSIDI = "";
 		String line = "";
 		if (Paths.get(scenWSIDIIterationFile).toFile().exists()) {
@@ -60,8 +56,7 @@ public final class MonitorSvcImpl implements IMonitorSvc {
 		} catch (IOException e) {
 			// no need to handle because the file is not yet there.
 		}
-		if (Paths.get(scenPROGRESSFile).toFile().exists()
-				&& (System.currentTimeMillis() - fileTime.toMillis() < 30000)) {
+		if (Paths.get(scenPROGRESSFile).toFile().exists() && (System.currentTimeMillis() - fileTime.toMillis() < 30000)) {
 			line = lastLine(scenPROGRESSFile);
 			line = progressString(line);
 			return scenarioName + " " + infoWSIDI + " - " + line;
@@ -78,8 +73,7 @@ public final class MonitorSvcImpl implements IMonitorSvc {
 	@Override
 	public String batchRun(String scenarioName) {
 		String scenPROGRESSFile = Constant.RUN_DETAILS_DIR + scenarioName + Constant.RUN_DIR + "//PROGRESS.txt";
-		String scenWRESLCHECKFile = Constant.RUN_DETAILS_DIR + scenarioName + Constant.RUN_DIR
-				+ "//=WreslCheck_main=.log";
+		String scenWRESLCHECKFile = Constant.RUN_DETAILS_DIR + scenarioName + Constant.RUN_DIR + "//=WreslCheck_main=.log";
 		String line = "";
 		FileTime fileTime = null;
 		try {
@@ -87,8 +81,7 @@ public final class MonitorSvcImpl implements IMonitorSvc {
 		} catch (IOException ex) {
 			// no need to handle because the file is not yet there.
 		}
-		if (Paths.get(scenPROGRESSFile).toFile().exists()
-				&& (System.currentTimeMillis() - fileTime.toMillis() < 300000)) {
+		if (Paths.get(scenPROGRESSFile).toFile().exists() && (System.currentTimeMillis() - fileTime.toMillis() < 300000)) {
 			line = lastLine(scenPROGRESSFile);
 			line = progressString(line);
 			return scenarioName + " - " + line;
@@ -103,13 +96,10 @@ public final class MonitorSvcImpl implements IMonitorSvc {
 	}
 
 	/**
-	 * This method will convert the batch string from the progrtss.txt file into
-	 * the detail Message to display.
+	 * This method will convert the batch string from the progrtss.txt file into the detail Message to display.
 	 *
 	 * @param value
-	 *            The string value.
-	 * @return Will convert the batch string from the progrtss.txt file into the
-	 *         detail Message to display.
+	 * @return
 	 */
 	private String progressString(String value) {
 		if (value.contains("unopenable!"))
@@ -125,8 +115,8 @@ public final class MonitorSvcImpl implements IMonitorSvc {
 			if (parts.length == 4) {
 				try {
 					int totalMonths = 12 * (Integer.parseInt(parts[1]) - Integer.parseInt(parts[0]));
-					int months = Math.min(totalMonths, Integer.parseInt(parts[3])
-							+ 12 * (Integer.parseInt(parts[2]) - Integer.parseInt(parts[0])));
+					int months = Math.min(totalMonths,
+					        Integer.parseInt(parts[3]) + 12 * (Integer.parseInt(parts[2]) - Integer.parseInt(parts[0])));
 					value = parts[3] + "/" + parts[2] + " (" + (100 * months / totalMonths) + "%)";
 				} catch (NumberFormatException e) {
 					value = "There is a error in formating the numbers.";
@@ -137,12 +127,10 @@ public final class MonitorSvcImpl implements IMonitorSvc {
 	}
 
 	/**
-	 * This method will convert the batch string into the detail Message to
-	 * display.
+	 * This method will convert the batch string into the detail Message to display.
 	 *
 	 * @param value
-	 *            The string value.
-	 * @return Will convert the batch string into the detail Message to display.
+	 * @return
 	 */
 	private String parsingString(String value) {
 		if (value.contains("unopenable!"))
@@ -160,7 +148,7 @@ public final class MonitorSvcImpl implements IMonitorSvc {
 	 *
 	 * @param fileName
 	 *            file name with whole path.
-	 * @return Will return the last line.
+	 * @return
 	 */
 	public String lastLine(String fileName) {
 		String value = "";
@@ -185,7 +173,7 @@ public final class MonitorSvcImpl implements IMonitorSvc {
 	 *
 	 * @param fileName
 	 *            file name with whole path.
-	 * @return This will return the last but one line.
+	 * @return
 	 */
 	public String lastButOneLine(String fileName) {
 		String value = "";

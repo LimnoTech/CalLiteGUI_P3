@@ -70,10 +70,10 @@ import gov.ca.water.calgui.tech_service.impl.FileSystemSvcImpl;
 import hec.heclib.dss.HecDss;
 
 /**
- * This class is to handle all the button actions in the ui like Load Scenario,
- * Save Scenario etc.
+ * This class is to handle all the button actions in the ui.
  *
- * @author Mohan
+ * @author mohan
+ *
  */
 public class AllButtonsDeleImp implements IAllButtonsDele {
 	private static final Logger LOG = Logger.getLogger(AllButtonsDeleImp.class.getName());
@@ -143,16 +143,9 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 	}
 
 	/**
-	 * This method will tell whether to save the existing gui state to the file.
+	 * TODO
 	 *
-	 * @return Will return true if we need to save to the file.
-	 */
-	/**
-	 * This method will tell whether to save the existing gui state to the file.
-	 * 
-	 * @param clsFileName
-	 *            The cls file name.
-	 * @return Will return true if we need to save to the file.
+	 * @return
 	 */
 	private boolean decisionToSaveOrNot(String clsFileName) {
 		if (auditSvc.hasValues()) {
@@ -190,15 +183,14 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 	}
 
 	/**
-	 * This method will save the current state of the ui to the cls file name
-	 * given.
+	 * TODO
 	 *
 	 * @param clsFileName
-	 *            The cls file name to save the currnt state of the ui.
-	 * @return Will return true if the save is successful.
+	 * @return
 	 */
 	private boolean save(String clsFileName) {
 
+		ProgressFrame progressFrame = ProgressFrame.getProgressFrameInstance();
 		String tempName = Constant.SCENARIOS_DIR + clsFileName + Constant.CLS_EXT;
 		boolean proceed = true;
 		if ((new File(tempName)).exists())
@@ -209,6 +201,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 		if (proceed) {
 			((JTextField) swingEngine.find("run_txfScen")).setText(clsFileName + Constant.CLS_EXT);
 			((JTextField) swingEngine.find("run_txfoDSS")).setText(clsFileName + Constant.DV_NAME + Constant.DSS_EXT);
+			progressFrame.addScenarioNamesAndAction(clsFileName, Constant.SAVE);
 			/*
 			 * The following code is for checking whether the tables in the
 			 * "Operations" tab is up to data or not and if not updating the
@@ -239,8 +232,6 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 					return false;
 				}
 			}
-			ProgressFrame progressFrame = ProgressFrame.getProgressFrameInstance();
-			progressFrame.addScenarioNamesAndAction(clsFileName, Constant.SAVE);
 			progressFrame.makeDialogVisible();
 			proceed = ResultSvcImpl.getResultSvcImplInstance().save(clsFileName,
 					XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine(),
@@ -254,6 +245,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 
 	@Override
 	public void runMultipleBatch() {
+		ProgressFrame progressFrame = ProgressFrame.getProgressFrameInstance();
 		JFileChooser fileChooser = new JFileChooser(Constant.SCENARIOS_DIR);
 		fileChooser.setMultiSelectionEnabled(true);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("CLS FILES (.cls)", "cls");
@@ -288,9 +280,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 					return;
 				}
 			}
-			ProgressFrame progressFrame = ProgressFrame.getProgressFrameInstance();
 			progressFrame.addScenarioNamesAndAction(fileNames, Constant.BATCH_RUN);
-			progressFrame.setBtnText(Constant.STATUS_BTN_TEXT_STOP);
 			progressFrame.makeDialogVisible();
 			batchRunSvc.doBatch(fileNames, swingEngine, false);
 		}
@@ -398,7 +388,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 						(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME));
 				return;
 			}
-			// poplute data.
+			// populate data.
 			StringTokenizer st1 = new StringTokenizer(totalData, Constant.NEW_LINE);
 			for (int i = 0; st1.hasMoreTokens(); i++) {
 				String rowstring = st1.nextToken();
@@ -684,22 +674,16 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 			Object[] options = { "Save", "Don't Save", "Cancel" };
 			optionPane = new JOptionPane("Current scenario not saved. Would you like to save before exiting?",
 					JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION, null, options, options[0]);
-			JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "CalLite");
+			JDialog dialog = optionPane.createDialog("CalLite");
 			dialog.setIconImage(icon.getImage());
 			dialog.setResizable(false);
 			dialog.setVisible(true);
 			if (optionPane.getValue().toString().equals("Save")) {
-				if (((JTextField) swingEngine.find("run_txfScen")).getText().toUpperCase().equals("DEFAULT.CLS")) {
-					JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-							"The CalLite GUI is not allowed to overwrite DEFAULT.CLS. Please use the Save As command to save your changes before exiting.");
-
-				} else {
-					boolean isSaved = saveCurrentStateToFile();
-					if (!isSaved)
-						errorHandlingSvc.businessErrorHandler("We encounter a problem when saving the file.", "",
-								(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME));
-					System.exit(0);
-				}
+				boolean isSaved = saveCurrentStateToFile();
+				if (!isSaved)
+					errorHandlingSvc.businessErrorHandler("We encounter a problem when saving the file.", "",
+							(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME));
+				System.exit(0);
 			} else if (optionPane.getValue().toString().equals("Don't Save")) {
 				System.exit(0);
 			}

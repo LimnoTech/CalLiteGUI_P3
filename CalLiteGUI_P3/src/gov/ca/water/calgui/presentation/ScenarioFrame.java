@@ -21,10 +21,10 @@ import javax.swing.JTable;
 import gov.ca.water.calgui.bo.DataTableModel;
 
 /**
- * This frame is used for the "View Scenario Settings" button in the
- * "Run Settings" tab.
+ * This frame is used for the "View Scenario Settings" button in the "Run Settings" tab.
  *
- * @author Mohan
+ * @author mohan
+ *
  */
 public class ScenarioFrame extends JFrame implements ItemListener {
 	private JPanel basePanel = new JPanel();
@@ -90,12 +90,10 @@ public class ScenarioFrame extends JFrame implements ItemListener {
 	}
 
 	/**
-	 * This method will build the {@link JPanel} with the {@link DataTableModel}
-	 * passed in.
+	 * This method will build the {@link JPanel} with the {@link DataTableModel} passed in.
 	 *
 	 * @param dataTableModel
-	 *            The data to display for "View Scenario Settings" button.
-	 * @return Will return the {@link JPanel} for "View Scenario Settings".
+	 * @return
 	 */
 	private JPanel buildJpanel(DataTableModel dataTableModel) {
 		JPanel jPanel = new JPanel();

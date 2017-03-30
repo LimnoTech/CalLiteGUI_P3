@@ -25,9 +25,9 @@ import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IFileSystemSvc;
 
 /**
- * This is the class for File Handling like reading and saving etc.
+ * This class have method for handling the File.
  *
- * @author Mohan
+ * @author mohan
  */
 public class FileSystemSvcImpl implements IFileSystemSvc {
 	private static final Logger LOG = Logger.getLogger(FileSystemSvcImpl.class.getName());

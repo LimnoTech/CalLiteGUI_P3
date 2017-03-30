@@ -1,7 +1,7 @@
 
-     HECDSS Complete Catalog of Record Pathnames in File D:/git/WMA/CalLiteGUI_P3/CalLiteGUI_P3/Model_w2/DSS_Files/CL_INIT.dss
+     HECDSS Complete Catalog of Record Pathnames in File D:/CalLite_3.1/CalLite_3.1.1_dev/CalLite_GUI_v3_SODS/Model_w2/DSS_Files/CL_INIT.dss
 
-     Catalog Created on Mar 2, 2017, 13:30
+     Catalog Created on Dec 15, 2016, 10:14
      Number of Records:0000086                   DSS 
      Sort Order: ABCFED
 
