@@ -133,8 +133,7 @@ public class VerifyControlsDeleImp implements IVerifyControlsDele {
 	}
 
 	/**
-	 * This method will get name of the {@code component} and it's children
-	 * names.
+	 * This method will get name of the {@code component} and itschildren names.
 	 * 
 	 * @param component
 	 *            The starting component.

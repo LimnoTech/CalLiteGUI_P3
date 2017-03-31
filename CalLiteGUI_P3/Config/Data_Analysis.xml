@@ -1,10 +1,10 @@
 <panel id="dataAnalysis" font="Tahoma-Italic-12"
 	layout="GridBagLayout">
 	<tabbedpane name="data_tabbedPane" constraints="Borderlayout.CENTER"					
-	preferredsize="1000,650" id="data_tabbedPane">
+	preferredsize="1100,750" id="data_tabbedPane">
 	<gridbagconstraints insets="0,5,0,5" gridx="0"
 		gridy="1" anchor="GridBagConstraints.NORTHWEST" />		
-		<panel id="data_tabbedPane1" name="Extertnal PDF" font="Tahoma-Italic-12"
+		<panel id="data_tabbedPane1" name="External PDF" font="Tahoma-Italic-12"
 			layout="GridBagLayout">	
 			<label text="Report template file">
 				<gridbagconstraints insets="0,5,5,5"
