@@ -286,7 +286,7 @@ public final class ResultSvcImpl implements IResultSvc {
 		} catch (NoSuchElementException ex) {
 			throw new CalLiteGUIException(
 					"The table name is " + tableName + Constant.NEW_LINE
-							+ "The Header is missing or not been formarted correctly in the table." + Constant.NEW_LINE,
+							+ "The Header is missing or not been formatted correctly in the table." + Constant.NEW_LINE,
 					ex);
 		}
 		String[] da = header.split(Constant.OLD_DELIMITER);
