@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
@@ -86,7 +87,21 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 			errorHandlingSvc.displayErrorMessageBeforeTheUI(new CalLiteGUIException(
 					"This is from Swing Engine : " + Constant.NEW_LINE + ex.getMessage(), ex, true));
 		}
+
 		Set<String> compIds = this.getIdFromXML();
+
+		// Force names to match IDs for all checkboxes and radio buttons
+		compIds.stream().forEach((compId) -> {
+			Component component = this.swingEngine.find(compId);
+			if (component instanceof JCheckBox) {
+				if (!((JCheckBox) component).getName().equals(compId))
+					((JCheckBox) component).setName(compId);
+			} else if (component instanceof JRadioButton) {
+				if (!((JRadioButton) component).getName().equals(compId))
+					((JRadioButton) component).setName(compId);
+			}
+		});
+
 		compIds.stream().forEach((compId) -> {
 			Component component = this.swingEngine.find(compId);
 			if (component instanceof JCheckBox) {
