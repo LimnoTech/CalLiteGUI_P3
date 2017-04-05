@@ -1,15 +1,33 @@
-<panel id="dynamic" name="dynamic" visible="true" layout="GridBagLayout">
+
+<!-- This is the main panel for the Sandbox. It is visible, and uses the GridBagLayout layout manager -->
+
+<panel id="sandbox" name="sandbox" visible="true" layout="GridBagLayout">
+
+   
 	<panel font="Tahoma-Bold-12" layout="GridBagLayout">
+	
+	    <!-- The following subpanel demonstrates the Enable/Disable dynamic control capabilities -->
+        <!-- The subpanel also uses the GridBagLayout manager, and places the subpanel at coordinate 0,0 of the parent's grid -->
+        
 		<panel resizeable="false" layout="GridBagLayout"
 			border="TitledBorder(For Enable/Disable)">
 			<gridbagconstraints insets="0,0,2,2"
 				anchor="GridBagConstraints.WEST" gridx="0" gridy="0" />
+				
+			<!-- Placing radiobuttons in a buttongroup gurantees that only one of the buttons can be selected at a time -->
+			
 			<buttongroup>
+			
+			    <!-- The buttons are placed inside the subpanel's grid at coordinates (0.5,0) and (0.5,1) -->
+			    <!-- Insets are used to specify padding inside the grid area -->
+			    <!-- The anchor value of WEST centers the component vertically and left-justifies it horizontally -->
+			    
 				<radiobutton id="ep_db" name="ep_db"
 					text="Enable Panel 1 and disable the Help button" minimumsize="240,20"
 					selected="false">
 					<gridbagconstraints insets="0,0,5,5"
 						anchor="GridBagConstraints.WEST" gridx="0.5" gridy="0" />
+							
 				</radiobutton>
 				<radiobutton id="dp_eb" name="dp_eb"
 					text="Disable Panel 1 and enable the Help button" minimumsize="240,20">
@@ -17,6 +35,10 @@
 						anchor="GridBagConstraints.WEST" gridx="0.5" gridy="1" />
 				</radiobutton>
 			</buttongroup>
+			
+			
+		<!-- The next panel is at coordinate (0,1) of the parent's grid -->
+			
 		</panel>
 		<panel resizeable="false" layout="GridBagLayout"
 			border="TitledBorder(For visible/invisible)">
@@ -35,6 +57,10 @@
 				</radiobutton>
 			</buttongroup>
 		</panel>
+		
+		
+		<!-- This panel is at coordinate (0,3) -->
+		
 		<panel resizeable="false" layout="GridBagLayout"
 			border="TitledBorder(For Select/Un-select)">
 			<gridbagconstraints insets="0,0,3,3"
@@ -57,6 +83,10 @@
 			<!-- anchor="GridBagConstraints.WEST" gridx="0" gridy="2" /> -->
 			<!-- </checkbox> -->
 		</panel>
+		
+		<!-- panel1 and panel2 contain some controls to be affected by the dynamic controls in the left-hand panels -->
+		<!-- These panels are at locations (1,0) and (1,1) -->
+		
 		<panel id="panel1" name="panel1" enabled="false" layout="GridBagLayout"
 			border="TitledBorder(panel 1)">
 			<gridbagconstraints insets="0,0,5,5"
