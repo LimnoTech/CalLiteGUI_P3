@@ -13,8 +13,7 @@
 <!ENTITY dataAnalysis SYSTEM "Config/Data_Analysis.xml">
 <!ENTITY dynamic SYSTEM "Config/Dynamic.xml">
 ]>
-<frame id="desktop" name="desktop" size="1200,900"
-	title="CalLite 3.x -  The Central Valley Water Management Screening Model"
+<frame id="desktop" name="desktop" size="1200,900" title="CalLite 3.x -  The Central Valley Water Management Screening Model"
 	CloseOperation="JFrame.EXIT_ON_CLOSE">
 	<menubar id="menu">
 		<menu text="File" mnemonic="VK_F">
@@ -24,55 +23,51 @@
 			<menuitem text="Save" mnemonic="VK_S" ActionCommand="AC_SaveScen" />
 			<menuitem text="Save As..." mnemonic="VK_A" ActionCommand="AC_SaveScenAs" />
 			<separator />
-			<menuitem text="Exit" mnemonic="VK_E" ActionCommand="AC_Exit"/>
+			<menuitem text="Exit" mnemonic="VK_E" ActionCommand="AC_Exit" />
 		</menu>
-		<menu visible="false" id="menuS" name="menuS" text="Scenario Settings"
-			mnemonic="VK_S">
+		<menu visible="false" id="menuS" name="menuS" text="Scenario Settings" mnemonic="VK_S">
 		</menu>
-		<menu visible="false" id="menuR" name="menuR" text="Results"
-			mnemonic="VK_R">
+		<menu visible="false" id="menuR" name="menuR" text="Results" mnemonic="VK_R">
 		</menu>
 		<menu text="Help" mnemonic="VK_H">
-			<menuitem text="View Help" mnemonic="VK_H" enabled="true"
-				ActionCommand="AC_Help" />
+			<menuitem text="View Help" mnemonic="VK_H" enabled="true" ActionCommand="AC_Help" />
 			<separator />
-			<menuitem text="About CalLite GUI" mnemonic="VK_A" enabled="true"
-				ActionCommand="AC_About" />
+			<menuitem text="About CalLite GUI" mnemonic="VK_A" enabled="true" ActionCommand="AC_About" />
 		</menu>
 	</menubar>
-		<tabbedpane id="tabbedPane1" name="tabbedPane1">
-			<scrollpane name="Run Settings">
+	<tabbedpane id="tabbedPane1" name="tabbedPane1">
+		<scrollpane name="Run Settings">
 				&runsettings;
-			</scrollpane>
-			<scrollpane name="Hydroclimate">
+		</scrollpane>
+		<scrollpane name="Hydroclimate">
 				&hydroclimate;
-			</scrollpane>
-			<scrollpane name="Demands">
+		</scrollpane>
+		<scrollpane name="Demands">
 				&demands;
-			</scrollpane>
-			<scrollpane name="Facilities">
+		</scrollpane>
+		<scrollpane name="Facilities">
 				&facilities;
-			</scrollpane>
-			<scrollpane name="Regulations">
+		</scrollpane>
+		<scrollpane name="Regulations">
 				&regulations;
-			</scrollpane>
-			<scrollpane name="Operations">
+		</scrollpane>
+		<scrollpane name="Operations">
 				&operations;
-			</scrollpane>
-			<scrollpane name="Quick Results">
+		</scrollpane>
+		<scrollpane name="Quick Results">
 				&quickresults;
-			</scrollpane>
-			<scrollpane name="Custom Results">
+		</scrollpane>
+		<scrollpane name="Custom Results">
 				&customresults;
-			</scrollpane>
-			<scrollpane name="Map View">
+		</scrollpane>
+		<scrollpane name="Map View">
 				&mapview;
-			</scrollpane>
-			<scrollpane name="Data Analysis">
+		</scrollpane>
+		<scrollpane name="Data Analysis">
 				&dataAnalysis;
-			</scrollpane>
-			<scrollpane name="Dynamic">
+		</scrollpane>
+		<scrollpane name="Dynamic">
 				&dynamic;
-			</scrollpane>
-		</tabbedpane>
+		</scrollpane>
+	</tabbedpane>
 </frame>

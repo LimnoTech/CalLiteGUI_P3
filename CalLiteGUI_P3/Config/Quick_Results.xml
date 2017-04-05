@@ -57,12 +57,22 @@
 			<spinner id="spnEndYear" name="spnEndYear" preferredsize="75,25" minimumsize="50,20">
 				<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="2" gridy="2" />
 			</spinner>
-			<hbox>
+			<hbox visible="false">
 				<gridbagconstraints insets="5,0,5,3" anchor="GridBagConstraints.WEST" gridx="0" gridy="3" gridwidth="3" />
 				<label text="Display Units for Flows: " />
 				<buttongroup id="rep4">
 					<radiobutton id="rdbCFS" name="rdbCFS" text="CFS" />
 					<radiobutton id="rdbTAF" name="rdbTAF" text="TAF" selected="true" />
+				</buttongroup>
+			</hbox>
+			<hbox visible="true">
+				<gridbagconstraints insets="5,0,5,3" anchor="GridBagConstraints.WEST" gridx="0" gridy="3" gridwidth="3" />
+				<label text="Display: " />
+				<buttongroup id="rep4pg">
+					<radiobutton id="rdbEnergy" name="rdbEnergy" text="Energy" selected="true" />
+					<radiobutton id="rdbCap" name="rdbCap" text="Capacity" />
+					<radiobutton id="rdbCapp" name="rdbCapp" text="Capacity (On-Peak)" />
+					<radiobutton id="rdbCapo" name="rdbCap0" text="Capacity (Off-Peak)" />
 				</buttongroup>
 			</hbox>
 			<checkbox name="RepckbTimeSeriesPlot" id="RepckbTimeSeriesPlot" text="Time series plot" selected="true">
