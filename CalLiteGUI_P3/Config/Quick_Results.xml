@@ -57,7 +57,7 @@
 			<spinner id="spnEndYear" name="spnEndYear" preferredsize="75,25" minimumsize="50,20">
 				<gridbagconstraints insets="0,0,5,3" anchor="GridBagConstraints.WEST" gridx="2" gridy="2" />
 			</spinner>
-			<hbox visible="false">
+			<hbox visible="true">
 				<gridbagconstraints insets="5,0,5,3" anchor="GridBagConstraints.WEST" gridx="0" gridy="3" gridwidth="3" />
 				<label text="Display Units for Flows: " />
 				<buttongroup id="rep4">
@@ -65,7 +65,7 @@
 					<radiobutton id="rdbTAF" name="rdbTAF" text="TAF" selected="true" />
 				</buttongroup>
 			</hbox>
-			<hbox visible="true">
+			<hbox visible="false">
 				<gridbagconstraints insets="5,0,5,3" anchor="GridBagConstraints.WEST" gridx="0" gridy="3" gridwidth="3" />
 				<label text="Display: " />
 				<buttongroup id="rep4pg">
@@ -240,7 +240,6 @@
 		<panel constraints="Borderlayout.WEST" id="reptabbedPane" minimumsize="550,505" preferredsize="550,505">
 			<gridbagconstraints anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="1" />
 			<tabbedpane id="variables" name="variables" minimumsize="510,502" preferredsize="510,502">
-				<panel id="project_pg" name="Project Power"></panel>
 						<panel id="generation_pg" name="CVP/SWP Power" layout="GridBagLayout">
 							<label text="CVP Power" font="Tahoma-BOLD-14" foreground="3366FF"
 								preferredsize="120,15">
@@ -452,6 +451,8 @@
 							</label>
 							
 								</panel>
+		
+						<panel id="project_pg" name="Project Power"></panel>
 		
 				<panel id="presets" name="Storage+Flows" layout="GridBagLayout">
 					<label text="Storage" font="Tahoma-BOLD-14" foreground="3366FF" preferredsize="110,15">
