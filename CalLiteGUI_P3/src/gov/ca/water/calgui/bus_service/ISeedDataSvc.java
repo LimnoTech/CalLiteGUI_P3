@@ -79,4 +79,23 @@ public interface ISeedDataSvc {
 	 *         Regulation Tab.
 	 */
 	public List<SeedDataBO> getRegulationsTabData();
+
+	/**
+	 * 
+	 * Provides access to GUI_Links3.csv values controlling Quick Results
+	 * charting
+	 * 
+	 * @param i
+	 *            row
+	 * @param j
+	 *            column
+	 * @return value at (i,j)
+	 */
+	public String getLookups(int i, int j);
+
+	/**
+	 * 
+	 * @return number of rows in GUI_Links3.csv
+	 */
+	public int getLookupsLength();
 }

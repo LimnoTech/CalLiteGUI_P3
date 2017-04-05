@@ -26,8 +26,7 @@ public class Constant {
 	// File Names.
 	public static final String GUI_XML_FILENAME = System.getProperty("user.dir") + "//Config//GUI.xml";
 	public static final String GUI_LINKS2_FILENAME = System.getProperty("user.dir") + "//Config//GUI_Links2" + CSV_EXT;
-	public static final String GUI_LINKS3_FILENAME = System.getProperty("user.dir") + "//Config//GUI_Links3"
-			+ TABLE_EXT;
+	public static final String GUI_LINKS3_FILENAME = System.getProperty("user.dir") + "//Config//GUI_Links3" + CSV_EXT;
 	public static final String GUI_LINKS4_FILENAME = System.getProperty("user.dir") + "//Config//GUI_Links4" + CSV_EXT;
 	public static final String DYNAMIC_CONTROL_FOR_STARTUP_FILENAME = System.getProperty("user.dir")
 			+ "//Config//DynamicControlForStartUp" + CSV_EXT;

@@ -46,6 +46,7 @@ import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
 import calsim.app.Project;
 import calsim.gui.GuiUtils;
+import gov.ca.water.calgui.bus_service.impl.SeedDataSvcImpl;
 import gov.ca.water.calgui.results.Report.PathnameMap;
 import vista.db.dss.DSSUtil;
 import vista.report.TSMath;
@@ -632,11 +633,11 @@ public class ResultUtils implements ChangeListener {
 	}
 
 	public String getLookups(int i, int j) {
-		return lookups[i][j];
+		return SeedDataSvcImpl.getSeedDataSvcImplInstance().getLookups(i, j);
 	}
 
 	public int getLookupsLength() {
-		return lookups.length;
+		return SeedDataSvcImpl.getSeedDataSvcImplInstance().getLookupsLength();
 	}
 
 	public Project getProject() {

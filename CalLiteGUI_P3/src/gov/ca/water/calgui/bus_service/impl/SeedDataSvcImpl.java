@@ -31,6 +31,9 @@ public final class SeedDataSvcImpl implements ISeedDataSvc {
 	private static ISeedDataSvc seedDataSvc;
 	private List<SeedDataBO> seedDataBOList;
 	private List<GuiLinks4BO> guiLinks4BOList;
+
+	private String gl3_lookups[][];
+
 	private Map<String, SeedDataBO> guiIdMap;
 	private Map<String, SeedDataBO> tableIdMap;
 	private Map<String, SeedDataBO> regIdMap;
@@ -52,8 +55,9 @@ public final class SeedDataSvcImpl implements ISeedDataSvc {
 
 	/*
 	 * This will read the gui_link2.table and build the list of {@link
-	 * SeedDataBO} objects and read the gui_link4.table and build the list of
-	 * {@link GuiLinks4BO} objects.
+	 * SeedDataBO} objects, read the gui_link4.table and build the list of
+	 * {@link GuiLinks4BO} objects, and read the gui_link3 table to provide GL3
+	 * lookupss
 	 */
 	private SeedDataSvcImpl() {
 		LOG.debug("Building SeedDataSvcImpl Object.");
@@ -67,6 +71,7 @@ public final class SeedDataSvcImpl implements ISeedDataSvc {
 		this.guiLinks4Map = new HashMap<String, GuiLinks4BO>();
 		List<String> seedDataStrList;
 		List<String> guiLink4StrList;
+		List<String> guiLink3StrList;
 		String errorStr = "";
 		String fileName = "";
 		try {
@@ -110,6 +115,23 @@ public final class SeedDataSvcImpl implements ISeedDataSvc {
 						+ guiLinks4BO.getCcmodelId();
 				guiLinks4Map.put(id, guiLinks4BO);
 			}
+
+			fileName = Constant.GUI_LINKS3_FILENAME;
+			guiLink3StrList = fileSystemSvc.getFileData(fileName, true, SeedDataSvcImpl::isNotComments);
+			gl3_lookups = new String[guiLink3StrList.size()][6];
+			int i = 0;
+			for (String guiLink3Str : guiLink3StrList) {
+				errorStr = guiLink3Str;
+				String[] list = guiLink3Str.split(Constant.DELIMITER);
+				for (int j = 0; j < 6; j++) {
+					if (list[j].equals("null"))
+						list[j] = "";
+					gl3_lookups[i][j] = list[j];
+				}
+				i++;
+
+			}
+
 		} catch (ArrayIndexOutOfBoundsException ex) {
 			String errorMessage = "In file \"" + fileName + "\" has a corrupted data at line \"" + errorStr + "\""
 					+ Constant.NEW_LINE + "The column number which the data is corrupted is " + ex.getMessage();
@@ -162,6 +184,14 @@ public final class SeedDataSvcImpl implements ISeedDataSvc {
 		return this.regIdMap.values().stream()
 				.filter(seedData -> seedData.getDashboard().equalsIgnoreCase(Constant.REGULATIONS_TABNAME))
 				.collect(Collectors.toList());
+	}
+
+	public String getLookups(int i, int j) {
+		return gl3_lookups[i][j];
+	}
+
+	public int getLookupsLength() {
+		return gl3_lookups.length;
 	}
 
 	/**
