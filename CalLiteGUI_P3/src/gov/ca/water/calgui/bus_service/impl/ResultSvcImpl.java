@@ -957,6 +957,8 @@ public final class ResultSvcImpl implements IResultSvc {
 				Component c = swingEngine.find(seedDataBO.getGuiId().trim());
 				if (c instanceof JTextField || c instanceof NumericTextField || c instanceof JTextArea) {
 					option = ((JTextComponent) c).getText();
+					if (!(c instanceof JTextArea) && option.equals(""))
+						option = "0";
 					fileDataStrBuf.append(index + Constant.OLD_DELIMITER + option + Constant.OLD_DELIMITER + description
 							+ Constant.NEW_LINE);
 				} else if (c instanceof JRadioButton) {
@@ -1149,6 +1151,8 @@ public final class ResultSvcImpl implements IResultSvc {
 			if (component instanceof JTextField || component instanceof NumericTextField
 					|| component instanceof JTextArea) {
 				value = ((JTextComponent) component).getText();
+				if (!(component instanceof JTextArea) && value.equals(""))
+					value = "0";
 				stringBuffer.append(compName + Constant.PIPELINE + value + Constant.NEW_LINE);
 			} else if (component instanceof JSpinner) {
 				value = ((JSpinner) component).getValue().toString();
