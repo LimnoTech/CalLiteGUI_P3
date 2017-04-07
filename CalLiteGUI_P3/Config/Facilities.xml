@@ -88,7 +88,7 @@
 					<gridbagconstraints insets="0,0,5,5"
 						anchor="GridBagConstraints.NORTHWEST" gridx="3" gridy="0" />
 				</label>
-				<textfield id="fac_lstbR1" name="fac_lstbR1" visible= "false" enabled="false"
+				<textfield id="fac_lstbR1" name="fac_lstbR1" enabled="false"
 					text="50"
 					HorizontalAlignment="RIGHT">
 					<gridbagconstraints insets="0,0,5,5"

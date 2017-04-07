@@ -72,6 +72,7 @@ SJR_interim,GUI_SJR.table,6,0,REST_REQ - SJR Restoration flows.  0=interim flows
 SJR_full,GUI_SJR.table,6,1,REST_REQ - SJR Restoration flows.  0=interim flows; 1=full flows,Regulations,n/a,n/a,n/a,n/a,n/a,n/a,1,n/a,44
 Dynamic_SJR,GUI_SJR.table,7,-1,"DYNAMIC_SJR - 0=timeseries, 1=dynamic SJR calculation",Operations,n/a,n/a,n/a,n/a,n/a,n/a,1,n/a,98
 fac_lstbL1,GUI_EnlargedShasta.table,4,-1,PLACEHOLDER FOR UNUSED VALUE,Facilities,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a
+fac_lstbR1,GUI_EnlargedShasta.table,5,-1,PLACEHOLDER FOR UNUSED VALUE,Facilities,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a
 fac_ckb2,GUI_EnlargedShasta.table,1,0,EnlargedShastaSwitch - Shasta Enlargement: ON(1) OFF(0),Facilities,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a
 fac_rdb0,GUI_EnlargedShasta.table,2,0,Size of enlargement: 0,Facilities,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a
 fac_rdb1,GUI_EnlargedShasta.table,2,1,Size of enlargement: 1 = 6.5 feet (256 taf) - 2 = 12.5 feet (443 taf) - 3 = 18.5 feet (634 taf),Facilities,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a
