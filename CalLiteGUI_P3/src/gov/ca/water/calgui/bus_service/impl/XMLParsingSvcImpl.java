@@ -226,8 +226,9 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 	@Override
 	public Set<String> getIdFromXML() {
 		Map<String, Object> map = this.swingEngine.getIdMap();
-		Set<String> swt = map.keySet();
-		swt.stream().forEach(key -> LOG.debug(key + " " + map.get(key).getClass().getName()));
+		// Set<String> swt = map.keySet();
+		// swt.stream().forEach(key -> LOG.debug(key + " " +
+		// map.get(key).getClass().getName()));
 		return map.keySet().stream().filter((id) -> {
 			Object component = map.get(id);
 			if (component instanceof Component) {

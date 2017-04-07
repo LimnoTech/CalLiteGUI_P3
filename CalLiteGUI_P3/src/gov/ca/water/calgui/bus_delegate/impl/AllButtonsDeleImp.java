@@ -30,7 +30,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -556,20 +555,25 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 	@Override
 	public void decisionSVInitFilesAndTableInOperations() {
 		applyDynamicConDele.changeSVInitFilesAndTableInOperations(true);
-		String text = "";
-		if (((JRadioButton) swingEngine.find("hyd_rdb2005")).isSelected()) {
-			text = ((JRadioButton) swingEngine.find("hyd_rdb2005")).getText();
-		}
-		if (((JRadioButton) swingEngine.find("hyd_rdb2030")).isSelected()) {
-			text = ((JRadioButton) swingEngine.find("hyd_rdb2030")).getText();
-		}
-		if (!text.equals("")) {
-			int option = JOptionPane.showConfirmDialog(null,
-					"You have selected " + text + ".\n  Do you wish to use the WSI/DI curves for this configuration?");
-			if (option == JOptionPane.YES_OPTION) {
-				return;
-			}
-		}
+
+		// Commented out because we always want to use the stored values when
+		// loading
+
+		// String text = "";
+		// if (((JRadioButton) swingEngine.find("hyd_rdb2005")).isSelected()) {
+		// text = ((JRadioButton) swingEngine.find("hyd_rdb2005")).getText();
+		// }
+		// if (((JRadioButton) swingEngine.find("hyd_rdb2030")).isSelected()) {
+		// text = ((JRadioButton) swingEngine.find("hyd_rdb2030")).getText();
+		// }
+		// if (!text.equals("")) {
+		// int option = JOptionPane.showConfirmDialog(null,
+		// "You have selected " + text + ".\n Do you wish to use the WSI/DI
+		// curves for this configuration?");
+		// if (option == JOptionPane.YES_OPTION) {
+		// return;
+		// }
+		// }
 		/*
 		 * The following code we are setting the SWP and CVP file names as user
 		 * defined because the table values we are getting it from the cls file
@@ -580,8 +584,8 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 	}
 
 	/**
-	 * This method is to ask the use whether he wants to contumue or not. This
-	 * is used in the "Oprtations" tab.
+	 * This method is to ask the use whether he wants to continue or not with
+	 * WSI/DI modification. This is used in the "Operations" tab.
 	 *
 	 * @return will return true if user wants to continue.
 	 */
