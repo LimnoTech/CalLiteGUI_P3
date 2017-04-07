@@ -1,4 +1,4 @@
-<panel id="demands" name="demands" visible="true" layout="GridBagLayout">
+ <panel id="demands" name="demands" visible="true" layout="GridBagLayout">
 	<panel font="Tahoma-Bold-12" layout="GridBagLayout">
 		<panel id="dem_SWP" resizeable="false"
 			border="TitledBorder(SWP Demands - South of Delta)" preferredsize="570,280"
