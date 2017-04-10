@@ -55,6 +55,7 @@ public class Constant {
 	public static final String DASH = "-";
 	public static final String D1641 = "D1641";
 	public static final String D1485 = "D1485";
+	public static final String BDCP = "BDCP";
 	public static final String D1641BO = "1641BO";
 	public static final String USER_DEFINED = "UD";
 	public static final String SEMICOLON = ";";

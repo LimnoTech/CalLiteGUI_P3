@@ -34,17 +34,33 @@ public final class TableSvcImpl implements ITableSvc {
 	private IFileSystemSvc fileSystemSvc;
 	private IErrorHandlingSvc errorHandlingSvc;
 	private Map<String, DataTableModel> map;
-	private String wsidiForSWPFullFileName = Constant.USER_DEFINED; // We are using this to know whether the user modify the value
-	                                                                // of not.
-	private String wsidiForCVPFullFileName = Constant.USER_DEFINED; // We are using this to know whether the user modify the value
-	                                                                // of not.
+	private String wsidiForSWPFullFileName = Constant.USER_DEFINED; // We are
+																	// using
+																	// this to
+																	// know
+																	// whether
+																	// the user
+																	// modify
+																	// the value
+																	// of not.
+	private String wsidiForCVPFullFileName = Constant.USER_DEFINED; // We are
+																	// using
+																	// this to
+																	// know
+																	// whether
+																	// the user
+																	// modify
+																	// the value
+																	// of not.
 
 	/**
-	 * This method is for implementing the singleton. It will return the instance of this class if it is empty it will create one.
+	 * This method is for implementing the singleton. It will return the
+	 * instance of this class if it is empty it will create one.
 	 *
-	 * @param list 
-	 * 			This is the list of user defined tables to load.
-	 * @return Will return the instance of this class if it is empty it will create one.
+	 * @param list
+	 *            This is the list of user defined tables to load.
+	 * @return Will return the instance of this class if it is empty it will
+	 *         create one.
 	 */
 	public static ITableSvc getTableSvcImplInstance(List<SeedDataBO> list) {
 		if (tableSvc == null) {
@@ -65,26 +81,24 @@ public final class TableSvcImpl implements ITableSvc {
 			columnName[1] = "di";
 			// We are trying to remove all the strings from the array.
 			lines = lines.stream().filter(line -> isDouble(line.split(Constant.TAB_OR_SPACE_DELIMITER)[0]))
-			        .collect(Collectors.toList());
+					.collect(Collectors.toList());
 			data = handleTableFileLikeTable(lines, 2, errorData);
 			return new DataTableModel(fileName, columnName, data, false);
 		} catch (NullPointerException ex) {
-			throw new CalLiteGUIException(
-			        "The data in the table is incorrect and the data is \"" + errorData + "\". The table name is = " + fileName,
-			        ex);
+			throw new CalLiteGUIException("The data in the table is incorrect and the data is \"" + errorData
+					+ "\". The table name is = " + fileName, ex);
 		} catch (IndexOutOfBoundsException ex) {
-			throw new CalLiteGUIException(
-			        "The data in the table is incorrect and the data is \"" + errorData + "\". The table name is = " + fileName,
-			        ex);
+			throw new CalLiteGUIException("The data in the table is incorrect and the data is \"" + errorData
+					+ "\". The table name is = " + fileName, ex);
 		} catch (CalLiteGUIException ex) {
 			throw new CalLiteGUIException(
-			        "There is a error in the table. File Name = " + fileName + Constant.NEW_LINE + ex.getMessage(), ex);
+					"There is a error in the table. File Name = " + fileName + Constant.NEW_LINE + ex.getMessage(), ex);
 		}
 	}
 
 	@Override
 	public DataTableModel getTable(String tableName, ThreeFunction<List<String>, Integer, String, String[][]> function)
-	        throws CalLiteGUIException {
+			throws CalLiteGUIException {
 		String errorData = "";
 		String fileName = Paths.get(Constant.MODEL_W2_WRESL_LOOKUP_DIR + tableName + Constant.TABLE_EXT).toString();
 		try {
@@ -93,16 +107,16 @@ public final class TableSvcImpl implements ITableSvc {
 			String[] columnName = getColumnName(lines);
 			// We are trying to remove all the strings from the array.
 			lines = lines.stream().filter(line -> isDouble(line.split(Constant.TAB_OR_SPACE_DELIMITER)[0]))
-			        .collect(Collectors.toList());
+					.collect(Collectors.toList());
 			data = function.apply(lines, columnName.length, errorData);
 			return new DataTableModel(tableName, columnName, data, false);
 		} catch (NullPointerException ex) {
-			throw new CalLiteGUIException(
-			        "The data in the table is incorrect and the data is \"" + errorData + "\". The table name is = " + fileName,
-			        ex);
+			throw new CalLiteGUIException("The data in the table is incorrect and the data is \"" + errorData
+					+ "\". The table name is = " + fileName, ex);
 		} catch (CalLiteGUIException ex) {
 			throw new CalLiteGUIException(
-			        "There is a error in the table. Table Name = " + tableName + Constant.NEW_LINE + ex.getMessage(), ex);
+					"There is a error in the table. Table Name = " + tableName + Constant.NEW_LINE + ex.getMessage(),
+					ex);
 		}
 	}
 
@@ -125,10 +139,11 @@ public final class TableSvcImpl implements ITableSvc {
 	 *            The string that gives the error data.
 	 * @return Will return the table data in two dimensional array.
 	 * @throws CalLiteGUIException
-	 *             If anything wrong about the data then it will throw a exception with the information about it.
+	 *             If anything wrong about the data then it will throw a
+	 *             exception with the information about it.
 	 */
 	public static String[][] handleTableFileWithColumnNumber(List<String> lines, int columnLength, String errorData)
-	        throws CalLiteGUIException {
+			throws CalLiteGUIException {
 		String[][] data = null;
 		int noOfRows = getRowNumbers(lines);
 		data = new String[noOfRows][columnLength];
@@ -140,7 +155,7 @@ public final class TableSvcImpl implements ITableSvc {
 			String[] arr = line.split(Constant.TAB_OR_SPACE_DELIMITER);
 			if (!isDouble(Arrays.asList(arr))) {
 				throw new CalLiteGUIException("The table data should only have integer values. This row \"" + errorData
-				        + "\" has other data then integer.");
+						+ "\" has other data then integer.");
 			}
 			data[Integer.parseInt(arr[0]) - 1][Integer.parseInt(arr[1])] = arr[2];
 		}
@@ -190,8 +205,8 @@ public final class TableSvcImpl implements ITableSvc {
 	/**
 	 * This will build the map of tables with the seed data.
 	 *
-	 * @param seedDataBOList 
-	 * 				The list of seed data objects.
+	 * @param seedDataBOList
+	 *            The list of seed data objects.
 	 */
 	private void generateMapForTables(List<SeedDataBO> seedDataBOList) {
 		List<String> list1 = new ArrayList<String>();
@@ -221,14 +236,18 @@ public final class TableSvcImpl implements ITableSvc {
 	 * This method is specially for X2 table only.
 	 *
 	 * @param tableName1
-	 *            1st table name. Just the Table Name without the extension and path. This will by default take the extension as
-	 *            ".table" and the path as lookup under the model_w2.
+	 *            1st table name. Just the Table Name without the extension and
+	 *            path. This will by default take the extension as ".table" and
+	 *            the path as lookup under the model_w2.
 	 * @param tableName2
-	 *            2nd table name. Just the Table Name without the extension and path. This will by default take the extension as
-	 *            ".table" and the path as lookup under the model_w2.
-	 * @return This will return the Map of tables with the table name as key and table data as value.
+	 *            2nd table name. Just the Table Name without the extension and
+	 *            path. This will by default take the extension as ".table" and
+	 *            the path as lookup under the model_w2.
+	 * @return This will return the Map of tables with the table name as key and
+	 *         table data as value.
 	 * @throws CalLiteGUIException
-	 *             If anything wrong about the file then it will throw a exception with the information about it.
+	 *             If anything wrong about the file then it will throw a
+	 *             exception with the information about it.
 	 */
 	private Map<String, DataTableModel> handleX2table(String tableName1, String tableName2) throws CalLiteGUIException {
 		Map<String, DataTableModel> tempMapForDataTable = new HashMap<String, DataTableModel>();
@@ -245,7 +264,8 @@ public final class TableSvcImpl implements ITableSvc {
 		// Combining the tables into one table.
 		String[] colName1 = dtm1.getColumnNames();
 		String[] colName2 = dtm2.getColumnNames();
-		String[] newColNames = { colName1[0], colName1[1], colName2[1], colName2[2], colName2[3], colName2[4], colName2[5] };
+		String[] newColNames = { colName1[0], colName1[1], colName2[1], colName2[2], colName2[3], colName2[4],
+				colName2[5] };
 		String[][] data1 = (String[][]) dtm1.getData();
 		String[][] data2 = (String[][]) dtm2.getData();
 		Object[][] newData = new Object[data1.length][newColNames.length];
@@ -263,21 +283,26 @@ public final class TableSvcImpl implements ITableSvc {
 				newData[i][j] = data2[i][j - 1];
 			}
 		}
-		DataTableModel newDtm = new DataTableModel(tableName1 + Constant.PIPELINE + tableName2, newColNames, newData, false);
+		DataTableModel newDtm = new DataTableModel(tableName1 + Constant.PIPELINE + tableName2, newColNames, newData,
+				false);
 		tempMapForDataTable.put(tableName1 + Constant.PIPELINE + tableName2 + Constant.DASH + Constant.D1641, newDtm);
 		return tempMapForDataTable;
 	}
 
 	/**
-	 * This will take the {@link SeedDataBO} object and build the table map depending on the {@link SeedDataBO}.
+	 * This will take the {@link SeedDataBO} object and build the table map
+	 * depending on the {@link SeedDataBO}.
 	 *
-	 * @param seedDataBOObj 
-	 * 				The list of seed data objects.
-	 * @return This will return the Map of tables with the table name as key and table data as value.
+	 * @param seedDataBOObj
+	 *            The list of seed data objects.
+	 * @return This will return the Map of tables with the table name as key and
+	 *         table data as value.
 	 * @throws CalLiteGUIException
-	 *             If anything wrong about the file then it will throw a exception with the information about it.
+	 *             If anything wrong about the file then it will throw a
+	 *             exception with the information about it.
 	 */
-	private Map<String, DataTableModel> getAllTypesOfTableForATableName(SeedDataBO seedDataBOObj) throws CalLiteGUIException {
+	private Map<String, DataTableModel> getAllTypesOfTableForATableName(SeedDataBO seedDataBOObj)
+			throws CalLiteGUIException {
 		Map<String, DataTableModel> tempMapForDataTable = new HashMap<String, DataTableModel>();
 		String dataTableName = seedDataBOObj.getDataTables();
 		DataTableModel dtm = null;
@@ -315,11 +340,13 @@ public final class TableSvcImpl implements ITableSvc {
 				}
 			} else {
 				if (seedDataBOObj.getD1485().equalsIgnoreCase(Constant.N_A)) {
-					dtm = getTable(name + Constant.DASH + Constant.D1485, TableSvcImpl::handleTableFileWithColumnNumber);
+					dtm = getTable(name + Constant.DASH + Constant.D1485,
+							TableSvcImpl::handleTableFileWithColumnNumber);
 					tempMapForDataTable.put(dataTableName + Constant.DASH + Constant.D1485, dtm);
 				}
 				if (seedDataBOObj.getD1641().equalsIgnoreCase(Constant.N_A)) {
-					dtm = getTable(name + Constant.DASH + Constant.D1641, TableSvcImpl::handleTableFileWithColumnNumber);
+					dtm = getTable(name + Constant.DASH + Constant.D1641,
+							TableSvcImpl::handleTableFileWithColumnNumber);
 					tempMapForDataTable.put(dataTableName + Constant.DASH + Constant.D1641, dtm);
 				}
 			}
@@ -338,10 +365,11 @@ public final class TableSvcImpl implements ITableSvc {
 	 *            The string that gives the error data.
 	 * @return Will return the table data in two dimensional array.
 	 * @throws CalLiteGUIException
-	 *             If anything wrong about the data then it will throw a exception with the information about it.
+	 *             If anything wrong about the data then it will throw a
+	 *             exception with the information about it.
 	 */
 	private static String[][] handleTableFileForEIsjr(List<String> lines, int columnLength, String errorData)
-	        throws CalLiteGUIException {
+			throws CalLiteGUIException {
 		String[][] data = null;
 		int noOfRows = getRowNumbers(lines);
 		data = new String[noOfRows][columnLength];
@@ -356,7 +384,7 @@ public final class TableSvcImpl implements ITableSvc {
 			String[] arr = line.split(Constant.TAB_OR_SPACE_DELIMITER);
 			if (!isDouble(Arrays.asList(arr))) {
 				throw new CalLiteGUIException("The table data should only have integer values. This row \"" + errorData
-				        + "\" has other data then integer.");
+						+ "\" has other data then integer.");
 			}
 			if (arr[1].equals(colNo)) {
 				data[Integer.parseInt(arr[0]) - 1][offsetNo] = arr[2];
@@ -399,10 +427,11 @@ public final class TableSvcImpl implements ITableSvc {
 	 *            The string that gives the error data.
 	 * @return Will return the table data in two dimensional array.
 	 * @throws CalLiteGUIException
-	 *             If anything wrong about the data then it will throw a exception with the information about it.
+	 *             If anything wrong about the data then it will throw a
+	 *             exception with the information about it.
 	 */
 	private static String[][] handleTableFileLikeTable(List<String> lines, int columnLength, String errorData)
-	        throws CalLiteGUIException {
+			throws CalLiteGUIException {
 		String[][] data = null;
 		data = new String[lines.size()][columnLength];
 		for (int i = 0; i < data.length; i++) {
@@ -412,7 +441,7 @@ public final class TableSvcImpl implements ITableSvc {
 			List<String> temp = removeAllEmptyFromArray(lineData);
 			if (!isDouble(temp)) {
 				throw new CalLiteGUIException("The table data should only have integer values. This row \"" + errorData
-				        + "\" has other data then integer.");
+						+ "\" has other data then integer.");
 			}
 			for (int j = 0; j < data[0].length; j++) {
 				data[i][j] = temp.get(j);
@@ -433,11 +462,13 @@ public final class TableSvcImpl implements ITableSvc {
 	 * </pre>
 	 *
 	 * @param tableName
-	 *            Just the Table Name without the extension and path. This will by default take the extension as ".table" and the
-	 *            path as lookup under the model_w2.
+	 *            Just the Table Name without the extension and path. This will
+	 *            by default take the extension as ".table" and the path as
+	 *            lookup under the model_w2.
 	 * @return This will return the {@link DataTableModel} object of the table.
 	 * @throws CalLiteGUIException
-	 *             If anything wrong about the file then it will throw a exception with the information about it.
+	 *             If anything wrong about the file then it will throw a
+	 *             exception with the information about it.
 	 */
 	private List<DataTableModel> handleTableFileWithTwoTableData(String tableName) throws CalLiteGUIException {
 		String errorData = "";
@@ -446,33 +477,40 @@ public final class TableSvcImpl implements ITableSvc {
 			List<DataTableModel> tempDataTableList = new ArrayList<DataTableModel>();
 			Object[][] dataForD1641 = null;
 			Object[][] dataForD1485 = null;
+			Object[][] dataForBDCP = null;
 			List<String> lines = fileSystemSvc.getFileDataForTables(fileName);
 			String[] columnName = getColumnName(lines);
 			// We are trying to remove all the strings from the array.
 			lines = lines.stream().filter(line -> isDouble(line.split(Constant.TAB_OR_SPACE_DELIMITER)[0]))
-			        .collect(Collectors.toList());
-			if (removeAllEmptyFromArray(lines.get(0).split(Constant.TAB_OR_SPACE_DELIMITER)).size() == 4) {
+					.collect(Collectors.toList());
+			if (removeAllEmptyFromArray(lines.get(0).split(Constant.TAB_OR_SPACE_DELIMITER)).size() >= 4) {
 				int noOfRows = 12;
 				dataForD1641 = new String[noOfRows][columnName.length];
 				dataForD1485 = new String[noOfRows][columnName.length];
+				dataForBDCP = new String[noOfRows][columnName.length];
+
 				for (int i = 0; i < noOfRows; i++) {
 					dataForD1641[i][0] = String.valueOf(i + 1);
 					dataForD1485[i][0] = String.valueOf(i + 1);
+					dataForBDCP[i][0] = String.valueOf(i + 1);
 				}
 				for (String line : lines) {
 					errorData = line;
 					String[] lineData = line.split(Constant.TAB_OR_SPACE_DELIMITER);
 					List<String> temp = removeAllEmptyFromArray(lineData);
 					if (!isDouble(temp)) {
-						throw new CalLiteGUIException("The table data should only have integer values. This row \"" + errorData
-						        + "\" has other data then integer.");
+						throw new CalLiteGUIException("The table data should only have integer values. This row \""
+								+ errorData + "\" has other data then integer.");
 					}
 					int index = Integer.parseInt(temp.get(0));
 					int col = Integer.parseInt(temp.get(1));
 					dataForD1641[index - 1][col] = temp.get(2);
 					dataForD1485[index - 1][col] = temp.get(3);
+					if (temp.size() == 5)
+						dataForBDCP[index - 1][col] = temp.get(4);
 				}
 			} else {
+
 				dataForD1641 = new String[lines.size()][columnName.length];
 				dataForD1485 = new String[lines.size()][columnName.length];
 				for (String line : lines) {
@@ -486,27 +524,32 @@ public final class TableSvcImpl implements ITableSvc {
 					dataForD1485[index - 1][1] = temp.get(2);
 				}
 			}
-			tempDataTableList.add(new DataTableModel(tableName + Constant.DASH + Constant.D1641, columnName, dataForD1641, false));
-			tempDataTableList.add(new DataTableModel(tableName + Constant.DASH + Constant.D1485, columnName, dataForD1485, false));
+			tempDataTableList.add(
+					new DataTableModel(tableName + Constant.DASH + Constant.D1641, columnName, dataForD1641, false));
+			tempDataTableList.add(
+					new DataTableModel(tableName + Constant.DASH + Constant.D1485, columnName, dataForD1485, false));
+//			if (dataForBDCP != null)
+//				tempDataTableList.add(
+//						new DataTableModel(tableName + Constant.DASH + Constant.BDCP, columnName, dataForBDCP, false));
 			return tempDataTableList;
 		} catch (NullPointerException ex) {
-			throw new CalLiteGUIException(
-			        "The data in the table is incorrect and the data is \"" + errorData + "\". The table name is = " + fileName,
-			        ex);
+			throw new CalLiteGUIException("The data in the table is incorrect and the data is \"" + errorData
+					+ "\". The table name is = " + fileName, ex);
 		} catch (IndexOutOfBoundsException ex) {
-			throw new CalLiteGUIException(
-			        "The data in the table is incorrect and the data is \"" + errorData + "\". The table name is = " + fileName,
-			        ex);
+			throw new CalLiteGUIException("The data in the table is incorrect and the data is \"" + errorData
+					+ "\". The table name is = " + fileName, ex);
 		} catch (CalLiteGUIException ex) {
 			throw new CalLiteGUIException(
-			        "There is a error in the table. Table Name = " + fileName + Constant.NEW_LINE + ex.getMessage(), ex);
+					"There is a error in the table. Table Name = " + fileName + Constant.NEW_LINE + ex.getMessage(),
+					ex);
 		}
 	}
 
 	/**
 	 * This method is used to get the real values from the array passed in.
 	 *
-	 * @param lineData data in the line.
+	 * @param lineData
+	 *            data in the line.
 	 * @return Will return the real values.
 	 */
 	private static List<String> removeAllEmptyFromArray(String[] lineData) {
@@ -522,8 +565,8 @@ public final class TableSvcImpl implements ITableSvc {
 	/**
 	 * This method will return true if all the data sent in as list are Double.
 	 *
-	 * @param data 
-	 * 			The data that should be checked.
+	 * @param data
+	 *            The data that should be checked.
 	 * @return Will return whether the list is double or not.
 	 */
 	private static boolean isDouble(List<String> data) {
@@ -541,30 +584,31 @@ public final class TableSvcImpl implements ITableSvc {
 	 * @param data
 	 *            The table data.
 	 * @return columns names as {@link String} Array.
-	 * @throws CalLiteGUIException see {@link CalLiteGUIException}
+	 * @throws CalLiteGUIException
+	 *             see {@link CalLiteGUIException}
 	 */
 	private String[] getColumnName(List<String> data) throws CalLiteGUIException {
 		try {
 			String header = null;
 			header = data.stream().filter(obj -> obj.contains(Constant.HEADERS)).findFirst().get();
 			String[] da = header.split(Constant.OLD_DELIMITER);
-			String[] headers = new String[da.length - 1]; // We are excluding the header word.
+			String[] headers = new String[da.length - 1]; // We are excluding
+															// the header word.
 			for (int i = 0; i < headers.length; i++) {
 				headers[i] = da[i + 1];
 			}
 			return headers;
 		} catch (NoSuchElementException ex) {
-			throw new CalLiteGUIException(
-			        "The Header is missing or not been formarted correctly in the table." + Constant.NEW_LINE + ex.getMessage(),
-			        ex);
+			throw new CalLiteGUIException("The Header is missing or not been formarted correctly in the table."
+					+ Constant.NEW_LINE + ex.getMessage(), ex);
 		}
 	}
 
 	/**
 	 * This will take the table data and return how many rows in that table.
 	 *
-	 * @param data 
-	 * 			The table data.
+	 * @param data
+	 *            The table data.
 	 * @return Number of rows.
 	 */
 	private static int getRowNumbers(List<String> data) {
@@ -580,8 +624,8 @@ public final class TableSvcImpl implements ITableSvc {
 	/**
 	 * This method will take the string and tell whether it's Double or not.
 	 *
-	 * @param value 
-	 * 			String value.
+	 * @param value
+	 *            String value.
 	 * @return Will return true if the string value is Double.
 	 */
 	private static boolean isDouble(String value) {
