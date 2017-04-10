@@ -447,12 +447,12 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 		DataTableModel dataTableModel = null;
 		switch (optionName) {
 		case Constant.D1641:
-			dataTableModel = desideTableNameAndGetTable(tableName, seedDataBO, Constant.D1641);
+			dataTableModel = decideTableNameAndGetTable(tableName, seedDataBO, Constant.D1641);
 			if (resultSvc.hasUserDefinedTable(tableName))
 				resultSvc.removeUserDefinedTable(tableName);
 			break;
 		case Constant.D1485:
-			dataTableModel = desideTableNameAndGetTable(tableName, seedDataBO, Constant.D1485);
+			dataTableModel = decideTableNameAndGetTable(tableName, seedDataBO, Constant.D1485);
 			if (resultSvc.hasUserDefinedTable(tableName))
 				resultSvc.removeUserDefinedTable(tableName);
 			break;
@@ -461,11 +461,11 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 				dataTableModel = resultSvc.getUserDefinedTable(tableName);
 			} else {
 				if (regValue == 1) {
-					dataTableModel = desideTableNameAndGetTable(tableName, seedDataBO, Constant.D1641);
+					dataTableModel = decideTableNameAndGetTable(tableName, seedDataBO, Constant.D1641);
 				} else if (regValue == 3) {
-					dataTableModel = desideTableNameAndGetTable(tableName, seedDataBO, Constant.D1485);
+					dataTableModel = decideTableNameAndGetTable(tableName, seedDataBO, Constant.D1485);
 				} else if (regValue == 2) {
-					dataTableModel = desideTableNameAndGetTable(tableName, seedDataBO, Constant.USER_DEFINED);
+					dataTableModel = decideTableNameAndGetTable(tableName, seedDataBO, Constant.USER_DEFINED);
 				}
 				if (dataTableModel != null) {
 					dataTableModel = (DataTableModel) dataTableModel.clone();
@@ -494,7 +494,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	 * @throws CalLiteGUIException
 	 *             see {@link CalLiteGUIException}
 	 */
-	private DataTableModel desideTableNameAndGetTable(String tableName, SeedDataBO seedDataBO, String type)
+	private DataTableModel decideTableNameAndGetTable(String tableName, SeedDataBO seedDataBO, String type)
 			throws CalLiteGUIException {
 		DataTableModel dtm = null;
 		switch (type) {
