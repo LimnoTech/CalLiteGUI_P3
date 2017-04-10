@@ -330,7 +330,8 @@ public final class TableSvcImpl implements ITableSvc {
 		} else {
 			String name = dataTableName.replace("gui_", "");
 			List<DataTableModel> dtmList = new ArrayList<DataTableModel>();
-			if (dataTableName.equals("gui_xchanneldays") || dataTableName.equals("gui_RioVista")) {
+			if (dataTableName.equals("gui_xchanneldays") || dataTableName.equals("gui_RioVista")
+					|| dataTableName.equals("gui_NDO_Flow")) {
 				dtmList = handleTableFileWithTwoTableData(name);
 				if (seedDataBOObj.getD1485().equalsIgnoreCase(Constant.N_A)) {
 					tempMapForDataTable.put(dataTableName + Constant.DASH + Constant.D1485, dtmList.get(1));
@@ -528,9 +529,10 @@ public final class TableSvcImpl implements ITableSvc {
 					new DataTableModel(tableName + Constant.DASH + Constant.D1641, columnName, dataForD1641, false));
 			tempDataTableList.add(
 					new DataTableModel(tableName + Constant.DASH + Constant.D1485, columnName, dataForD1485, false));
-//			if (dataForBDCP != null)
-//				tempDataTableList.add(
-//						new DataTableModel(tableName + Constant.DASH + Constant.BDCP, columnName, dataForBDCP, false));
+			// if (dataForBDCP != null)
+			// tempDataTableList.add(
+			// new DataTableModel(tableName + Constant.DASH + Constant.BDCP,
+			// columnName, dataForBDCP, false));
 			return tempDataTableList;
 		} catch (NullPointerException ex) {
 			throw new CalLiteGUIException("The data in the table is incorrect and the data is \"" + errorData

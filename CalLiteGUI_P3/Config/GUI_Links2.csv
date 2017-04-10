@@ -26,7 +26,7 @@ demtxt5,GUI_SODdemand.table,7,-1,CVP MI user-defined demands,Demands,n/a,n/a,n/a
 demtxt6,GUI_SODdemand.table,8,-1,CVP Refuge user-defined demands,Demands,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a
 ckbReg_DCC,GUI_Regs.table,1,-2,DCC_DLTSW -  Delta Cross Channel,Regulations,gui_xchanneldays,3,1,1,n/a,n/a,n/a,n/a,1
 ckbReg_EI,GUI_Regs.table,2,-2,EI_DLTSW -  Export-Inflow Ratio,Regulations,gui_EIRatio,8,2,n/a,n/a,n/a,n/a,1,2
-ckbReg_NDO,GUI_Regs.table,3,-2,NDO_DLTSW -  Minimum Net Delta Outflow,Regulations,GUI_NDO_Flow,6,3,n/a,n/a,n/a,n/a,n/a,3
+ckbReg_NDO,GUI_Regs.table,3,-2,NDO_DLTSW -  Minimum Net Delta Outflow,Regulations,gui_NDO_Flow,6,3,1,n/a,n/a,n/a,n/a,3
 ckbReg_RV,GUI_Regs.table,4,-2,RV_DLTSW -  Sacramento River at Rio Vista Minimum Flow,Regulations,gui_RioVista,4,4,1,n/a,n/a,n/a,n/a,4
 ckbReg_X2,GUI_Regs.table,5,-2,X2_DLTSW -  X2 Requirements,Regulations,gui_x2active|gui_x2km,7,5,n/a,n/a,n/a,n/a,1,5
 ckbReg_X2ROE,GUI_Regs.table,6,-1,X2ROE_DLTSW -  Roe Trigger,Regulations,n/a,n/a,n/a,n/a,n/a,n/a,1,1,6
