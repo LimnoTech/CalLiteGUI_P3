@@ -1151,8 +1151,6 @@ public final class ResultSvcImpl implements IResultSvc {
 			if (component instanceof JTextField || component instanceof NumericTextField
 					|| component instanceof JTextArea) {
 				value = ((JTextComponent) component).getText();
-				if (!(component instanceof JTextArea) && value.equals(""))
-					value = "0";
 				stringBuffer.append(compName + Constant.PIPELINE + value + Constant.NEW_LINE);
 			} else if (component instanceof JSpinner) {
 				value = ((JSpinner) component).getValue().toString();
