@@ -136,7 +136,6 @@ ckbRegbo2|false
 ckbRegbo3|false
 ckbRegbo4|false
 ckbRegbo5|false
-ckbRegTestTable|false
 Dynamic_SJR|true
 D1641_Base|false
 D1641_SALINITY|false

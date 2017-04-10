@@ -94,4 +94,3 @@ btnFacLimits,n/a,n/a,n/a,Edit Diversion Table,Facilities,IsolatedFacility,2,12,n
 run_rdbD1485,GUI_RunBasis.table,1,0,Run-Basis:  0 = D-1485 - 1 = PreBo - 2 = BO,runsettings,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a
 run_rdbD1641,GUI_RunBasis.table,1,1,Run-Basis:  0 = D-1485 - 1 = PreBo - 2 = BO,runsettings,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a
 run_rdbBO,GUI_RunBasis.table,1,2,Run-Basis:  0 = D-1485 - 1 = PreBo - 2 = BO,runsettings,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a
-ckbRegTestTable,GUI_Regs.table,16,-2,DCC_DLTSW -  Delta Cross Channel,Regulations,testTable_dynamic,3,15,n/a,n/a,n/a,n/a,n/a,95

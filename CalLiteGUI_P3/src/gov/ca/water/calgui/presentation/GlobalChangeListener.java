@@ -8,6 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSlider;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -36,7 +37,16 @@ public class GlobalChangeListener implements ChangeListener {
 		if (lcName.equals("reg_tabbedpane")) {
 			((JComponent) swingEngine.find("scrRegValues")).setVisible(false);
 			((JPanel) swingEngine.find("reg_panTab")).setBorder(BorderFactory.createTitledBorder("Values"));
-			boolean showTablePanel = ((JRadioButton) swingEngine.find("rdbRegQS_UD")).isSelected();
+			boolean showTablePanel = ((JRadioButton) swingEngine.find("rdbRegQS_UD")).isSelected()
+					&& (((JTabbedPane) changeEvent.getSource()).getSelectedIndex() != 2); // DO
+																							// NOT
+																							// SHOW
+																							// table
+																							// value
+																							// panel
+																							// for
+																							// SJR
+																							// tab
 			// Hide/show reg_panTab as needed and selected - will be updated by
 			// focus control
 			((JPanel) this.swingEngine.find("reg_panTab")).setVisible(showTablePanel);
