@@ -156,12 +156,16 @@ ckbReg18,off,reg_panTab,off
 ! For Operations,,,
 op_rdb1,on,op_btn1,on
 op_rdb1,on,op_btn2,on
+op_rdb1,on,op_btn2a,on
+op_rdb1,on,op_btn2b,on
+op_rdb1,on,op_btn2c,on
+op_rdb1,on,op_panTab,on
 op_rdb1,off,op_btn1,off
 op_rdb1,off,op_btn2,off
-op_rdb2,on,op_btn1,off
-op_rdb2,on,op_btn2,off
-op_rdb2,off,op_btn1,on
-op_rdb2,off,op_btn2,on
+op_rdb1,off,op_btn2a,off
+op_rdb1,off,op_btn2b,off
+op_rdb1,off,op_btn2c,off
+op_rdb1,off,op_panTab,off
 ! For Dynamic tab,,,
 ep_db,on,panel1,on
 ep_db,on,dy_help,off
