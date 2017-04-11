@@ -91,4 +91,10 @@ public class Constant {
 	// Status window
 	public static final String STATUS_BTN_TEXT_CLOSE = "Close this status window";
 	public static final String STATUS_BTN_TEXT_STOP = "Stop all runs";
+
+	// VAMP text strings
+	public static final String CKB_REG_VAMP = "ckbReg_VAMP";
+	public static final String VAMP_SELECTED_TEXT = "If D1485 is selected, take VAMP D1641 hydrology with a D1485 run.";
+	public static final String VAMP_NOT_SELECTED_TEXT = "Access regulation table (where applicable) by selecting or right-clicking on a regulation name.";
+
 }

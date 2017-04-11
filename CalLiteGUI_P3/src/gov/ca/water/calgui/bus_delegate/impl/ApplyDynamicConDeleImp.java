@@ -52,6 +52,7 @@ import gov.ca.water.calgui.tech_service.impl.FileSystemSvcImpl;
  * @author Mohan
  */
 public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
+
 	private static final Logger LOG = Logger.getLogger(ApplyDynamicConDeleImp.class.getName());
 	private ISeedDataSvc seedDataSvc = SeedDataSvcImpl.getSeedDataSvcImplInstance();
 	private IDynamicControlSvc dynamicControlSvc = DynamicControlSvcImpl.getDynamicControlSvcImplInstance();
@@ -222,6 +223,8 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 		String tableName = "";
 		String optionName = "";
 		Component scrRegValues = (this.swingEngine.find("scrRegValues"));
+		JLabel labReg = (JLabel) (this.swingEngine.find("labReg"));
+
 		boolean toDisplayMessage = true;
 		try {
 			// if (isSelected) {
@@ -267,6 +270,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 							.setTitle(((JCheckBox) this.swingEngine.find(itemName)).getText() + " (not selected)");
 					if (!seedDataBO.getDataTables().equals(Constant.N_A)) {
 						((JPanel) this.swingEngine.find(panelId)).setVisible(true);
+						labReg.setEnabled(true);
 						((JPanel) this.swingEngine.find(panelId + "Placeholder")).setVisible(false);
 					} else {
 						((JPanel) this.swingEngine.find(panelId)).setVisible(false);
@@ -310,17 +314,20 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 					if (!seedDataBO.getDataTables().equals(Constant.N_A)) {
 						((JPanel) this.swingEngine.find(panelId)).setVisible(true);
 						((JPanel) this.swingEngine.find(panelId + "Placeholder")).setVisible(false);
+						labReg.setEnabled(true);
 						tableName = seedDataBO.getDataTables();
 						scrRegValues.setVisible(true);
+						labReg.setForeground(scrRegValues.getBackground());
 						toDisplayMessage = loadTableToUI((JTable) this.swingEngine.find(guiTableName), tableName,
 								regFlags[regId], seedDataBO, optionName);
 					} else {
+
 						((JPanel) this.swingEngine.find(panelId)).setVisible(false);
 						((JPanel) this.swingEngine.find(panelId + "Placeholder")).setVisible(true);
 
-						String valueToDisplay = "Access regulation table by selecting or right-clicking on item at left";
-						if (itemName.equals("ckbReg_VAMP")) {
-							valueToDisplay = "If D1485 is selected, take VAMP D1641 hydrology with a D1485 run.";
+						String valueToDisplay = Constant.VAMP_NOT_SELECTED_TEXT;
+						if (itemName.equals(Constant.CKB_REG_VAMP) && isSelected) {
+							valueToDisplay = Constant.VAMP_SELECTED_TEXT;
 						}
 						changeTheLabel(valueToDisplay);
 					}
@@ -342,12 +349,13 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 				int regId = Integer.parseInt(seedData.getRegID());
 				if (!tableName.equals(Constant.N_A)) {
 					scrRegValues.setVisible(true);
+					labReg.setForeground(scrRegValues.getBackground());
 					toDisplayMessage = loadTableToUI((JTable) this.swingEngine.find(guiTableName), tableName,
 							regFlags[regId], seedData, optionName);
 				} else {
-					String valueToDisplay = "Access regulation table by selecting or right-clicking on item at left";
-					if (seedData.getGuiId().equals("ckbReg_VAMP")) {
-						valueToDisplay = "If D1485 is selected, take VAMP D1641 hydrology with a D1485 run.";
+					String valueToDisplay = Constant.VAMP_NOT_SELECTED_TEXT;
+					if (seedData.getGuiId().equals(Constant.CKB_REG_VAMP)) {
+						valueToDisplay = Constant.VAMP_SELECTED_TEXT;
 					}
 					changeTheLabel(valueToDisplay);
 				}
@@ -369,9 +377,12 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 					new CalLiteGUIException("The control id " + itemName
 							+ " don't have the proper data in the TriggerForDynamicDisplay File", ex));
 		}
-		if (toDisplayMessage)
+		if (toDisplayMessage) {
 			scrRegValues.setVisible(false);
-	}
+			labReg.setForeground((this.swingEngine.find("labReg2")).getForeground());
+			labReg.setEnabled(true);
+		}
+	};
 
 	/**
 	 * This method will display the table to the ui.
@@ -418,6 +429,9 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	private void changeTheLabel(String label) {
 		JLabel lab = (JLabel) swingEngine.find("labReg");
 		lab.setText(label);
+		lab = (JLabel) swingEngine.find("labReg2");
+		lab.setText(label);
+
 	}
 
 	/**

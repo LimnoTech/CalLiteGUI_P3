@@ -443,14 +443,17 @@ public class CalLiteInitClass {
 	 * 
 	 * @param listOfNames
 	 *            The list of names to which we want to add the
-	 *            JTextFieldListener.
+	 *            JCheckBoxListeners.
 	 */
 	private void addJCheckBoxListener(List<String> listOfNames) {
 		FocusListener focusListenerForCheckBox = new FocusListener() {
 
 			@Override
 			public void focusLost(FocusEvent e) {
-
+				if (e.getComponent().getName().equals(Constant.CKB_REG_VAMP)) {
+					((JLabel) swingEngine.find("labReg")).setText(Constant.VAMP_NOT_SELECTED_TEXT);
+					((JLabel) swingEngine.find("labReg2")).setText(Constant.VAMP_NOT_SELECTED_TEXT);
+				}
 			}
 
 			@Override
@@ -459,13 +462,41 @@ public class CalLiteInitClass {
 				if (showTablePanel) {
 					SeedDataBO seedDataBO = SeedDataSvcImpl.getSeedDataSvcImplInstance()
 							.getObjByGuiId(e.getComponent().getName());
-					showTablePanel = !seedDataBO.getDataTables().equals(Constant.N_A);
+
+					if (seedDataBO != null)
+						showTablePanel = showTablePanel || (!seedDataBO.getDataTables().equals(Constant.N_A));
+
+					showTablePanel = showTablePanel
+							&& (((JTabbedPane) swingEngine.find("reg_tabbedPane")).getSelectedIndex() != 2);
 
 					((JPanel) swingEngine.find("reg_panTab")).setVisible(showTablePanel);
 					((JPanel) swingEngine.find("reg_panTabPlaceholder")).setVisible(!showTablePanel);
+
 					IApplyDynamicConDele applyDynamicConDele = new ApplyDynamicConDeleImp();
 					JCheckBox c = (JCheckBox) e.getComponent();
+					// boolean isSelected = c.isSelected();
+					// if (c.getName().equals(Constant.CKB_REG_VAMP) &&
+					// e.getComponent() != null)
+					// c.setSelected(!isSelected);
+
 					applyDynamicConDele.applyDynamicControl(c.getName(), c.isSelected(), c.isEnabled(), false);
+
+					if (c.getName().equals(Constant.CKB_REG_VAMP)) {
+
+						if (c.isSelected()) {
+							((JLabel) swingEngine.find("labReg")).setText(Constant.VAMP_SELECTED_TEXT);
+							((JLabel) swingEngine.find("labReg2")).setText(Constant.VAMP_SELECTED_TEXT);
+						} else {
+							((JLabel) swingEngine.find("labReg")).setText(Constant.VAMP_NOT_SELECTED_TEXT);
+							((JLabel) swingEngine.find("labReg2")).setText(Constant.VAMP_NOT_SELECTED_TEXT);
+						}
+					}
+					// Make label red and enabled
+
+					((JLabel) swingEngine.find("labReg"))
+							.setForeground(((JLabel) swingEngine.find("labReg2")).getForeground());
+
+					((JLabel) swingEngine.find("labReg")).setEnabled(true);
 
 				}
 			}
