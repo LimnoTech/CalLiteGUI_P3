@@ -316,7 +316,11 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 						((JPanel) this.swingEngine.find(panelId + "Placeholder")).setVisible(false);
 						labReg.setEnabled(true);
 						tableName = seedDataBO.getDataTables();
-						scrRegValues.setVisible(true);
+						if (tableName.equals("gui_NDO_Flow") && optionName.equals(Constant.D1485))
+							// Hide D1485 table for Min NDO
+							scrRegValues.setVisible(false);
+						else
+							scrRegValues.setVisible(true);
 						labReg.setForeground(scrRegValues.getBackground());
 						toDisplayMessage = loadTableToUI((JTable) this.swingEngine.find(guiTableName), tableName,
 								regFlags[regId], seedDataBO, optionName);
@@ -348,7 +352,12 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 				}
 				int regId = Integer.parseInt(seedData.getRegID());
 				if (!tableName.equals(Constant.N_A)) {
-					scrRegValues.setVisible(true);
+					if (tableName.equals("gui_NDO_Flow") && optionName.equals(Constant.D1485))
+						// Hide D1485 table for Min NDO
+						scrRegValues.setVisible(false);
+					else
+						scrRegValues.setVisible(true);
+
 					labReg.setForeground(scrRegValues.getBackground());
 					toDisplayMessage = loadTableToUI((JTable) this.swingEngine.find(guiTableName), tableName,
 							regFlags[regId], seedData, optionName);
