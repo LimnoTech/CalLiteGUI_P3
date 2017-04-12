@@ -3,7 +3,6 @@ package gov.ca.water.calgui.bus_delegate;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 /**
@@ -137,4 +136,13 @@ public interface IAllButtonsDele {
 	 * the tables in the Operations tab.
 	 */
 	public void decisionSVInitFilesAndTableInOperations();
+
+	/**
+	 * This method provides access to the Default CLS Protection value in the
+	 * properties file. The value can be set to "false" to allow overwriting of
+	 * the DEFAULT.CLS file.
+	 * 
+	 * @return
+	 */
+	public boolean defaultCLSIsProtected();
 }

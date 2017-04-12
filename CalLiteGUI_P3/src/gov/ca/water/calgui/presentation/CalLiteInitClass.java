@@ -184,14 +184,14 @@ public class CalLiteInitClass {
 		btnClearAll.addActionListener(fdDSSFiles);
 		// Set up month spinners
 		JSpinner spnSM = (JSpinner) swingEngine.find("spnStartMonth");
-		resultUtils.SetMonthModelAndIndex(spnSM, 9, resultUtils, true);
+		ResultUtils.SetMonthModelAndIndex(spnSM, 9, resultUtils, true);
 		JSpinner spnEM = (JSpinner) swingEngine.find("spnEndMonth");
-		resultUtils.SetMonthModelAndIndex(spnEM, 8, resultUtils, true);
+		ResultUtils.SetMonthModelAndIndex(spnEM, 8, resultUtils, true);
 		// Set up year spinners
 		JSpinner spnSY = (JSpinner) swingEngine.find("spnStartYear");
-		resultUtils.SetNumberModelAndIndex(spnSY, 1921, 1921, 2003, 1, "####", resultUtils, true);
+		ResultUtils.SetNumberModelAndIndex(spnSY, 1921, 1921, 2003, 1, "####", resultUtils, true);
 		JSpinner spnEY = (JSpinner) swingEngine.find("spnEndYear");
-		resultUtils.SetNumberModelAndIndex(spnEY, 2003, 1921, 2003, 1, "####", resultUtils, true);
+		ResultUtils.SetNumberModelAndIndex(spnEY, 2003, 1921, 2003, 1, "####", resultUtils, true);
 		// Set up report list
 		JList<?> lstReports = (JList<?>) swingEngine.find("lstReports");
 		lstReports.setBorder(new LineBorder(Color.gray, 1));

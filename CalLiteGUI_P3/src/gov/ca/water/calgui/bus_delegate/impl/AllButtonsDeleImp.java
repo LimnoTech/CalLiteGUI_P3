@@ -83,6 +83,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 	private ITableSvc tableSvc = TableSvcImpl.getTableSvcImplInstance(seedDataSvc.getSeedDataBOList());
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private Properties properties = new Properties();
+	private boolean defaultCLSProtected = true;
 	private IAuditSvc auditSvc = AuditSvcImpl.getAuditSvcImplInstance();
 	private IFileSystemSvc fileSystemSvc = new FileSystemSvcImpl();
 	private IDynamicControlSvc dynamicControlSvc = DynamicControlSvcImpl.getDynamicControlSvcImplInstance();
@@ -91,9 +92,14 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 	public AllButtonsDeleImp() {
 		try {
 			properties.load(GlobalActionListener.class.getClassLoader().getResourceAsStream("callite-gui.properties"));
+			defaultCLSProtected = !properties.getProperty("default.cls.protected").equals("false");
 		} catch (Exception ex) {
 			LOG.error("Problem loading properties. " + ex.getMessage());
 		}
+	}
+
+	public boolean defaultCLSIsProtected() {
+		return defaultCLSProtected;
 	}
 
 	@Override
@@ -116,7 +122,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 				if (newScrName.toLowerCase().endsWith(".cls")) {
 					newScrName = FilenameUtils.removeExtension(newScrName);
 				}
-				if (newScrName.toUpperCase().equals("DEFAULT")) {
+				if (newScrName.toUpperCase().equals("DEFAULT") && defaultCLSProtected) {
 					JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
 							"The CalLite GUI is not allowed to overwrite DEFAULT.CLS. Please choose a different scenario file name or cancel the save operation.");
 
@@ -693,14 +699,15 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 			dialog.setResizable(false);
 			dialog.setVisible(true);
 			if (optionPane.getValue().toString().equals("Save")) {
-				if (((JTextField) swingEngine.find("run_txfScen")).getText().toUpperCase().equals("DEFAULT.CLS")) {
+				if (((JTextField) swingEngine.find("run_txfScen")).getText().toUpperCase().equals("DEFAULT.CLS")
+						&& defaultCLSProtected) {
 					JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
 							"The CalLite GUI is not allowed to overwrite DEFAULT.CLS. Please use the Save As command to save your changes before exiting.");
 
 				} else {
 					boolean isSaved = saveCurrentStateToFile();
 					if (!isSaved)
-						errorHandlingSvc.businessErrorHandler("We encounter a problem when saving the file.", "",
+						errorHandlingSvc.businessErrorHandler("We encountered a problem when saving the file.", "",
 								(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME));
 					System.exit(0);
 				}
@@ -709,7 +716,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 			}
 		} else {
 			Object[] options = { "Ok", "Cancel" };
-			optionPane = new JOptionPane("Are you sure you want to exit ?", JOptionPane.QUESTION_MESSAGE,
+			optionPane = new JOptionPane("Are you certain that you are ready to exit ?", JOptionPane.QUESTION_MESSAGE,
 					JOptionPane.OK_CANCEL_OPTION, null, options, options[0]);
 			JDialog dialog = optionPane.createDialog("CalLite");
 			dialog.setIconImage(icon.getImage());
