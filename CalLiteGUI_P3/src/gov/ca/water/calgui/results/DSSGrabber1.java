@@ -1066,7 +1066,7 @@ public class DSSGrabber1 {
 		return primaryDSSName;
 	}
 
-	private void setPrimaryDSSName(String primaryDSSName) {
+	public void setPrimaryDSSName(String primaryDSSName) {
 		this.primaryDSSName = primaryDSSName;
 	}
 
