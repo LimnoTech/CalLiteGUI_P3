@@ -14,7 +14,7 @@ import wrimsv2.evaluator.PreEvaluator;
 import wrimsv2.wreslparser.elements.StudyUtils;
 
 /**
- * This class is used to run study's of the wrimsv2 class.
+ * This class is used to run studys of the wrimsv2 class.
  */
 public class Singleton {
 	private static final Logger LOG = Logger.getLogger(Singleton.class.getName());
@@ -30,20 +30,23 @@ public class Singleton {
 		try {
 			cb.processArgs(args);
 			StudyDataSet sds = cb.parse();
+			LOG.error(Integer.toString(StudyUtils.total_errors) + Integer.toString(Error.getTotalError()) + "*****");
 			if (StudyUtils.total_errors == 0 && Error.getTotalError() == 0) {
 				new PreEvaluator(sds);
 				new PreRunModel(sds);
 				cb.generateStudyFile();
 				// ExecutorService es = Executors.newCachedThreadPool();
-				// es.execute(new ProgressUpdate("test", ControlData.startYear, ControlData.startMonth, ControlData.endYear,
+				// es.execute(new ProgressUpdate("test", ControlData.startYear,
+				// ControlData.startMonth, ControlData.endYear,
 				// ControlData.endMonth));
 				cb.runModel(sds);
 				long endTimeInMillis = Calendar.getInstance().getTimeInMillis();
 				int runPeriod = (int) (endTimeInMillis - startTimeInMillis);
 				LOG.debug("=================Run Time is " + runPeriod / 60000 + "min"
-				        + Math.round((runPeriod / 60000.0 - runPeriod / 60000) * 60) + "sec====");
+						+ Math.round((runPeriod / 60000.0 - runPeriod / 60000) * 60) + "sec====");
 			} else {
-				LOG.error("=================Run ends with errors=================");
+				LOG.error("=================Run ends with errors (" + Integer.toString(StudyUtils.total_errors) + ","
+						+ Integer.toString(Error.getTotalError()) + " =================");
 			}
 		} catch (RecognitionException ex) {
 			ex.printStackTrace();
