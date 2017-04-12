@@ -69,4 +69,4 @@ set PATH=%ExternalDir%;%JarDir%;%VistaLibDir%
 
 start /min "CalLiteRun%ScenarioName%" %temp_wrims2%/../../../../jre8/bin/java -Xmx1000m -Xss1280K -Djava.library.path=%PATH% %CLASSPATH% gov.ca.water.calgui.batch.Singleton -config="%configFilePath%"
 
-rem exit
+exit
