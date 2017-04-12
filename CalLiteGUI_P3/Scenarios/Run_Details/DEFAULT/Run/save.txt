@@ -1,0 +1,8 @@
+Deleting the previous data.
+Copying DSS Files.
+Saving the table files.
+Copying WRIMSv2 DLL.
+Creating study.sty
+Writing WRIMSv2 Batchfile.
+Writing Scenario Config.
+Save is completed.
