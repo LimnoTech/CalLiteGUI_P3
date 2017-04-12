@@ -1,8 +1,5 @@
 package gov.ca.water.calgui.results;
 
-import hec.heclib.util.HecTime;
-import hec.io.TimeSeriesContainer;
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -27,6 +24,9 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import hec.heclib.util.HecTime;
+import hec.io.TimeSeriesContainer;
+
 /**
  * Creates a panel tabulating results by month (column) and year (row)
  */
@@ -40,30 +40,30 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 	final String CELL_BREAK = "\t";
 	final Clipboard CLIPBOARD = Toolkit.getDefaultToolkit().getSystemClipboard();
 
-	public MonthlyTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs, DSSGrabber1 dss_Grabber,
-	        String sName) {
+	public MonthlyTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs,
+			DSSGrabber1 dss_Grabber, String sName) {
 		this(title, tscs, stscs, dss_Grabber, null, sName, false);
 
 	}
 
-	public MonthlyTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs, DSSGrabber2 dss_Grabber,
-	        String sName) {
+	public MonthlyTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs,
+			DSSGrabber2 dss_Grabber, String sName) {
 		this(title, tscs, stscs, null, dss_Grabber, sName, false);
 
 	}
 
-	public MonthlyTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs, DSSGrabber1 dss_Grabber,
-	        String sName, boolean isBase) {
+	public MonthlyTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs,
+			DSSGrabber1 dss_Grabber, String sName, boolean isBase) {
 		this(title, tscs, stscs, dss_Grabber, null, sName, isBase);
 	}
 
-	public MonthlyTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs, DSSGrabber2 dss_Grabber,
-	        String sName, boolean isBase) {
+	public MonthlyTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs,
+			DSSGrabber2 dss_Grabber, String sName, boolean isBase) {
 		this(title, tscs, stscs, null, dss_Grabber, sName, isBase);
 	}
 
-	public MonthlyTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs, DSSGrabber1 dss_Grabber,
-	        DSSGrabber2 dss_Grabber2, String sName, boolean isBase) {
+	public MonthlyTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs,
+			DSSGrabber1 dss_Grabber, DSSGrabber2 dss_Grabber2, String sName, boolean isBase) {
 
 		super();
 
@@ -75,8 +75,7 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 
 		DecimalFormat df1 = new DecimalFormat("#.#");
 		HecTime ht = new HecTime();
-		// Count forward to right month - hardcoded to 10 for now
-		// TODO - match to input
+
 		Vector<String> columns = new Vector<String>();
 		columns.addElement("WY");
 		columns.addElement("Oct");
@@ -91,8 +90,8 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 		columns.addElement("Jul");
 		columns.addElement("Aug");
 		columns.addElement("Sep");
-		boolean isCFS = dss_Grabber == null ? dss_Grabber2.getOriginalUnits().equals("CFS") : dss_Grabber.getOriginalUnits()
-		        .equals("CFS");
+		boolean isCFS = dss_Grabber == null ? dss_Grabber2.getOriginalUnits().equals("CFS")
+				: dss_Grabber.getOriginalUnits().equals("CFS");
 		if (isCFS) {
 			columns.addElement("Ann (TAF)");
 		}
@@ -116,74 +115,106 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 			label.setText(sLabel + " (" + tsc.units + ") - " + tsc.fileName);
 			panel.add(label);
 
-			int first = 0;
-			ht.set(tsc.times[first]);
-			while (ht.month() != 10) {
-				first++;
-				ht.set(tsc.times[first]);
-			}
+			// int first = 0;
+			// while (ht.month() != 10) {
+			// first++;
+			// ht.set(tsc.times[first]);
+			// }
+
+			// Get starting water year for first point
 
 			Vector<String> data = new Vector<String>();
 			double sum = 0;
-			double[] mins, maxs, avgs;
-			mins = new double[13];
-			maxs = new double[13];
-			avgs = new double[13];
+			double[] mins = { 1e10, 1e10, 1e10, 1e10, 1e10, 1e10, 1e10, 1e10, 1e10, 1e10, 1e10, 1e10, 1e10, };
+			double[] maxs = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, };
 			double minTAFY = 1e10;
 			double maxTAFY = 0;
 			double sumTAFY = 0;
-			int years = 0;
-			int wy = 0;
-			for (int i = first; i < tsc.numberValues; i++) {
+			double[] avgs = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+			int[] years = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+			// Put in empty months (if any) first
+			ht.set(tsc.times[0]);
+			int wy = ht.year() + (ht.month() < 10 ? 0 : 1);
+			data.addElement(Integer.toString(wy));
+			for (int i = 0; i < (ht.month() + 2) % 12; i++)
+				data.addElement("");
+
+			for (int i = 0; i < tsc.numberValues; i++) {
 				ht.set(tsc.times[i]);
 				int y = ht.year();
-				int m = ht.month();
-				wy = (m < 10) ? y : y + 1;
-				if ((i - first) % 12 == 0) {
-					if (i != first && isCFS) {
-						double aTAFY = dss_Grabber == null ? dss_Grabber2.getAnnualTAF(s, wy - 1) : dss_Grabber.getAnnualTAF(s,
-						        wy - 1);
-						data.addElement(df1.format(aTAFY));
-						minTAFY = Math.min(minTAFY, aTAFY);
-						maxTAFY = Math.max(maxTAFY, aTAFY);
-						sumTAFY += aTAFY;
+				wy = (ht.month() < 10) ? y : y + 1;
+				int m = (ht.month() + 2) % 12;
 
+				// Put in column sum and new water year at the end of each row.
+
+				if (m == 0) {
+					if (i != 0) {
+						if (isCFS) {
+							double aTAFY = dss_Grabber == null ? dss_Grabber2.getAnnualTAF(s, wy - 1)
+									: dss_Grabber.getAnnualTAF(s, wy - 1);
+							if (aTAFY != -1) {
+								data.addElement(df1.format(aTAFY));
+								minTAFY = Math.min(minTAFY, aTAFY);
+								maxTAFY = Math.max(maxTAFY, aTAFY);
+								sumTAFY += aTAFY;
+								years[12]++;
+							} else
+								data.addElement("");
+						}
+						data.addElement(Integer.toString(wy));
 					}
-					data.addElement(Integer.toString(wy));
-					years++;
 				}
+
+				// Aggregate
+
+				years[m]++;
 				sum = sum + tsc.values[i];
-				m = (m + 2) % 12;
 				avgs[m] = avgs[m] + tsc.values[i];
-				mins[m] = (years == 1) ? tsc.values[i] : Math.min(mins[m], tsc.values[i]);
-				maxs[m] = (years == 1) ? tsc.values[i] : Math.max(maxs[m], tsc.values[i]);
+				mins[m] = Math.min(mins[m], tsc.values[i]);
+				maxs[m] = Math.max(maxs[m], tsc.values[i]);
 				data.addElement(df1.format(tsc.values[i]));
 			}
-			if (isCFS) {
-				double aTAFY = dss_Grabber == null ? dss_Grabber2.getAnnualTAF(s, wy - 1) : dss_Grabber.getAnnualTAF(s, wy - 1);
-				data.addElement(df1.format(aTAFY));
-				minTAFY = Math.min(minTAFY, aTAFY);
-				maxTAFY = Math.max(maxTAFY, aTAFY);
-				sumTAFY += aTAFY;
+
+			// Fill in end
+
+			ht.set(tsc.times[tsc.numberValues - 1]);
+			for (int i = 1 + (ht.month() + 2) % 12; i < 12; i++) {
+				data.addElement("");
 			}
+			if (isCFS) {
+				double aTAFY = dss_Grabber == null ? dss_Grabber2.getAnnualTAF(s, wy) : dss_Grabber.getAnnualTAF(s, wy);
+				if (aTAFY != -1) {
+					data.addElement(df1.format(aTAFY));
+
+					minTAFY = Math.min(minTAFY, aTAFY);
+					maxTAFY = Math.max(maxTAFY, aTAFY);
+					sumTAFY += aTAFY;
+					years[12]++;
+				} else
+					data.addElement("");
+				;
+			}
+
+			// Column statistics
 
 			data.addElement("Min");
 			for (int i = 0; i < 12; i++)
-				data.addElement(df1.format(mins[i]));
+				data.addElement(years[i] > 0 ? df1.format(mins[i]) : "");
 			if (isCFS)
 				data.addElement(df1.format(minTAFY));
 
 			data.addElement("Max");
 			for (int i = 0; i < 12; i++)
-				data.addElement(df1.format(maxs[i]));
+				data.addElement(years[i] > 0 ? df1.format(maxs[i]) : "");
 			if (isCFS)
 				data.addElement(df1.format(maxTAFY));
 
 			data.addElement("Avg");
 			for (int i = 0; i < 12; i++)
-				data.addElement(df1.format(avgs[i] / years));
+				data.addElement(years[i] > 0 ? df1.format(avgs[i] / years[i]) : "");
 			if (isCFS)
-				data.addElement(df1.format(sumTAFY / years));
+				data.addElement(df1.format(sumTAFY / years[12]));
 
 			SimpleTableModel2 model = new SimpleTableModel2(data, columns);
 			JTable table = new JTable(model);

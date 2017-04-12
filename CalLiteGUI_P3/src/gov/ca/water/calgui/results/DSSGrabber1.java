@@ -47,7 +47,7 @@ public class DSSGrabber1 {
 	static final double CFS_2_TAF_DAY = 0.001983471;
 	static final double TAF_DAY_2_CFS = 504.166667;
 
-	protected final JList<?> lstScenarios;
+	protected final JList lstScenarios;
 
 	protected String baseName;
 	protected String primaryDSSName;
@@ -107,11 +107,7 @@ public class DSSGrabber1 {
 
 			int m = ResultUtils.getXMLParsingSvcImplInstance(null).monthToInt(dateRange.substring(0, 3));
 			int y = new Integer(dateRange.substring(3, 7));
-			ht.setYearMonthDay(m == 12 ? y + 1 : y, m == 12 ? 1 : m + 1, 1, 0); // TODO:
-																				// confirm
-																				// why
-																				// this
-																				// wraps?
+			ht.setYearMonthDay(m == 12 ? y + 1 : y, m == 12 ? 1 : m + 1, 1, 0);
 			startTime = ht.value();
 			startWY = (m < 10) ? y : y + 1; // Water year
 
@@ -515,7 +511,7 @@ public class DSSGrabber1 {
 				first = i + 1;
 
 			int last = result.numberValues - 1; // find ending index
-			for (int i = result.numberValues - 1; (i >= 0) && (result.times[i] > endTime); i--)
+			for (int i = result.numberValues - 1; (i >= 0) && (result.times[i] >= endTime); i--)
 				last = i;
 
 			if (first != 0) // Shift results in array to start
@@ -783,22 +779,22 @@ public class DSSGrabber1 {
 
 	public double getAnnualTAF(int i, int wy) {
 
-		return annualTAFs[i][wy - startWY];
+		return wy < startWY ? -1 : annualTAFs[i][wy - startWY];
 	}
 
 	public double getAnnualTAFDiff(int i, int wy) {
 
-		return annualTAFsDiff[i][wy - startWY];
+		return wy < startWY ? -1 : annualTAFsDiff[i][wy - startWY];
 	}
 
 	public double getAnnualCFS(int i, int wy) {
 
-		return annualCFSs[i][wy - startWY];
+		return wy < startWY ? -1 : annualCFSs[i][wy - startWY];
 	}
 
 	public double getAnnualCFSDiff(int i, int wy) {
 
-		return annualCFSsDiff[i][wy - startWY];
+		return wy < startWY ? -1 : annualCFSsDiff[i][wy - startWY];
 	}
 
 	/**
@@ -1070,8 +1066,8 @@ public class DSSGrabber1 {
 		return primaryDSSName;
 	}
 
-	// private void setPrimaryDSSName(String primaryDSSName) {
-	// this.primaryDSSName = primaryDSSName;
-	// }
+	private void setPrimaryDSSName(String primaryDSSName) {
+		this.primaryDSSName = primaryDSSName;
+	}
 
 }
