@@ -1,4 +1,4 @@
-package gov.ca.water.calgui.results;
+package gov.ca.water.calgui.presentation.display;
 
 import java.awt.BorderLayout;
 import java.awt.Component;

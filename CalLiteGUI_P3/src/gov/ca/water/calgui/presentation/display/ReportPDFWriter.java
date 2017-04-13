@@ -1,6 +1,4 @@
-package gov.ca.water.calgui.results;
-
-import gov.ca.water.calgui.results.Report.Writer;
+package gov.ca.water.calgui.presentation.display;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -44,6 +42,9 @@ import com.lowagie.text.pdf.PdfPRow;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.pdf.TextField;
+
+import gov.ca.water.calgui.presentation.Report;
+import gov.ca.water.calgui.presentation.Report.Writer;
 
 public class ReportPDFWriter implements Writer {
 	Document document;

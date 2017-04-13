@@ -1,4 +1,4 @@
-package gov.ca.water.calgui.results;
+package gov.ca.water.calgui.presentation;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -27,6 +27,14 @@ import gov.ca.water.calgui.bo.DSSGrabber1BO;
 import gov.ca.water.calgui.bo.DSSGrabber2BO;
 import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
+import gov.ca.water.calgui.presentation.display.BoxPlotChartPanel;
+import gov.ca.water.calgui.presentation.display.BoxPlotChartPanel2;
+import gov.ca.water.calgui.presentation.display.ChartPanel1;
+import gov.ca.water.calgui.presentation.display.ChartPanel2;
+import gov.ca.water.calgui.presentation.display.MonthlyTablePanel;
+import gov.ca.water.calgui.presentation.display.MonthlyTablePanel2;
+import gov.ca.water.calgui.presentation.display.SummaryTablePanel;
+import gov.ca.water.calgui.presentation.display.SummaryTablePanel2;
 import hec.io.TimeSeriesContainer;
 
 /**

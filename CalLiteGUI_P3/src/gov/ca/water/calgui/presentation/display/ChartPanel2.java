@@ -1,4 +1,4 @@
-package gov.ca.water.calgui.results;
+package gov.ca.water.calgui.presentation.display;
 
 import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;

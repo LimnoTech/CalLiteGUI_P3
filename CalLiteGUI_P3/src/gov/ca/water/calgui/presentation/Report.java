@@ -1,4 +1,4 @@
-package gov.ca.water.calgui.results;
+package gov.ca.water.calgui.presentation;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -18,6 +18,7 @@ import gov.ca.dsm2.input.parser.InputTable;
 import gov.ca.dsm2.input.parser.Parser;
 import gov.ca.dsm2.input.parser.Tables;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
+import gov.ca.water.calgui.presentation.display.ReportPDFWriter;
 import vista.report.TSMath;
 import vista.set.DataReference;
 import vista.set.Group;

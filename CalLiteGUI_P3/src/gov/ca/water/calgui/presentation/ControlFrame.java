@@ -1,4 +1,4 @@
-package gov.ca.water.calgui.results;
+package gov.ca.water.calgui.presentation;
 
 import java.awt.Component;
 import java.awt.Dimension;
