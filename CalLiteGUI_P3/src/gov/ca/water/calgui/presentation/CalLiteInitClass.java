@@ -72,7 +72,6 @@ import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.results.DisplayFrame;
 import gov.ca.water.calgui.results.FileDialog;
-import gov.ca.water.calgui.results.ReportListener;
 import gov.ca.water.calgui.results.ResultUtils;
 import gov.ca.water.calgui.results.SchematicListener;
 import gov.ca.water.calgui.results.SchematicMain;
@@ -160,7 +159,6 @@ public class CalLiteInitClass {
 				.setText("Simultaneous runs " + ((maxThreads > 1) ? "(1-" + maxThreads + ")" : "(1)"));
 		// For Result part.
 		ResultUtils resultUtils = ResultUtils.getXMLParsingSvcImplInstance(swingEngine);
-		setCheckBoxorRadioButtonItemListener(swingEngine.find("Reporting"), new ReportListener(swingEngine));
 		// setCheckBoxorMouseListener(swingEngine.find("Reporting"), );
 		// Setup for Reporting page
 		// Set up additional UI elements

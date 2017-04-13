@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
 import org.apache.log4j.Logger;
@@ -19,6 +20,7 @@ import gov.ca.water.calgui.bus_service.IResultSvc;
 import gov.ca.water.calgui.bus_service.impl.DynamicControlSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.ResultSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
+import gov.ca.water.calgui.results.ResultUtils;
 import gov.ca.water.calgui.tech_service.IAuditSvc;
 import gov.ca.water.calgui.tech_service.impl.AuditSvcImpl;
 
@@ -52,6 +54,33 @@ public class GlobalItemListener implements ItemListener {
 			return;
 		String itemName = ((JComponent) ie.getItem()).getName();
 		LOG.debug(itemName);
+
+		// ----- Insert ReportListener handling
+		if (itemName != null) {
+			if (itemName.startsWith("Repckb")) {
+				// Checkbox in Reporting page changed
+				// if (itemName.startsWith("RepckbExceedancePlot") ||
+				// itemName.startsWith("RepckbBAWPlot")) {
+				// // Month controls should be turned on if *either* exceedance
+				// // or B&W plots are asked for;
+				// JPanel controls2 = (JPanel) swingEngine.find("controls2");
+				// ResultUtils.getXMLParsingSvcImplInstance(null).toggleEnComponentAndChildren(controls2,
+				// (ie.getStateChange() == ItemEvent.SELECTED)
+				// || ((JCheckBox)
+				// swingEngine.find("RepckbBAWPlot")).isSelected()
+				// || ((JCheckBox)
+				// swingEngine.find("RepckbExceedancePlot")).isSelected());
+				// } else
+				if (itemName.startsWith("RepckbSummaryTable")) {
+					JPanel controls3 = (JPanel) swingEngine.find("controls3");
+					ResultUtils.getXMLParsingSvcImplInstance(null).toggleEnComponentAndChildren(controls3,
+							ie.getStateChange() == ItemEvent.SELECTED);
+				}
+			}
+		}
+
+		// End ReportListener handling -----
+
 		boolean isSelected = ie.getStateChange() == ItemEvent.SELECTED;
 		boolean isEnabled = ((JComponent) ie.getItem()).isEnabled();
 		boolean optionFromTheBox = false;
