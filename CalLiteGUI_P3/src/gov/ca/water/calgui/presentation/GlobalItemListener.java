@@ -19,9 +19,9 @@ import org.swixml.SwingEngine;
 import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
 import gov.ca.water.calgui.bus_delegate.impl.ApplyDynamicConDeleImp;
 import gov.ca.water.calgui.bus_service.IDynamicControlSvc;
-import gov.ca.water.calgui.bus_service.IResultSvc;
+import gov.ca.water.calgui.bus_service.IScenarioSvc;
 import gov.ca.water.calgui.bus_service.impl.DynamicControlSvcImpl;
-import gov.ca.water.calgui.bus_service.impl.ResultSvcImpl;
+import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.results.ResultUtils;
@@ -41,7 +41,7 @@ public class GlobalItemListener implements ItemListener {
 	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
 	private IDynamicControlSvc dynamicControlSvc = DynamicControlSvcImpl.getDynamicControlSvcImplInstance();
 	private IAuditSvc auditSvc = AuditSvcImpl.getAuditSvcImplInstance();
-	private IResultSvc resultSvc = ResultSvcImpl.getResultSvcImplInstance();
+	private IScenarioSvc scenarioSvc = ScenarioSvcImpl.getScenarioSvcImplInstance();
 	private String oldValue = "";
 	/*
 	 * we use the rollBackFlag to avoid a cascade effect when we show a
@@ -52,7 +52,7 @@ public class GlobalItemListener implements ItemListener {
 
 	@Override
 	public void itemStateChanged(ItemEvent ie) {
-		if (resultSvc.isCLSFileLoading())
+		if (scenarioSvc.isCLSFileLoading())
 			return;
 		if (dynamicControlSvc.isPreventRoeTrigger())
 			return;
@@ -193,6 +193,9 @@ public class GlobalItemListener implements ItemListener {
 		auditSvc.addAudit(itemName, String.valueOf(!isSelected), String.valueOf(isSelected));
 	}
 
+	/**
+	 * Kludge to force redraw when switching between schematic views
+	 */
 	private void updateSchematicLayout() {
 		JFrame f = (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME);
 		Dimension d = f.getSize();

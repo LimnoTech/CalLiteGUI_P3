@@ -51,11 +51,11 @@ import gov.ca.water.calgui.bus_delegate.impl.AllButtonsDeleImp;
 import gov.ca.water.calgui.bus_delegate.impl.ApplyDynamicConDeleImp;
 import gov.ca.water.calgui.bus_delegate.impl.ScenarioDeleImp;
 import gov.ca.water.calgui.bus_delegate.impl.VerifyControlsDeleImp;
-import gov.ca.water.calgui.bus_service.IBatchRunSvc;
-import gov.ca.water.calgui.bus_service.IResultSvc;
+import gov.ca.water.calgui.bus_service.IModelRunSvc;
+import gov.ca.water.calgui.bus_service.IScenarioSvc;
 import gov.ca.water.calgui.bus_service.ISeedDataSvc;
-import gov.ca.water.calgui.bus_service.impl.BatchRunSvcImpl;
-import gov.ca.water.calgui.bus_service.impl.ResultSvcImpl;
+import gov.ca.water.calgui.bus_service.impl.ModelRunSvcImpl;
+import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.SeedDataSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
@@ -78,9 +78,9 @@ public class GlobalActionListener implements ActionListener {
 	private static final Logger LOG = Logger.getLogger(GlobalActionListener.class.getName());
 	private IScenarioDele scenarioDele = new ScenarioDeleImp();
 	private IAllButtonsDele allButtonsDele = new AllButtonsDeleImp();
-	private IResultSvc resultSvc = ResultSvcImpl.getResultSvcImplInstance();
+	private IScenarioSvc scenarioSvc = ScenarioSvcImpl.getScenarioSvcImplInstance();
 	private IAuditSvc auditSvc = AuditSvcImpl.getAuditSvcImplInstance();
-	private IBatchRunSvc batchRunSvc = new BatchRunSvcImpl();
+	private IModelRunSvc modelRunSvc = new ModelRunSvcImpl();
 	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
 	private ISeedDataSvc seedDataSvc = SeedDataSvcImpl.getSeedDataSvcImplInstance();
 	private IVerifyControlsDele verifyControlsDele = new VerifyControlsDeleImp();
@@ -345,7 +345,7 @@ public class GlobalActionListener implements ActionListener {
 		LOG.debug("loading this cls file " + fileName);
 		fileName = FilenameUtils.removeExtension(fileName);
 		this.verifyControlsDele.verifyTheDataBeforeUI(Constant.SCENARIOS_DIR + fileName + Constant.CLS_EXT);
-		this.resultSvc.applyClsFile(Constant.SCENARIOS_DIR + fileName + Constant.CLS_EXT, swingEngine,
+		this.scenarioSvc.applyClsFile(Constant.SCENARIOS_DIR + fileName + Constant.CLS_EXT, swingEngine,
 				seedDataSvc.getTableIdMap());
 		((JTextField) swingEngine.find("run_txfScen")).setText(fileName + Constant.CLS_EXT);
 		((JTextField) swingEngine.find("run_txfoDSS")).setText(fileName + Constant.DV_NAME + Constant.DSS_EXT);
@@ -389,7 +389,7 @@ public class GlobalActionListener implements ActionListener {
 			progressFrame.addScenarioNamesAndAction(clsFileName, Constant.BATCH_RUN);
 			progressFrame.setBtnText(Constant.STATUS_BTN_TEXT_STOP);
 			progressFrame.makeDialogVisible();
-			batchRunSvc.doBatch(fileName, swingEngine, false);
+			modelRunSvc.doBatch(fileName, swingEngine, false);
 		}
 	}
 
@@ -405,7 +405,7 @@ public class GlobalActionListener implements ActionListener {
 			progressFrame.addScenarioNamesAndAction(clsFileName, Constant.BATCH_RUN_WSIDI);
 			progressFrame.setBtnText(Constant.STATUS_BTN_TEXT_STOP);
 			progressFrame.makeDialogVisible();
-			batchRunSvc.doBatch(fileName, swingEngine, true);
+			modelRunSvc.doBatch(fileName, swingEngine, true);
 		}
 	}
 

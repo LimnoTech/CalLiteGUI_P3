@@ -16,7 +16,7 @@ import javax.swing.event.ChangeListener;
 import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
 
-import gov.ca.water.calgui.bus_service.impl.BatchRunSvcImpl;
+import gov.ca.water.calgui.bus_service.impl.ModelRunSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 
 /**
@@ -53,9 +53,9 @@ public class GlobalChangeListener implements ChangeListener {
 			((JPanel) this.swingEngine.find("reg_panTabPlaceholder")).setVisible(!showTablePanel);
 
 		} else if (lcName.equals("run_sldthreads")) {
-			BatchRunSvcImpl.simultaneousRuns = ((JSlider) changeEvent.getSource()).getValue();
-			((JLabel) swingEngine.find("run_lblThreads")).setText(" " + BatchRunSvcImpl.simultaneousRuns + " run"
-					+ ((BatchRunSvcImpl.simultaneousRuns > 1) ? "s" : ""));
+			ModelRunSvcImpl.simultaneousRuns = ((JSlider) changeEvent.getSource()).getValue();
+			((JLabel) swingEngine.find("run_lblThreads")).setText(" " + ModelRunSvcImpl.simultaneousRuns + " run"
+					+ ((ModelRunSvcImpl.simultaneousRuns > 1) ? "s" : ""));
 
 		} else if (changeEvent.getSource() instanceof JLinkedSlider) {
 

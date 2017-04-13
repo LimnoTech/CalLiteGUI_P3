@@ -45,14 +45,14 @@ import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.GuiLinks4BO;
 import gov.ca.water.calgui.bus_delegate.IAllButtonsDele;
 import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
-import gov.ca.water.calgui.bus_service.IBatchRunSvc;
+import gov.ca.water.calgui.bus_service.IModelRunSvc;
 import gov.ca.water.calgui.bus_service.IDynamicControlSvc;
-import gov.ca.water.calgui.bus_service.IResultSvc;
+import gov.ca.water.calgui.bus_service.IScenarioSvc;
 import gov.ca.water.calgui.bus_service.ISeedDataSvc;
 import gov.ca.water.calgui.bus_service.ITableSvc;
-import gov.ca.water.calgui.bus_service.impl.BatchRunSvcImpl;
+import gov.ca.water.calgui.bus_service.impl.ModelRunSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.DynamicControlSvcImpl;
-import gov.ca.water.calgui.bus_service.impl.ResultSvcImpl;
+import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.SeedDataSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.TableSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
@@ -77,8 +77,8 @@ import hec.heclib.dss.HecDss;
 public class AllButtonsDeleImp implements IAllButtonsDele {
 	private static final Logger LOG = Logger.getLogger(AllButtonsDeleImp.class.getName());
 	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
-	private IBatchRunSvc batchRunSvc = new BatchRunSvcImpl();
-	private IResultSvc resultSvc = ResultSvcImpl.getResultSvcImplInstance();
+	private IModelRunSvc modelRunSvc = new ModelRunSvcImpl();
+	private IScenarioSvc scenarioSvc = ScenarioSvcImpl.getScenarioSvcImplInstance();
 	private ISeedDataSvc seedDataSvc = SeedDataSvcImpl.getSeedDataSvcImplInstance();
 	private ITableSvc tableSvc = TableSvcImpl.getTableSvcImplInstance(seedDataSvc.getGUILinks2BOList());
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
@@ -184,7 +184,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 	@Override
 	public boolean saveForViewScen() {
 		try {
-			resultSvc.saveToCLSFile(Constant.SCENARIOS_DIR + Constant.CURRENT_SCENARIO + Constant.CLS_EXT, swingEngine,
+			scenarioSvc.saveToCLSFile(Constant.SCENARIOS_DIR + Constant.CURRENT_SCENARIO + Constant.CLS_EXT, swingEngine,
 					seedDataSvc.getGUILinks2BOList());
 			return true;
 		} catch (CalLiteGUIException ex) {
@@ -219,13 +219,13 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 			 * "Operations" tab is up to data or not and if not updating the
 			 * tables(SWP and CVP) in the menory.
 			 */
-			String swpFileName = resultSvc.getUserDefinedTable(Constant.SWP_START_FILENAME).getTableName();
-			String cvpFileName = resultSvc.getUserDefinedTable(Constant.CVP_START_FILENAME).getTableName();
+			String swpFileName = scenarioSvc.getUserDefinedTable(Constant.SWP_START_FILENAME).getTableName();
+			String cvpFileName = scenarioSvc.getUserDefinedTable(Constant.CVP_START_FILENAME).getTableName();
 
 			if (!fileSystemSvc.getTheLookupFromTheFullFileName(tableSvc.getWsidiForSWPFullFileName())
 					.equalsIgnoreCase(swpFileName)) {
 				try {
-					resultSvc.addUserDefinedTable(Constant.SWP_START_FILENAME,
+					scenarioSvc.addUserDefinedTable(Constant.SWP_START_FILENAME,
 							tableSvc.getWsiDiTable(tableSvc.getWsidiForSWPFullFileName()));
 				} catch (CalLiteGUIException ex) {
 					LOG.error(ex);
@@ -236,7 +236,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 			if (!fileSystemSvc.getTheLookupFromTheFullFileName(tableSvc.getWsidiForCVPFullFileName())
 					.equalsIgnoreCase(cvpFileName)) {
 				try {
-					resultSvc.addUserDefinedTable(Constant.CVP_START_FILENAME,
+					scenarioSvc.addUserDefinedTable(Constant.CVP_START_FILENAME,
 							tableSvc.getWsiDiTable(tableSvc.getWsidiForCVPFullFileName()));
 				} catch (CalLiteGUIException ex) {
 					LOG.error(ex);
@@ -247,7 +247,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 			ProgressFrame progressFrame = ProgressFrame.getProgressFrameInstance();
 			progressFrame.addScenarioNamesAndAction(clsFileName, Constant.SAVE);
 			progressFrame.makeDialogVisible();
-			proceed = ResultSvcImpl.getResultSvcImplInstance().save(clsFileName,
+			proceed = ScenarioSvcImpl.getScenarioSvcImplInstance().save(clsFileName,
 					XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine(),
 					SeedDataSvcImpl.getSeedDataSvcImplInstance().getGUILinks2BOList());
 			LOG.debug("Save Complete. " + clsFileName);
@@ -297,7 +297,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 			progressFrame.addScenarioNamesAndAction(fileNames, Constant.BATCH_RUN);
 			progressFrame.setBtnText(Constant.STATUS_BTN_TEXT_STOP);
 			progressFrame.makeDialogVisible();
-			batchRunSvc.doBatch(fileNames, swingEngine, false);
+			modelRunSvc.doBatch(fileNames, swingEngine, false);
 		}
 	}
 
@@ -459,14 +459,14 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 			cvpDtm.setTableName(Constant.USER_DEFINED);
 			cvpDtm.setCellEditable(true);
 			cvpDtm.setSwingEngine(swingEngine);
-			resultSvc.addUserDefinedTable(Constant.CVP_START_FILENAME, cvpDtm);
+			scenarioSvc.addUserDefinedTable(Constant.CVP_START_FILENAME, cvpDtm);
 			tableSvc.setWsidiForCVPFullFileName(Constant.USER_DEFINED);
 			// for SWP table
 			DataTableModel swpDtm = tableSvc.getWsiDiTable(swpFullFileName);
 			swpDtm.setTableName(Constant.USER_DEFINED);
 			swpDtm.setCellEditable(true);
 			swpDtm.setSwingEngine(swingEngine);
-			resultSvc.addUserDefinedTable(Constant.SWP_START_FILENAME, swpDtm);
+			scenarioSvc.addUserDefinedTable(Constant.SWP_START_FILENAME, swpDtm);
 			tableSvc.setWsidiForSWPFullFileName(Constant.USER_DEFINED);
 			JLabel jLabel = (JLabel) swingEngine.find("op_WSIDI_Status");
 			jLabel.setText("WSI/DI read from [" + Paths.get(swpFullFileName).getFileName().toString() + " , "
@@ -496,14 +496,14 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 			cvpDtm.setTableName(FilenameUtils.removeExtension(Paths.get(cvpFullFileName).getFileName().toString()));
 			cvpDtm.setCellEditable(true);
 			cvpDtm.setSwingEngine(swingEngine);
-			resultSvc.addUserDefinedTable(Constant.CVP_START_FILENAME, cvpDtm);
+			scenarioSvc.addUserDefinedTable(Constant.CVP_START_FILENAME, cvpDtm);
 			tableSvc.setWsidiForCVPFullFileName(cvpFullFileName);
 			// To Load SWP table
 			DataTableModel swpDtm = tableSvc.getWsiDiTable(swpFullFileName);
 			swpDtm.setTableName(FilenameUtils.removeExtension(Paths.get(swpFullFileName).getFileName().toString()));
 			swpDtm.setCellEditable(true);
 			swpDtm.setSwingEngine(swingEngine);
-			resultSvc.addUserDefinedTable(Constant.SWP_START_FILENAME, swpDtm);
+			scenarioSvc.addUserDefinedTable(Constant.SWP_START_FILENAME, swpDtm);
 			tableSvc.setWsidiForSWPFullFileName(swpFullFileName);
 			JLabel jLabel = (JLabel) swingEngine.find("op_WSIDI_Status");
 			jLabel.setText(labelNames.get(1) + Constant.UNEDITED_FORLABEL);
@@ -540,7 +540,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 					fileName = tableSvc.getWsidiForCVPFullFileName();
 				}
 				if (fileName.equalsIgnoreCase(Constant.USER_DEFINED)) {
-					dataTableModel = resultSvc.getUserDefinedTable(tableName);
+					dataTableModel = scenarioSvc.getUserDefinedTable(tableName);
 					dataTableModel.setSwingEngine(swingEngine);
 				} else {
 					dataTableModel = tableSvc.getWsiDiTable(fileName);
@@ -548,7 +548,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 							.setTableName(FilenameUtils.removeExtension(Paths.get(fileName).getFileName().toString()));
 					dataTableModel.setCellEditable(true);
 					dataTableModel.setSwingEngine(swingEngine);
-					resultSvc.addUserDefinedTable(tableName, dataTableModel);
+					scenarioSvc.addUserDefinedTable(tableName, dataTableModel);
 				}
 				showTableOnOperations(dataTableModel);
 			}

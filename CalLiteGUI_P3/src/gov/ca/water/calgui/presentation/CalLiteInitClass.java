@@ -59,13 +59,13 @@ import gov.ca.water.calgui.bus_delegate.IVerifyControlsDele;
 import gov.ca.water.calgui.bus_delegate.impl.AllButtonsDeleImp;
 import gov.ca.water.calgui.bus_delegate.impl.ApplyDynamicConDeleImp;
 import gov.ca.water.calgui.bus_delegate.impl.VerifyControlsDeleImp;
-import gov.ca.water.calgui.bus_service.IResultSvc;
+import gov.ca.water.calgui.bus_service.IScenarioSvc;
 import gov.ca.water.calgui.bus_service.ISeedDataSvc;
 import gov.ca.water.calgui.bus_service.ITableSvc;
 import gov.ca.water.calgui.bus_service.IXMLParsingSvc;
-import gov.ca.water.calgui.bus_service.impl.BatchRunSvcImpl;
+import gov.ca.water.calgui.bus_service.impl.ModelRunSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.DynamicControlSvcImpl;
-import gov.ca.water.calgui.bus_service.impl.ResultSvcImpl;
+import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.SeedDataSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.TableSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
@@ -106,7 +106,7 @@ public class CalLiteInitClass {
 		DynamicControlSvcImpl.getDynamicControlSvcImplInstance();
 		ITableSvc tableSvc = TableSvcImpl.getTableSvcImplInstance(seedDataSvc.getUserTables());
 		this.swingEngine = xmlParsingSvc.getSwingEngine();
-		IResultSvc resultSvc = ResultSvcImpl.getResultSvcImplInstance();
+		IScenarioSvc scenarioSvc = ScenarioSvcImpl.getScenarioSvcImplInstance();
 		IAllButtonsDele allButtonsDele = new AllButtonsDeleImp();
 		// Set up the GUI
 		// Set up month spinners
@@ -138,10 +138,10 @@ public class CalLiteInitClass {
 			}
 		});
 		// Loading the default cls file.
-		resultSvc.applyClsFile(Constant.SCENARIOS_DIR + Constant.DEFAULT + Constant.CLS_EXT, swingEngine,
+		scenarioSvc.applyClsFile(Constant.SCENARIOS_DIR + Constant.DEFAULT + Constant.CLS_EXT, swingEngine,
 				seedDataSvc.getTableIdMap());
 		// check
-		checkForNewUserDefinedTables(xmlParsingSvc.getNewUserDefinedTables(), resultSvc, tableSvc, swingEngine);
+		checkForNewUserDefinedTables(xmlParsingSvc.getNewUserDefinedTables(), scenarioSvc, tableSvc, swingEngine);
 		auditSvc = AuditSvcImpl.getAuditSvcImplInstance();
 		auditSvc.clearAudit(); // we clear because when we 1st load the cls file
 								// we should not have any records.
@@ -149,7 +149,7 @@ public class CalLiteInitClass {
 		addJCheckBoxListener(xmlParsingSvc.getjCheckBoxIDs());
 		// Count threads and update selector appropriately
 		int maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors());
-		BatchRunSvcImpl.simultaneousRuns = maxThreads;
+		ModelRunSvcImpl.simultaneousRuns = maxThreads;
 		((JSlider) swingEngine.find("run_sldThreads")).addChangeListener(new GlobalChangeListener());
 		((JSlider) swingEngine.find("run_sldThreads")).setEnabled(maxThreads > 1);
 		((JSlider) swingEngine.find("run_sldThreads")).setMaximum(maxThreads);
@@ -302,25 +302,25 @@ public class CalLiteInitClass {
 	 *
 	 * @param newUserDefinedIds
 	 *            This is the id's of the new tables defined in gui.xml file.
-	 * @param resultSvc
-	 *            The Object of {@link ResultSvcImpl}.
+	 * @param scenarioSvc
+	 *            The Object of {@link ScenarioSvcImpl}.
 	 * @param tableSvc
 	 *            The Object of {@link TableSvcImpl}.
 	 * @param swingEngine
 	 *            The Object of {@link SwingEngine}.
 	 */
-	public void checkForNewUserDefinedTables(List<String> newUserDefinedIds, IResultSvc resultSvc, ITableSvc tableSvc,
+	public void checkForNewUserDefinedTables(List<String> newUserDefinedIds, IScenarioSvc scenarioSvc, ITableSvc tableSvc,
 			SwingEngine swingEngine) {
 		DataTableModel dtm = null;
 		for (String newUserDefinedId : newUserDefinedIds) {
-			if (resultSvc.hasUserDefinedTable(newUserDefinedId)) {
-				dtm = resultSvc.getUserDefinedTable(newUserDefinedId);
+			if (scenarioSvc.hasUserDefinedTable(newUserDefinedId)) {
+				dtm = scenarioSvc.getUserDefinedTable(newUserDefinedId);
 				((JTable) swingEngine.find(newUserDefinedId)).setModel(dtm);
 			} else {
 				try {
 					dtm = tableSvc.getTable(newUserDefinedId, TableSvcImpl::handleTableFileWithColumnNumber);
 					dtm.setCellEditable(true);
-					resultSvc.addUserDefinedTable(newUserDefinedId, dtm);
+					scenarioSvc.addUserDefinedTable(newUserDefinedId, dtm);
 					((JTable) swingEngine.find(newUserDefinedId)).setModel(dtm);
 				} catch (CalLiteGUIException ex) {
 					Log.error(ex);

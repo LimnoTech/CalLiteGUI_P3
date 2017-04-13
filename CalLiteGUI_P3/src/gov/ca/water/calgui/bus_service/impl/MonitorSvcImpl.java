@@ -33,7 +33,7 @@ public final class MonitorSvcImpl implements IMonitorSvc {
 	}
 
 	@Override
-	public String batchRunWsidi(String scenarioName) {
+	public String runWSIDI(String scenarioName) {
 		String scenPROGRESSFile = Constant.RUN_DETAILS_DIR + scenarioName + Constant.RUN_DIR + "//PROGRESS.txt";
 		String scenWRESLCheckWSIDIFile = Constant.RUN_DETAILS_DIR + scenarioName + Constant.RUN_DIR
 				+ "//=WreslCheck_main_wsidi=.log";
@@ -76,7 +76,7 @@ public final class MonitorSvcImpl implements IMonitorSvc {
 	}
 
 	@Override
-	public String batchRun(String scenarioName) {
+	public String runModel(String scenarioName) {
 		String scenPROGRESSFile = Constant.RUN_DETAILS_DIR + scenarioName + Constant.RUN_DIR + "//PROGRESS.txt";
 		String scenWRESLCHECKFile = Constant.RUN_DETAILS_DIR + scenarioName + Constant.RUN_DIR
 				+ "//=WreslCheck_main=.log";

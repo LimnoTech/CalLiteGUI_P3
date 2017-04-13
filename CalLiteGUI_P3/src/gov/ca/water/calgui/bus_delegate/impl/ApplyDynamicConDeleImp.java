@@ -25,12 +25,12 @@ import gov.ca.water.calgui.bo.GuiLinks4BO;
 import gov.ca.water.calgui.bo.GUILinks2BO;
 import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
 import gov.ca.water.calgui.bus_service.IDynamicControlSvc;
-import gov.ca.water.calgui.bus_service.IResultSvc;
+import gov.ca.water.calgui.bus_service.IScenarioSvc;
 import gov.ca.water.calgui.bus_service.ISeedDataSvc;
 import gov.ca.water.calgui.bus_service.ITableSvc;
 import gov.ca.water.calgui.bus_service.IXMLParsingSvc;
 import gov.ca.water.calgui.bus_service.impl.DynamicControlSvcImpl;
-import gov.ca.water.calgui.bus_service.impl.ResultSvcImpl;
+import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.SeedDataSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.TableSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
@@ -60,7 +60,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private IXMLParsingSvc xmlParsingSvc = XMLParsingSvcImpl.getXMLParsingSvcImplInstance();
 	private SwingEngine swingEngine = xmlParsingSvc.getSwingEngine();
-	private IResultSvc resultSvc = ResultSvcImpl.getResultSvcImplInstance();
+	private IScenarioSvc scenarioSvc = ScenarioSvcImpl.getScenarioSvcImplInstance();
 	private IFileSystemSvc fileSystemSvc = new FileSystemSvcImpl();
 
 	@Override
@@ -219,7 +219,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	private void regulations(String itemName, boolean isSelected)
 			throws CalLiteGUIException, CloneNotSupportedException {
 		List<GUILinks2BO> seedDataList = seedDataSvc.getRegulationsTabData();
-		int[] regFlags = resultSvc.getRegulationoptions();
+		int[] regFlags = scenarioSvc.getRegulationoptions();
 		String tableName = "";
 		String optionName = "";
 		Component scrRegValues = (this.swingEngine.find("scrRegValues"));
@@ -239,7 +239,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 					// regFlags[Integer.parseInt(seedDataBO.getRegID())] = 4;
 					// }
 					if (!gUILinks2BO.getDataTables().equals(Constant.N_A)) {
-						resultSvc.removeUserDefinedTable(gUILinks2BO.getDataTables());
+						scenarioSvc.removeUserDefinedTable(gUILinks2BO.getDataTables());
 					}
 				}
 			} else if (isSelected && itemName.equals(Constant.QUICK_SELECT_RB_D1641)
@@ -254,7 +254,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 					// regFlags[Integer.parseInt(seedDataBO.getRegID())] = 4;
 					// }
 					if (!gUILinks2BO.getDataTables().equals(Constant.N_A)) {
-						resultSvc.removeUserDefinedTable(gUILinks2BO.getDataTables());
+						scenarioSvc.removeUserDefinedTable(gUILinks2BO.getDataTables());
 					}
 				}
 			} else if (itemName.startsWith("ckbReg")) {
@@ -471,17 +471,17 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 		switch (optionName) {
 		case Constant.D1641:
 			dataTableModel = decideTableNameAndGetTable(tableName, gUILinks2BO, Constant.D1641);
-			if (resultSvc.hasUserDefinedTable(tableName))
-				resultSvc.removeUserDefinedTable(tableName);
+			if (scenarioSvc.hasUserDefinedTable(tableName))
+				scenarioSvc.removeUserDefinedTable(tableName);
 			break;
 		case Constant.D1485:
 			dataTableModel = decideTableNameAndGetTable(tableName, gUILinks2BO, Constant.D1485);
-			if (resultSvc.hasUserDefinedTable(tableName))
-				resultSvc.removeUserDefinedTable(tableName);
+			if (scenarioSvc.hasUserDefinedTable(tableName))
+				scenarioSvc.removeUserDefinedTable(tableName);
 			break;
 		case Constant.USER_DEFINED:
-			if (resultSvc.hasUserDefinedTable(tableName)) {
-				dataTableModel = resultSvc.getUserDefinedTable(tableName);
+			if (scenarioSvc.hasUserDefinedTable(tableName)) {
+				dataTableModel = scenarioSvc.getUserDefinedTable(tableName);
 			} else {
 				if (regValue == 1) {
 					dataTableModel = decideTableNameAndGetTable(tableName, gUILinks2BO, Constant.D1641);
@@ -493,7 +493,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 				if (dataTableModel != null) {
 					dataTableModel = (DataTableModel) dataTableModel.clone();
 					dataTableModel.setCellEditable(true);
-					resultSvc.addUserDefinedTable(tableName, dataTableModel);
+					scenarioSvc.addUserDefinedTable(tableName, dataTableModel);
 				}
 			}
 			break;

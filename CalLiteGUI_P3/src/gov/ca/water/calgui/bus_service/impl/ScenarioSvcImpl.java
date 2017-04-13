@@ -44,7 +44,7 @@ import org.swixml.XScrollPane;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.GUILinks2BO;
-import gov.ca.water.calgui.bus_service.IResultSvc;
+import gov.ca.water.calgui.bus_service.IScenarioSvc;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.presentation.NumericTextField;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
@@ -58,11 +58,11 @@ import wrimsv2.evaluator.TimeOperation;
  *
  * @author Mohan
  */
-public final class ResultSvcImpl implements IResultSvc {
-	private static final Logger LOG = Logger.getLogger(ResultSvcImpl.class.getName());
+public final class ScenarioSvcImpl implements IScenarioSvc {
+	private static final Logger LOG = Logger.getLogger(ScenarioSvcImpl.class.getName());
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private IFileSystemSvc fileSystemSvc = new FileSystemSvcImpl();
-	private static IResultSvc resultSvc;
+	private static IScenarioSvc scenarioSvc;
 	private int[] regulationoptions = new int[100];
 	private Map<String, DataTableModel> userDefinedTableMap = new HashMap<String, DataTableModel>();
 	private boolean isCLSFlag = true;
@@ -74,14 +74,14 @@ public final class ResultSvcImpl implements IResultSvc {
 	 * @return Will return the instance of this class if it is empty it will
 	 *         create one.
 	 */
-	public static IResultSvc getResultSvcImplInstance() {
-		if (resultSvc == null) {
-			resultSvc = new ResultSvcImpl();
+	public static IScenarioSvc getScenarioSvcImplInstance() {
+		if (scenarioSvc == null) {
+			scenarioSvc = new ScenarioSvcImpl();
 		}
-		return resultSvc;
+		return scenarioSvc;
 	}
 
-	private ResultSvcImpl() {
+	private ScenarioSvcImpl() {
 
 	}
 
@@ -946,7 +946,7 @@ public final class ResultSvcImpl implements IResultSvc {
 			List<String> headerList = null;
 			StringBuffer fileDataStrBuf = new StringBuffer();
 			headerList = fileSystemSvc.getFileData(Constant.MODEL_W2_WRESL_LOOKUP_DIR + tableName, false,
-					ResultSvcImpl::isComment);
+					ScenarioSvcImpl::isComment);
 			headerList.stream().forEach(header -> fileDataStrBuf.append(header + Constant.NEW_LINE));
 			fileDataStrBuf.append(FilenameUtils.removeExtension(tableName) + Constant.NEW_LINE);
 			fileDataStrBuf.append("Index" + Constant.OLD_DELIMITER + "Option" + Constant.NEW_LINE);

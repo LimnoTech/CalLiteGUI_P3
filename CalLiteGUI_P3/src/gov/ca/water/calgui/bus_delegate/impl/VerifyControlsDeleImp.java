@@ -17,10 +17,10 @@ import org.swixml.SwingEngine;
 
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bus_delegate.IVerifyControlsDele;
-import gov.ca.water.calgui.bus_service.IResultSvc;
+import gov.ca.water.calgui.bus_service.IScenarioSvc;
 import gov.ca.water.calgui.bus_service.ISeedDataSvc;
 import gov.ca.water.calgui.bus_service.IXMLParsingSvc;
-import gov.ca.water.calgui.bus_service.impl.ResultSvcImpl;
+import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.SeedDataSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
@@ -38,7 +38,7 @@ public class VerifyControlsDeleImp implements IVerifyControlsDele {
 	private SwingEngine swingEngine = xmlParsingSvc.getSwingEngine();
 	private ISeedDataSvc seedDataSvc = SeedDataSvcImpl.getSeedDataSvcImplInstance();
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
-	private IResultSvc resultSvc = ResultSvcImpl.getResultSvcImplInstance();
+	private IScenarioSvc scenarioSvc = ScenarioSvcImpl.getScenarioSvcImplInstance();
 
 	@Override
 	public void verifyTheDataBeforeUI(String fileName) {
@@ -101,7 +101,7 @@ public class VerifyControlsDeleImp implements IVerifyControlsDele {
 		List<String> controlStrList = new ArrayList<String>();
 		List<String> dataTableModelStrList = new ArrayList<String>();
 		List<String> regulationoptionsStr = new ArrayList<String>();
-		resultSvc.getCLSData(fileName, controlStrList, dataTableModelStrList, regulationoptionsStr);
+		scenarioSvc.getCLSData(fileName, controlStrList, dataTableModelStrList, regulationoptionsStr);
 		Set<String> guiIds = xmlParsingSvc.getIdFromXML();
 		List<String> conStr = controlStrList.stream().map((key) -> {
 			return key.split(Constant.PIPELINE_DELIMITER)[0];

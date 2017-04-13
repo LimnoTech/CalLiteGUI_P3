@@ -9,7 +9,7 @@ import org.swixml.SwingEngine;
  * 
  * @author Mohan
  */
-public interface IBatchRunSvc {
+public interface IModelRunSvc {
 	/**
 	 * This method will generate the batch file and run it.
 	 *

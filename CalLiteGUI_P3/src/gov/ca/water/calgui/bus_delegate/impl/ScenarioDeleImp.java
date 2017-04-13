@@ -25,10 +25,10 @@ import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.ScenarioDisplayBO;
 import gov.ca.water.calgui.bo.GUILinks2BO;
 import gov.ca.water.calgui.bus_delegate.IScenarioDele;
-import gov.ca.water.calgui.bus_service.IResultSvc;
+import gov.ca.water.calgui.bus_service.IScenarioSvc;
 import gov.ca.water.calgui.bus_service.ISeedDataSvc;
 import gov.ca.water.calgui.bus_service.IXMLParsingSvc;
-import gov.ca.water.calgui.bus_service.impl.ResultSvcImpl;
+import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.SeedDataSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
@@ -43,7 +43,7 @@ import gov.ca.water.calgui.presentation.NumericTextField;
 public class ScenarioDeleImp implements IScenarioDele {
 	private IXMLParsingSvc xmlParsingSvc = XMLParsingSvcImpl.getXMLParsingSvcImplInstance();
 	private SwingEngine swingEngine = xmlParsingSvc.getSwingEngine();
-	private IResultSvc resultSvc = ResultSvcImpl.getResultSvcImplInstance();
+	private IScenarioSvc scenarioSvc = ScenarioSvcImpl.getScenarioSvcImplInstance();
 	private ISeedDataSvc seedDataSvc = SeedDataSvcImpl.getSeedDataSvcImplInstance();
 
 	@Override
@@ -190,7 +190,7 @@ public class ScenarioDeleImp implements IScenarioDele {
 		List<String> dataTableModelStrList = new ArrayList<String>();
 		List<String> regulationoptionsStr = new ArrayList<String>();
 		// Read in the cls file data.
-		resultSvc.getCLSData(Constant.SCENARIOS_DIR + fileName, controlStrList, dataTableModelStrList,
+		scenarioSvc.getCLSData(Constant.SCENARIOS_DIR + fileName, controlStrList, dataTableModelStrList,
 				regulationoptionsStr);
 		// This will build all the component data into list of
 		// ScenarioDisplayBO.
@@ -218,7 +218,7 @@ public class ScenarioDeleImp implements IScenarioDele {
 		String tableName = "";
 		for (String dataTableStr : dataTableModelStrList) {
 			String[] arr = dataTableStr.split(Constant.PIPELINE_DELIMITER);
-			if (resultSvc.isDouble(arr[0])) {
+			if (scenarioSvc.isDouble(arr[0])) {
 				GUILinks2BO gUILinks2BO = tableMap.get(arr[0]);
 				tableName = gUILinks2BO.getDataTables();
 			} else {

@@ -19,7 +19,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
 
-import gov.ca.water.calgui.bus_service.IBatchRunSvc;
+import gov.ca.water.calgui.bus_service.IModelRunSvc;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
@@ -29,17 +29,17 @@ import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
  * 
  * @author Mohan
  */
-public final class BatchRunSvcImpl implements IBatchRunSvc {
+public final class ModelRunSvcImpl implements IModelRunSvc {
 
-	private static final Logger LOG = Logger.getLogger(BatchRunSvcImpl.class.getName());
+	private static final Logger LOG = Logger.getLogger(ModelRunSvcImpl.class.getName());
 	private Properties properties = new Properties();
 	private int wsdiIterations;
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	public static int simultaneousRuns;
 
-	public BatchRunSvcImpl() {
+	public ModelRunSvcImpl() {
 		try {
-			properties.load(BatchRunSvcImpl.class.getClassLoader().getResourceAsStream("callite-gui.properties"));
+			properties.load(ModelRunSvcImpl.class.getClassLoader().getResourceAsStream("callite-gui.properties"));
 			wsdiIterations = Integer.parseInt(properties.getProperty("wsidi.iterations"));
 		} catch (Exception ex) {
 			LOG.error("Problem loading properties. " + ex.getMessage(), ex);
@@ -64,7 +64,7 @@ public final class BatchRunSvcImpl implements IBatchRunSvc {
 		// delete previous generated batch file
 		deleteBatchFile();
 		if (isWsidi) {
-			if (scenarioNamesList.size() > 1) {
+			if (scenarioNamesList.size() > 1) { 
 				JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
 						"WSIDI generation only allowed for a single hydroclimate realization.");
 			} else {

@@ -10,11 +10,12 @@ import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.GUILinks2BO;
 
 /**
- * This is the interface for handling the cls file and saving the data.
+ * This is the interface for handling the cls file and run directory for CalLite
+ * scenarios.
  *
  * @author Mohan
  */
-public interface IResultSvc {
+public interface IScenarioSvc {
 
 	/**
 	 * This will open the cls file and build the following list of strings.

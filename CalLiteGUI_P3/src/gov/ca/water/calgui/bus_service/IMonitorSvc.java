@@ -23,7 +23,7 @@ public interface IMonitorSvc {
 	 *            Just the scenario name.
 	 * @return Will return the string to be displayed.
 	 */
-	public String batchRun(String scenarioName);
+	public String runModel(String scenarioName);
 
 	/**
 	 * This method will return the status of the batch run process for WSIDI.
@@ -32,5 +32,5 @@ public interface IMonitorSvc {
 	 *            Just the scenario name.
 	 * @return Will return the string to be displayed.
 	 */
-	public String batchRunWsidi(String scenarioName);
+	public String runWSIDI(String scenarioName);
 }
