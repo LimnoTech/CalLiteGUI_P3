@@ -10,8 +10,6 @@ import org.apache.log4j.Logger;
 
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
-import gov.ca.water.calgui.results.RBListItem;
-import gov.ca.water.calgui.results.ResultUtils;
 import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
 
@@ -94,25 +92,25 @@ public class DSSGrabber2BO extends DSSGrabber1BO {
 		} else if (locationName.startsWith("SchVw")) {
 			// Schematic view uses Table5 in mainMenu; this should be combined
 			// with GUI_Links3 table
-			for (int i = 0; i < ResultUtils.getXMLParsingSvcImplInstance(null).getLookups5Length(); i++) {
+			for (int i = 0; i < ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups5Length(); i++) {
 				if (locationName.toUpperCase()
-						.endsWith(ResultUtils.getXMLParsingSvcImplInstance(null).getLookups5(i, 0))) {
-					primaryDSSName = ResultUtils.getXMLParsingSvcImplInstance(null).getLookups5(i, 1);
-					secondaryDSSName = ResultUtils.getXMLParsingSvcImplInstance(null).getLookups5(i, 2);
-					yLabel = ResultUtils.getXMLParsingSvcImplInstance(null).getLookups5(i, 3);
-					title = ResultUtils.getXMLParsingSvcImplInstance(null).getLookups5(i, 4);
-					sLabel = ResultUtils.getXMLParsingSvcImplInstance(null).getLookups5(i, 5);
+						.endsWith(ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups5(i, 0))) {
+					primaryDSSName = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups5(i, 1);
+					secondaryDSSName = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups5(i, 2);
+					yLabel = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups5(i, 3);
+					title = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups5(i, 4);
+					sLabel = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups5(i, 5);
 				}
 			}
 		} else
 
-			for (int i = 0; i < ResultUtils.getXMLParsingSvcImplInstance(null).getLookupsLength(); i++) {
-				if (locationName.endsWith(ResultUtils.getXMLParsingSvcImplInstance(null).getLookups(i, 0))) {
-					primaryDSSName = ResultUtils.getXMLParsingSvcImplInstance(null).getLookups(i, 1);
-					secondaryDSSName = ResultUtils.getXMLParsingSvcImplInstance(null).getLookups(i, 2);
-					yLabel = ResultUtils.getXMLParsingSvcImplInstance(null).getLookups(i, 3);
-					title = ResultUtils.getXMLParsingSvcImplInstance(null).getLookups(i, 4);
-					sLabel = ResultUtils.getXMLParsingSvcImplInstance(null).getLookups(i, 5);
+			for (int i = 0; i < ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookupsLength(); i++) {
+				if (locationName.endsWith(ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups(i, 0))) {
+					primaryDSSName = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups(i, 1);
+					secondaryDSSName = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups(i, 2);
+					yLabel = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups(i, 3);
+					title = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups(i, 4);
+					sLabel = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups(i, 5);
 				}
 			}
 	}
@@ -186,7 +184,7 @@ public class DSSGrabber2BO extends DSSGrabber1BO {
 							break;
 						}
 					} else
-						scenarioName = ((RBListItem) lstScenarios.getModel().getElementAt(i)).toString();
+						scenarioName = ((RBListItemBO) lstScenarios.getModel().getElementAt(i)).toString();
 					if (!baseName.equals(scenarioName)) {
 						j = j + 1;
 						results[j] = getOneSeries_WRIMS(scenarioName, primaryDSSName, dts);
@@ -243,7 +241,7 @@ public class DSSGrabber2BO extends DSSGrabber1BO {
 						break;
 					}
 				} else
-					scenarioName = ((RBListItem) lstScenarios.getModel().getElementAt(i)).toString();
+					scenarioName = ((RBListItemBO) lstScenarios.getModel().getElementAt(i)).toString();
 				if (!baseName.equals(scenarioName)) {
 					j = j + 1;
 					results[j] = getOneSeries_WRIMS(scenarioName, mtsI, mts);
@@ -263,7 +261,7 @@ public class DSSGrabber2BO extends DSSGrabber1BO {
 			TimeSeriesContainer interimResult;
 			if (!((String) dtsNames.get(i)).isEmpty()) {
 				// Operand is reference to another DTS
-				DerivedTimeSeries adt = ResultUtils.getXMLParsingSvcImplInstance(null).getProject()
+				DerivedTimeSeries adt = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getProject()
 						.getDTS((String) dtsNames.get(i));
 				System.out.println((String) dtsNames.get(i) + ":" + adt.getName());
 				interimResult = getOneSeries_WRIMS(dssFilename, dssName, adt);
@@ -345,7 +343,7 @@ public class DSSGrabber2BO extends DSSGrabber1BO {
 		TimeSeriesContainer result = null;
 		if (!mts2.getDTSNameAt(i).equals("")) {
 			// Operand is reference to a DTS
-			DerivedTimeSeries adt = ResultUtils.getXMLParsingSvcImplInstance(null).getProject()
+			DerivedTimeSeries adt = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getProject()
 					.getDTS(mts.getDTSNameAt(i));
 			result = getOneSeries_WRIMS(dssFilename, "", adt);
 			primaryDSSName = mts.getDTSNameAt(i);

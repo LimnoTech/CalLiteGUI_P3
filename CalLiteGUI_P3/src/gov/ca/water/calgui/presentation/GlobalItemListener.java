@@ -16,6 +16,7 @@ import javax.swing.JRadioButton;
 import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
 
+import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
 import gov.ca.water.calgui.bus_delegate.impl.ApplyDynamicConDeleImp;
 import gov.ca.water.calgui.bus_service.IDynamicControlSvc;
@@ -24,7 +25,6 @@ import gov.ca.water.calgui.bus_service.impl.DynamicControlSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.results.ResultUtils;
 import gov.ca.water.calgui.tech_service.IAuditSvc;
 import gov.ca.water.calgui.tech_service.impl.AuditSvcImpl;
 
@@ -77,7 +77,7 @@ public class GlobalItemListener implements ItemListener {
 				// } else
 				if (itemName.startsWith("RepckbSummaryTable")) {
 					JPanel controls3 = (JPanel) swingEngine.find("controls3");
-					ResultUtils.getXMLParsingSvcImplInstance(null).toggleEnComponentAndChildren(controls3,
+					ResultUtilsBO.getXMLParsingSvcImplInstance(null).toggleEnComponentAndChildren(controls3,
 							ie.getStateChange() == ItemEvent.SELECTED);
 				}
 

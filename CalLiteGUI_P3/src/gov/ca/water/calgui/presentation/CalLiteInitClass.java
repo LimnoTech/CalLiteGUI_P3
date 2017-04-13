@@ -52,7 +52,9 @@ import calsim.app.MultipleTimeSeries;
 import calsim.gui.GuiUtils;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
+import gov.ca.water.calgui.bo.FileDialogBO;
 import gov.ca.water.calgui.bo.GUILinks2BO;
+import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.bus_delegate.IAllButtonsDele;
 import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
 import gov.ca.water.calgui.bus_delegate.IVerifyControlsDele;
@@ -71,8 +73,6 @@ import gov.ca.water.calgui.bus_service.impl.TableSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.results.DisplayFrame;
-import gov.ca.water.calgui.results.FileDialog;
-import gov.ca.water.calgui.results.ResultUtils;
 import gov.ca.water.calgui.results.SchematicMain;
 import gov.ca.water.calgui.results.WRIMSGUILinks;
 import gov.ca.water.calgui.tech_service.IAuditSvc;
@@ -157,15 +157,15 @@ public class CalLiteInitClass {
 		((JLabel) swingEngine.find("run_lblThreadsInfo"))
 				.setText("Simultaneous runs " + ((maxThreads > 1) ? "(1-" + maxThreads + ")" : "(1)"));
 		// For Result part.
-		ResultUtils resultUtils = ResultUtils.getXMLParsingSvcImplInstance(swingEngine);
+		ResultUtilsBO resultUtilsBO = ResultUtilsBO.getXMLParsingSvcImplInstance(swingEngine);
 		// setCheckBoxorMouseListener(swingEngine.find("Reporting"), );
 		// Setup for Reporting page
 		// Set up additional UI elements
 		JList<?> lstScenarios = (JList<?>) swingEngine.find("SelectedList");
 		JRadioButton rdb1 = (JRadioButton) swingEngine.find("rdbp001");
 		JRadioButton rdb2 = (JRadioButton) swingEngine.find("rdbp002");
-		FileDialog fdDSSFiles = new FileDialog(lstScenarios, (JLabel) swingEngine.find("lblBase"), rdb1, rdb2, true);
-		resultUtils.setFdDSSFiles(fdDSSFiles);
+		FileDialogBO fdDSSFiles = new FileDialogBO(lstScenarios, (JLabel) swingEngine.find("lblBase"), rdb1, rdb2, true);
+		resultUtilsBO.setFdDSSFiles(fdDSSFiles);
 		lstScenarios.setModel(fdDSSFiles.lmScenNames);
 		lstScenarios.setBorder(new LineBorder(Color.gray, 1));
 		JButton btnScenario = (JButton) swingEngine.find("btnAddScenario");
@@ -176,14 +176,14 @@ public class CalLiteInitClass {
 		btnClearAll.addActionListener(fdDSSFiles);
 		// Set up month spinners
 		JSpinner spnSM = (JSpinner) swingEngine.find("spnStartMonth");
-		ResultUtils.SetMonthModelAndIndex(spnSM, 9, resultUtils, true);
+		ResultUtilsBO.SetMonthModelAndIndex(spnSM, 9, resultUtilsBO, true);
 		JSpinner spnEM = (JSpinner) swingEngine.find("spnEndMonth");
-		ResultUtils.SetMonthModelAndIndex(spnEM, 8, resultUtils, true);
+		ResultUtilsBO.SetMonthModelAndIndex(spnEM, 8, resultUtilsBO, true);
 		// Set up year spinners
 		JSpinner spnSY = (JSpinner) swingEngine.find("spnStartYear");
-		ResultUtils.SetNumberModelAndIndex(spnSY, 1921, 1921, 2003, 1, "####", resultUtils, true);
+		ResultUtilsBO.SetNumberModelAndIndex(spnSY, 1921, 1921, 2003, 1, "####", resultUtilsBO, true);
 		JSpinner spnEY = (JSpinner) swingEngine.find("spnEndYear");
-		ResultUtils.SetNumberModelAndIndex(spnEY, 2003, 1921, 2003, 1, "####", resultUtils, true);
+		ResultUtilsBO.SetNumberModelAndIndex(spnEY, 2003, 1921, 2003, 1, "####", resultUtilsBO, true);
 		// Set up report list
 		JList<?> lstReports = (JList<?>) swingEngine.find("lstReports");
 		lstReports.setBorder(new LineBorder(Color.gray, 1));
@@ -218,13 +218,13 @@ public class CalLiteInitClass {
 		}
 		// PDF Report
 		((JButton) swingEngine.find("btnGetTemplateFile"))
-				.addActionListener(new FileDialog(null, (JTextField) swingEngine.find("tfTemplateFILE"), "inp"));
+				.addActionListener(new FileDialogBO(null, (JTextField) swingEngine.find("tfTemplateFILE"), "inp"));
 		((JButton) swingEngine.find("btnGetReportFile1"))
-				.addActionListener(new FileDialog(null, (JTextField) swingEngine.find("tfReportFILE1")));
+				.addActionListener(new FileDialogBO(null, (JTextField) swingEngine.find("tfReportFILE1")));
 		((JButton) swingEngine.find("btnGetReportFile2"))
-				.addActionListener(new FileDialog(null, (JTextField) swingEngine.find("tfReportFILE2")));
+				.addActionListener(new FileDialogBO(null, (JTextField) swingEngine.find("tfReportFILE2")));
 		((JButton) swingEngine.find("btnGetReportFile3"))
-				.addActionListener(new FileDialog(null, (JTextField) swingEngine.find("tfReportFILE3"), "PDF"));
+				.addActionListener(new FileDialogBO(null, (JTextField) swingEngine.find("tfReportFILE3"), "PDF"));
 		// Schematic views
 		new SchematicMain((JPanel) swingEngine.find("schematic_holder"),
 				"file:///" + System.getProperty("user.dir") + "/Config/callite_merged.svg", swingEngine, 1.19, 0.0, 0.0,
@@ -242,7 +242,7 @@ public class CalLiteInitClass {
 		jTabbedPane.setBackgroundAt(7, Color.WHITE);
 		jTabbedPane.setBackgroundAt(8, Color.WHITE);
 		jTabbedPane.setBackgroundAt(9, Color.WHITE);
-		jTabbedPane.addChangeListener(resultUtils);
+		jTabbedPane.addChangeListener(resultUtilsBO);
 		JMenuBar menuBar = (JMenuBar) this.swingEngine.find("menu");
 		((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME)).setJMenuBar(menuBar);
 		menuBar.setVisible(true);

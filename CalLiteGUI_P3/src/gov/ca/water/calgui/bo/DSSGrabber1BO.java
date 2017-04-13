@@ -15,8 +15,6 @@ import javax.swing.JOptionPane;
 import org.apache.log4j.Logger;
 
 import calsim.app.Project;
-import gov.ca.water.calgui.results.RBListItem;
-import gov.ca.water.calgui.results.ResultUtils;
 import hec.heclib.dss.HecDss;
 import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
@@ -74,7 +72,7 @@ public class DSSGrabber1BO {
 	protected double[][] annualCFSs;
 	protected double[][] annualCFSsDiff;
 
-	protected Project project = ResultUtils.getXMLParsingSvcImplInstance(null).getProject();
+	protected Project project = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getProject();
 
 	public DSSGrabber1BO(JList list) {
 
@@ -107,13 +105,13 @@ public class DSSGrabber1BO {
 		try {
 			HecTime ht = new HecTime();
 
-			int m = ResultUtils.getXMLParsingSvcImplInstance(null).monthToInt(dateRange.substring(0, 3));
+			int m = ResultUtilsBO.getXMLParsingSvcImplInstance(null).monthToInt(dateRange.substring(0, 3));
 			int y = new Integer(dateRange.substring(3, 7));
 			ht.setYearMonthDay(m == 12 ? y + 1 : y, m == 12 ? 1 : m + 1, 1, 0);
 			startTime = ht.value();
 			startWY = (m < 10) ? y : y + 1; // Water year
 
-			m = ResultUtils.getXMLParsingSvcImplInstance(null).monthToInt(dateRange.substring(8, 11));
+			m = ResultUtilsBO.getXMLParsingSvcImplInstance(null).monthToInt(dateRange.substring(8, 11));
 			y = new Integer(dateRange.substring(11, 15));
 			ht.setYearMonthDay(m == 12 ? y + 1 : y, m == 12 ? 1 : m + 1, 1, 0);
 			endTime = ht.value();
@@ -191,25 +189,25 @@ public class DSSGrabber1BO {
 		} else if (locationName.startsWith("SchVw")) {
 			// Schematic view uses Table5 in mainMenu; this should be combined
 			// with GUI_Links3 table
-			for (int i = 0; i < ResultUtils.getXMLParsingSvcImplInstance(null).getLookups5Length(); i++) {
+			for (int i = 0; i < ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups5Length(); i++) {
 				if (locationName.toUpperCase()
-						.endsWith(ResultUtils.getXMLParsingSvcImplInstance(null).getLookups5(i, 0))) {
-					primaryDSSName = ResultUtils.getXMLParsingSvcImplInstance(null).getLookups5(i, 1);
-					secondaryDSSName = ResultUtils.getXMLParsingSvcImplInstance(null).getLookups5(i, 2);
-					yLabel = ResultUtils.getXMLParsingSvcImplInstance(null).getLookups5(i, 3);
-					title = ResultUtils.getXMLParsingSvcImplInstance(null).getLookups5(i, 4);
-					sLabel = ResultUtils.getXMLParsingSvcImplInstance(null).getLookups5(i, 5);
+						.endsWith(ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups5(i, 0))) {
+					primaryDSSName = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups5(i, 1);
+					secondaryDSSName = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups5(i, 2);
+					yLabel = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups5(i, 3);
+					title = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups5(i, 4);
+					sLabel = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups5(i, 5);
 				}
 			}
 		} else
 
-			for (int i = 0; i < ResultUtils.getXMLParsingSvcImplInstance(null).getLookupsLength(); i++) {
-				if (locationName.endsWith(ResultUtils.getXMLParsingSvcImplInstance(null).getLookups(i, 0))) {
-					primaryDSSName = ResultUtils.getXMLParsingSvcImplInstance(null).getLookups(i, 1);
-					secondaryDSSName = ResultUtils.getXMLParsingSvcImplInstance(null).getLookups(i, 2);
-					yLabel = ResultUtils.getXMLParsingSvcImplInstance(null).getLookups(i, 3);
-					title = ResultUtils.getXMLParsingSvcImplInstance(null).getLookups(i, 4);
-					sLabel = ResultUtils.getXMLParsingSvcImplInstance(null).getLookups(i, 5);
+			for (int i = 0; i < ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookupsLength(); i++) {
+				if (locationName.endsWith(ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups(i, 0))) {
+					primaryDSSName = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups(i, 1);
+					secondaryDSSName = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups(i, 2);
+					yLabel = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups(i, 3);
+					title = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups(i, 4);
+					sLabel = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups(i, 5);
 				}
 			}
 	}
@@ -662,7 +660,7 @@ public class DSSGrabber1BO {
 							break;
 						}
 					} else
-						scenarioName = ((RBListItem) lstScenarios.getModel().getElementAt(i)).toString();
+						scenarioName = ((RBListItemBO) lstScenarios.getModel().getElementAt(i)).toString();
 					if (!baseName.equals(scenarioName)) {
 						j = j + 1;
 						results[j] = getOneSeries(scenarioName, primaryDSSName);
@@ -698,7 +696,7 @@ public class DSSGrabber1BO {
 			for (int i = 0; i < scenarios; i++) {
 				// String scenarioName = (String)
 				// lstScenarios.getModel().getElementAt(i);
-				String scenarioName = ((RBListItem) lstScenarios.getModel().getElementAt(i)).toString();
+				String scenarioName = ((RBListItemBO) lstScenarios.getModel().getElementAt(i)).toString();
 
 				if (!baseName.equals(scenarioName)) {
 					j = j + 1;

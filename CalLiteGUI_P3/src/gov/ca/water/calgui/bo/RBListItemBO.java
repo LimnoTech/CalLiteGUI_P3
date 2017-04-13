@@ -1,4 +1,4 @@
-package gov.ca.water.calgui.results;
+package gov.ca.water.calgui.bo;
 
 /**
  * RBListItem is a helper for the FileDialog class. It holds DV and SV path information and selection (base) status of scenarios
@@ -7,14 +7,14 @@ package gov.ca.water.calgui.results;
  * @author tslawecki
  * 
  */
-public class RBListItem {
+public class RBListItemBO {
 
 	private final String label;
 	private final String fullname;
 	private boolean isSelected = false;
 	private String svFilename;
 
-	public RBListItem(String label, String label2) {
+	public RBListItemBO(String label, String label2) {
 		this.label = label2;
 		this.fullname = label;
 		this.svFilename = "";

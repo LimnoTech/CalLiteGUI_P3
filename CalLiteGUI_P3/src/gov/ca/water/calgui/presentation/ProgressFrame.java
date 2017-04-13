@@ -30,19 +30,19 @@ import org.swixml.SwingEngine;
 
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
+import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.bus_delegate.IAllButtonsDele;
 import gov.ca.water.calgui.bus_delegate.impl.AllButtonsDeleImp;
 import gov.ca.water.calgui.bus_service.IDynamicControlSvc;
 import gov.ca.water.calgui.bus_service.IMonitorSvc;
-import gov.ca.water.calgui.bus_service.IResultSvc;
+import gov.ca.water.calgui.bus_service.IScenarioSvc;
 import gov.ca.water.calgui.bus_service.ITableSvc;
 import gov.ca.water.calgui.bus_service.impl.DynamicControlSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.MonitorSvcImpl;
-import gov.ca.water.calgui.bus_service.impl.ResultSvcImpl;
+import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.TableSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.results.ResultUtils;
 
 /**
  * This frame is used for displaying updated status during long-duration
@@ -61,7 +61,7 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 	private Map<String, String> scenarioNamesAndAction;
 	private IMonitorSvc monitorSvc = new MonitorSvcImpl();
 	private ITableSvc tableSvc = TableSvcImpl.getTableSvcImplInstance(null);
-	private IResultSvc resultSvc = ResultSvcImpl.getResultSvcImplInstance();
+	private IScenarioSvc scenarioSvc = ScenarioSvcImpl.getScenarioSvcImplInstance();
 	private IAllButtonsDele allButtonsDele = new AllButtonsDeleImp();
 	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
 	private IDynamicControlSvc dynamicControlSvc = DynamicControlSvcImpl.getDynamicControlSvcImplInstance();
@@ -97,18 +97,18 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 							}
 							break;
 						case Constant.BATCH_RUN:
-							text = monitorSvc.batchRun(scenarioName);
+							text = monitorSvc.runModel(scenarioName);
 							data.add(text);
 							if (text.toLowerCase().endsWith("Run completed".toLowerCase())) {
 								LOG.info(text);
-								ResultUtils.getXMLParsingSvcImplInstance(null).getFdDSSFiles()
+								ResultUtilsBO.getXMLParsingSvcImplInstance(null).getFdDSSFiles()
 										.addFileToList(new File(Constant.SCENARIOS_DIR + scenarioName + "_DV.DSS"));
 								sleepAfterDisplay = true;
 								scenarioNamesAndAction.remove(scenarioName);
 							}
 							break;
 						case Constant.BATCH_RUN_WSIDI:
-							text = monitorSvc.batchRunWsidi(scenarioName);
+							text = monitorSvc.runWSIDI(scenarioName);
 							data.add(text);
 							if (text.toLowerCase()
 									.endsWith("(wsidi iteration " + properties.getProperty("wsidi.iterations") + "/"
@@ -116,7 +116,7 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 											+ ")  - DONE - run completed".toLowerCase())) {
 								sleepAfterDisplay = true;
 								loadGeneratedWSIDI(scenarioName);
-								ResultUtils.getXMLParsingSvcImplInstance(null).getFdDSSFiles()
+								ResultUtilsBO.getXMLParsingSvcImplInstance(null).getFdDSSFiles()
 										.addFileToList(new File(Constant.SCENARIOS_DIR + scenarioName + "_DV.DSS"));
 								scenarioNamesAndAction.remove(scenarioName);
 							}
@@ -329,8 +329,8 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 			cvpDtm.setCellEditable(true);
 			cvpDtm.setTableName(Constant.CVP_START_FILENAME);
 			cvpDtm.setSwingEngine(swingEngine);
-			resultSvc.addUserDefinedTable(Constant.SWP_START_FILENAME, swpDtm);
-			resultSvc.addUserDefinedTable(Constant.CVP_START_FILENAME, cvpDtm);
+			scenarioSvc.addUserDefinedTable(Constant.SWP_START_FILENAME, swpDtm);
+			scenarioSvc.addUserDefinedTable(Constant.CVP_START_FILENAME, cvpDtm);
 			/*
 			 * The following code we are sedtting the SWP and CVP file names as
 			 * user defined because the table values we are getting after the

@@ -25,6 +25,8 @@ import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
 import gov.ca.water.calgui.bo.DSSGrabber1BO;
 import gov.ca.water.calgui.bo.DSSGrabber2BO;
+import gov.ca.water.calgui.bo.RBListItemBO;
+import gov.ca.water.calgui.bo.ResultUtilsBO;
 import hec.io.TimeSeriesContainer;
 
 /**
@@ -39,7 +41,7 @@ public class DisplayFrame {
 	private static int displayDeltaY = 20;
 	private static int displayDeltaX = 200;
 
-	private static SwingEngine swix = ResultUtils.getXMLParsingSvcImplInstance(null).getSwix();
+	private static SwingEngine swix = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getSwix();
 
 	/**
 	 *
@@ -121,7 +123,7 @@ public class DisplayFrame {
 			dssGrabber.setBase(filename);
 		else
 			for (int i = 0; i < lstScenarios.getModel().getSize(); i++) {
-				RBListItem item = (RBListItem) lstScenarios.getModel().getElementAt(i);
+				RBListItemBO item = (RBListItemBO) lstScenarios.getModel().getElementAt(i);
 				if (item.isSelected())
 					dssGrabber.setBase(item.toString());
 			}
@@ -199,14 +201,14 @@ public class DisplayFrame {
 				JSpinner m = (JSpinner) swix.find("spnStartMonth");
 				JSpinner y = (JSpinner) swix.find("spnStartYear");
 				lower.setTime(
-						(new Month(ResultUtils.getXMLParsingSvcImplInstance(null).monthToInt((String) m.getValue()),
+						(new Month(ResultUtilsBO.getXMLParsingSvcImplInstance(null).monthToInt((String) m.getValue()),
 								(Integer) y.getValue())).getFirstMillisecond());
 
 				Date upper = new Date();
 				m = (JSpinner) swix.find("spnEndMonth");
 				y = (JSpinner) swix.find("spnEndYear");
 				upper.setTime(
-						(new Month(ResultUtils.getXMLParsingSvcImplInstance(null).monthToInt((String) m.getValue()),
+						(new Month(ResultUtilsBO.getXMLParsingSvcImplInstance(null).monthToInt((String) m.getValue()),
 								(Integer) y.getValue()).getLastMillisecond()));
 
 				ChartPanel1 cp3;
@@ -545,7 +547,7 @@ public class DisplayFrame {
 			dssGrabber.setBase(filename);
 		else
 			for (int i = 0; i < lstScenarios.getModel().getSize(); i++) {
-				RBListItem item = (RBListItem) lstScenarios.getModel().getElementAt(i);
+				RBListItemBO item = (RBListItemBO) lstScenarios.getModel().getElementAt(i);
 				if (item.isSelected())
 					dssGrabber.setBase(item.toString());
 			}
@@ -555,13 +557,13 @@ public class DisplayFrame {
 		Date lower = new Date();
 		JSpinner m = (JSpinner) swix.find("spnStartMonth");
 		JSpinner y = (JSpinner) swix.find("spnStartYear");
-		lower.setTime((new Month(ResultUtils.getXMLParsingSvcImplInstance(null).monthToInt((String) m.getValue()),
+		lower.setTime((new Month(ResultUtilsBO.getXMLParsingSvcImplInstance(null).monthToInt((String) m.getValue()),
 				(Integer) y.getValue())).getFirstMillisecond());
 
 		Date upper = new Date();
 		m = (JSpinner) swix.find("spnEndMonth");
 		y = (JSpinner) swix.find("spnEndYear");
-		upper.setTime((new Month(ResultUtils.getXMLParsingSvcImplInstance(null).monthToInt((String) m.getValue()),
+		upper.setTime((new Month(ResultUtilsBO.getXMLParsingSvcImplInstance(null).monthToInt((String) m.getValue()),
 				(Integer) y.getValue()).getLastMillisecond()));
 
 		if (mts != null) {

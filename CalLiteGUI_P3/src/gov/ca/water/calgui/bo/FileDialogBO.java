@@ -1,4 +1,4 @@
-package gov.ca.water.calgui.results;
+package gov.ca.water.calgui.bo;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -29,6 +29,8 @@ import javax.swing.event.ListDataListener;
 
 import org.apache.log4j.Logger;
 
+import gov.ca.water.calgui.results.WRIMSGUILinks;
+
 /**
  * Supports selection of different types of CalLite files from customized
  * JFileChoosers.
@@ -37,7 +39,7 @@ import org.apache.log4j.Logger;
  *
  *
  */
-public class FileDialog implements ActionListener {
+public class FileDialogBO implements ActionListener {
 
 	public DefaultListModel lmScenNames;
 	public JFileChooser fc = new JFileChooser2();
@@ -51,7 +53,7 @@ public class FileDialog implements ActionListener {
 	JRadioButton rdbopt1;
 	JRadioButton rdbopt2;
 
-	private static Logger log = Logger.getLogger(FileDialog.class.getName());
+	private static Logger log = Logger.getLogger(FileDialogBO.class.getName());
 
 	/**
 	 * Basic constructor for use with DSS files. Result is appended to aList.
@@ -62,7 +64,7 @@ public class FileDialog implements ActionListener {
 	 *            - not currently used
 	 *
 	 */
-	public FileDialog(JList aList, JLabel aLabel) {
+	public FileDialogBO(JList aList, JLabel aLabel) {
 		theLabel = aLabel;
 		theFileExt = "DSS";
 		theTextField = null;
@@ -76,7 +78,7 @@ public class FileDialog implements ActionListener {
 	 * @param aList
 	 * @param aTextField
 	 */
-	public FileDialog(JList aList, JTextField aTextField) {
+	public FileDialogBO(JList aList, JTextField aTextField) {
 		theLabel = null;
 		theFileExt = "DSS";
 		theTextField = aTextField;
@@ -91,7 +93,7 @@ public class FileDialog implements ActionListener {
 	 * @param aTextField
 	 * @param aFileExt
 	 */
-	public FileDialog(JList aList, JTextField aTextField, String aFileExt) {
+	public FileDialogBO(JList aList, JTextField aTextField, String aFileExt) {
 		theLabel = null;
 		theTextField = aTextField;
 		theFileExt = aFileExt;
@@ -107,7 +109,7 @@ public class FileDialog implements ActionListener {
 	 * @param aFileExt
 	 * @param isMultiple
 	 */
-	public FileDialog(JList aList, JTextField aTextField, String aFileExt, boolean isMultiple) {
+	public FileDialogBO(JList aList, JTextField aTextField, String aFileExt, boolean isMultiple) {
 		theLabel = null;
 		theTextField = aTextField;
 		theFileExt = aFileExt;
@@ -124,7 +126,7 @@ public class FileDialog implements ActionListener {
 	 * @param rdb1
 	 * @param rdb2
 	 */
-	public FileDialog(JList aList, JLabel aLabel, JRadioButton rdb1, JRadioButton rdb2, boolean isMultiple) {
+	public FileDialogBO(JList aList, JLabel aLabel, JRadioButton rdb1, JRadioButton rdb2, boolean isMultiple) {
 		theLabel = aLabel;
 		theFileExt = "DSS";
 		theTextField = null;
@@ -186,7 +188,7 @@ public class FileDialog implements ActionListener {
 						// Toggle selected state
 
 						for (int i = 0; i < list.getModel().getSize(); i++) {
-							RBListItem item = (RBListItem) list.getModel().getElementAt(i);
+							RBListItemBO item = (RBListItemBO) list.getModel().getElementAt(i);
 							if (i == index) {
 								item.setSelected(true);
 								list.repaint(list.getCellBounds(i, i));
@@ -253,12 +255,12 @@ public class FileDialog implements ActionListener {
 			if ((theList != null) && lmScenNames.getSize() > 0) {
 				int todel = -1;
 				for (int i = 0; i < lmScenNames.getSize(); i++)
-					if (((RBListItem) lmScenNames.getElementAt(i)).isSelected())
+					if (((RBListItemBO) lmScenNames.getElementAt(i)).isSelected())
 						todel = i;
 				if (todel > 0)
-					((RBListItem) lmScenNames.getElementAt(todel - 1)).setSelected(true);
+					((RBListItemBO) lmScenNames.getElementAt(todel - 1)).setSelected(true);
 				else if (todel < lmScenNames.getSize() - 1)
-					((RBListItem) lmScenNames.getElementAt(todel + 1)).setSelected(true);
+					((RBListItemBO) lmScenNames.getElementAt(todel + 1)).setSelected(true);
 				lmScenNames.remove(todel);
 			}
 		} else if (e.getActionCommand().equals("btnClearScenario")) {
@@ -316,7 +318,7 @@ public class FileDialog implements ActionListener {
 	public void addFileToList(File file) {
 		boolean match = false;
 		for (int i = 0; i < lmScenNames.getSize(); i++) {
-			RBListItem rbli = (RBListItem) lmScenNames.getElementAt(i);
+			RBListItemBO rbli = (RBListItemBO) lmScenNames.getElementAt(i);
 			match = match | (rbli.toString().equals(file.getPath()));
 		}
 
@@ -330,9 +332,9 @@ public class FileDialog implements ActionListener {
 			// "Alert", JOptionPane.ERROR_MESSAGE);
 			;
 		else {
-			lmScenNames.addElement(new RBListItem(file.getPath(), file.getName()));
+			lmScenNames.addElement(new RBListItemBO(file.getPath(), file.getName()));
 			if (lmScenNames.getSize() == 1)
-				((RBListItem) lmScenNames.getElementAt(0)).setSelected(true);
+				((RBListItemBO) lmScenNames.getElementAt(0)).setSelected(true);
 			theList.ensureIndexIsVisible(lmScenNames.getSize() - 1);
 			theList.revalidate();
 			theList.validate();
@@ -450,12 +452,12 @@ public class FileDialog implements ActionListener {
 		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
 				boolean hasFocus) {
 			setEnabled(list.isEnabled());
-			setSelected(((RBListItem) value).isSelected());
+			setSelected(((RBListItemBO) value).isSelected());
 			setFont(list.getFont());
 			setBackground(list.getBackground());
 			setForeground(list.getForeground());
-			setText(((RBListItem) value).toString2());
-			this.setToolTipText(value.toString() + " 	\n" + ((RBListItem) value).getSVFilename());
+			setText(((RBListItemBO) value).toString2());
+			this.setToolTipText(value.toString() + " 	\n" + ((RBListItemBO) value).getSVFilename());
 			return this;
 		}
 	}

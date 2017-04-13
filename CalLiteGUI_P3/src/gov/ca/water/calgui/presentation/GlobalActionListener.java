@@ -43,6 +43,7 @@ import calsim.gui.DtsTreeModel;
 import calsim.gui.DtsTreePanel;
 import calsim.gui.GuiUtils;
 import gov.ca.water.calgui.bo.DataTableModel;
+import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.bus_delegate.IAllButtonsDele;
 import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
 import gov.ca.water.calgui.bus_delegate.IScenarioDele;
@@ -62,7 +63,6 @@ import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.results.ControlFrame;
 import gov.ca.water.calgui.results.DisplayFrame;
 import gov.ca.water.calgui.results.Report;
-import gov.ca.water.calgui.results.ResultUtils;
 import gov.ca.water.calgui.tech_service.IAuditSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.AuditSvcImpl;
@@ -223,22 +223,22 @@ public class GlobalActionListener implements ActionListener {
 		// From Custom Results dashboard
 
 		case "AC_Controls":
-			ControlFrame cf = ResultUtils.getXMLParsingSvcImplInstance(null).getControlFrame();
+			ControlFrame cf = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getControlFrame();
 			cf.display();
 			if (cf.getExtendedState() == JFrame.ICONIFIED)
 				cf.setExtendedState(JFrame.NORMAL);
 			break;
 
 		case "CR_LoadList":
-			ResultUtils.getXMLParsingSvcImplInstance(null).readCGR();
+			ResultUtilsBO.getXMLParsingSvcImplInstance(null).readCGR();
 			break;
 
 		case "CR_SaveList":
-			ResultUtils.getXMLParsingSvcImplInstance(null).writeCGR();
+			ResultUtilsBO.getXMLParsingSvcImplInstance(null).writeCGR();
 			break;
 
 		case "CR_ClearTree":
-			Project p = ResultUtils.getXMLParsingSvcImplInstance(null).getProject();
+			Project p = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getProject();
 			p.clearMTSList();
 			p.clearDTSList();
 			DtsTreePanel dtp = GuiUtils.getCLGPanel().getDtsTreePanel();
@@ -284,10 +284,10 @@ public class GlobalActionListener implements ActionListener {
 			lstReports.setListData(new String[0]);
 			break;
 		case "Rep_LoadList":
-			ResultUtils.getXMLParsingSvcImplInstance(null).readCGR();
+			ResultUtilsBO.getXMLParsingSvcImplInstance(null).readCGR();
 			break;
 		case "Rep_SaveList":
-			ResultUtils.getXMLParsingSvcImplInstance(null).writeCGR();
+			ResultUtilsBO.getXMLParsingSvcImplInstance(null).writeCGR();
 			break;
 		case "Rep_DispAll":
 			if (lstScenarios.getModel().getSize() == 0) {

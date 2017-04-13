@@ -22,6 +22,8 @@ import calsim.app.AppUtils;
 import calsim.app.Project;
 import calsim.gui.CalLiteGUIPanelWrapper;
 import calsim.gui.GuiUtils;
+import gov.ca.water.calgui.bo.RBListItemBO;
+import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.constant.Constant;
 
 /**
@@ -55,7 +57,7 @@ public class WRIMSGUILinks {
 		p.setSize(900, 650);
 
 		CalLiteGUIPanelWrapper pw = new CalLiteGUIPanelWrapper(
-				(JFrame) ResultUtils.getXMLParsingSvcImplInstance(null).getSwix().find(Constant.MAIN_FRAME_NAME));
+				(JFrame) ResultUtilsBO.getXMLParsingSvcImplInstance(null).getSwix().find(Constant.MAIN_FRAME_NAME));
 		pw.getPanel().setSize(900, 650);
 		p.add(pw.getPanel(), BorderLayout.NORTH);
 		JPanel statusPanel = GuiUtils.getStatusPanel();
@@ -72,7 +74,7 @@ public class WRIMSGUILinks {
 
 		// Get project and clear
 
-		Project project = ResultUtils.getXMLParsingSvcImplInstance(null).getProject();
+		Project project = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getProject();
 		project.setDVFile("");
 		project.setDV2File("");
 		project.setDV3File("");
@@ -83,7 +85,7 @@ public class WRIMSGUILinks {
 
 		if (theList.getModel().getSize() == 1) {
 
-			RBListItem item = (RBListItem) theList.getModel().getElementAt(0);
+			RBListItemBO item = (RBListItemBO) theList.getModel().getElementAt(0);
 			String dvFileName = item.toString();
 			project.setDVFile(dvFileName);
 			project.setDVHashtable();
@@ -109,7 +111,7 @@ public class WRIMSGUILinks {
 			int dssCount = 1;
 			for (int i = 0; i < theList.getModel().getSize(); i++) {
 
-				RBListItem item = (RBListItem) theList.getModel().getElementAt(i);
+				RBListItemBO item = (RBListItemBO) theList.getModel().getElementAt(i);
 				String dvFileName = item.toString();
 				String svFileName = item.getSVFilename();
 				if (svFileName.equals("")) {

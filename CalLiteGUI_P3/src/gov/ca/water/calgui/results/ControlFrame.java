@@ -14,9 +14,10 @@ import javax.swing.JPanel;
 import org.swixml.SwingEngine;
 
 import COM.objectspace.jgl.Container;
+import gov.ca.water.calgui.bo.ResultUtilsBO;
 
 /**
- * Floating frame to display Quick Result scenario and display panels
+ * Floating frame to display Quick Result scenario and display control panels
  *
  * @author tslawecki
  *
@@ -34,7 +35,7 @@ public class ControlFrame extends JFrame implements WindowListener {
 	 */
 	public ControlFrame() {
 
-		swix = ResultUtils.getXMLParsingSvcImplInstance(null).getSwix();
+		swix = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getSwix();
 		removeClose(this);
 
 		JPanel p = new JPanel(new GridBagLayout());
@@ -77,7 +78,8 @@ public class ControlFrame extends JFrame implements WindowListener {
 	}
 
 	/**
-	 * Places frame to right of "desktop" frame if screen width permits, then makes visible
+	 * Places frame to right of "desktop" frame if screen width permits, then
+	 * makes visible
 	 *
 	 */
 	public void display() {
@@ -100,7 +102,7 @@ public class ControlFrame extends JFrame implements WindowListener {
 
 	@Override
 	public void windowClosed(WindowEvent arg0) {
-		ResultUtils.getXMLParsingSvcImplInstance(null).closeControlFrame();
+		ResultUtilsBO.getXMLParsingSvcImplInstance(null).closeControlFrame();
 
 	}
 

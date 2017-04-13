@@ -1,4 +1,4 @@
-package gov.ca.water.calgui.results;
+package gov.ca.water.calgui.bo;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -47,6 +47,9 @@ import calsim.app.MultipleTimeSeries;
 import calsim.app.Project;
 import calsim.gui.GuiUtils;
 import gov.ca.water.calgui.bus_service.impl.SeedDataSvcImpl;
+import gov.ca.water.calgui.results.ControlFrame;
+import gov.ca.water.calgui.results.DisplayFrame;
+import gov.ca.water.calgui.results.Report;
 import gov.ca.water.calgui.results.Report.PathnameMap;
 import vista.db.dss.DSSUtil;
 import vista.report.TSMath;
@@ -66,24 +69,24 @@ import vista.time.Time;
 import vista.time.TimeFactory;
 import vista.time.TimeWindow;
 
-public class ResultUtils implements ChangeListener {
-	private static final Logger LOG = Logger.getLogger(ResultUtils.class.getName());
+public class ResultUtilsBO implements ChangeListener {
+	private static final Logger LOG = Logger.getLogger(ResultUtilsBO.class.getName());
 	private String lookups[][];
-	private static ResultUtils resultUtils;
+	private static ResultUtilsBO resultUtilsBO;
 	private SwingEngine swingEngine;
 	private Project project;
 	private String table5[][]; // Holds DSS Schematic link values
 	private StringBuffer messages = new StringBuffer();
 	private ControlFrame _controlFrame = null;
-	private Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
-	private Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
-	private FileDialog fdDSSFiles;
+//	private Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+//	private Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+	private FileDialogBO fdDSSFiles;
 
-	public FileDialog getFdDSSFiles() {
+	public FileDialogBO getFdDSSFiles() {
 		return fdDSSFiles;
 	}
 
-	public void setFdDSSFiles(FileDialog fdDSSFiles) {
+	public void setFdDSSFiles(FileDialogBO fdDSSFiles) {
 		this.fdDSSFiles = fdDSSFiles;
 	}
 
@@ -104,14 +107,14 @@ public class ResultUtils implements ChangeListener {
 	 *
 	 * @return
 	 */
-	public static ResultUtils getXMLParsingSvcImplInstance(SwingEngine swingEngine) {
-		if (resultUtils == null) {
-			resultUtils = new ResultUtils(swingEngine);
+	public static ResultUtilsBO getXMLParsingSvcImplInstance(SwingEngine swingEngine) {
+		if (resultUtilsBO == null) {
+			resultUtilsBO = new ResultUtilsBO(swingEngine);
 		}
-		return resultUtils;
+		return resultUtilsBO;
 	}
 
-	private ResultUtils(SwingEngine swingEngine) {
+	private ResultUtilsBO(SwingEngine swingEngine) {
 		this.swingEngine = swingEngine;
 		readInLookups();
 
