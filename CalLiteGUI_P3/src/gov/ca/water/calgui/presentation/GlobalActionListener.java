@@ -27,6 +27,10 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
 
+import calsim.app.Project;
+import calsim.gui.DtsTreeModel;
+import calsim.gui.DtsTreePanel;
+import calsim.gui.GuiUtils;
 import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bus_delegate.IAllButtonsDele;
 import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
@@ -44,6 +48,8 @@ import gov.ca.water.calgui.bus_service.impl.ResultSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.SeedDataSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.results.ControlFrame;
+import gov.ca.water.calgui.results.ResultUtils;
 import gov.ca.water.calgui.tech_service.IAuditSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.AuditSvcImpl;
@@ -194,6 +200,35 @@ public class GlobalActionListener implements ActionListener {
 			table = (JTable) swingEngine.find("tblOpValues");
 			this.allButtonsDele.pasteTableValues(table);
 			break;
+
+		// From Custom Results dashboard
+
+		case "AC_Controls":
+			ControlFrame cf = ResultUtils.getXMLParsingSvcImplInstance(null).getControlFrame();
+			cf.display();
+			if (cf.getExtendedState() == JFrame.ICONIFIED)
+				cf.setExtendedState(JFrame.NORMAL);
+			break;
+
+		case "CR_LoadList":
+			ResultUtils.getXMLParsingSvcImplInstance(null).readCGR();
+			break;
+
+		case "CR_SaveList":
+			ResultUtils.getXMLParsingSvcImplInstance(null).writeCGR();
+			break;
+
+		case "CR_ClearTree":
+			Project p = ResultUtils.getXMLParsingSvcImplInstance(null).getProject();
+			p.clearMTSList();
+			p.clearDTSList();
+			DtsTreePanel dtp = GuiUtils.getCLGPanel().getDtsTreePanel();
+			DtsTreeModel dtm = dtp.getCurrentModel();
+			dtm.clearVectors();
+			dtm.createTreeFromPrj(null, null, "");
+			GuiUtils.getCLGPanel().repaint();
+			break;
+
 		}
 	}
 

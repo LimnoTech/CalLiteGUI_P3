@@ -70,7 +70,6 @@ import gov.ca.water.calgui.bus_service.impl.SeedDataSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.TableSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.results.CustomResultsAction;
 import gov.ca.water.calgui.results.DisplayFrame;
 import gov.ca.water.calgui.results.FileDialog;
 import gov.ca.water.calgui.results.ReportAction;
@@ -197,7 +196,7 @@ public class CalLiteInitClass {
 		lstReports.setBorder(new LineBorder(Color.gray, 1));
 		lstReports.setVisible(true);
 		// for Custom Results.
-		swingEngine.setActionListener(swingEngine.find("Custom"), new CustomResultsAction());
+
 		WRIMSGUILinks.buildWRIMSGUI((JPanel) swingEngine.find("WRIMS"));
 		WRIMSGUILinks.setStatus("Initialized.");
 		// Replace WRIMS GUI display action with CalLite GUI action
