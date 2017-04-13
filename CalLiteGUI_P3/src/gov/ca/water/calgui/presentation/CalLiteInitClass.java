@@ -52,7 +52,7 @@ import calsim.app.MultipleTimeSeries;
 import calsim.gui.GuiUtils;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
-import gov.ca.water.calgui.bo.SeedDataBO;
+import gov.ca.water.calgui.bo.GUILinks2BO;
 import gov.ca.water.calgui.bus_delegate.IAllButtonsDele;
 import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
 import gov.ca.water.calgui.bus_delegate.IVerifyControlsDele;
@@ -460,11 +460,11 @@ public class CalLiteInitClass {
 			public void focusGained(FocusEvent e) {
 				boolean showTablePanel = ((JRadioButton) swingEngine.find("rdbRegQS_UD")).isSelected();
 				if (showTablePanel) {
-					SeedDataBO seedDataBO = SeedDataSvcImpl.getSeedDataSvcImplInstance()
+					GUILinks2BO gUILinks2BO = SeedDataSvcImpl.getSeedDataSvcImplInstance()
 							.getObjByGuiId(e.getComponent().getName());
 
-					if (seedDataBO != null)
-						showTablePanel = showTablePanel || (!seedDataBO.getDataTables().equals(Constant.N_A));
+					if (gUILinks2BO != null)
+						showTablePanel = showTablePanel || (!gUILinks2BO.getDataTables().equals(Constant.N_A));
 
 					showTablePanel = showTablePanel
 							&& (((JTabbedPane) swingEngine.find("reg_tabbedPane")).getSelectedIndex() != 2);
