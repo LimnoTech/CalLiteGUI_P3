@@ -14,7 +14,7 @@ import wrimsv2.evaluator.PreEvaluator;
 import wrimsv2.wreslparser.elements.StudyUtils;
 
 /**
- * This class is used to run studys of the wrimsv2 class.
+ * This class is used to run a single study of the wrimsv2 class.
  */
 public class Singleton {
 	private static final Logger LOG = Logger.getLogger(Singleton.class.getName());

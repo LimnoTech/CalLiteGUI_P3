@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * This class will run the batch progeam.
+ * This class will run the multiple batch files created when running on multiple
+ * threads.
+ * 
  */
 public class RunScenarios {
 
@@ -15,7 +17,8 @@ public class RunScenarios {
 		for (String sc : scenarioList) {
 			String fn = "run_" + sc + ".bat";
 			Runtime rt = Runtime.getRuntime();
-			// Process proc = rt.exec("cmd /c start " + System.getProperty("user.dir") + "\\CalLite_w2.bat");
+			// Process proc = rt.exec("cmd /c start " +
+			// System.getProperty("user.dir") + "\\CalLite_w2.bat");
 			Process proc = rt.exec("cmd /c start /min " + System.getProperty("user.dir") + "\\" + fn);
 			proc.waitFor();
 		}
