@@ -22,7 +22,7 @@ import org.swixml.SwingEngine;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.GuiLinks4BO;
-import gov.ca.water.calgui.bo.SeedDataBO;
+import gov.ca.water.calgui.bo.GUILinks2BO;
 import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
 import gov.ca.water.calgui.bus_service.IDynamicControlSvc;
 import gov.ca.water.calgui.bus_service.IResultSvc;
@@ -218,7 +218,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	 */
 	private void regulations(String itemName, boolean isSelected)
 			throws CalLiteGUIException, CloneNotSupportedException {
-		List<SeedDataBO> seedDataList = seedDataSvc.getRegulationsTabData();
+		List<GUILinks2BO> seedDataList = seedDataSvc.getRegulationsTabData();
 		int[] regFlags = resultSvc.getRegulationoptions();
 		String tableName = "";
 		String optionName = "";
@@ -229,37 +229,37 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 		try {
 			// if (isSelected) {
 			if (isSelected && itemName.equals(Constant.QUICK_SELECT_RB_D1485)) {
-				for (SeedDataBO seedDataBO : seedDataList) {
+				for (GUILinks2BO gUILinks2BO : seedDataList) {
 					// if (seedDataBO.getD1485().equals(Constant.N_A)) {
-					regFlags[Integer.parseInt(seedDataBO.getRegID())] = 3;
+					regFlags[Integer.parseInt(gUILinks2BO.getRegID())] = 3;
 					// } else if (seedDataBO.getD1641().equals(Constant.N_A)) {
 					// regFlags[Integer.parseInt(seedDataBO.getRegID())] = 1;
 					// } else ifx`
 					// (seedDataBO.getUserDefined().equals(Constant.N_A)) {
 					// regFlags[Integer.parseInt(seedDataBO.getRegID())] = 4;
 					// }
-					if (!seedDataBO.getDataTables().equals(Constant.N_A)) {
-						resultSvc.removeUserDefinedTable(seedDataBO.getDataTables());
+					if (!gUILinks2BO.getDataTables().equals(Constant.N_A)) {
+						resultSvc.removeUserDefinedTable(gUILinks2BO.getDataTables());
 					}
 				}
 			} else if (isSelected && itemName.equals(Constant.QUICK_SELECT_RB_D1641)
 					|| itemName.equals(Constant.QUICK_SELECT_RB_D1641_BO)) {
-				for (SeedDataBO seedDataBO : seedDataList) {
+				for (GUILinks2BO gUILinks2BO : seedDataList) {
 					// if (seedDataBO.getD1641().equals(Constant.N_A)) {
-					regFlags[Integer.parseInt(seedDataBO.getRegID())] = 1;
+					regFlags[Integer.parseInt(gUILinks2BO.getRegID())] = 1;
 					// } else if (seedDataBO.getD1485().equals(Constant.N_A)) {
 					// regFlags[Integer.parseInt(seedDataBO.getRegID())] = 3;
 					// } else if
 					// (seedDataBO.getUserDefined().equals(Constant.N_A)) {
 					// regFlags[Integer.parseInt(seedDataBO.getRegID())] = 4;
 					// }
-					if (!seedDataBO.getDataTables().equals(Constant.N_A)) {
-						resultSvc.removeUserDefinedTable(seedDataBO.getDataTables());
+					if (!gUILinks2BO.getDataTables().equals(Constant.N_A)) {
+						resultSvc.removeUserDefinedTable(gUILinks2BO.getDataTables());
 					}
 				}
 			} else if (itemName.startsWith("ckbReg")) {
-				SeedDataBO seedDataBO = seedDataSvc.getObjByGuiId(itemName);
-				makeRBVisible(seedDataBO);
+				GUILinks2BO gUILinks2BO = seedDataSvc.getObjByGuiId(itemName);
+				makeRBVisible(gUILinks2BO);
 				String panelId = dynamicControlSvc.getTriggerBOById(itemName).getAffectdeGuiId();
 				String guiTableName = getTableNameFromTheComponent(swingEngine.find(panelId));
 
@@ -268,7 +268,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 				if (!isSelected) {
 					((TitledBorder) ((JPanel) this.swingEngine.find(panelId)).getBorder())
 							.setTitle(((JCheckBox) this.swingEngine.find(itemName)).getText() + " (not selected)");
-					if (!seedDataBO.getDataTables().equals(Constant.N_A)) {
+					if (!gUILinks2BO.getDataTables().equals(Constant.N_A)) {
 						((JPanel) this.swingEngine.find(panelId)).setVisible(true);
 						labReg.setEnabled(true);
 						((JPanel) this.swingEngine.find(panelId + "Placeholder")).setVisible(false);
@@ -284,26 +284,26 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 
 				((JPanel) this.swingEngine.find(panelId)).repaint();
 				if (isSelected) {
-					int regId = Integer.parseInt(seedDataBO.getRegID());
+					int regId = Integer.parseInt(gUILinks2BO.getRegID());
 					if (regFlags[regId] == 1) {
-						if (seedDataBO.getD1641().equals(Constant.N_A)) {
+						if (gUILinks2BO.getD1641().equals(Constant.N_A)) {
 							((JRadioButton) swingEngine.find(Constant.PANEL_RB_D1641)).setSelected(true);
 							optionName = Constant.D1641;
-						} else if (seedDataBO.getD1485().equals(Constant.N_A)) {
+						} else if (gUILinks2BO.getD1485().equals(Constant.N_A)) {
 							((JRadioButton) swingEngine.find(Constant.PANEL_RB_D1485)).setSelected(true);
 							optionName = Constant.D1485;
-						} else if (seedDataBO.getUserDefined().equals(Constant.N_A)) {
+						} else if (gUILinks2BO.getUserDefined().equals(Constant.N_A)) {
 							regFlags[regId] = 2;
 							optionName = Constant.USER_DEFINED;
 						}
 					} else if (regFlags[regId] == 3) {
-						if (seedDataBO.getD1485().equals(Constant.N_A)) {
+						if (gUILinks2BO.getD1485().equals(Constant.N_A)) {
 							((JRadioButton) swingEngine.find(Constant.PANEL_RB_D1485)).setSelected(true);
 							optionName = Constant.D1485;
-						} else if (seedDataBO.getD1641().equals(Constant.N_A)) {
+						} else if (gUILinks2BO.getD1641().equals(Constant.N_A)) {
 							((JRadioButton) swingEngine.find(Constant.PANEL_RB_D1641)).setSelected(true);
 							optionName = Constant.D1641;
-						} else if (seedDataBO.getUserDefined().equals(Constant.N_A)) {
+						} else if (gUILinks2BO.getUserDefined().equals(Constant.N_A)) {
 							regFlags[regId] = 2;
 							optionName = Constant.USER_DEFINED;
 						}
@@ -311,11 +311,11 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 						((JRadioButton) swingEngine.find(Constant.PANEL_RB_USER_DEFIND)).setSelected(true);
 						optionName = Constant.USER_DEFINED;
 					}
-					if (!seedDataBO.getDataTables().equals(Constant.N_A)) {
+					if (!gUILinks2BO.getDataTables().equals(Constant.N_A)) {
 						((JPanel) this.swingEngine.find(panelId)).setVisible(true);
 						((JPanel) this.swingEngine.find(panelId + "Placeholder")).setVisible(false);
 						labReg.setEnabled(true);
-						tableName = seedDataBO.getDataTables();
+						tableName = gUILinks2BO.getDataTables();
 						if (tableName.equals("gui_NDO_Flow") && optionName.equals(Constant.D1485))
 							// Hide D1485 table for Min NDO
 							scrRegValues.setVisible(false);
@@ -323,7 +323,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 							scrRegValues.setVisible(true);
 						labReg.setForeground(scrRegValues.getBackground());
 						toDisplayMessage = loadTableToUI((JTable) this.swingEngine.find(guiTableName), tableName,
-								regFlags[regId], seedDataBO, optionName);
+								regFlags[regId], gUILinks2BO, optionName);
 					} else {
 
 						((JPanel) this.swingEngine.find(panelId)).setVisible(false);
@@ -339,10 +339,10 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 			} else if (isSelected && itemName.startsWith("btnReg")) {
 				JRadioButton radioButton = ((JRadioButton) this.swingEngine.find(itemName));
 				TitledBorder titledBorder = (TitledBorder) ((JPanel) radioButton.getParent()).getBorder();
-				SeedDataBO seedData = seedDataSvc
+				GUILinks2BO guiLinks2BO = seedDataSvc
 						.getObjByGuiId(xmlParsingSvc.getcompIdfromName(titledBorder.getTitle()));
 				String guiTableName = getTableNameFromTheComponent(radioButton.getParent());
-				tableName = seedData.getDataTables();
+				tableName = guiLinks2BO.getDataTables();
 				if (itemName.endsWith(Constant.D1641)) {
 					optionName = Constant.D1641;
 				} else if (itemName.endsWith(Constant.D1485)) {
@@ -350,7 +350,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 				} else if (itemName.endsWith(Constant.USER_DEFINED)) {
 					optionName = Constant.USER_DEFINED;
 				}
-				int regId = Integer.parseInt(seedData.getRegID());
+				int regId = Integer.parseInt(guiLinks2BO.getRegID());
 				if (!tableName.equals(Constant.N_A)) {
 					if (tableName.equals("gui_NDO_Flow") && optionName.equals(Constant.D1485))
 						// Hide D1485 table for Min NDO
@@ -360,10 +360,10 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 
 					labReg.setForeground(scrRegValues.getBackground());
 					toDisplayMessage = loadTableToUI((JTable) this.swingEngine.find(guiTableName), tableName,
-							regFlags[regId], seedData, optionName);
+							regFlags[regId], guiLinks2BO, optionName);
 				} else {
 					String valueToDisplay = Constant.VAMP_NOT_SELECTED_TEXT;
-					if (seedData.getGuiId().equals(Constant.CKB_REG_VAMP)) {
+					if (guiLinks2BO.getGuiId().equals(Constant.CKB_REG_VAMP)) {
 						valueToDisplay = Constant.VAMP_SELECTED_TEXT;
 					}
 					changeTheLabel(valueToDisplay);
@@ -404,7 +404,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	 * @param regValue
 	 *            The regId from gui_link2.csv file which tells us what is the
 	 *            option for user defined table.
-	 * @param seedDataBO
+	 * @param gUILinks2BO
 	 *            The seed data object for loading the table data.
 	 * @param optionName
 	 *            The shared option that is from the "Regulations" tab.
@@ -414,9 +414,9 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	 * @throws CloneNotSupportedException
 	 *             see {@link CloneNotSupportedException}
 	 */
-	private boolean loadTableToUI(JTable table, String tableName, int regValue, SeedDataBO seedDataBO,
+	private boolean loadTableToUI(JTable table, String tableName, int regValue, GUILinks2BO gUILinks2BO,
 			String optionName) throws CalLiteGUIException, CloneNotSupportedException {
-		DataTableModel dtm = getTable(tableName, regValue, seedDataBO, optionName);
+		DataTableModel dtm = getTable(tableName, regValue, gUILinks2BO, optionName);
 		if (dtm == null) {
 			changeTheLabel("The table is not available. The table name is " + tableName);
 			return true;
@@ -454,7 +454,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	 * @param regValue
 	 *            The regId from gui_link2.csv file which tells us what is the
 	 *            option for user defined table.
-	 * @param seedDataBO
+	 * @param gUILinks2BO
 	 *            seedData of the selected object.
 	 * @param optionName
 	 *            The shared option that is from the "Regulations" tab.
@@ -465,17 +465,17 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	 * @throws CloneNotSupportedException
 	 *             see {@link CloneNotSupportedException}
 	 */
-	private DataTableModel getTable(String tableName, int regValue, SeedDataBO seedDataBO, String optionName)
+	private DataTableModel getTable(String tableName, int regValue, GUILinks2BO gUILinks2BO, String optionName)
 			throws CalLiteGUIException, CloneNotSupportedException {
 		DataTableModel dataTableModel = null;
 		switch (optionName) {
 		case Constant.D1641:
-			dataTableModel = decideTableNameAndGetTable(tableName, seedDataBO, Constant.D1641);
+			dataTableModel = decideTableNameAndGetTable(tableName, gUILinks2BO, Constant.D1641);
 			if (resultSvc.hasUserDefinedTable(tableName))
 				resultSvc.removeUserDefinedTable(tableName);
 			break;
 		case Constant.D1485:
-			dataTableModel = decideTableNameAndGetTable(tableName, seedDataBO, Constant.D1485);
+			dataTableModel = decideTableNameAndGetTable(tableName, gUILinks2BO, Constant.D1485);
 			if (resultSvc.hasUserDefinedTable(tableName))
 				resultSvc.removeUserDefinedTable(tableName);
 			break;
@@ -484,11 +484,11 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 				dataTableModel = resultSvc.getUserDefinedTable(tableName);
 			} else {
 				if (regValue == 1) {
-					dataTableModel = decideTableNameAndGetTable(tableName, seedDataBO, Constant.D1641);
+					dataTableModel = decideTableNameAndGetTable(tableName, gUILinks2BO, Constant.D1641);
 				} else if (regValue == 3) {
-					dataTableModel = decideTableNameAndGetTable(tableName, seedDataBO, Constant.D1485);
+					dataTableModel = decideTableNameAndGetTable(tableName, gUILinks2BO, Constant.D1485);
 				} else if (regValue == 2) {
-					dataTableModel = decideTableNameAndGetTable(tableName, seedDataBO, Constant.USER_DEFINED);
+					dataTableModel = decideTableNameAndGetTable(tableName, gUILinks2BO, Constant.USER_DEFINED);
 				}
 				if (dataTableModel != null) {
 					dataTableModel = (DataTableModel) dataTableModel.clone();
@@ -509,7 +509,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	 *
 	 * @param tableName
 	 *            just the table name
-	 * @param seedDataBO
+	 * @param gUILinks2BO
 	 *            seedData of the selected object.
 	 * @param type
 	 *            The type from the "Regulations" tab.
@@ -517,23 +517,23 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	 * @throws CalLiteGUIException
 	 *             see {@link CalLiteGUIException}
 	 */
-	private DataTableModel decideTableNameAndGetTable(String tableName, SeedDataBO seedDataBO, String type)
+	private DataTableModel decideTableNameAndGetTable(String tableName, GUILinks2BO gUILinks2BO, String type)
 			throws CalLiteGUIException {
 		DataTableModel dtm = null;
 		switch (type) {
 		case Constant.D1485:
-			if (seedDataBO.getD1485().equalsIgnoreCase(Constant.N_A)) {
+			if (gUILinks2BO.getD1485().equalsIgnoreCase(Constant.N_A)) {
 				dtm = tableSvc.getTable(tableName + Constant.DASH + Constant.D1485);
-			} else if (seedDataBO.getD1641().equalsIgnoreCase(Constant.N_A)) {
+			} else if (gUILinks2BO.getD1641().equalsIgnoreCase(Constant.N_A)) {
 				dtm = tableSvc.getTable(tableName + Constant.DASH + Constant.D1641);
 			} else {
 				dtm = tableSvc.getTable(tableName);
 			}
 			break;
 		case Constant.D1641:
-			if (seedDataBO.getD1641().equalsIgnoreCase(Constant.N_A)) {
+			if (gUILinks2BO.getD1641().equalsIgnoreCase(Constant.N_A)) {
 				dtm = tableSvc.getTable(tableName + Constant.DASH + Constant.D1641);
-			} else if (seedDataBO.getD1485().equalsIgnoreCase(Constant.N_A)) {
+			} else if (gUILinks2BO.getD1485().equalsIgnoreCase(Constant.N_A)) {
 				dtm = tableSvc.getTable(tableName + Constant.DASH + Constant.D1485);
 			} else {
 				dtm = tableSvc.getTable(tableName);
@@ -570,20 +570,20 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	 * This method will make the shared radio buttons in the "Regulations" tab
 	 * visible based on the seedData passed in.
 	 *
-	 * @param seedDataBO
+	 * @param gUILinks2BO
 	 *            It is used to show which radio button is to display.
 	 */
-	private void makeRBVisible(SeedDataBO seedDataBO) {
+	private void makeRBVisible(GUILinks2BO gUILinks2BO) {
 		swingEngine.find(Constant.PANEL_RB_D1485).setVisible(false);
 		swingEngine.find(Constant.PANEL_RB_D1641).setVisible(false);
 		swingEngine.find(Constant.PANEL_RB_USER_DEFIND).setVisible(false);
-		if (seedDataBO.getD1485().equals(Constant.N_A)) {
+		if (gUILinks2BO.getD1485().equals(Constant.N_A)) {
 			swingEngine.find(Constant.PANEL_RB_D1485).setVisible(true);
 		}
-		if (seedDataBO.getD1641().equals(Constant.N_A)) {
+		if (gUILinks2BO.getD1641().equals(Constant.N_A)) {
 			swingEngine.find(Constant.PANEL_RB_D1641).setVisible(true);
 		}
-		if (seedDataBO.getUserDefined().equals(Constant.N_A)) {
+		if (gUILinks2BO.getUserDefined().equals(Constant.N_A)) {
 			swingEngine.find(Constant.PANEL_RB_USER_DEFIND).setVisible(true);
 		}
 	}

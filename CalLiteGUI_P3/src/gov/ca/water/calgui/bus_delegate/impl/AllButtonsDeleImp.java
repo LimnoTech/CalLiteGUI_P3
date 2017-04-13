@@ -80,7 +80,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 	private IBatchRunSvc batchRunSvc = new BatchRunSvcImpl();
 	private IResultSvc resultSvc = ResultSvcImpl.getResultSvcImplInstance();
 	private ISeedDataSvc seedDataSvc = SeedDataSvcImpl.getSeedDataSvcImplInstance();
-	private ITableSvc tableSvc = TableSvcImpl.getTableSvcImplInstance(seedDataSvc.getSeedDataBOList());
+	private ITableSvc tableSvc = TableSvcImpl.getTableSvcImplInstance(seedDataSvc.getGUILinks2BOList());
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private Properties properties = new Properties();
 	private boolean defaultCLSProtected = true;
@@ -185,7 +185,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 	public boolean saveForViewScen() {
 		try {
 			resultSvc.saveToCLSFile(Constant.SCENARIOS_DIR + Constant.CURRENT_SCENARIO + Constant.CLS_EXT, swingEngine,
-					seedDataSvc.getSeedDataBOList());
+					seedDataSvc.getGUILinks2BOList());
 			return true;
 		} catch (CalLiteGUIException ex) {
 			LOG.debug(ex);
@@ -249,7 +249,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 			progressFrame.makeDialogVisible();
 			proceed = ResultSvcImpl.getResultSvcImplInstance().save(clsFileName,
 					XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine(),
-					SeedDataSvcImpl.getSeedDataSvcImplInstance().getSeedDataBOList());
+					SeedDataSvcImpl.getSeedDataSvcImplInstance().getGUILinks2BOList());
 			LOG.debug("Save Complete. " + clsFileName);
 			auditSvc.clearAudit();
 			return proceed;

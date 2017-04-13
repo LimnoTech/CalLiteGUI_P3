@@ -7,7 +7,7 @@ import org.swixml.SwingEngine;
 
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
-import gov.ca.water.calgui.bo.SeedDataBO;
+import gov.ca.water.calgui.bo.GUILinks2BO;
 
 /**
  * This is the interface for handling the cls file and saving the data.
@@ -52,7 +52,7 @@ public interface IResultSvc {
 	 * @param tableMap
 	 *            The map with key as the table id and value as table object.
 	 */
-	public void applyClsFile(String fileName, SwingEngine swingEngine, Map<String, SeedDataBO> tableMap);
+	public void applyClsFile(String fileName, SwingEngine swingEngine, Map<String, GUILinks2BO> tableMap);
 
 	/**
 	 * This will save the current state of the ui into the cls file and the
@@ -62,12 +62,12 @@ public interface IResultSvc {
 	 *            The cls file name with out the path and the extension.
 	 * @param swingEngine
 	 *            The object of the GUI.
-	 * @param seedDataBOList
+	 * @param guiLinks2BOList
 	 *            The data list from gui_link2.table.
 	 * 
 	 * @return Will return true if the save if done.
 	 */
-	public boolean save(String fileName, SwingEngine swingEngine, List<SeedDataBO> seedDataBOList);
+	public boolean save(String fileName, SwingEngine swingEngine, List<GUILinks2BO> guiLinks2BOList);
 
 	/**
 	 * This will return the Regulation options data.
@@ -130,12 +130,12 @@ public interface IResultSvc {
 	 *            Just the file name with out the path and extension.
 	 * @param swingEngine
 	 *            The object of the GUI.
-	 * @param seedDataBOList
+	 * @param guiLinks2BOList
 	 *            The list of seed Data.
 	 * @throws CalLiteGUIException
 	 *             It throws a general exception.
 	 */
-	public void saveToCLSFile(String fileName, SwingEngine swingEngine, List<SeedDataBO> seedDataBOList)
+	public void saveToCLSFile(String fileName, SwingEngine swingEngine, List<GUILinks2BO> guiLinks2BOList)
 			throws CalLiteGUIException;
 
 	/**

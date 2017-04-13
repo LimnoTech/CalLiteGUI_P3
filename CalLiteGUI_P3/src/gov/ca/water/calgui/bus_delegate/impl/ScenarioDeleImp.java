@@ -23,7 +23,7 @@ import org.swixml.SwingEngine;
 
 import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.ScenarioDisplayBO;
-import gov.ca.water.calgui.bo.SeedDataBO;
+import gov.ca.water.calgui.bo.GUILinks2BO;
 import gov.ca.water.calgui.bus_delegate.IScenarioDele;
 import gov.ca.water.calgui.bus_service.IResultSvc;
 import gov.ca.water.calgui.bus_service.ISeedDataSvc;
@@ -185,7 +185,7 @@ public class ScenarioDeleImp implements IScenarioDele {
 	 * @return Will return the map of whole cls file.
 	 */
 	private Map<String, String> buildMapOfCLSFile(String fileName, SwingEngine swingEngine,
-			Map<String, SeedDataBO> tableMap) {
+			Map<String, GUILinks2BO> tableMap) {
 		List<String> controlStrList = new ArrayList<String>();
 		List<String> dataTableModelStrList = new ArrayList<String>();
 		List<String> regulationoptionsStr = new ArrayList<String>();
@@ -213,14 +213,14 @@ public class ScenarioDeleImp implements IScenarioDele {
 	 * @return This contain all the table Data as a map.
 	 */
 	private Map<String, String> buildTableDataInCLSIntoMap(List<String> dataTableModelStrList, SwingEngine swingEngine,
-			Map<String, SeedDataBO> tableMap) {
+			Map<String, GUILinks2BO> tableMap) {
 		Map<String, String> allTableData = new LinkedHashMap<String, String>();
 		String tableName = "";
 		for (String dataTableStr : dataTableModelStrList) {
 			String[] arr = dataTableStr.split(Constant.PIPELINE_DELIMITER);
 			if (resultSvc.isDouble(arr[0])) {
-				SeedDataBO seedDataBO = tableMap.get(arr[0]);
-				tableName = seedDataBO.getDataTables();
+				GUILinks2BO gUILinks2BO = tableMap.get(arr[0]);
+				tableName = gUILinks2BO.getDataTables();
 			} else {
 				tableName = arr[0];
 			}

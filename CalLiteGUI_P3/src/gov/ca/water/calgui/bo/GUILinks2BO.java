@@ -6,7 +6,7 @@ package gov.ca.water.calgui.bo;
  * 
  * @author Mohan
  */
-public class SeedDataBO {
+public class GUILinks2BO {
 	/**
 	 * The id of the gui from GUI_Link2.table. This is control value from the
 	 * gui.xml file.
@@ -83,7 +83,7 @@ public class SeedDataBO {
 	 */
 	private String regID;
 
-	public SeedDataBO(String guiId, String tableName, String index, String option, String description, String dashboard,
+	public GUILinks2BO(String guiId, String tableName, String index, String option, String description, String dashboard,
 			String dataTables, String switchID, String tableID, String d1485d1641, String d1641, String noregulation,
 			String userDefined, String d1485, String regID) {
 		this.guiId = guiId;

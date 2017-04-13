@@ -43,7 +43,7 @@ import org.swixml.XScrollPane;
 
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
-import gov.ca.water.calgui.bo.SeedDataBO;
+import gov.ca.water.calgui.bo.GUILinks2BO;
 import gov.ca.water.calgui.bus_service.IResultSvc;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.presentation.NumericTextField;
@@ -123,7 +123,7 @@ public final class ResultSvcImpl implements IResultSvc {
 	}
 
 	@Override
-	public void applyClsFile(String fileName, SwingEngine swingEngine, Map<String, SeedDataBO> tableMap) {
+	public void applyClsFile(String fileName, SwingEngine swingEngine, Map<String, GUILinks2BO> tableMap) {
 		this.isCLSFlag = true;
 		List<String> controlStrList = new ArrayList<String>();
 		List<String> dataTableModelStrList = new ArrayList<String>();
@@ -145,10 +145,10 @@ public final class ResultSvcImpl implements IResultSvc {
 	}
 
 	@Override
-	public boolean save(String fileName, SwingEngine swingEngine, List<SeedDataBO> seedDataBOList) {
+	public boolean save(String fileName, SwingEngine swingEngine, List<GUILinks2BO> guiLinks2BOList) {
 		try {
-			saveToCLSFile(Constant.SCENARIOS_DIR + fileName + Constant.CLS_EXT, swingEngine, seedDataBOList);
-			saveFiles(fileName, swingEngine, seedDataBOList);
+			saveToCLSFile(Constant.SCENARIOS_DIR + fileName + Constant.CLS_EXT, swingEngine, guiLinks2BOList);
+			saveFiles(fileName, swingEngine, guiLinks2BOList);
 			return true;
 		} catch (CalLiteGUIException ex) {
 			errorHandlingSvc.businessErrorHandler((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME),
@@ -197,7 +197,7 @@ public final class ResultSvcImpl implements IResultSvc {
 	 * @param tableMap
 	 *            The map with key as the table id and value as table object.
 	 */
-	private void populateClsTableMap(List<String> dataTableModelStrList, Map<String, SeedDataBO> tableMap) {
+	private void populateClsTableMap(List<String> dataTableModelStrList, Map<String, GUILinks2BO> tableMap) {
 		String tableName = "";
 		for (String dataTableModelStr : dataTableModelStrList) {
 			try {
@@ -370,12 +370,12 @@ public final class ResultSvcImpl implements IResultSvc {
 	 *            Just the file name with out the path and extension.
 	 * @param swingEngine
 	 *            The object of the GUI.
-	 * @param seedDataBOList
+	 * @param guiLinks2BOList
 	 *            The data list from gui_link2.table.
 	 * @throws CalLiteGUIException
 	 *             It throws a general exception.
 	 */
-	private void saveFiles(String fileName, SwingEngine swingEngine, List<SeedDataBO> seedDataBOList)
+	private void saveFiles(String fileName, SwingEngine swingEngine, List<GUILinks2BO> guiLinks2BOList)
 			throws CalLiteGUIException {
 		String runDirAbsPath = Paths.get(Constant.RUN_DETAILS_DIR + fileName + Constant.RUN_DIR).toString();
 		String generatedDirAbsPath = Paths.get(Constant.RUN_DETAILS_DIR + fileName + Constant.GENERATED_DIR).toString();
@@ -410,9 +410,9 @@ public final class ResultSvcImpl implements IResultSvc {
 		copyDSSFileToScenarioDirectory(runDirAbsPath, ((JTextField) swingEngine.find("hyd_DSS_Init")).getText());
 
 		updateSaveStatusFile(runDirAbsPath + Constant.SAVE_FILE + Constant.TXT_EXT, "Saving the table files.");
-		writeToFileIndexAndOption(swingEngine, seedDataBOList, runDirAbsPath + "//Lookup//",
+		writeToFileIndexAndOption(swingEngine, guiLinks2BOList, runDirAbsPath + "//Lookup//",
 				generatedDirAbsPath + "//Lookup//");
-		writeUserDefinedTables(seedDataBOList, runDirAbsPath + "//Lookup//", generatedDirAbsPath + "//Lookup//");
+		writeUserDefinedTables(guiLinks2BOList, runDirAbsPath + "//Lookup//", generatedDirAbsPath + "//Lookup//");
 		// Copying demand tables.
 		String demandDirPath = "";
 		if (((JRadioButton) swingEngine.find("dem_rdbCurSWP")).isSelected()) {
@@ -701,7 +701,7 @@ public final class ResultSvcImpl implements IResultSvc {
 	 * This will write the user define table data to the table files as given in
 	 * the gui_link2.table
 	 *
-	 * @param seedDataBOList
+	 * @param guiLinks2BOList
 	 *            The data list from gui_link2.table.
 	 * @param runDir
 	 *            The string for the Run directory.
@@ -710,7 +710,7 @@ public final class ResultSvcImpl implements IResultSvc {
 	 * @throws CalLiteGUIException
 	 *             It throws a general exception.
 	 */
-	private void writeUserDefinedTables(List<SeedDataBO> seedDataBOList, String runDir, String generatedDir)
+	private void writeUserDefinedTables(List<GUILinks2BO> guiLinks2BOList, String runDir, String generatedDir)
 			throws CalLiteGUIException {
 		for (String tableName : this.userDefinedTableMap.keySet()) {
 			Map<String, StringBuffer> fileDataMap = new HashMap<String, StringBuffer>();
@@ -917,7 +917,7 @@ public final class ResultSvcImpl implements IResultSvc {
 	 *
 	 * @param swingEngine
 	 *            The object of the GUI.
-	 * @param seedDataBOList
+	 * @param guiLinks2BOList
 	 *            The data list from gui_link2.table.
 	 * @param runDir
 	 *            The string for the Run directory.
@@ -926,23 +926,23 @@ public final class ResultSvcImpl implements IResultSvc {
 	 * @throws CalLiteGUIException
 	 *             It throws a general exception.
 	 */
-	private void writeToFileIndexAndOption(SwingEngine swingEngine, List<SeedDataBO> seedDataBOList, String runDir,
+	private void writeToFileIndexAndOption(SwingEngine swingEngine, List<GUILinks2BO> guiLinks2BOList, String runDir,
 			String generatedDir) throws CalLiteGUIException {
-		Map<String, List<SeedDataBO>> tableNameMap = new HashMap<String, List<SeedDataBO>>();
-		for (SeedDataBO seedDataBO : seedDataBOList) {
-			String tableName = seedDataBO.getTableName();
+		Map<String, List<GUILinks2BO>> tableNameMap = new HashMap<String, List<GUILinks2BO>>();
+		for (GUILinks2BO gUILinks2BO : guiLinks2BOList) {
+			String tableName = gUILinks2BO.getTableName();
 			if (tableName.equals(Constant.N_A))
 				continue;
 			if (tableNameMap.get(tableName) == null) {
-				List<SeedDataBO> data = new ArrayList<SeedDataBO>();
-				data.add(seedDataBO);
+				List<GUILinks2BO> data = new ArrayList<GUILinks2BO>();
+				data.add(gUILinks2BO);
 				tableNameMap.put(tableName, data);
 			} else {
-				tableNameMap.get(tableName).add(seedDataBO);
+				tableNameMap.get(tableName).add(gUILinks2BO);
 			}
 		}
 		for (String tableName : tableNameMap.keySet()) {
-			List<SeedDataBO> data = tableNameMap.get(tableName);
+			List<GUILinks2BO> data = tableNameMap.get(tableName);
 			List<String> headerList = null;
 			StringBuffer fileDataStrBuf = new StringBuffer();
 			headerList = fileSystemSvc.getFileData(Constant.MODEL_W2_WRESL_LOOKUP_DIR + tableName, false,
@@ -950,11 +950,11 @@ public final class ResultSvcImpl implements IResultSvc {
 			headerList.stream().forEach(header -> fileDataStrBuf.append(header + Constant.NEW_LINE));
 			fileDataStrBuf.append(FilenameUtils.removeExtension(tableName) + Constant.NEW_LINE);
 			fileDataStrBuf.append("Index" + Constant.OLD_DELIMITER + "Option" + Constant.NEW_LINE);
-			for (SeedDataBO seedDataBO : data) {
-				String index = seedDataBO.getIndex();
-				String option = seedDataBO.getOption();
-				String description = Constant.EXCLAMATION + seedDataBO.getDescription();
-				Component c = swingEngine.find(seedDataBO.getGuiId().trim());
+			for (GUILinks2BO gUILinks2BO : data) {
+				String index = gUILinks2BO.getIndex();
+				String option = gUILinks2BO.getOption();
+				String description = Constant.EXCLAMATION + gUILinks2BO.getDescription();
+				Component c = swingEngine.find(gUILinks2BO.getGuiId().trim());
 				if (c instanceof JTextField || c instanceof NumericTextField || c instanceof JTextArea) {
 					option = ((JTextComponent) c).getText();
 					if (!(c instanceof JTextArea) && option.equals(""))
@@ -962,7 +962,7 @@ public final class ResultSvcImpl implements IResultSvc {
 					fileDataStrBuf.append(index + Constant.OLD_DELIMITER + option + Constant.OLD_DELIMITER + description
 							+ Constant.NEW_LINE);
 				} else if (c instanceof JRadioButton) {
-					if (seedDataBO.getGuiId().startsWith("hyd_ckb")) {
+					if (gUILinks2BO.getGuiId().startsWith("hyd_ckb")) {
 						boolean isSelected = ((AbstractButton) swingEngine.find("hyd_rdb2005")).isSelected()
 								|| ((AbstractButton) swingEngine.find("hyd_rdb2030")).isSelected();
 						if (isSelected)
@@ -974,11 +974,11 @@ public final class ResultSvcImpl implements IResultSvc {
 					}
 				} else if (c instanceof JCheckBox) {
 					if (((AbstractButton) c).isSelected()) {
-						if (seedDataBO.getGuiId().startsWith("ckbReg")) {
-							if (!seedDataBO.getRegID().equals("n/a")) {
-								int rID = Integer.parseInt(seedDataBO.getRegID());
+						if (gUILinks2BO.getGuiId().startsWith("ckbReg")) {
+							if (!gUILinks2BO.getRegID().equals("n/a")) {
+								int rID = Integer.parseInt(gUILinks2BO.getRegID());
 								if (tableName.equals("GUI_RPAsOtherRegs.table")
-										&& !seedDataBO.getSwitchID().equals(Constant.N_A)) {
+										&& !gUILinks2BO.getSwitchID().equals(Constant.N_A)) {
 
 									// Special case for tables under Other regs:
 									// Option = 1 for default
@@ -994,7 +994,7 @@ public final class ResultSvcImpl implements IResultSvc {
 							option = "1";
 						}
 					} else {
-						String naFlag = seedDataBO.getNoregulation();
+						String naFlag = gUILinks2BO.getNoregulation();
 						if (naFlag == "1") {
 							option = "NA";
 						} else {
@@ -1058,7 +1058,7 @@ public final class ResultSvcImpl implements IResultSvc {
 	}
 
 	@Override
-	public void saveToCLSFile(String fileName, SwingEngine swingEngine, List<SeedDataBO> seedDataBOList)
+	public void saveToCLSFile(String fileName, SwingEngine swingEngine, List<GUILinks2BO> guiLinks2BOList)
 			throws CalLiteGUIException {
 		List<String> panelNames = new ArrayList<String>();
 		JTabbedPane main = (JTabbedPane) swingEngine.find(Constant.MAIN_PANEL_NAME);
@@ -1089,9 +1089,9 @@ public final class ResultSvcImpl implements IResultSvc {
 		if (!keys.isEmpty()) {
 			for (String key : keys) {
 				try {
-					SeedDataBO seedDataBO = seedDataBOList.stream()
+					GUILinks2BO gUILinks2BO = guiLinks2BOList.stream()
 							.filter(seedData -> seedData.getDataTables().equals(key)).findFirst().get();
-					sb.append(convertTableToString(seedDataBO.getTableID(), this.userDefinedTableMap.get(key))
+					sb.append(convertTableToString(gUILinks2BO.getTableID(), this.userDefinedTableMap.get(key))
 							+ Constant.NEW_LINE);
 				} catch (NoSuchElementException ex) {
 					sb.append(convertTableToString(key, this.userDefinedTableMap.get(key)) + Constant.NEW_LINE);

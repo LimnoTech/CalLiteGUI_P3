@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
-import gov.ca.water.calgui.bo.SeedDataBO;
+import gov.ca.water.calgui.bo.GUILinks2BO;
 import gov.ca.water.calgui.bus_service.ITableSvc;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
@@ -62,7 +62,7 @@ public final class TableSvcImpl implements ITableSvc {
 	 * @return Will return the instance of this class if it is empty it will
 	 *         create one.
 	 */
-	public static ITableSvc getTableSvcImplInstance(List<SeedDataBO> list) {
+	public static ITableSvc getTableSvcImplInstance(List<GUILinks2BO> list) {
 		if (tableSvc == null) {
 			tableSvc = new TableSvcImpl(list);
 		}
@@ -194,35 +194,35 @@ public final class TableSvcImpl implements ITableSvc {
 	/*
 	 * This will build the table map.
 	 */
-	private TableSvcImpl(List<SeedDataBO> seedDataBOList) {
+	private TableSvcImpl(List<GUILinks2BO> guiLinks2BOList) {
 		LOG.info("Building TableSvcImpl Object.");
 		this.fileSystemSvc = new FileSystemSvcImpl();
 		this.map = new HashMap<String, DataTableModel>();
 		this.errorHandlingSvc = new ErrorHandlingSvcImpl();
-		generateMapForTables(seedDataBOList);
+		generateMapForTables(guiLinks2BOList);
 	}
 
 	/**
 	 * This will build the map of tables with the seed data.
 	 *
-	 * @param seedDataBOList
+	 * @param guiLinks2DataBOList
 	 *            The list of seed data objects.
 	 */
-	private void generateMapForTables(List<SeedDataBO> seedDataBOList) {
+	private void generateMapForTables(List<GUILinks2BO> guiLinks2DataBOList) {
 		List<String> list1 = new ArrayList<String>();
 		list1.add(Constant.SWP_START_FILENAME);
 		list1.add(Constant.CVP_START_FILENAME);
 		list1.add("IFBypassFlows_vs_SAC");
 		list1.add("IsolatedFacility");
-		for (SeedDataBO seedDataBOObj : seedDataBOList) {
+		for (GUILinks2BO guiLinks2BOObj : guiLinks2DataBOList) {
 			try {
-				String dataTableName = seedDataBOObj.getDataTables();
+				String dataTableName = guiLinks2BOObj.getDataTables();
 				if (!list1.contains(dataTableName)) {
 					if (dataTableName.contains(Constant.PIPELINE)) {
 						String[] tableNames = dataTableName.split(Constant.PIPELINE_DELIMITER);
 						map.putAll(handleX2table(tableNames[0], tableNames[1]));
 					} else {
-						map.putAll(getAllTypesOfTableForATableName(seedDataBOObj));
+						map.putAll(getAllTypesOfTableForATableName(guiLinks2BOObj));
 					}
 				}
 			} catch (CalLiteGUIException ex) {
@@ -290,10 +290,10 @@ public final class TableSvcImpl implements ITableSvc {
 	}
 
 	/**
-	 * This will take the {@link SeedDataBO} object and build the table map
-	 * depending on the {@link SeedDataBO}.
+	 * This will take the {@link GUILinks2BO} object and build the table map
+	 * depending on the {@link GUILinks2BO}.
 	 *
-	 * @param seedDataBOObj
+	 * @param guiLinks2BOObj
 	 *            The list of seed data objects.
 	 * @return This will return the Map of tables with the table name as key and
 	 *         table data as value.
@@ -301,12 +301,12 @@ public final class TableSvcImpl implements ITableSvc {
 	 *             If anything wrong about the file then it will throw a
 	 *             exception with the information about it.
 	 */
-	private Map<String, DataTableModel> getAllTypesOfTableForATableName(SeedDataBO seedDataBOObj)
+	private Map<String, DataTableModel> getAllTypesOfTableForATableName(GUILinks2BO guiLinks2BOObj)
 			throws CalLiteGUIException {
 		Map<String, DataTableModel> tempMapForDataTable = new HashMap<String, DataTableModel>();
-		String dataTableName = seedDataBOObj.getDataTables();
+		String dataTableName = guiLinks2BOObj.getDataTables();
 		DataTableModel dtm = null;
-		if (seedDataBOObj.getD1485D1641().equals(Constant.N_A)) {
+		if (guiLinks2BOObj.getD1485D1641().equals(Constant.N_A)) {
 			if (dataTableName.equals("gui_EIRatio") || dataTableName.equals("perc_UnimparedFlow")) {
 				dtm = getTable(dataTableName, TableSvcImpl::handleTableFileLikeTable);
 			} else if (dataTableName.equals("gui_EIsjr")) {
@@ -315,15 +315,15 @@ public final class TableSvcImpl implements ITableSvc {
 				dtm = getTable(dataTableName, TableSvcImpl::handleTableFileWithColumnNumber);
 			}
 			boolean flag = true;
-			if (seedDataBOObj.getD1641().equalsIgnoreCase(Constant.N_A)) {
+			if (guiLinks2BOObj.getD1641().equalsIgnoreCase(Constant.N_A)) {
 				flag = false;
 				tempMapForDataTable.put(dataTableName + Constant.DASH + Constant.D1641, dtm);
 			}
-			if (seedDataBOObj.getD1485().equalsIgnoreCase(Constant.N_A)) {
+			if (guiLinks2BOObj.getD1485().equalsIgnoreCase(Constant.N_A)) {
 				if (flag)
 					tempMapForDataTable.put(dataTableName + Constant.DASH + Constant.D1485, dtm);
 			}
-			if (seedDataBOObj.getUserDefined().equalsIgnoreCase(Constant.N_A)) {
+			if (guiLinks2BOObj.getUserDefined().equalsIgnoreCase(Constant.N_A)) {
 				if (flag)
 					tempMapForDataTable.put(dataTableName, dtm);
 			}
@@ -333,19 +333,19 @@ public final class TableSvcImpl implements ITableSvc {
 			if (dataTableName.equals("gui_xchanneldays") || dataTableName.equals("gui_RioVista")
 					|| dataTableName.equals("gui_NDO_Flow")) {
 				dtmList = handleTableFileWithTwoTableData(name);
-				if (seedDataBOObj.getD1485().equalsIgnoreCase(Constant.N_A)) {
+				if (guiLinks2BOObj.getD1485().equalsIgnoreCase(Constant.N_A)) {
 					tempMapForDataTable.put(dataTableName + Constant.DASH + Constant.D1485, dtmList.get(1));
 				}
-				if (seedDataBOObj.getD1641().equalsIgnoreCase(Constant.N_A)) {
+				if (guiLinks2BOObj.getD1641().equalsIgnoreCase(Constant.N_A)) {
 					tempMapForDataTable.put(dataTableName + Constant.DASH + Constant.D1641, dtmList.get(0));
 				}
 			} else {
-				if (seedDataBOObj.getD1485().equalsIgnoreCase(Constant.N_A)) {
+				if (guiLinks2BOObj.getD1485().equalsIgnoreCase(Constant.N_A)) {
 					dtm = getTable(name + Constant.DASH + Constant.D1485,
 							TableSvcImpl::handleTableFileWithColumnNumber);
 					tempMapForDataTable.put(dataTableName + Constant.DASH + Constant.D1485, dtm);
 				}
-				if (seedDataBOObj.getD1641().equalsIgnoreCase(Constant.N_A)) {
+				if (guiLinks2BOObj.getD1641().equalsIgnoreCase(Constant.N_A)) {
 					dtm = getTable(name + Constant.DASH + Constant.D1641,
 							TableSvcImpl::handleTableFileWithColumnNumber);
 					tempMapForDataTable.put(dataTableName + Constant.DASH + Constant.D1641, dtm);

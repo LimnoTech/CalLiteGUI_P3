@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import gov.ca.water.calgui.bo.GuiLinks4BO;
-import gov.ca.water.calgui.bo.SeedDataBO;
+import gov.ca.water.calgui.bo.GUILinks2BO;
 
 /**
  * This is the interface for loading the GUI_Link2.table and GUI_Link4.table.
@@ -21,7 +21,7 @@ public interface ISeedDataSvc {
 	 *            The guiId.
 	 * @return Will return the seedData object of the gui id passed in.
 	 */
-	public SeedDataBO getObjByGuiId(String guiId);
+	public GUILinks2BO getObjByGuiId(String guiId);
 
 	/**
 	 * This will concatenate "RunBasis_ID LOD_ID CCProject_ID CCModel_ID" id's
@@ -36,49 +36,49 @@ public interface ISeedDataSvc {
 	public GuiLinks4BO getObjByRunBasisLodCcprojCcmodelIds(String id);
 
 	/**
-	 * This will return the list of {@link SeedDataBO} objects which has data
+	 * This will return the list of {@link GUILinks2BO} objects which has data
 	 * Table value in it.
 	 *
-	 * @return Will return the list of {@link SeedDataBO} objects which has data
+	 * @return Will return the list of {@link GUILinks2BO} objects which has data
 	 *         Table value in it.
 	 */
-	public List<SeedDataBO> getUserTables();
+	public List<GUILinks2BO> getUserTables();
 
 	/**
-	 * This will return the Gui_Link2.table data as list of {@link SeedDataBO}
+	 * This will return the Gui_Link2.table data as list of {@link GUILinks2BO}
 	 * Objects.
 	 *
 	 * @return Will return the Gui_Link2.table data as list of
-	 *         {@link SeedDataBO} Objects.
+	 *         {@link GUILinks2BO} Objects.
 	 */
-	public List<SeedDataBO> getSeedDataBOList();
+	public List<GUILinks2BO> getGUILinks2BOList();
 
 	/**
 	 * This will return the map with key as the Table id and value as
-	 * {@link SeedDataBO}.
+	 * {@link GUILinks2BO}.
 	 *
 	 * @return Will return the map with key as the Table id and value as
-	 *         {@link SeedDataBO}.
+	 *         {@link GUILinks2BO}.
 	 */
-	public Map<String, SeedDataBO> getTableIdMap();
+	public Map<String, GUILinks2BO> getTableIdMap();
 
 	/**
-	 * This will tell whether the guiId have {@link SeedDataBO} or not.
+	 * This will tell whether the guiId have {@link GUILinks2BO} or not.
 	 * 
 	 * @param guiId
 	 *            The gui Id
-	 * @return Will tell whether the guiId have {@link SeedDataBO} or not.
+	 * @return Will tell whether the guiId have {@link GUILinks2BO} or not.
 	 */
 	public boolean hasSeedDataObject(String guiId);
 
 	/**
-	 * This will return the list of {@link SeedDataBO} which belong to the
+	 * This will return the list of {@link GUILinks2BO} which belong to the
 	 * Regulation Tab.
 	 *
-	 * @return Will return the list of {@link SeedDataBO} which belong to the
+	 * @return Will return the list of {@link GUILinks2BO} which belong to the
 	 *         Regulation Tab.
 	 */
-	public List<SeedDataBO> getRegulationsTabData();
+	public List<GUILinks2BO> getRegulationsTabData();
 
 	/**
 	 * 
