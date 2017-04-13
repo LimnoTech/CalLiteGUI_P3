@@ -28,6 +28,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import calsim.app.MultipleTimeSeries;
+import gov.ca.water.calgui.bo.DSSGrabber2BO;
 
 /**
  * Monthly table panel for mts
@@ -45,7 +46,7 @@ public class MonthlyTablePanel2 extends JPanel implements ActionListener, Compon
 	final String CELL_BREAK = "\t";
 	final Clipboard CLIPBOARD = Toolkit.getDefaultToolkit().getSystemClipboard();
 
-	public MonthlyTablePanel2(String title, TimeSeriesContainer[][] mtscs, DSSGrabber2 dss_Grabber2, String sName, boolean isBase,
+	public MonthlyTablePanel2(String title, TimeSeriesContainer[][] mtscs, DSSGrabber2BO dss_Grabber2, String sName, boolean isBase,
 	        MultipleTimeSeries mts) {
 
 		super();

@@ -29,6 +29,9 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import gov.ca.water.calgui.bo.DSSGrabber1BO;
+import gov.ca.water.calgui.bo.DSSGrabber2BO;
+
 //import com.limno.calgui.table.ColumnGroup;
 //import com.limno.calgui.table.GroupableTableHeader;
 
@@ -126,35 +129,35 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 	Vector<String> columns;
 
 	public SummaryTablePanel(String title, TimeSeriesContainer tscs[], TimeSeriesContainer stscs[], String tagString, String sName,
-	        DSSGrabber1 dss_Grabber) {
+	        DSSGrabber1BO dss_Grabber) {
 
 		this(title, tscs, stscs, tagString, sName, dss_Grabber, null, false);
 
 	}
 
 	public SummaryTablePanel(String title, TimeSeriesContainer tscs[], TimeSeriesContainer stscs[], String tagString, String sName,
-	        DSSGrabber2 dss_Grabber) {
+	        DSSGrabber2BO dss_Grabber) {
 
 		this(title, tscs, stscs, tagString, sName, null, dss_Grabber, false);
 
 	}
 
 	public SummaryTablePanel(String title, TimeSeriesContainer tscs[], TimeSeriesContainer stscs[], String tagString, String sName,
-	        DSSGrabber1 dss_Grabber, boolean isBase) {
+	        DSSGrabber1BO dss_Grabber, boolean isBase) {
 
 		this(title, tscs, stscs, tagString, sName, dss_Grabber, null, isBase);
 
 	}
 
 	public SummaryTablePanel(String title, TimeSeriesContainer tscs[], TimeSeriesContainer stscs[], String tagString, String sName,
-	        DSSGrabber2 dss_Grabber, boolean isBase) {
+	        DSSGrabber2BO dss_Grabber, boolean isBase) {
 
 		this(title, tscs, stscs, tagString, sName, null, dss_Grabber, isBase);
 
 	}
 
 	public SummaryTablePanel(String title, TimeSeriesContainer tscs[], TimeSeriesContainer stscs[], String tagString, String sName,
-	        DSSGrabber1 dss_Grabber, DSSGrabber2 dss_Grabber2, boolean isBase) {
+	        DSSGrabber1BO dss_Grabber, DSSGrabber2BO dss_Grabber2, boolean isBase) {
 
 		super();
 

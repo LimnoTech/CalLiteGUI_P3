@@ -1,4 +1,4 @@
-package gov.ca.water.calgui.results;
+package gov.ca.water.calgui.bo;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,6 +15,9 @@ import javax.swing.JOptionPane;
 import org.apache.log4j.Logger;
 
 import calsim.app.Project;
+import gov.ca.water.calgui.results.Prefix;
+import gov.ca.water.calgui.results.RBListItem;
+import gov.ca.water.calgui.results.ResultUtils;
 import hec.heclib.dss.HecDss;
 import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
@@ -41,9 +44,9 @@ import hec.io.TimeSeriesContainer;
  * <li>Other calculations</li>
  * </ul>
  */
-public class DSSGrabber1 {
+public class DSSGrabber1BO {
 
-	static Logger log = Logger.getLogger(DSSGrabber1.class.getName());
+	static Logger log = Logger.getLogger(DSSGrabber1BO.class.getName());
 	static final double CFS_2_TAF_DAY = 0.001983471;
 	static final double TAF_DAY_2_CFS = 504.166667;
 
@@ -74,7 +77,7 @@ public class DSSGrabber1 {
 
 	protected Project project = ResultUtils.getXMLParsingSvcImplInstance(null).getProject();
 
-	public DSSGrabber1(JList list) {
+	public DSSGrabber1BO(JList list) {
 
 		this.lstScenarios = list;
 

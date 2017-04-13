@@ -23,6 +23,8 @@ import org.swixml.SwingEngine;
 
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
+import gov.ca.water.calgui.bo.DSSGrabber1BO;
+import gov.ca.water.calgui.bo.DSSGrabber2BO;
 import hec.io.TimeSeriesContainer;
 
 /**
@@ -52,7 +54,7 @@ public class DisplayFrame {
 	 */
 	public static void showDisplayFrames(String displayGroup, JList lstScenarios) {
 
-		DSSGrabber1 dssGrabber = new DSSGrabber1(lstScenarios);
+		DSSGrabber1BO dssGrabber = new DSSGrabber1BO(lstScenarios);
 		boolean doComparison = false;
 		boolean doDifference = false;
 		boolean doTimeSeries = false;
@@ -474,7 +476,7 @@ public class DisplayFrame {
 	public static void showDisplayFrames_WRIMS(String displayGroup, JList lstScenarios, DerivedTimeSeries dts,
 			MultipleTimeSeries mts) {
 
-		DSSGrabber2 dssGrabber = new DSSGrabber2(lstScenarios, dts, mts);
+		DSSGrabber2BO dssGrabber = new DSSGrabber2BO(lstScenarios, dts, mts);
 		boolean doComparison = false;
 		boolean doDifference = false;
 		boolean doTimeSeries = false;

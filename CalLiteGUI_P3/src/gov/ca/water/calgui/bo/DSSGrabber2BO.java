@@ -1,4 +1,4 @@
-package gov.ca.water.calgui.results;
+package gov.ca.water.calgui.bo;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -10,6 +10,8 @@ import org.apache.log4j.Logger;
 
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
+import gov.ca.water.calgui.results.RBListItem;
+import gov.ca.water.calgui.results.ResultUtils;
 import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
 
@@ -36,9 +38,9 @@ import hec.io.TimeSeriesContainer;
  * <li>Other calculations</li>
  * </ul>
  */
-public class DSSGrabber2 extends DSSGrabber1 {
+public class DSSGrabber2BO extends DSSGrabber1BO {
 
-	static Logger log = Logger.getLogger(DSSGrabber2.class.getName());
+	static Logger log = Logger.getLogger(DSSGrabber2BO.class.getName());
 
 	private final DerivedTimeSeries dts;
 	private final MultipleTimeSeries mts;
@@ -48,7 +50,7 @@ public class DSSGrabber2 extends DSSGrabber1 {
 	private double[][][] annualCFSs;
 	private double[][][] annualCFSsDiff;
 
-	public DSSGrabber2(JList list, DerivedTimeSeries dts, MultipleTimeSeries mts) {
+	public DSSGrabber2BO(JList list, DerivedTimeSeries dts, MultipleTimeSeries mts) {
 
 		super(list);
 		this.dts = dts;
@@ -460,12 +462,12 @@ public class DSSGrabber2 extends DSSGrabber1 {
 
 	public double getAnnualTAF(int mtsi, int i, int wy) {
 
-		return annualTAFs[mtsi][i][wy - startWY];
+		return wy < startWY ? -1 : annualTAFs[mtsi][i][wy - startWY];
 	}
 
 	public double getAnnualTAFDiff(int mtsi, int i, int wy) {
 
-		return annualTAFsDiff[mtsi][i][wy - startWY];
+		return wy < startWY ? -1 : annualTAFsDiff[mtsi][i][wy - startWY];
 	}
 
 	/**
