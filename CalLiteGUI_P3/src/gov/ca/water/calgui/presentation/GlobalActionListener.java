@@ -1,24 +1,35 @@
 package gov.ca.water.calgui.presentation;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -49,6 +60,8 @@ import gov.ca.water.calgui.bus_service.impl.SeedDataSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.results.ControlFrame;
+import gov.ca.water.calgui.results.DisplayFrame;
+import gov.ca.water.calgui.results.Report;
 import gov.ca.water.calgui.results.ResultUtils;
 import gov.ca.water.calgui.tech_service.IAuditSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
@@ -73,9 +86,15 @@ public class GlobalActionListener implements ActionListener {
 	private IVerifyControlsDele verifyControlsDele = new VerifyControlsDeleImp();
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private IApplyDynamicConDele applyDynamicConDele = new ApplyDynamicConDeleImp();
+	private JList<String> lstScenarios = null;
+	private JList<String> lstReports = null;
+	static DtsTreeModel dtm;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void actionPerformed(ActionEvent ae) {
+		lstReports = (JList<String>) swingEngine.find("lstReports");
+		lstScenarios = (JList<String>) swingEngine.find("SelectedList");
 		JTable table = null;
 		switch (ae.getActionCommand()) {
 		case "AC_SaveScen":
@@ -229,6 +248,89 @@ public class GlobalActionListener implements ActionListener {
 			GuiUtils.getCLGPanel().repaint();
 			break;
 
+		// From Quick Results and External PDF
+
+		case "AC_PresetClear":
+			clearQRCheckBoxes("presets");
+			break;
+		case "AC_ShortageClear":
+			clearQRCheckBoxes("shortage");
+			break;
+		case "AC_SJRClear":
+			clearQRCheckBoxes("SJR Results");
+			break;
+		case "AC_WMAClear":
+			clearQRCheckBoxes("WMA");
+			break;
+		case "AC_DShortClear":
+			clearQRCheckBoxes("DShort");
+			break;
+		case "AC_DfcClear":
+			clearQRCheckBoxes("delta_flow_criteria");
+			break;
+		case "AC_GenReport":
+			generateReport();
+			break;
+		case "Rep_All":
+			setQRMonthCheckBoxesSelected(true);
+			break;
+		case "Rep_ClearMonths":
+			setQRMonthCheckBoxesSelected(false);
+			break;
+		case "Rep_AddList":
+			addToQRReportList();
+			break;
+		case "Rep_ClearList":
+			lstReports.setListData(new String[0]);
+			break;
+		case "Rep_LoadList":
+			ResultUtils.getXMLParsingSvcImplInstance(null).readCGR();
+			break;
+		case "Rep_SaveList":
+			ResultUtils.getXMLParsingSvcImplInstance(null).writeCGR();
+			break;
+		case "Rep_DispAll":
+			if (lstScenarios.getModel().getSize() == 0) {
+				JOptionPane.showMessageDialog(null, "No scenarios loaded", "Error", JOptionPane.ERROR_MESSAGE);
+			} else {
+				for (int i = 0; i < lstReports.getModel().getSize(); i++)
+					DisplayFrame.showDisplayFrames((String) (lstReports.getModel().getElementAt(i)), lstScenarios);
+			}
+			break;
+		case "Rep_DispCur":
+			if (lstScenarios.getModel().getSize() == 0) {
+				JOptionPane.showMessageDialog(null, "No scenarios loaded", "Error", JOptionPane.ERROR_MESSAGE);
+			} else if (lstReports.getSelectedValue() == null) {
+				JOptionPane.showMessageDialog(null, "No display group selected", "Error", JOptionPane.ERROR_MESSAGE);
+			} else {
+
+				DisplayFrame.showDisplayFrames((String) ((JList) swingEngine.find("lstReports")).getSelectedValue(),
+						lstScenarios);
+			}
+			break;
+		case "Time_SELECT":
+
+			break;
+		case "AC_CompScen":
+			IScenarioDele scenarioDele = new ScenarioDeleImp();
+			boolean proceed = this.allButtonsDele.saveForViewScen();
+			List<String> fileNames = new ArrayList<>();
+			for (int i = 0; i < ((DefaultListModel) lstScenarios.getModel()).getSize(); i++) {
+				String name = Paths.get(((DefaultListModel) lstScenarios.getModel()).getElementAt(i).toString())
+						.getFileName().toString();
+				fileNames.add(name.substring(0, name.length() - 7) + Constant.CLS_EXT);
+			}
+			if (proceed) {
+				List<DataTableModel> dtmList = scenarioDele.getScenarioTableData(fileNames);
+				ScenarioFrame scenarioFrame = new ScenarioFrame(dtmList);
+				scenarioFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				scenarioFrame.setVisible(true);
+				try {
+					Files.delete(Paths.get(Constant.SCENARIOS_DIR + Constant.CURRENT_SCENARIO + Constant.CLS_EXT));
+				} catch (IOException ex) {
+					LOG.debug(ex);
+				}
+			}
 		}
 	}
 
@@ -354,5 +456,158 @@ public class GlobalActionListener implements ActionListener {
 			isSaved = true;
 		}
 		return isSaved;
+	}
+
+	/**
+	 * Adds items to list of reports on Quick Result dashboard. One item is
+	 * added for each checked item on the children panels for "variables"
+	 * 
+	 */
+	private void addToQRReportList() {
+		// Store previous list items
+		int size = lstReports.getModel().getSize(); // 4
+		int n;
+		n = 0;
+		String[] lstArray = new String[size];
+		for (int i = 0; i < size; i++) {
+			Object item = lstReports.getModel().getElementAt(i);
+			if (item.toString() != " ") {
+				lstArray[n] = item.toString();
+				n = n + 1;
+			}
+		}
+		String[] lstArray1 = new String[n + 1];
+		for (int i = 0; i < n; i++) {
+			lstArray1[i] = lstArray[i];
+		}
+		// Add new items
+		String cSTOR = ";Locs-";
+		String cSTORIdx = ";Index-";
+		Component[] components = ((JTabbedPane) swingEngine.find("variables")).getComponents();
+		for (Component c : components) {
+			if (c instanceof JPanel) {
+				Component[] components2 = ((JPanel) c).getComponents();
+				for (Component c2 : components2)
+					if (c2 instanceof JCheckBox) {
+						JCheckBox cb = (JCheckBox) c2;
+						String cName = cb.getName();
+						if (cName.startsWith("ckbp")) {
+							if (cb.isSelected()) {
+								cSTOR = cSTOR + cb.getText().trim() + ",";
+								cSTORIdx = cSTORIdx + cName + ",";
+							}
+						}
+						lstArray1[n] = DisplayFrame.quickState() + cSTOR + cSTORIdx;
+						// String[] reportNamesEG = {cDate};
+						lstReports.setListData(lstArray1);
+					}
+			}
+		}
+	}
+
+	/**
+	 * Selects/deselects all monthly checkboxes on Quick Result control panel
+	 * 
+	 * @param b
+	 */
+	private void setQRMonthCheckBoxesSelected(boolean b) {
+		JPanel controls2 = (JPanel) swingEngine.find("controls2");
+		Component[] components = controls2.getComponents();
+		for (int i = 0; i < components.length; i++) {
+			if (components[i] instanceof JCheckBox) {
+				JCheckBox c = (JCheckBox) components[i];
+				String cName = c.getName();
+				if (cName != null) {
+					if (cName.startsWith("RepchkMon")) {
+						c.setSelected(b);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Clears Quick Result checkboxes that are on panel named "panelName"
+	 * 
+	 * @param panelName
+	 */
+	private void clearQRCheckBoxes(String panelName) {
+		JPanel panel = (JPanel) swingEngine.find(panelName);
+		Component[] components = panel.getComponents();
+		for (int i = 0; i < components.length; i++) {
+			if (components[i] instanceof JCheckBox) {
+				JCheckBox c = (JCheckBox) components[i];
+				c.setSelected(false);
+			}
+		}
+	}
+
+	/**
+	 * Generates PDF report from "External PDF" dashboard - action "ACGenReport"
+	 */
+	private void generateReport() {
+		if (((JTextField) swingEngine.find("tfReportFILE1")).getText().isEmpty()
+				|| ((JTextField) swingEngine.find("tfReportFILE2")).getText().isEmpty()
+				|| ((JTextField) swingEngine.find("tfReportFILE3")).getText().isEmpty()) {
+			JOptionPane.showMessageDialog(null, "You must specify the source DSS files and the output PDF file",
+					"Error", JOptionPane.ERROR_MESSAGE);
+		} else {
+			try {
+				// Create an inputstream from template file;
+				FileInputStream fin = new FileInputStream(
+						((JTextField) swingEngine.find("tfTemplateFILE")).getToolTipText());
+				BufferedReader br = new BufferedReader(new InputStreamReader(fin));
+				// Open the template file
+				String theText = br.readLine() + "\n";
+				theText = theText + br.readLine() + "\n";
+				theText = theText + br.readLine() + "\n";
+				br.readLine();
+				theText = theText + "FILE_BASE\t" + ((JTextField) swingEngine.find("tfReportFILE1")).getToolTipText()
+						+ "\n";
+				br.readLine();
+				theText = theText + "NAME_BASE\t\"" + ((JTextField) swingEngine.find("tfReportNAME1")).getText()
+						+ "\"\n";
+				br.readLine();
+				theText = theText + "FILE_ALT\t" + ((JTextField) swingEngine.find("tfReportFILE2")).getToolTipText()
+						+ "\n";
+				br.readLine();
+				theText = theText + "NAME_ALT\t\"" + ((JTextField) swingEngine.find("tfReportNAME2")).getText()
+						+ "\"\n";
+				br.readLine();
+				theText = theText + "OUTFILE\t" + ((JTextField) swingEngine.find("tfReportFILE3")).getToolTipText()
+						+ "\n";
+				br.readLine();
+				theText = theText + "NOTE\t\"" + ((JTextArea) swingEngine.find("taReportNOTES")).getText() + "\"\n";
+				br.readLine();
+				theText = theText + "ASSUMPTIONS\t\"" + ((JTextArea) swingEngine.find("taReportASSUMPTIONS")).getText()
+						+ "\"\n";
+				br.readLine();
+				theText = theText + "MODELER\t\"" + ((JTextField) swingEngine.find("tfReportMODELER")).getText()
+						+ "\"\n";
+
+				theText = theText + "TABLE_FONT_SIZE\t" + ((JTextField) swingEngine.find("tfFontSize")).getText()
+						+ "\n";
+
+				String aLine = br.readLine();
+				while (aLine != null) {
+					theText = theText + aLine + "\n";
+					aLine = br.readLine();
+				}
+				br.close();
+				theText = theText + "\n";
+				ByteArrayInputStream bs = new ByteArrayInputStream(theText.getBytes());
+				try {
+					Report report = new Report(bs, ((JTextField) swingEngine.find("tfReportFILE3")).getToolTipText());
+					report.execute();
+				} catch (IOException e1) {
+					LOG.debug(e1.getMessage()); // Not sure - should catch
+												// thread problems like
+												// already-open PDF?
+				}
+			} catch (IOException e1) {
+				LOG.debug(e1.getMessage()); // Failure to open template file
+											// (?)
+			}
+		}
 	}
 }
