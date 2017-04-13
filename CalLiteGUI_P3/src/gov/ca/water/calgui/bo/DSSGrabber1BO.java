@@ -15,7 +15,6 @@ import javax.swing.JOptionPane;
 import org.apache.log4j.Logger;
 
 import calsim.app.Project;
-import gov.ca.water.calgui.results.Prefix;
 import gov.ca.water.calgui.results.RBListItem;
 import gov.ca.water.calgui.results.ResultUtils;
 import hec.heclib.dss.HecDss;
@@ -216,6 +215,40 @@ public class DSSGrabber1BO {
 	}
 
 	/**
+	 * Provides element type (DSS D-PART) based on prefix location (C-PART). For
+	 * example, a C-PART prefix of "S_" maps to "STORAGE".
+	 * 
+	 * @param name
+	 *            (C-PART)
+	 * @return appropriate D-PART
+	 */
+	private String getType(String name) {
+		String type;
+		if (name.startsWith("S_") || name.startsWith("s_")) {
+			type = "STORAGE";
+		} else if (name.startsWith("C_") || name.startsWith("c_")) {
+			type = "FLOW-CHANNEL";
+		} else if (name.startsWith("D_") || name.startsWith("d_")) {
+			type = "FLOW-DELIVERY";
+		} else if (name.startsWith("R_") || name.startsWith("r_")) {
+			type = "RETURN-FLOW";
+		} else if (name.startsWith("I_") || name.startsWith("i_")) {
+			type = "INFLOW";
+		} else if (name.startsWith("AD_") || name.startsWith("ad_")) {
+			type = "FLOW-ACCRDEPL";
+		} else if (name.startsWith("S") || name.startsWith("s")) {
+			type = "STORAGE";
+		} else if (name.startsWith("D") || name.startsWith("d")) {
+			type = "FLOW-DELIVERY";
+		} else if (name.startsWith("C") || name.startsWith("c")) {
+			type = "FLOW-CHANNEL";
+		} else {
+			type = "";
+		}
+		return type;
+	}
+
+	/**
 	 * Sets dataset (DSS) names to read from scenario DSS files, title, and axis
 	 * labels be parsing string defined in web viewer.
 	 *
@@ -224,8 +257,7 @@ public class DSSGrabber1BO {
 	 */
 	public void setLocationWeb(String locationName) {
 
-		Prefix prefix = new Prefix();
-		String type = prefix.getType(locationName);
+		String type = getType(locationName);
 		primaryDSSName = locationName + "/" + type;
 		secondaryDSSName = "";
 		yLabel = type;
