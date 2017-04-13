@@ -73,7 +73,6 @@ import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.results.DisplayFrame;
 import gov.ca.water.calgui.results.FileDialog;
 import gov.ca.water.calgui.results.ResultUtils;
-import gov.ca.water.calgui.results.SchematicListener;
 import gov.ca.water.calgui.results.SchematicMain;
 import gov.ca.water.calgui.results.WRIMSGUILinks;
 import gov.ca.water.calgui.tech_service.IAuditSvc;
@@ -233,7 +232,6 @@ public class CalLiteInitClass {
 		new SchematicMain((JPanel) swingEngine.find("schematic_holder2"),
 				"file:///" + System.getProperty("user.dir") + "/Config/callite-massbalance_working.svg", swingEngine,
 				1.2, 0, 0.0, 1.2, 21.0, 15.0);
-		setCheckBoxorRadioButtonItemListener(swingEngine.find("schematics"), new SchematicListener(swingEngine));
 		// Recolor results tabs
 		JTabbedPane jTabbedPane = (JTabbedPane) swingEngine.find("tabbedPane1");
 		jTabbedPane.setForegroundAt(6, Color.blue);

@@ -1,11 +1,14 @@
 package gov.ca.water.calgui.presentation;
 
+import java.awt.CardLayout;
+import java.awt.Dimension;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -20,6 +23,7 @@ import gov.ca.water.calgui.bus_service.IResultSvc;
 import gov.ca.water.calgui.bus_service.impl.DynamicControlSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.ResultSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
+import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.results.ResultUtils;
 import gov.ca.water.calgui.tech_service.IAuditSvc;
 import gov.ca.water.calgui.tech_service.impl.AuditSvcImpl;
@@ -75,6 +79,23 @@ public class GlobalItemListener implements ItemListener {
 					JPanel controls3 = (JPanel) swingEngine.find("controls3");
 					ResultUtils.getXMLParsingSvcImplInstance(null).toggleEnComponentAndChildren(controls3,
 							ie.getStateChange() == ItemEvent.SELECTED);
+				}
+
+			} else if (itemName.startsWith("rdbSchem")) {
+
+				// Schematic (map) view
+
+				JPanel p = (JPanel) swingEngine.find("schematic_card_layout");
+				CardLayout cl = (CardLayout) p.getLayout();
+				if (ie.getStateChange() == ItemEvent.SELECTED) {
+
+					if (itemName.equals("rdbSchemNormal")) {
+						cl.show(p, "First");
+						updateSchematicLayout();
+					} else if (itemName.equals("rdbSchemMB")) {
+						cl.show(p, "Second");
+						updateSchematicLayout();
+					}
 				}
 			}
 		}
@@ -170,5 +191,12 @@ public class GlobalItemListener implements ItemListener {
 			applyDynamicConDele.applyDynamicControl(itemName, isSelected, isEnabled, optionFromTheBox);
 		}
 		auditSvc.addAudit(itemName, String.valueOf(!isSelected), String.valueOf(isSelected));
+	}
+
+	private void updateSchematicLayout() {
+		JFrame f = (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME);
+		Dimension d = f.getSize();
+		f.setSize(new Dimension(d.width + 1, d.height));
+		f.setSize(d);
 	}
 }
