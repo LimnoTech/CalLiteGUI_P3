@@ -16,6 +16,7 @@ import javax.swing.event.ChangeListener;
 import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
 
+import gov.ca.water.calgui.bo.JLinkedSlider;
 import gov.ca.water.calgui.bus_service.impl.ModelRunSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 

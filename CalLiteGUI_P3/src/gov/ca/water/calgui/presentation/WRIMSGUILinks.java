@@ -1,7 +1,7 @@
 /**
  *
  */
-package gov.ca.water.calgui.presentation.display;
+package gov.ca.water.calgui.presentation;
 
 import java.awt.BorderLayout;
 import java.io.File;

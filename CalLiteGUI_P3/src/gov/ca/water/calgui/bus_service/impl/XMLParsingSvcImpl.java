@@ -19,10 +19,10 @@ import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
 
 import gov.ca.water.calgui.bo.CalLiteGUIException;
+import gov.ca.water.calgui.bo.JLinkedSlider;
+import gov.ca.water.calgui.bo.NumericTextField;
 import gov.ca.water.calgui.bus_service.IXMLParsingSvc;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.presentation.JLinkedSlider;
-import gov.ca.water.calgui.presentation.NumericTextField;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.IFileSystemSvc;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;

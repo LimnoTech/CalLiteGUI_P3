@@ -29,7 +29,7 @@ import javax.swing.event.ListDataListener;
 
 import org.apache.log4j.Logger;
 
-import gov.ca.water.calgui.results.WRIMSGUILinks;
+import gov.ca.water.calgui.presentation.WRIMSGUILinks;
 
 /**
  * Supports selection of different types of CalLite files from customized

@@ -1,4 +1,4 @@
-package gov.ca.water.calgui.presentation;
+package gov.ca.water.calgui.bo;
 
 import javax.swing.JSlider;
 

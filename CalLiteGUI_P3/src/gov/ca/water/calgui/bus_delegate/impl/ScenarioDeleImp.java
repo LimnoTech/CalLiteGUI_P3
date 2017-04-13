@@ -24,6 +24,7 @@ import org.swixml.SwingEngine;
 import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.ScenarioDisplayBO;
 import gov.ca.water.calgui.bo.GUILinks2BO;
+import gov.ca.water.calgui.bo.NumericTextField;
 import gov.ca.water.calgui.bus_delegate.IScenarioDele;
 import gov.ca.water.calgui.bus_service.IScenarioSvc;
 import gov.ca.water.calgui.bus_service.ISeedDataSvc;
@@ -32,7 +33,6 @@ import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.SeedDataSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.presentation.NumericTextField;
 
 /**
  * This class is used to show the Scenario state of the application and also
