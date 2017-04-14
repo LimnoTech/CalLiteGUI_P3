@@ -77,7 +77,7 @@ public class DSSGrabber1BO {
 	protected double[][] annualCFSs;
 	protected double[][] annualCFSsDiff;
 
-	protected Project project = ResultUtilsBO.getResultsUtilslInstance(null).getProject();
+	protected Project project = ResultUtilsBO.getResultUtilsInstance(null).getProject();
 
 	public DSSGrabber1BO(JList list) {
 
@@ -110,13 +110,13 @@ public class DSSGrabber1BO {
 		try {
 			HecTime ht = new HecTime();
 
-			int m = ResultUtilsBO.getResultsUtilslInstance(null).monthToInt(dateRange.substring(0, 3));
+			int m = ResultUtilsBO.getResultUtilsInstance(null).monthToInt(dateRange.substring(0, 3));
 			int y = new Integer(dateRange.substring(3, 7));
 			ht.setYearMonthDay(m == 12 ? y + 1 : y, m == 12 ? 1 : m + 1, 1, 0);
 			startTime = ht.value();
 			startWY = (m < 10) ? y : y + 1; // Water year
 
-			m = ResultUtilsBO.getResultsUtilslInstance(null).monthToInt(dateRange.substring(8, 11));
+			m = ResultUtilsBO.getResultUtilsInstance(null).monthToInt(dateRange.substring(8, 11));
 			y = new Integer(dateRange.substring(11, 15));
 			ht.setYearMonthDay(m == 12 ? y + 1 : y, m == 12 ? 1 : m + 1, 1, 0);
 			endTime = ht.value();

@@ -260,7 +260,7 @@ public class DSSGrabber2BO extends DSSGrabber1BO {
 			TimeSeriesContainer interimResult;
 			if (!((String) dtsNames.get(i)).isEmpty()) {
 				// Operand is reference to another DTS
-				DerivedTimeSeries adt = ResultUtilsBO.getResultsUtilslInstance(null).getProject()
+				DerivedTimeSeries adt = ResultUtilsBO.getResultUtilsInstance(null).getProject()
 						.getDTS((String) dtsNames.get(i));
 				System.out.println((String) dtsNames.get(i) + ":" + adt.getName());
 				interimResult = getOneSeries_WRIMS(dssFilename, dssName, adt);
@@ -342,7 +342,7 @@ public class DSSGrabber2BO extends DSSGrabber1BO {
 		TimeSeriesContainer result = null;
 		if (!mts2.getDTSNameAt(i).equals("")) {
 			// Operand is reference to a DTS
-			DerivedTimeSeries adt = ResultUtilsBO.getResultsUtilslInstance(null).getProject()
+			DerivedTimeSeries adt = ResultUtilsBO.getResultUtilsInstance(null).getProject()
 					.getDTS(mts.getDTSNameAt(i));
 			result = getOneSeries_WRIMS(dssFilename, "", adt);
 			primaryDSSName = mts.getDTSNameAt(i);

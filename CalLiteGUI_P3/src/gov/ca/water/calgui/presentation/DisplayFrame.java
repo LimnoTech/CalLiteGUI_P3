@@ -50,7 +50,7 @@ public class DisplayFrame {
 	private static int displayDeltaY = 20;
 	private static int displayDeltaX = 200;
 
-	private static SwingEngine swix = ResultUtilsBO.getResultsUtilslInstance(null).getSwix();
+	private static SwingEngine swix = ResultUtilsBO.getResultUtilsInstance(null).getSwix();
 
 	/**
 	 *
@@ -210,14 +210,14 @@ public class DisplayFrame {
 				JSpinner m = (JSpinner) swix.find("spnStartMonth");
 				JSpinner y = (JSpinner) swix.find("spnStartYear");
 				lower.setTime(
-						(new Month(ResultUtilsBO.getResultsUtilslInstance(null).monthToInt((String) m.getValue()),
+						(new Month(ResultUtilsBO.getResultUtilsInstance(null).monthToInt((String) m.getValue()),
 								(Integer) y.getValue())).getFirstMillisecond());
 
 				Date upper = new Date();
 				m = (JSpinner) swix.find("spnEndMonth");
 				y = (JSpinner) swix.find("spnEndYear");
 				upper.setTime(
-						(new Month(ResultUtilsBO.getResultsUtilslInstance(null).monthToInt((String) m.getValue()),
+						(new Month(ResultUtilsBO.getResultUtilsInstance(null).monthToInt((String) m.getValue()),
 								(Integer) y.getValue()).getLastMillisecond()));
 
 				ChartPanel1 cp3;
@@ -568,13 +568,13 @@ public class DisplayFrame {
 		Date lower = new Date();
 		JSpinner m = (JSpinner) swix.find("spnStartMonth");
 		JSpinner y = (JSpinner) swix.find("spnStartYear");
-		lower.setTime((new Month(ResultUtilsBO.getResultsUtilslInstance(null).monthToInt((String) m.getValue()),
+		lower.setTime((new Month(ResultUtilsBO.getResultUtilsInstance(null).monthToInt((String) m.getValue()),
 				(Integer) y.getValue())).getFirstMillisecond());
 
 		Date upper = new Date();
 		m = (JSpinner) swix.find("spnEndMonth");
 		y = (JSpinner) swix.find("spnEndYear");
-		upper.setTime((new Month(ResultUtilsBO.getResultsUtilslInstance(null).monthToInt((String) m.getValue()),
+		upper.setTime((new Month(ResultUtilsBO.getResultUtilsInstance(null).monthToInt((String) m.getValue()),
 				(Integer) y.getValue()).getLastMillisecond()));
 
 		if (mts != null) {

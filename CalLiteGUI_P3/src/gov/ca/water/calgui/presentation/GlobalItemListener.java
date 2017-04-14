@@ -77,7 +77,7 @@ public class GlobalItemListener implements ItemListener {
 				// } else
 				if (itemName.startsWith("RepckbSummaryTable")) {
 					JPanel controls3 = (JPanel) swingEngine.find("controls3");
-					ResultUtilsBO.getResultsUtilslInstance(null).toggleEnComponentAndChildren(controls3,
+					ResultUtilsBO.getResultUtilsInstance(null).toggleEnComponentAndChildren(controls3,
 							ie.getStateChange() == ItemEvent.SELECTED);
 				}
 

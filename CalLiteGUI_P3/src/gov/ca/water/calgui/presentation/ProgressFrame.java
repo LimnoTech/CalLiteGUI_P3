@@ -101,7 +101,7 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 							data.add(text);
 							if (text.toLowerCase().endsWith("Run completed".toLowerCase())) {
 								LOG.info(text);
-								ResultUtilsBO.getResultsUtilslInstance(null).getFdDSSFiles()
+								ResultUtilsBO.getResultUtilsInstance(null).getFdDSSFiles()
 										.addFileToList(new File(Constant.SCENARIOS_DIR + scenarioName + "_DV.DSS"));
 								sleepAfterDisplay = true;
 								scenarioNamesAndAction.remove(scenarioName);
@@ -116,7 +116,7 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 											+ ")  - DONE - run completed".toLowerCase())) {
 								sleepAfterDisplay = true;
 								loadGeneratedWSIDI(scenarioName);
-								ResultUtilsBO.getResultsUtilslInstance(null).getFdDSSFiles()
+								ResultUtilsBO.getResultUtilsInstance(null).getFdDSSFiles()
 										.addFileToList(new File(Constant.SCENARIOS_DIR + scenarioName + "_DV.DSS"));
 								scenarioNamesAndAction.remove(scenarioName);
 							}

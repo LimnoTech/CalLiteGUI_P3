@@ -8,19 +8,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Scanner;
-import java.util.StringTokenizer;
-import java.util.TimeZone;
 import java.util.Vector;
 
 import javax.swing.JFileChooser;
@@ -45,24 +39,6 @@ import calsim.app.MultipleTimeSeries;
 import calsim.app.Project;
 import calsim.gui.GuiUtils;
 import gov.ca.water.calgui.presentation.ControlFrame;
-import gov.ca.water.calgui.presentation.Report.PathnameMap;
-import vista.db.dss.DSSUtil;
-import vista.report.TSMath;
-import vista.set.Constants;
-import vista.set.DataReference;
-import vista.set.DataSetElement;
-import vista.set.ElementFilter;
-import vista.set.ElementFilterIterator;
-import vista.set.Group;
-import vista.set.MultiIterator;
-import vista.set.Pathname;
-import vista.set.RegularTimeSeries;
-import vista.set.Stats;
-import vista.set.TimeSeries;
-import vista.time.SubTimeFormat;
-import vista.time.Time;
-import vista.time.TimeFactory;
-import vista.time.TimeWindow;
 
 public class ResultUtilsBO implements ChangeListener {
 	private static final Logger LOG = Logger.getLogger(ResultUtilsBO.class.getName());
@@ -82,7 +58,7 @@ public class ResultUtilsBO implements ChangeListener {
 	 *
 	 * @return
 	 */
-	public static ResultUtilsBO getResultsUtilslInstance(SwingEngine swingEngine) {
+	public static ResultUtilsBO getResultUtilsInstance(SwingEngine swingEngine) {
 		if (resultUtilsBO == null) {
 			resultUtilsBO = new ResultUtilsBO(swingEngine);
 		}
@@ -264,277 +240,6 @@ public class ResultUtilsBO implements ChangeListener {
 			_controlFrame = null;
 		}
 		return;
-	}
-
-	public ArrayList<String> getGUILinks(String filename) {
-		ArrayList<String> GUILinks = new ArrayList<String>();
-		Scanner input;
-		try {
-			input = new Scanner(new FileReader(filename));
-		} catch (FileNotFoundException e) {
-			LOG.debug(e.getMessage());
-			return null;
-		}
-		int lineCount = 0;
-		// int rowid = 0;
-		// int colid = 0;
-		while (input.hasNextLine()) {
-			String line = input.nextLine();
-			lineCount++;
-			if (lineCount > 1) {
-				StringTokenizer st1 = new StringTokenizer(line, "\t| ");
-				if (st1.countTokens() > 0) {
-					GUILinks.add(line);
-				}
-			}
-		}
-		input.close();
-		return GUILinks;
-	}
-
-	public ArrayList<double[]> buildDataArray(DataReference ref1, DataReference ref2, TimeWindow tw) {
-		ArrayList<double[]> dlist = new ArrayList<double[]>();
-		if ((ref1 == null) && (ref2 == null)) {
-			return dlist;
-		}
-		TimeSeries data1 = (TimeSeries) ref1.getData();
-		TimeSeries data2 = (TimeSeries) ref2.getData();
-		if (tw != null) {
-			data1 = data1.createSlice(tw);
-			data2 = data2.createSlice(tw);
-		}
-		MultiIterator iterator = buildMultiIterator(new TimeSeries[] { data1, data2 }, Constants.DEFAULT_FLAG_FILTER);
-		while (!iterator.atEnd()) {
-			DataSetElement e = iterator.getElement();
-			Date date = convertToDate(TimeFactory.getInstance().createTime(e.getXString()));
-			dlist.add(new double[] { date.getTime(), e.getX(1), e.getX(2) });
-			iterator.advance();
-		}
-		return dlist;
-	}
-
-	public Date convertToDate(Time time_val) {
-		return new Date(time_val.getDate().getTime() - TimeZone.getDefault().getRawOffset());
-	}
-
-	public MultiIterator buildMultiIterator(TimeSeries[] dsarray, ElementFilter filter) {
-		if (filter == null) {
-			return new MultiIterator(dsarray);
-		} else {
-			return new MultiIterator(dsarray, filter);
-		}
-	}
-
-	public ArrayList<double[]> buildExceedanceArray(DataReference ref1, DataReference ref2, boolean end_of_sept,
-			TimeWindow tw) {
-		ArrayList<Double> x1 = sort(ref1, end_of_sept, tw);
-		ArrayList<Double> x2 = sort(ref2, end_of_sept, tw);
-		ArrayList<double[]> darray = new ArrayList<double[]>();
-		int i = 0;
-		int n = Math.round(Math.min(x1.size(), x2.size()));
-		while (i < n) {
-			darray.add(new double[] { 100.0 - 100.0 * i / (n + 1), x1.get(i), x2.get(i) });
-			i = i + 1;
-		}
-		return darray;
-	}
-
-	public ArrayList<Double> sort(DataReference ref, boolean end_of_sept, TimeWindow tw) {
-		TimeSeries data = (TimeSeries) ref.getData();
-		if (tw != null) {
-			data = data.createSlice(tw);
-		}
-		ArrayList<Double> dx = new ArrayList<Double>();
-		ElementFilterIterator iter = new ElementFilterIterator(data.getIterator(), Constants.DEFAULT_FLAG_FILTER);
-		while (!iter.atEnd()) {
-			if (end_of_sept) {
-				if (iter.getElement().getXString().indexOf("30SEP") >= 0) {
-					dx.add(iter.getElement().getY());
-				}
-			} else {
-				dx.add(iter.getElement().getY());
-			}
-			iter.advance();
-		}
-		Collections.sort(dx);
-		return dx;
-	}
-
-	/**
-	 * Retrieves the contents list for a dss file
-	 *
-	 * @param filename
-	 * @return a handle to the content listing for a dss file
-	 */
-	public Group opendss(String filename) {
-		return DSSUtil.createGroup("local", filename);
-	}
-
-	public RegularTimeSeries cfs2taf(RegularTimeSeries data) {
-		RegularTimeSeries data_taf = (RegularTimeSeries) TSMath.createCopy(data);
-		TSMath.cfs2taf(data_taf);
-		return data_taf;
-	}
-
-	public double avg(RegularTimeSeries data, TimeWindow tw) {
-		try {
-			return Stats.avg(data.createSlice(tw)) * 12;
-		} catch (Exception ex) {
-			LOG.debug(ex.getMessage());
-			return Double.NaN;
-		}
-	}
-
-	public DataReference getReference(Group group, String path, boolean calculate_dts,
-			ArrayList<PathnameMap> pathname_maps, int group_no) {
-		if (calculate_dts) {
-			try {
-				// FIXME: add expression parser to enable any expression
-				String bpart = path.split("/")[2];
-				String[] vars = bpart.split("\\+");
-				DataReference ref = null;
-				for (String varname : vars) {
-					DataReference xref = null;
-					String varPath = createPathFromVarname(path, varname);
-					xref = getReference(group, varPath, false, pathname_maps, group_no);
-					if (xref == null) {
-						throw new RuntimeException("Aborting calculation of " + path + " due to previous path missing");
-					}
-					if (ref == null) {
-						ref = xref;
-					} else {
-						ref = ref.__add__(xref);
-					}
-				}
-				return ref;
-			} catch (Exception ex) {
-				addMessage(ex.getMessage());
-				LOG.debug(ex.getMessage());
-				return null;
-			}
-		} else {
-			try {
-				DataReference[] refs = findpath(group, path, true);
-				if (refs == null) {
-					String msg = "No data found for " + group + " and " + path;
-					addMessage(msg);
-					System.err.println(msg);
-					return null;
-				} else {
-					return refs[0];
-				}
-			} catch (Exception ex) {
-				String msg = "Exception while trying to retrieve " + path + " from " + group;
-				System.err.println(msg);
-				addMessage(msg);
-				LOG.debug(msg);
-				return null;
-			}
-		}
-	}
-
-	/**
-	 * findpath(g,path,exact=1): this returns an array of matching data
-	 * references g is the group returned from opendss function path is the
-	 * dsspathname e.g. '//C6/FLOW-CHANNEL////' exact means that the exact
-	 * string is matched as opposed to the reg. exp.
-	 *
-	 * @param g
-	 * @param path
-	 * @param exact
-	 * @return
-	 */
-	public DataReference[] findpath(Group g, String path, boolean exact) {
-		String[] pa = new String[6];
-		for (int i = 0; i < 6; i++) {
-			pa[i] = "";
-		}
-		int i = 0;
-		for (String p : path.trim().split("/")) {
-			if (i == 0) {
-				i++;
-				continue;
-			}
-			if (i >= pa.length) {
-				break;
-			}
-			pa[i - 1] = p;
-			if (exact) {
-				if (p.length() > 0) {
-					pa[i - 1] = "^" + pa[i - 1] + "$";
-				}
-			}
-			i++;
-		}
-		return g.find(pa);
-	}
-
-	private String createPathFromVarname(String path, String varname) {
-		String[] parts = path.split("/");
-		if (parts.length > 2) {
-			parts[2] = varname;
-		}
-		StringBuilder builder = new StringBuilder();
-		for (String part : parts) {
-			if (part.length() > 0) {
-				part = "^" + part + "$";
-			}
-			builder.append(part).append("/");
-		}
-		return builder.toString();
-	}
-
-	public String formatTimeWindowAsWaterYear(TimeWindow tw) {
-		SubTimeFormat year_format = new SubTimeFormat("yyyy");
-		return tw.getStartTime().__add__("3MON").format(year_format) + "-"
-				+ tw.getEndTime().__add__("3MON").format(year_format);
-	}
-
-	public String getExceedancePlotTitle(PathnameMap path_map) {
-		String title = "Exceedance " + path_map.var_name.replace("\"", "");
-		if (path_map.var_category.equals("S_SEPT")) {
-			title = title + " (Sept)";
-		}
-		return title;
-	}
-
-	public String getUnitsForReference(DataReference ref) {
-		if (ref != null) {
-			return ref.getData().getAttributes().getYUnits();
-		}
-		return "";
-	}
-
-	public String getUnits(DataReference ref1, DataReference ref2) {
-		if (ref1 == null) {
-			if (ref2 == null) {
-				return "";
-			} else {
-				return getUnitsForReference(ref2);
-			}
-		} else {
-			return getUnitsForReference(ref1);
-		}
-	}
-
-	public String getTypeOfReference(DataReference ref) {
-		if (ref != null) {
-			Pathname p = ref.getPathname();
-			return p.getPart(Pathname.C_PART);
-		}
-		return "";
-	}
-
-	public String getType(DataReference ref1, DataReference ref2) {
-		if (ref1 == null) {
-			if (ref2 == null) {
-				return "";
-			} else {
-				return getTypeOfReference(ref2);
-			}
-		} else {
-			return getTypeOfReference(ref1);
-		}
 	}
 
 	/**
