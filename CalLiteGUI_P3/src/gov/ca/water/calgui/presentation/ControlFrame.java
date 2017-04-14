@@ -29,9 +29,6 @@ public class ControlFrame extends JFrame implements WindowListener {
 
 	/**
 	 * Constructor moves controls from Quick Results to new frame
-	 *
-	 * @param swix_in
-	 *            Reference to SwingEngine containing basic GUI
 	 */
 	public ControlFrame() {
 

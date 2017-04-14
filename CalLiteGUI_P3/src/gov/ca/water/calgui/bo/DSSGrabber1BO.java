@@ -134,7 +134,7 @@ public class DSSGrabber1BO {
 	 * listed first in legends and used as the basis for difference
 	 * calculations.
 	 *
-	 * @param string
+	 * @param baseName
 	 *            name of scenario/DSS file to use as base.
 	 */
 	public void setBase(String baseName) {
@@ -175,7 +175,7 @@ public class DSSGrabber1BO {
 	 * it starts with Constant.SCHEMATIC_PREFIX) or into GUI_Links3.table. These
 	 * tables may be combined in Phase 2.
 	 *
-	 * @param string
+	 * @param locationName
 	 *            index into GUI_Links3.table or Schematic_DSS_Link4.table
 	 */
 	public void setLocation(String locationName) {
@@ -248,7 +248,7 @@ public class DSSGrabber1BO {
 	 * Sets dataset (DSS) names to read from scenario DSS files, title, and axis
 	 * labels be parsing string defined in web viewer.
 	 *
-	 * @param string
+	 * @param locationName
 	 *            coded location string passed
 	 */
 	public void setLocationWeb(String locationName) {

@@ -9,7 +9,8 @@ package gov.ca.water.calgui.bo;
 public class GUILinks3BO {
 	/**
 	 * The numeric portion of the gui ID from GUI_Links3.csv, It is combined
-	 * with the string "ckbp" padded with leading zeros (e.g."1" -> "ckbp001").
+	 * with the string "ckbp" padded with leading zeros (e.g."1" is mapped to
+	 * "ckbp001").
 	 */
 	private String iD;
 	/**

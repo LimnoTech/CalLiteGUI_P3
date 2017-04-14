@@ -45,20 +45,25 @@ public class SchematicMain {
 
 	/**
 	 *
+	 *
+	 */
+	/**
+	 * 
 	 * @param p
 	 *            Housing panel
 	 * @param url
 	 *            URL for SVG file
-	 * @param mainMenuIn
-	 *            Handle to main panel - used to access information about loaded
-	 *            scenarios
 	 * @param swix
 	 *            Handle to UI
 	 * @param m0
 	 *            -m5 Affine Transformation values
-	 *
+	 * @param m0
+	 * @param m1
+	 * @param m2
+	 * @param m3
+	 * @param m4
+	 * @param m5
 	 */
-
 	public SchematicMain(JPanel p, String url, SwingEngine swix, double m0, double m1, double m2, double m3, double m4,
 			double m5) {
 		this.swix = swix;

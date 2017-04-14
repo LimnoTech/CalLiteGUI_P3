@@ -58,10 +58,7 @@ public class DisplayFrame {
 	 * according to parameters.
 	 *
 	 * @param displayGroup
-	 * @param swix
-	 * @param dss_Grabber
 	 * @param lstScenarios
-	 * @param displayCount
 	 */
 	public static void showDisplayFrames(String displayGroup, JList lstScenarios) {
 
@@ -209,16 +206,14 @@ public class DisplayFrame {
 				Date lower = new Date();
 				JSpinner m = (JSpinner) swix.find("spnStartMonth");
 				JSpinner y = (JSpinner) swix.find("spnStartYear");
-				lower.setTime(
-						(new Month(ResultUtilsBO.getResultUtilsInstance(null).monthToInt((String) m.getValue()),
-								(Integer) y.getValue())).getFirstMillisecond());
+				lower.setTime((new Month(ResultUtilsBO.getResultUtilsInstance(null).monthToInt((String) m.getValue()),
+						(Integer) y.getValue())).getFirstMillisecond());
 
 				Date upper = new Date();
 				m = (JSpinner) swix.find("spnEndMonth");
 				y = (JSpinner) swix.find("spnEndYear");
-				upper.setTime(
-						(new Month(ResultUtilsBO.getResultUtilsInstance(null).monthToInt((String) m.getValue()),
-								(Integer) y.getValue()).getLastMillisecond()));
+				upper.setTime((new Month(ResultUtilsBO.getResultUtilsInstance(null).monthToInt((String) m.getValue()),
+						(Integer) y.getValue()).getLastMillisecond()));
 
 				ChartPanel1 cp3;
 				if (doBoxPlot) {

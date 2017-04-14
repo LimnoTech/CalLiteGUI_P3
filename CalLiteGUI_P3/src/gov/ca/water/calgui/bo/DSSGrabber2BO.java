@@ -70,7 +70,7 @@ public class DSSGrabber2BO extends DSSGrabber1BO {
 	 * it starts with Constant.SCHEMATIC_PREFIX) or into GUI_Links3.table. These
 	 * tables may be combined in Phase 2.
 	 *
-	 * @param string
+	 * @param locationName
 	 *            index into GUI_Links3.table or Schematic_DSS_Link4.table
 	 */
 	public void setLocation(String locationName) {
@@ -342,8 +342,7 @@ public class DSSGrabber2BO extends DSSGrabber1BO {
 		TimeSeriesContainer result = null;
 		if (!mts2.getDTSNameAt(i).equals("")) {
 			// Operand is reference to a DTS
-			DerivedTimeSeries adt = ResultUtilsBO.getResultUtilsInstance(null).getProject()
-					.getDTS(mts.getDTSNameAt(i));
+			DerivedTimeSeries adt = ResultUtilsBO.getResultUtilsInstance(null).getProject().getDTS(mts.getDTSNameAt(i));
 			result = getOneSeries_WRIMS(dssFilename, "", adt);
 			primaryDSSName = mts.getDTSNameAt(i);
 

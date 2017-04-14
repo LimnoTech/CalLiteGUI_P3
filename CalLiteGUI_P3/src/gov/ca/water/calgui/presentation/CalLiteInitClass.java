@@ -342,10 +342,10 @@ public class CalLiteInitClass {
 	}
 
 	/**
-	 * This method is for loading the strings in the {@link JSpinneer}.
+	 * This method is for loading the strings in the {@link JSpinner}.
 	 *
 	 * @param jspn
-	 *            The {@link JSpinneer} to load.
+	 *            The {@link JSpinner} to load.
 	 * @param idx
 	 *            The month value which we should be displaying.
 	 */
@@ -364,9 +364,9 @@ public class CalLiteInitClass {
 	 * object.
 	 *
 	 * @param jspn
-	 *            The {@link JSpinneer} object.
+	 *            The {@link JSpinner} object.
 	 * @param value
-	 *            the current value of the {@link JSpinneer}.
+	 *            the current value of the {@link JSpinner}.
 	 * @param min
 	 *            the first number in the sequence
 	 * @param max
@@ -374,7 +374,7 @@ public class CalLiteInitClass {
 	 * @param step
 	 *            the difference between elements of the sequence
 	 * @param format
-	 *            The format that the {@link JSpinneer} should look like.
+	 *            The format that the {@link JSpinner} should look like.
 	 */
 	public void setNumberModelAndIndex(JSpinner jspn, int value, int min, int max, int step, String format) {
 		SpinnerModel spnmod = new SpinnerNumberModel(value, min, max, step);

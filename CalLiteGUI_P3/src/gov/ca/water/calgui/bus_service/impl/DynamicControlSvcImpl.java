@@ -186,7 +186,7 @@ public final class DynamicControlSvcImpl implements IDynamicControlSvc {
 	}
 
 	/**
-	 * This will convert boolean to on and off string and return it. true -> on
+	 * This will convert boolean to on and off string and return it. true = on
 	 *
 	 * @param value
 	 *            The value of the boolean to convert.
@@ -198,7 +198,7 @@ public final class DynamicControlSvcImpl implements IDynamicControlSvc {
 
 	/**
 	 * This will convert the string show and hide to boolean value and return
-	 * it. show -> true
+	 * it. show = true
 	 *
 	 * @param value
 	 *            The value of the string to convert.
@@ -210,7 +210,7 @@ public final class DynamicControlSvcImpl implements IDynamicControlSvc {
 
 	/**
 	 * This will convert the on and off string to boolean value and return it.
-	 * on -> true
+	 * on = true
 	 *
 	 * @param value
 	 *            The value of the string to convert.

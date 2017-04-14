@@ -119,7 +119,7 @@ public class FileDialogBO implements ActionListener {
 
 	/**
 	 * Constructor used for DSS files, result is appended to list, radiobuttons
-	 * are enabled when list length > 1
+	 * are enabled when list length greater than 1
 	 *
 	 * @param aList
 	 * @param aLabel

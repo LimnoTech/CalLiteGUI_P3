@@ -45,7 +45,6 @@ public final class ProgressFrameForPDF extends JFrame implements ActionListener 
 	/**
 	 * This will prepare the Dialog box to show.
 	 *
-	 * @param title
 	 */
 	private ProgressFrameForPDF() {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -53,7 +52,7 @@ public final class ProgressFrameForPDF extends JFrame implements ActionListener 
 		setMinimumSize(new Dimension(400, 210));
 		setLayout(new BorderLayout(5, 5));
 		setTitle("Monitor for PDF");
-		String[] data = { "No scenarios active" };
+		String[] data = { "No reports active" };
 		list = new JList(data);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.setLayoutOrientation(JList.VERTICAL);
@@ -83,7 +82,7 @@ public final class ProgressFrameForPDF extends JFrame implements ActionListener 
 	/**
 	 * This will set the listData to the monitor window.
 	 *
-	 * @param listData
+	 * @param data
 	 */
 	public void setList(String data) {
 		String[] listData = new String[1];
