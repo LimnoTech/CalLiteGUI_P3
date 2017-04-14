@@ -1,7 +1,6 @@
 package gov.ca.water.calgui.bo;
 
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.io.BufferedReader;
 import java.io.File;
@@ -47,7 +46,6 @@ public class ResultUtilsBO implements ChangeListener {
 	private HashMap<String, Integer> monthMap;
 	private SwingEngine swingEngine;
 	private Project project;
-	private StringBuffer messages = new StringBuffer();
 	private ControlFrame _controlFrame = null;
 	// private Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
 	// private Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
@@ -89,14 +87,6 @@ public class ResultUtilsBO implements ChangeListener {
 		project = new Project();
 		AppUtils.setCurrentProject(project);
 		AppUtils.baseOn = false;
-
-	}
-
-	public void toggleEnComponentAndChildren(Component component, Boolean b) {
-		component.setEnabled(b);
-		for (Component child : ((Container) component).getComponents()) {
-			toggleEnComponentAndChildren(child, b);
-		}
 	}
 
 	/**
@@ -386,17 +376,5 @@ public class ResultUtilsBO implements ChangeListener {
 
 	public void setFdDSSFiles(FileDialogBO fdDSSFiles) {
 		this.fdDSSFiles = fdDSSFiles;
-	}
-
-	public void clearMessages() {
-		messages.setLength(0);
-	}
-
-	public void addMessage(String msg) {
-		messages.append(msg).append("\n");
-	}
-
-	public String getMessages() {
-		return messages.toString();
 	}
 }

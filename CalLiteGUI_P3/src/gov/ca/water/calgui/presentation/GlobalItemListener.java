@@ -16,7 +16,6 @@ import javax.swing.JRadioButton;
 import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
 
-import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
 import gov.ca.water.calgui.bus_delegate.impl.ApplyDynamicConDeleImp;
 import gov.ca.water.calgui.bus_service.IDynamicControlSvc;
@@ -75,11 +74,11 @@ public class GlobalItemListener implements ItemListener {
 				// || ((JCheckBox)
 				// swingEngine.find("RepckbExceedancePlot")).isSelected());
 				// } else
-				if (itemName.startsWith("RepckbSummaryTable")) {
-					JPanel controls3 = (JPanel) swingEngine.find("controls3");
-					ResultUtilsBO.getResultUtilsInstance(null).toggleEnComponentAndChildren(controls3,
-							ie.getStateChange() == ItemEvent.SELECTED);
-				}
+				// if (itemName.startsWith("RepckbSummaryTable")) {
+				// JPanel controls3 = (JPanel) swingEngine.find("controls3");
+				// ResultUtilsBO.getResultUtilsInstance(null).toggleEnComponentAndChildren(controls3,
+				// ie.getStateChange() == ItemEvent.SELECTED);
+				// }
 
 			} else if (itemName.startsWith("rdbSchem")) {
 

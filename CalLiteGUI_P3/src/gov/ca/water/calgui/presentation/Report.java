@@ -51,6 +51,7 @@ public class Report extends SwingWorker<Void, String> {
 	private static SwingEngine swix = ResultUtilsBO.getResultUtilsInstance(null).getSwix();
 	private ProgressFrameForPDF progressFrameForPDF;
 	private static final Logger LOG = Logger.getLogger(Report.class.getName());
+	private StringBuffer messages = new StringBuffer();
 
 	/**
 	 * Externalizes the format for output. This allows the flexibility of
@@ -167,7 +168,7 @@ public class Report extends SwingWorker<Void, String> {
 
 	void generateReport(InputStream templateContentStream) throws IOException {
 		logger.fine("Parsing input template");
-		ResultUtilsBO.getResultUtilsInstance(null).clearMessages();
+		clearMessages();
 		parseTemplateFile(templateContentStream);
 		doProcessing();
 		logger.fine("Done generating report");
@@ -242,7 +243,7 @@ public class Report extends SwingWorker<Void, String> {
 		if ((dssGroupBase == null) || (dssGroupAlt == null)) {
 			String msg = "No data available in either : " + scalars.get("FILE_BASE") + " or " + scalars.get("FILE_ALT");
 			logger.severe(msg);
-			ResultUtilsBO.getResultUtilsInstance(null).addMessage(msg);
+			addMessage(msg);
 			return;
 		}
 
@@ -435,7 +436,7 @@ public class Report extends SwingWorker<Void, String> {
 			String msg = "Requested unknown plot type: " + plotType + " for title: " + title + " seriesName: "
 					+ seriesName[0] + ",..";
 			logger.warning(msg);
-			ResultUtilsBO.getResultUtilsInstance(null).addMessage(msg);
+			addMessage(msg);
 		}
 	}
 
@@ -602,7 +603,7 @@ public class Report extends SwingWorker<Void, String> {
 				}
 				return ref;
 			} catch (Exception ex) {
-				ResultUtilsBO.getResultUtilsInstance(null).addMessage(ex.getMessage());
+				addMessage(ex.getMessage());
 				logger.fine(ex.getMessage());
 				return null;
 			}
@@ -611,7 +612,7 @@ public class Report extends SwingWorker<Void, String> {
 				DataReference[] refs = findpath(group, path, true);
 				if (refs == null) {
 					String msg = "No data found for " + group + " and " + path;
-					ResultUtilsBO.getResultUtilsInstance(null).addMessage(msg);
+					addMessage(msg);
 					System.err.println(msg);
 					return null;
 				} else {
@@ -620,7 +621,7 @@ public class Report extends SwingWorker<Void, String> {
 			} catch (Exception ex) {
 				String msg = "Exception while trying to retrieve " + path + " from " + group;
 				System.err.println(msg);
-				ResultUtilsBO.getResultUtilsInstance(null).addMessage(msg);
+				addMessage(msg);
 				LOG.fine(msg);
 				return null;
 			}
@@ -709,6 +710,22 @@ public class Report extends SwingWorker<Void, String> {
 		} else {
 			return getUnitsForReference(ref1);
 		}
+	}
+
+	/**
+	 * Clear {@link ProgressFrameForPDF} status window message buffer
+	 */
+	public void clearMessages() {
+		messages.setLength(0);
+	}
+
+	/**
+	 * Add a message to the {@link ProgressFrameForPDF} status window
+	 * 
+	 * @param msg
+	 */
+	public void addMessage(String msg) {
+		messages.append(msg).append("\n");
 	}
 
 }

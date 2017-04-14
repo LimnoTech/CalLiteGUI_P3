@@ -375,3 +375,6 @@ fac_ckb9,on,fac_pan8,hide
 fac_rdb4,on,fac_txf41,off
 fac_rdb5,on,fac_txf41,off
 fac_rdb6,on,fac_txf41,on
+! For quick results,,,
+RepckbSummaryTable,on,controls3,on
+RepckbSummaryTable,off,controls3,off
