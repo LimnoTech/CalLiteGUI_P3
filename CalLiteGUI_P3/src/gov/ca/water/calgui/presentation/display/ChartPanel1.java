@@ -1,8 +1,5 @@
 package gov.ca.water.calgui.presentation.display;
 
-import hec.heclib.util.HecTime;
-import hec.io.TimeSeriesContainer;
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -53,6 +50,10 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
+import gov.ca.water.calgui.constant.Constant;
+import hec.heclib.util.HecTime;
+import hec.io.TimeSeriesContainer;
+
 public class ChartPanel1 extends JPanel implements Printable {
 	/**
 	 * ChartPanel1 - Creates JPanel with a single ChartPanel
@@ -62,13 +63,13 @@ public class ChartPanel1 extends JPanel implements Printable {
 	private static Logger log = Logger.getLogger(ChartPanel.class.getName());
 	JButton btnScatter;
 
-	public ChartPanel1(String title, String yLabel, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs, boolean isExceed,
-	        Date lower, Date upper, String sLabel) {
+	public ChartPanel1(String title, String yLabel, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs,
+			boolean isExceed, Date lower, Date upper, String sLabel) {
 		this(title, yLabel, tscs, stscs, isExceed, lower, upper, sLabel, false);
 	}
 
-	public ChartPanel1(String title, String yLabel, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs, boolean isExceed,
-	        Date lower, Date upper, String sLabel, boolean isBase) {
+	public ChartPanel1(String title, String yLabel, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs,
+			boolean isExceed, Date lower, Date upper, String sLabel, boolean isBase) {
 
 		super();
 
@@ -98,8 +99,8 @@ public class ChartPanel1 extends JPanel implements Printable {
 		boolean isSchVw = false;
 		String[] svNames = null;
 
-		if (title.startsWith("SchVw")) {
-			title = title.substring(5);
+		if (title.startsWith(Constant.SCHEMATIC_PREFIX)) {
+			title = title.substring(Constant.SCHEMATIC_PREFIX.length());
 			isSchVw = true;
 			svNames = sLabel.split(",");
 		}
@@ -145,16 +146,17 @@ public class ChartPanel1 extends JPanel implements Printable {
 							ymin = stscs[i].minimumValue();
 						if (ymax < maxval)
 							ymax = maxval;// typo in HEC DSS
-							              // classes?
+											// classes?
 					}
 				}
 			}
 
 			chart = ChartFactory.createXYLineChart(title.replace(";", "+"), // title
-			        "Percent", // x-axis label
-			        yLabel + ((yLabel.endsWith("(TAF)") ? "" : "(" + tscs[0].units + ")")), // y-axis label
-			        dataset, // data
-			        true); // create and display a frame...
+					"Percent", // x-axis label
+					yLabel + ((yLabel.endsWith("(TAF)") ? "" : "(" + tscs[0].units + ")")), // y-axis
+																							// label
+					dataset, // data
+					true); // create and display a frame...
 
 		} else {
 
@@ -188,7 +190,9 @@ public class ChartPanel1 extends JPanel implements Printable {
 				subplot1.setBackgroundPaint(Color.WHITE); // White background
 				subplot1.setDomainGridlinesVisible(false); // No gridlines
 				subplot1.setRangeGridlinesVisible(false);
-				subplot1.setAxisOffset(new RectangleInsets(0, 0, 0, 0)); // No axis offset
+				subplot1.setAxisOffset(new RectangleInsets(0, 0, 0, 0)); // No
+																			// axis
+																			// offset
 
 				// SUBPLOT2 - EVAPORATION ...
 
@@ -201,7 +205,9 @@ public class ChartPanel1 extends JPanel implements Printable {
 				subplot2.setBackgroundPaint(Color.WHITE); // White background
 				subplot2.setDomainGridlinesVisible(false); // No gridlines
 				subplot2.setRangeGridlinesVisible(false);
-				subplot2.setAxisOffset(new RectangleInsets(0, 0, 0, 0)); // No axis offset
+				subplot2.setAxisOffset(new RectangleInsets(0, 0, 0, 0)); // No
+																			// axis
+																			// offset
 
 				// ... and SURFACE AREA
 
@@ -229,7 +235,9 @@ public class ChartPanel1 extends JPanel implements Printable {
 				subplot3.setBackgroundPaint(Color.WHITE); // White background
 				subplot3.setDomainGridlinesVisible(false); // No gridlines
 				subplot3.setRangeGridlinesVisible(false);
-				subplot3.setAxisOffset(new RectangleInsets(0, 0, 0, 0)); // No axis offset
+				subplot3.setAxisOffset(new RectangleInsets(0, 0, 0, 0)); // No
+																			// axis
+																			// offset
 
 				// COMBINE THE SUBPLOTS
 
@@ -260,7 +268,8 @@ public class ChartPanel1 extends JPanel implements Printable {
 					if (ymin > tscs[i].minimumValue())
 						ymin = tscs[i].minimumValue();
 					if (ymax < tscs[i].maxmimumValue())
-						ymax = tscs[i].maxmimumValue(); // typo in HEC DSS classes?
+						ymax = tscs[i].maxmimumValue(); // typo in HEC DSS
+														// classes?
 
 				}
 
@@ -285,17 +294,17 @@ public class ChartPanel1 extends JPanel implements Printable {
 								ymin = stscs[i].minimumValue();
 							if (ymax < maxval)
 								ymax = maxval; // typo in HEC DSS
-								               // classes?
+												// classes?
 						}
 					}
 				}
 
 				chart = ChartFactory.createTimeSeriesChart(title.replace(";", "+"), // title
-				        "Time (1MON)", // x-axis label //TODO - Hard-coded to
-				                       // monthly!
-				        yLabel + " (" + tscs[0].units + ")", // y-axis label
-				        dataset, // data
-				        true); // create and display a frame...
+						"Time (1MON)", // x-axis label //TODO - Hard-coded to
+										// monthly!
+						yLabel + " (" + tscs[0].units + ")", // y-axis label
+						dataset, // data
+						true); // create and display a frame...
 
 				if (scatterAvailable) {
 
@@ -306,10 +315,10 @@ public class ChartPanel1 extends JPanel implements Printable {
 						seriesXY.addOrUpdate(tscs[0].values[j], tscs[1].values[j]);
 					datasetXY.addSeries(seriesXY);
 					chartXY = ChartFactory.createXYLineChart(title.replace(";", "+") + " (" + tscs[0].units + ")", // title
-					        tscs[0].fileName, // x-axis label
-					        tscs[1].fileName, // y-axis label
-					        datasetXY, // data
-					        false); // create and display a frame...
+							tscs[0].fileName, // x-axis label
+							tscs[1].fileName, // y-axis label
+							datasetXY, // data
+							false); // create and display a frame...
 					XYPlot plot = (XYPlot) chartXY.getPlot();
 					XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) plot.getRenderer();
 					renderer.setSeriesLinesVisible(0, false);
@@ -436,8 +445,8 @@ public class ChartPanel1 extends JPanel implements Printable {
 
 							buffer = buffer + dataset.getXValue(i, j) + "\t" + dataset.getYValue(i, j) + "\t\t";
 						else {
-							buffer = buffer + df.format(new Date((long) dataset.getXValue(i, j))) + "\t" + dataset.getYValue(i, j)
-							        + "\t\t";
+							buffer = buffer + df.format(new Date((long) dataset.getXValue(i, j))) + "\t"
+									+ dataset.getYValue(i, j) + "\t\t";
 						}
 					} else
 						buffer = buffer + "\t\t\t";
@@ -458,8 +467,8 @@ public class ChartPanel1 extends JPanel implements Printable {
 	 * @param ymin
 	 * @param primaries
 	 */
-	private void setChartOptions(JFreeChart chart, TimeSeriesContainer[] stscs, boolean isExceed, boolean isBase, Double ymax,
-	        Double ymin, Integer primaries) {
+	private void setChartOptions(JFreeChart chart, TimeSeriesContainer[] stscs, boolean isExceed, boolean isBase,
+			Double ymax, Double ymin, Integer primaries) {
 
 		chart.setBackgroundPaint(Color.WHITE);
 
@@ -473,17 +482,19 @@ public class ChartPanel1 extends JPanel implements Printable {
 
 		if (plot instanceof CombinedDomainXYPlot)
 			;
-		else if (plot.getDataset(0).getSeriesCount() >= 4) // Fourth series assumed yellow, switched to black
+		else if (plot.getDataset(0).getSeriesCount() >= 4) // Fourth series
+															// assumed yellow,
+															// switched to black
 			r.setSeriesPaint(3, ChartColor.BLACK);
 
 		if (stscs != null) { // Secondary time series as dashed lines
 			for (int t = 0; t < (isBase ? 1 : stscs.length); t++) {
 				Stroke stroke = new BasicStroke(1.0f, // Width
-				        BasicStroke.CAP_SQUARE, // End cap
-				        BasicStroke.JOIN_MITER, // Join style
-				        10.0f, // Miter limit
-				        new float[] { 2.0f, 2.0f }, // Dash pattern
-				        0.0f); // Dash phase
+						BasicStroke.CAP_SQUARE, // End cap
+						BasicStroke.JOIN_MITER, // Join style
+						10.0f, // Miter limit
+						new float[] { 2.0f, 2.0f }, // Dash pattern
+						0.0f); // Dash phase
 				r.setSeriesStroke(primaries + t, stroke);
 			}
 		}

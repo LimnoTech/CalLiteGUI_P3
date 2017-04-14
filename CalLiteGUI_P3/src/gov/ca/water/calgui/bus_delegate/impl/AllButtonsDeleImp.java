@@ -42,7 +42,7 @@ import org.swixml.SwingEngine;
 
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
-import gov.ca.water.calgui.bo.GuiLinks4BO;
+import gov.ca.water.calgui.bo.GUILinks4BO;
 import gov.ca.water.calgui.bus_delegate.IAllButtonsDele;
 import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
 import gov.ca.water.calgui.bus_service.IModelRunSvc;
@@ -486,11 +486,11 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 		}
 		try {
 			List<String> labelNames = dynamicControlSvc.getLabelAndGuiLinks4BOBasedOnTheRadioButtons(swingEngine);
-			GuiLinks4BO guiLinks4BO = seedDataSvc.getObjByRunBasisLodCcprojCcmodelIds(labelNames.get(0));
+			GUILinks4BO gUILinks4BO = seedDataSvc.getObjByRunBasisLodCcprojCcmodelIds(labelNames.get(0));
 			String swpFullFileName = Constant.MODEL_W2_WRESL_LOOKUP_DIR + "\\WSIDI\\" + Constant.SWP_START_FILENAME
-					+ Constant.UNDER_SCORE + guiLinks4BO.getLookup() + Constant.TABLE_EXT;
+					+ Constant.UNDER_SCORE + gUILinks4BO.getLookup() + Constant.TABLE_EXT;
 			String cvpFullFileName = Constant.MODEL_W2_WRESL_LOOKUP_DIR + "\\WSIDI\\" + Constant.CVP_START_FILENAME
-					+ Constant.UNDER_SCORE + guiLinks4BO.getLookup() + Constant.TABLE_EXT;
+					+ Constant.UNDER_SCORE + gUILinks4BO.getLookup() + Constant.TABLE_EXT;
 			// To Load CVP table
 			DataTableModel cvpDtm = tableSvc.getWsiDiTable(cvpFullFileName);
 			cvpDtm.setTableName(FilenameUtils.removeExtension(Paths.get(cvpFullFileName).getFileName().toString()));

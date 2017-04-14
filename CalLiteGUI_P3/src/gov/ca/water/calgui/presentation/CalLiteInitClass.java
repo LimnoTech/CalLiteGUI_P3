@@ -158,7 +158,7 @@ public class CalLiteInitClass {
 		((JLabel) swingEngine.find("run_lblThreadsInfo"))
 				.setText("Simultaneous runs " + ((maxThreads > 1) ? "(1-" + maxThreads + ")" : "(1)"));
 		// For Result part.
-		ResultUtilsBO resultUtilsBO = ResultUtilsBO.getXMLParsingSvcImplInstance(swingEngine);
+		ResultUtilsBO resultUtilsBO = ResultUtilsBO.getResultsUtilslInstance(swingEngine);
 		// Setup for Reporting page
 		// Set up additional UI elements
 		JList<?> lstScenarios = (JList<?>) swingEngine.find("SelectedList");

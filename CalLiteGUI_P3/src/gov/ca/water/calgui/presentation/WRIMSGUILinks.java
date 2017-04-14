@@ -55,7 +55,7 @@ public class WRIMSGUILinks {
 		p.setSize(900, 650);
 
 		CalLiteGUIPanelWrapper pw = new CalLiteGUIPanelWrapper(
-				(JFrame) ResultUtilsBO.getXMLParsingSvcImplInstance(null).getSwix().find(Constant.MAIN_FRAME_NAME));
+				(JFrame) ResultUtilsBO.getResultsUtilslInstance(null).getSwix().find(Constant.MAIN_FRAME_NAME));
 		pw.getPanel().setSize(900, 650);
 		p.add(pw.getPanel(), BorderLayout.NORTH);
 		JPanel statusPanel = GuiUtils.getStatusPanel();
@@ -75,7 +75,7 @@ public class WRIMSGUILinks {
 
 		// Get project and clear
 
-		Project project = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getProject();
+		Project project = ResultUtilsBO.getResultsUtilslInstance(null).getProject();
 		project.setDVFile("");
 		project.setDV2File("");
 		project.setDV3File("");

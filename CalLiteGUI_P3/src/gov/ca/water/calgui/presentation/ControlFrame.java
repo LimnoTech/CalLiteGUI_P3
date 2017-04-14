@@ -35,7 +35,7 @@ public class ControlFrame extends JFrame implements WindowListener {
 	 */
 	public ControlFrame() {
 
-		swix = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getSwix();
+		swix = ResultUtilsBO.getResultsUtilslInstance(null).getSwix();
 		removeClose(this);
 
 		JPanel p = new JPanel(new GridBagLayout());
@@ -102,7 +102,7 @@ public class ControlFrame extends JFrame implements WindowListener {
 
 	@Override
 	public void windowClosed(WindowEvent arg0) {
-		ResultUtilsBO.getXMLParsingSvcImplInstance(null).closeControlFrame();
+		ResultUtilsBO.getResultsUtilslInstance(null).closeControlFrame();
 
 	}
 

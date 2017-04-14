@@ -40,7 +40,7 @@ public class Report extends SwingWorker<Void, String> {
 	 * @author psandhu
 	 *
 	 */
-	private static SwingEngine swix = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getSwix();
+	private static SwingEngine swix = ResultUtilsBO.getResultsUtilslInstance(null).getSwix();
 	private ProgressFrameForPDF progressFrameForPDF;
 
 	public static interface Writer {
@@ -150,7 +150,7 @@ public class Report extends SwingWorker<Void, String> {
 
 	void generateReport(InputStream templateContentStream) throws IOException {
 		logger.fine("Parsing input template");
-		ResultUtilsBO.getXMLParsingSvcImplInstance(null).clearMessages();
+		ResultUtilsBO.getResultsUtilslInstance(null).clearMessages();
 		parseTemplateFile(templateContentStream);
 		doProcessing();
 		logger.fine("Done generating report");
@@ -204,8 +204,8 @@ public class Report extends SwingWorker<Void, String> {
 		if (isInitialized) {
 			publish("Processing template file.");
 		}
-		Group dssGroupBase = ResultUtilsBO.getXMLParsingSvcImplInstance(null).opendss(scalars.get("FILE_BASE"));
-		Group dssGroupAlt = ResultUtilsBO.getXMLParsingSvcImplInstance(null).opendss(scalars.get("FILE_ALT"));
+		Group dssGroupBase = ResultUtilsBO.getResultsUtilslInstance(null).opendss(scalars.get("FILE_BASE"));
+		Group dssGroupAlt = ResultUtilsBO.getResultsUtilslInstance(null).opendss(scalars.get("FILE_ALT"));
 		ArrayList<TimeWindow> timewindows = new ArrayList<TimeWindow>();
 		for (ArrayList<String> values : twValues) {
 			String v = values.get(1).replace("\"", "");
@@ -226,7 +226,7 @@ public class Report extends SwingWorker<Void, String> {
 		if ((dssGroupBase == null) || (dssGroupAlt == null)) {
 			String msg = "No data available in either : " + scalars.get("FILE_BASE") + " or " + scalars.get("FILE_ALT");
 			logger.severe(msg);
-			ResultUtilsBO.getXMLParsingSvcImplInstance(null).addMessage(msg);
+			ResultUtilsBO.getResultsUtilslInstance(null).addMessage(msg);
 			return;
 		}
 
@@ -250,9 +250,9 @@ public class Report extends SwingWorker<Void, String> {
 			if (pathMap.report_type.endsWith("_post")) {
 				calculate_dts = true;
 			}
-			DataReference refBase = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getReference(dssGroupBase, pathMap.pathBase,
+			DataReference refBase = ResultUtilsBO.getResultsUtilslInstance(null).getReference(dssGroupBase, pathMap.pathBase,
 			        calculate_dts, pathnameMaps, 1);
-			DataReference refAlt = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getReference(dssGroupAlt, pathMap.pathAlt,
+			DataReference refAlt = ResultUtilsBO.getResultsUtilslInstance(null).getReference(dssGroupAlt, pathMap.pathAlt,
 			        calculate_dts, pathnameMaps, 2);
 			if ((refBase == null) || (refAlt == null)) {
 				continue;
@@ -268,34 +268,34 @@ public class Report extends SwingWorker<Void, String> {
 				TSMath.taf2cfs((RegularTimeSeries) refBase.getData());
 				TSMath.taf2cfs((RegularTimeSeries) refAlt.getData());
 			}
-			String data_units = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getUnits(refBase, refAlt);
-			String data_type = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getType(refBase, refAlt);
+			String data_units = ResultUtilsBO.getResultsUtilslInstance(null).getUnits(refBase, refAlt);
+			String data_type = ResultUtilsBO.getResultsUtilslInstance(null).getType(refBase, refAlt);
 			if (pathMap.plot) {
 				if (pathMap.report_type.startsWith("average")) {
-					generatePlot(ResultUtilsBO.getXMLParsingSvcImplInstance(null).buildDataArray(refAlt, refBase, tw), dataIndex,
+					generatePlot(ResultUtilsBO.getResultsUtilslInstance(null).buildDataArray(refAlt, refBase, tw), dataIndex,
 					        "Average " + pathMap.var_name.replace("\"", ""), series_name, data_type + "(" + data_units + ")",
 					        "Time", PlotType.TIME_SERIES);
 				} else if (pathMap.report_type.startsWith("exceedance")) {
 					generatePlot(
-					        ResultUtilsBO.getXMLParsingSvcImplInstance(null).buildExceedanceArray(refAlt, refBase,
+					        ResultUtilsBO.getResultsUtilslInstance(null).buildExceedanceArray(refAlt, refBase,
 					                pathMap.var_category == "S_SEPT", tw),
-					        dataIndex, ResultUtilsBO.getXMLParsingSvcImplInstance(null).getExceedancePlotTitle(pathMap), series_name,
+					        dataIndex, ResultUtilsBO.getResultsUtilslInstance(null).getExceedancePlotTitle(pathMap), series_name,
 					        data_type + "(" + data_units + ")", "Percent at or above", PlotType.EXCEEDANCE);
 				} else if (pathMap.report_type.startsWith("avg_excd")) {
-					generatePlot(ResultUtilsBO.getXMLParsingSvcImplInstance(null).buildDataArray(refAlt, refBase, tw), dataIndex,
+					generatePlot(ResultUtilsBO.getResultsUtilslInstance(null).buildDataArray(refAlt, refBase, tw), dataIndex,
 					        "Average " + pathMap.var_name.replace("\"", ""), series_name, data_type + "(" + data_units + ")",
 					        "Time", PlotType.TIME_SERIES);
 					generatePlot(
-					        ResultUtilsBO.getXMLParsingSvcImplInstance(null).buildExceedanceArray(refAlt, refBase,
+					        ResultUtilsBO.getResultsUtilslInstance(null).buildExceedanceArray(refAlt, refBase,
 					                pathMap.var_category == "S_SEPT", tw),
-					        dataIndex, ResultUtilsBO.getXMLParsingSvcImplInstance(null).getExceedancePlotTitle(pathMap), series_name,
+					        dataIndex, ResultUtilsBO.getResultsUtilslInstance(null).getExceedancePlotTitle(pathMap), series_name,
 					        data_type + "(" + data_units + ")", "Percent at or above", PlotType.EXCEEDANCE);
 				} else if (pathMap.report_type.startsWith("timeseries")) {
-					generatePlot(ResultUtilsBO.getXMLParsingSvcImplInstance(null).buildDataArray(refAlt, refBase, tw), dataIndex,
+					generatePlot(ResultUtilsBO.getResultsUtilslInstance(null).buildDataArray(refAlt, refBase, tw), dataIndex,
 					        "Average " + pathMap.var_name.replace("\"", ""), series_name, data_type + "(" + data_units + ")",
 					        "Time", PlotType.TIME_SERIES);
 				} else if (pathMap.report_type.equals("alloc")) {
-					generatePlot(ResultUtilsBO.getXMLParsingSvcImplInstance(null).buildExceedanceArray(refAlt, refBase, true, tw),
+					generatePlot(ResultUtilsBO.getResultsUtilslInstance(null).buildExceedanceArray(refAlt, refBase, true, tw),
 					        dataIndex, "Exceedance " + pathMap.var_name.replace("\"", ""), series_name, "Allocation (%)",
 					        "Probability", PlotType.EXCEEDANCE);
 				}
@@ -317,8 +317,8 @@ public class Report extends SwingWorker<Void, String> {
 		writer.addTableSubTitle(scalars.get("ASSUMPTIONS").replace("\"", ""));
 		writer.addTableSubTitle(" "); // add empty line to increase space
 		// between title and table
-		Group dssGroupBase = ResultUtilsBO.getXMLParsingSvcImplInstance(null).opendss(scalars.get("FILE_BASE"));
-		Group dssGroupAlt = ResultUtilsBO.getXMLParsingSvcImplInstance(null).opendss(scalars.get("FILE_ALT"));
+		Group dssGroupBase = ResultUtilsBO.getResultsUtilslInstance(null).opendss(scalars.get("FILE_BASE"));
+		Group dssGroupAlt = ResultUtilsBO.getResultsUtilslInstance(null).opendss(scalars.get("FILE_ALT"));
 		ArrayList<TimeWindow> timewindows = new ArrayList<TimeWindow>();
 		for (ArrayList<String> values : twValues) {
 			String v = values.get(1).replace("\"", "");
@@ -330,7 +330,7 @@ public class Report extends SwingWorker<Void, String> {
 		headerRow2.add("");
 
 		for (TimeWindow tw : timewindows) {
-			headerRow.add(ResultUtilsBO.getXMLParsingSvcImplInstance(null).formatTimeWindowAsWaterYear(tw));
+			headerRow.add(ResultUtilsBO.getResultsUtilslInstance(null).formatTimeWindowAsWaterYear(tw));
 			headerRow2.addAll(Arrays.asList(scalars.get("NAME_ALT"), scalars.get("NAME_BASE"), "Diff", "% Diff"));
 		}
 		int[] columnSpans = new int[timewindows.size() + 1];
@@ -360,25 +360,25 @@ public class Report extends SwingWorker<Void, String> {
 			}
 			DataReference refBase = null, refAlt = null;
 			if (!pathMap.pathBase.equalsIgnoreCase("ignore")) {
-				refBase = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getReference(dssGroupBase, pathMap.pathBase, calculate_dts,
+				refBase = ResultUtilsBO.getResultsUtilslInstance(null).getReference(dssGroupBase, pathMap.pathBase, calculate_dts,
 				        pathnameMaps, 1);
 			}
 			if (!pathMap.pathAlt.equalsIgnoreCase("ignore")) {
-				refAlt = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getReference(dssGroupAlt, pathMap.pathAlt, calculate_dts,
+				refAlt = ResultUtilsBO.getResultsUtilslInstance(null).getReference(dssGroupAlt, pathMap.pathAlt, calculate_dts,
 				        pathnameMaps, 2);
 			}
 			for (TimeWindow tw : timewindows) {
 				double avgBase = 0, avgAlt = 0;
 				if (refAlt != null) {
-					avgAlt = ResultUtilsBO.getXMLParsingSvcImplInstance(null)
-					        .avg(ResultUtilsBO.getXMLParsingSvcImplInstance(null).cfs2taf((RegularTimeSeries) refAlt.getData()), tw);
+					avgAlt = ResultUtilsBO.getResultsUtilslInstance(null)
+					        .avg(ResultUtilsBO.getResultsUtilslInstance(null).cfs2taf((RegularTimeSeries) refAlt.getData()), tw);
 					rowData.add(formatDoubleValue(avgAlt));
 				} else {
 					rowData.add("");
 				}
 				if (refBase != null) {
-					avgBase = ResultUtilsBO.getXMLParsingSvcImplInstance(null)
-					        .avg(ResultUtilsBO.getXMLParsingSvcImplInstance(null).cfs2taf((RegularTimeSeries) refBase.getData()), tw);
+					avgBase = ResultUtilsBO.getResultsUtilslInstance(null)
+					        .avg(ResultUtilsBO.getResultsUtilslInstance(null).cfs2taf((RegularTimeSeries) refBase.getData()), tw);
 					rowData.add(formatDoubleValue(avgBase));
 				} else {
 					rowData.add("");
@@ -427,7 +427,7 @@ public class Report extends SwingWorker<Void, String> {
 			String msg = "Requested unknown plot type: " + plotType + " for title: " + title + " seriesName: " + seriesName[0]
 			        + ",..";
 			logger.warning(msg);
-			ResultUtilsBO.getXMLParsingSvcImplInstance(null).addMessage(msg);
+			ResultUtilsBO.getResultsUtilslInstance(null).addMessage(msg);
 		}
 	}
 

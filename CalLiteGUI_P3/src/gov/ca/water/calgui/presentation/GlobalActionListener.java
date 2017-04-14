@@ -220,22 +220,22 @@ public class GlobalActionListener implements ActionListener {
 		// From Custom Results dashboard
 
 		case "AC_Controls":
-			ControlFrame cf = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getControlFrame();
+			ControlFrame cf = ResultUtilsBO.getResultsUtilslInstance(null).getControlFrame();
 			cf.display();
 			if (cf.getExtendedState() == JFrame.ICONIFIED)
 				cf.setExtendedState(JFrame.NORMAL);
 			break;
 
 		case "CR_LoadList":
-			ResultUtilsBO.getXMLParsingSvcImplInstance(null).readCGR();
+			ResultUtilsBO.getResultsUtilslInstance(null).readCGR();
 			break;
 
 		case "CR_SaveList":
-			ResultUtilsBO.getXMLParsingSvcImplInstance(null).writeCGR();
+			ResultUtilsBO.getResultsUtilslInstance(null).writeCGR();
 			break;
 
 		case "CR_ClearTree":
-			Project p = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getProject();
+			Project p = ResultUtilsBO.getResultsUtilslInstance(null).getProject();
 			p.clearMTSList();
 			p.clearDTSList();
 			DtsTreePanel dtp = GuiUtils.getCLGPanel().getDtsTreePanel();
@@ -281,10 +281,10 @@ public class GlobalActionListener implements ActionListener {
 			lstReports.setListData(new String[0]);
 			break;
 		case "Rep_LoadList":
-			ResultUtilsBO.getXMLParsingSvcImplInstance(null).readCGR();
+			ResultUtilsBO.getResultsUtilslInstance(null).readCGR();
 			break;
 		case "Rep_SaveList":
-			ResultUtilsBO.getXMLParsingSvcImplInstance(null).writeCGR();
+			ResultUtilsBO.getResultsUtilslInstance(null).writeCGR();
 			break;
 		case "Rep_DispAll":
 			if (lstScenarios.getModel().getSize() == 0) {

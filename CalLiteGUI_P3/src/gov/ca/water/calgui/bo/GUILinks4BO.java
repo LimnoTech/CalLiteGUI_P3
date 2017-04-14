@@ -6,7 +6,7 @@ package gov.ca.water.calgui.bo;
  * 
  * @author Mohan
  */
-public class GuiLinks4BO {
+public class GUILinks4BO {
 	/**
 	 * The RunBasis_ID from GUI_Link4.table. Please refer GUI_Link4.table for
 	 * more information.
@@ -63,7 +63,7 @@ public class GuiLinks4BO {
 	 */
 	private String lookup;
 
-	public GuiLinks4BO(String runBasisID, String lodId, String ccprojectId, String ccmodelId, String svFile,
+	public GUILinks4BO(String runBasisID, String lodId, String ccprojectId, String ccmodelId, String svFile,
 			String fPartSV1, String initFile, String fPartSV2, String cvpWsiDi, String swpWsiDi, String lookup) {
 		super();
 		this.runBasisID = runBasisID;

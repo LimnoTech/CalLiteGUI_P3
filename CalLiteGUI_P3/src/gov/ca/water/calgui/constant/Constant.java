@@ -70,6 +70,7 @@ public class Constant {
 	public static final String EDITED_FORLABEL = " (Edited)";
 	public static final String SWP_START_FILENAME = "wsi_di_swp";
 	public static final String CVP_START_FILENAME = "wsi_di_cvp_sys";
+	public static final String SCHEMATIC_PREFIX = "SchVW";
 
 	public static final String HYDROCLIMATE_TABNAME = "Hydroclimate";
 	public static final String REGULATIONS_TABNAME = "Regulations";

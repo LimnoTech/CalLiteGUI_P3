@@ -23,6 +23,8 @@ import org.w3c.dom.events.Event;
 import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 
+import gov.ca.water.calgui.constant.Constant;
+
 /**
  * SchematicMain: Class to handle display of SVG-formatted schematic view.
  *
@@ -48,7 +50,8 @@ public class SchematicMain {
 	 * @param url
 	 *            URL for SVG file
 	 * @param mainMenuIn
-	 *            Handle to main panel - used to access information about loaded scenarios
+	 *            Handle to main panel - used to access information about loaded
+	 *            scenarios
 	 * @param swix
 	 *            Handle to UI
 	 * @param m0
@@ -56,7 +59,8 @@ public class SchematicMain {
 	 *
 	 */
 
-	public SchematicMain(JPanel p, String url, SwingEngine swix, double m0, double m1, double m2, double m3, double m4, double m5) {
+	public SchematicMain(JPanel p, String url, SwingEngine swix, double m0, double m1, double m2, double m3, double m4,
+			double m5) {
 		this.swix = swix;
 		theAT = new AffineTransform(m0, m1, m2, m3, m4, m5);
 		canvas = new JSVGCanvas();
@@ -75,8 +79,8 @@ public class SchematicMain {
 				// ...and the window object too.
 				window = canvas.getUpdateManager().getScriptingEnvironment().createWindow();
 				// Registers the listeners on the document
-		        // just before the SVGLoad event is
-		        // dispatched.
+				// just before the SVGLoad event is
+				// dispatched.
 				registerListeners();
 				// It is time to pack the frame.
 			}
@@ -157,11 +161,10 @@ public class SchematicMain {
 				if (lstScenarios.getModel().getSize() == 0)
 					JOptionPane.showMessageDialog(null, "No scenarios loaded", "Error", JOptionPane.ERROR_MESSAGE);
 				else {
-					DisplayFrame.showDisplayFrames(DisplayFrame.quickState() + ";Locs-" + label + ";Index-" + "SchVw" + label,
-					        lstScenarios);
+					DisplayFrame.showDisplayFrames(DisplayFrame.quickState() + ";Locs-" + label + ";Index-"
+							+ Constant.SCHEMATIC_PREFIX + label, lstScenarios);
 				}
 			}
-			System.out.println("Title: " + label);
 		}
 	}
 }

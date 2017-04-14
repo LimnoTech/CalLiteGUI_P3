@@ -2,7 +2,6 @@ package gov.ca.water.calgui.bo;
 
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Cursor;
 import java.awt.GridBagConstraints;
 import java.io.BufferedReader;
 import java.io.File;
@@ -24,7 +23,6 @@ import java.util.StringTokenizer;
 import java.util.TimeZone;
 import java.util.Vector;
 
-import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JMenuBar;
@@ -46,10 +44,7 @@ import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
 import calsim.app.Project;
 import calsim.gui.GuiUtils;
-import gov.ca.water.calgui.bus_service.impl.SeedDataSvcImpl;
 import gov.ca.water.calgui.presentation.ControlFrame;
-import gov.ca.water.calgui.presentation.DisplayFrame;
-import gov.ca.water.calgui.presentation.Report;
 import gov.ca.water.calgui.presentation.Report.PathnameMap;
 import vista.db.dss.DSSUtil;
 import vista.report.TSMath;
@@ -71,43 +66,23 @@ import vista.time.TimeWindow;
 
 public class ResultUtilsBO implements ChangeListener {
 	private static final Logger LOG = Logger.getLogger(ResultUtilsBO.class.getName());
-	private String lookups[][];
+
 	private static ResultUtilsBO resultUtilsBO;
+	private HashMap<String, Integer> monthMap;
 	private SwingEngine swingEngine;
 	private Project project;
-	private String table5[][]; // Holds DSS Schematic link values
 	private StringBuffer messages = new StringBuffer();
 	private ControlFrame _controlFrame = null;
-//	private Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
-//	private Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
+	// private Cursor hourglassCursor = new Cursor(Cursor.WAIT_CURSOR);
+	// private Cursor normalCursor = new Cursor(Cursor.DEFAULT_CURSOR);
 	private FileDialogBO fdDSSFiles;
-
-	public FileDialogBO getFdDSSFiles() {
-		return fdDSSFiles;
-	}
-
-	public void setFdDSSFiles(FileDialogBO fdDSSFiles) {
-		this.fdDSSFiles = fdDSSFiles;
-	}
-
-	public void clearMessages() {
-		messages.setLength(0);
-	}
-
-	public void addMessage(String msg) {
-		messages.append(msg).append("\n");
-	}
-
-	public String getMessages() {
-		return messages.toString();
-	}
 
 	/**
 	 * This method is for implementing the singleton.
 	 *
 	 * @return
 	 */
-	public static ResultUtilsBO getXMLParsingSvcImplInstance(SwingEngine swingEngine) {
+	public static ResultUtilsBO getResultsUtilslInstance(SwingEngine swingEngine) {
 		if (resultUtilsBO == null) {
 			resultUtilsBO = new ResultUtilsBO(swingEngine);
 		}
@@ -116,45 +91,28 @@ public class ResultUtilsBO implements ChangeListener {
 
 	private ResultUtilsBO(SwingEngine swingEngine) {
 		this.swingEngine = swingEngine;
-		readInLookups();
+
+		// Build map for mmm -> m mapping
+
+		monthMap = new HashMap<String, Integer>();
+		monthMap.put("jan", 1);
+		monthMap.put("feb", 2);
+		monthMap.put("mar", 3);
+		monthMap.put("apr", 4);
+		monthMap.put("may", 5);
+		monthMap.put("jun", 6);
+		monthMap.put("jul", 7);
+		monthMap.put("aug", 8);
+		monthMap.put("sep", 9);
+		monthMap.put("oct", 10);
+		monthMap.put("nov", 11);
+		monthMap.put("dec", 12);
 
 		// Create a WRIMS GUI project for WRIMS GUI to work off of
 
 		project = new Project();
 		AppUtils.setCurrentProject(project);
 		AppUtils.baseOn = false;
-
-		// Read Schematic_DSS_link4.table and place in Table5
-		ArrayList<String> guiLinks5 = new ArrayList<String>();
-
-		try {
-			guiLinks5 = getGUILinks("Config/Schematic_DSS_link4.table");
-			table5 = new String[guiLinks5.size()][6];
-
-			for (int i = 0; i < guiLinks5.size(); i++) {
-				String tokens[] = guiLinks5.get(i).split("\t");
-				table5[i][0] = tokens[0];
-				table5[i][1] = tokens[1];
-				table5[i][2] = tokens[2];
-				table5[i][3] = tokens[3];
-				table5[i][4] = tokens[4];
-				table5[i][5] = tokens[5];
-			}
-		} catch (Exception ex) {
-
-		}
-	}
-
-	public void quickDisplay(String cbText, String cbName) {
-		// ----- Quick Results: HANDLE DISPLAY OF SINGLE VARIABLE -----
-		// menu.setCursor(hourglassCursor);
-		JList lstScenarios = (JList) swingEngine.find("SelectedList");
-		if (lstScenarios.getModel().getSize() == 0) {
-			JOptionPane.showMessageDialog(null, "No scenarios loaded", "Error", JOptionPane.ERROR_MESSAGE);
-		} else {
-			DisplayFrame.showDisplayFrames(DisplayFrame.quickState() + ";Locs-" + cbText + ";Index-" + cbName,
-					lstScenarios);
-		}
 
 	}
 
@@ -588,79 +546,11 @@ public class ResultUtilsBO implements ChangeListener {
 		return swingEngine;
 	}
 
-	/**
-	 * Reads GUI_Links3.table into the String array lookups[][] (controls Quick
-	 * Results display)
-	 *
-	 * @return
-	 */
-	private int readInLookups() {
-		Scanner input;
-		try {
-			input = new Scanner(new FileReader("Config/GUI_Links3.table"));
-		} catch (FileNotFoundException e) {
-			LOG.debug("Cannot open input file Config/GUI_Links3.table: " + e.getMessage());
-			return -1;
-		}
-		Vector<String> allLookups = new Vector<String>();
-		int lineCount = 0;
-		input.nextLine(); // Skip header line
-		while (input.hasNextLine()) {
-			String line = input.nextLine();
-			allLookups.add(line);
-			lineCount++;
-		}
-		input.close();
-		lookups = new String[lineCount][6];
-		for (int i = 0; i < lineCount; i++) {
-			String[] parts = allLookups.get(i).split("[\t]+");
-			for (int j = 0; j < 6; j++) {
-				if (parts[j].equals("null"))
-					parts[j] = "";
-				lookups[i][j] = parts[j];
-			}
-			if (lookups[i][1].equals("") && !lookups[i][0].startsWith("0")) { // additional
-				JCheckBox cb = (JCheckBox) swingEngine.find("ckbp" + lookups[i][0]);
-				cb.setEnabled(false);
-			}
-		}
-		return 0;
-	}
-
-	public String getLookups5(int i, int j) {
-		return table5[i][j];
-	}
-
-	public int getLookups5Length() {
-		return table5.length;
-	}
-
-	public String getLookups(int i, int j) {
-		return SeedDataSvcImpl.getSeedDataSvcImplInstance().getLookups(i, j);
-	}
-
-	public int getLookupsLength() {
-		return SeedDataSvcImpl.getSeedDataSvcImplInstance().getLookupsLength();
-	}
-
 	public Project getProject() {
 		return project;
 	}
 
 	public int monthToInt(String month) {
-		HashMap<String, Integer> monthMap = new HashMap<String, Integer>();
-		monthMap.put("jan", 1);
-		monthMap.put("feb", 2);
-		monthMap.put("mar", 3);
-		monthMap.put("apr", 4);
-		monthMap.put("may", 5);
-		monthMap.put("jun", 6);
-		monthMap.put("jul", 7);
-		monthMap.put("aug", 8);
-		monthMap.put("sep", 9);
-		monthMap.put("oct", 10);
-		monthMap.put("nov", 11);
-		monthMap.put("dec", 12);
 		month = month.toLowerCase();
 		Integer monthCode = null;
 		try {
@@ -785,52 +675,23 @@ public class ResultUtilsBO implements ChangeListener {
 		}
 	}
 
-	// @Override
-	// public void mouseClicked(MouseEvent e) {
-	// }
-	//
-	// @Override
-	// public void mouseEntered(MouseEvent e) {
-	// }
-	//
-	// @Override
-	// public void mouseExited(MouseEvent e) {
-	// }
-	//
-	// @Override
-	// public void mousePressed(MouseEvent e) {
-	// // Handles mouse presses for results tabs
-	// JComponent component = (JComponent) e.getComponent();
-	// String cName = component.getName();
-	// int button = e.getButton();
-	// Integer iClickCount = e.getClickCount();
-	// if (button != MouseEvent.NOBUTTON && button != MouseEvent.BUTTON1) {
-	// // Nothing for right mousepress
-	// } else {
-	// // Double Click
-	// if (iClickCount == 2) {
-	// if (cName.startsWith("ckbp")) {
-	// // ----- Quick Results: HANDLE DISPLAY OF SINGLE VARIABLE -----
-	// // menu.setCursor(hourglassCursor);
-	// JList lstScenarios = (JList) swingEngine.find("SelectedList");
-	// if (lstScenarios.getModel().getSize() == 0) {
-	// JOptionPane.showMessageDialog(null, "No scenarios loaded", "Error",
-	// JOptionPane.ERROR_MESSAGE);
-	// } else {
-	// lstScenarios = (JList) swingEngine.find("SelectedList");
-	// JCheckBox chk = (JCheckBox) component;
-	// DisplayFrame.showDisplayFrames(
-	// DisplayFrame.quickState() + ";Locs-" + chk.getText() + ";Index-" +
-	// chk.getName(), lstScenarios);
-	// // menu.setCursor(normalCursor);
-	// }
-	// // Placeholder for future handling of double-clicks
-	// }
-	// }
-	// }
-	// }
-	//
-	// @Override
-	// public void mouseReleased(MouseEvent e) {
-	// }
+	public FileDialogBO getFdDSSFiles() {
+		return fdDSSFiles;
+	}
+
+	public void setFdDSSFiles(FileDialogBO fdDSSFiles) {
+		this.fdDSSFiles = fdDSSFiles;
+	}
+
+	public void clearMessages() {
+		messages.setLength(0);
+	}
+
+	public void addMessage(String msg) {
+		messages.append(msg).append("\n");
+	}
+
+	public String getMessages() {
+		return messages.toString();
+	}
 }

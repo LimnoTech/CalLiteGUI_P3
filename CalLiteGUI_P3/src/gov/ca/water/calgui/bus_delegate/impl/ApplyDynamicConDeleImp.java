@@ -21,7 +21,7 @@ import org.swixml.SwingEngine;
 
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
-import gov.ca.water.calgui.bo.GuiLinks4BO;
+import gov.ca.water.calgui.bo.GUILinks4BO;
 import gov.ca.water.calgui.bo.GUILinks2BO;
 import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
 import gov.ca.water.calgui.bus_service.IDynamicControlSvc;
@@ -181,15 +181,15 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 	public void changeSVInitFilesAndTableInOperations(boolean optionFromTheBox) {
 		try {
 			List<String> labelValues = dynamicControlSvc.getLabelAndGuiLinks4BOBasedOnTheRadioButtons(swingEngine);
-			GuiLinks4BO guiLinks4BO = seedDataSvc.getObjByRunBasisLodCcprojCcmodelIds(labelValues.get(0));
+			GUILinks4BO gUILinks4BO = seedDataSvc.getObjByRunBasisLodCcprojCcmodelIds(labelValues.get(0));
 			if (!((JRadioButton) swingEngine.find("btnDSS_Manual")).isSelected()) {
-				((JTextField) swingEngine.find("hyd_DSS_SV")).setText(guiLinks4BO.getSvFile());
-				((JTextField) swingEngine.find("hyd_DSS_SV_F")).setText(guiLinks4BO.getfPartSV1());
-				((JTextField) swingEngine.find("hyd_DSS_Init")).setText(guiLinks4BO.getInitFile());
-				((JTextField) swingEngine.find("hyd_DSS_Init_F")).setText(guiLinks4BO.getfPartSV2());
+				((JTextField) swingEngine.find("hyd_DSS_SV")).setText(gUILinks4BO.getSvFile());
+				((JTextField) swingEngine.find("hyd_DSS_SV_F")).setText(gUILinks4BO.getfPartSV1());
+				((JTextField) swingEngine.find("hyd_DSS_Init")).setText(gUILinks4BO.getInitFile());
+				((JTextField) swingEngine.find("hyd_DSS_Init_F")).setText(gUILinks4BO.getfPartSV2());
 			}
 			if (optionFromTheBox) {
-				String lookup = guiLinks4BO.getLookup();
+				String lookup = gUILinks4BO.getLookup();
 				tableSvc.setWsidiForSWPFullFileName(Constant.MODEL_W2_WRESL_LOOKUP_DIR + "\\WSIDI\\"
 						+ Constant.SWP_START_FILENAME + Constant.UNDER_SCORE + lookup + Constant.TABLE_EXT);
 				tableSvc.setWsidiForCVPFullFileName(Constant.MODEL_W2_WRESL_LOOKUP_DIR + "\\WSIDI\\"

@@ -15,6 +15,9 @@ import javax.swing.JOptionPane;
 import org.apache.log4j.Logger;
 
 import calsim.app.Project;
+import gov.ca.water.calgui.bus_service.ISeedDataSvc;
+import gov.ca.water.calgui.bus_service.impl.SeedDataSvcImpl;
+import gov.ca.water.calgui.constant.Constant;
 import hec.heclib.dss.HecDss;
 import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
@@ -42,6 +45,8 @@ import hec.io.TimeSeriesContainer;
  * </ul>
  */
 public class DSSGrabber1BO {
+
+	private ISeedDataSvc seedDataSvc = SeedDataSvcImpl.getSeedDataSvcImplInstance();
 
 	static Logger log = Logger.getLogger(DSSGrabber1BO.class.getName());
 	static final double CFS_2_TAF_DAY = 0.001983471;
@@ -72,7 +77,7 @@ public class DSSGrabber1BO {
 	protected double[][] annualCFSs;
 	protected double[][] annualCFSsDiff;
 
-	protected Project project = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getProject();
+	protected Project project = ResultUtilsBO.getResultsUtilslInstance(null).getProject();
 
 	public DSSGrabber1BO(JList list) {
 
@@ -105,13 +110,13 @@ public class DSSGrabber1BO {
 		try {
 			HecTime ht = new HecTime();
 
-			int m = ResultUtilsBO.getXMLParsingSvcImplInstance(null).monthToInt(dateRange.substring(0, 3));
+			int m = ResultUtilsBO.getResultsUtilslInstance(null).monthToInt(dateRange.substring(0, 3));
 			int y = new Integer(dateRange.substring(3, 7));
 			ht.setYearMonthDay(m == 12 ? y + 1 : y, m == 12 ? 1 : m + 1, 1, 0);
 			startTime = ht.value();
 			startWY = (m < 10) ? y : y + 1; // Water year
 
-			m = ResultUtilsBO.getXMLParsingSvcImplInstance(null).monthToInt(dateRange.substring(8, 11));
+			m = ResultUtilsBO.getResultsUtilslInstance(null).monthToInt(dateRange.substring(8, 11));
 			y = new Integer(dateRange.substring(11, 15));
 			ht.setYearMonthDay(m == 12 ? y + 1 : y, m == 12 ? 1 : m + 1, 1, 0);
 			endTime = ht.value();
@@ -167,15 +172,14 @@ public class DSSGrabber1BO {
 	 * Sets dataset (DSS) names to read from scenario DSS files, title, and axis
 	 * labels according to location specified using a coded string. The string
 	 * is currently used as a lookup into either Schematic_DSS_Links4.table (if
-	 * it starts with "SchVw") or into GUI_Links3.table. These tables may be
-	 * combined in Phase 2.
+	 * it starts with Constant.SCHEMATIC_PREFIX) or into GUI_Links3.table. These
+	 * tables may be combined in Phase 2.
 	 *
 	 * @param string
 	 *            index into GUI_Links3.table or Schematic_DSS_Link4.table
 	 */
 	public void setLocation(String locationName) {
 
-		// TODO: Combine lookup tables AND review use of complex names
 		locationName = locationName.trim();
 
 		if (locationName.startsWith("/")) {
@@ -186,30 +190,24 @@ public class DSSGrabber1BO {
 			secondaryDSSName = "";
 			yLabel = "";
 			sLabel = "";
-		} else if (locationName.startsWith("SchVw")) {
-			// Schematic view uses Table5 in mainMenu; this should be combined
-			// with GUI_Links3 table
-			for (int i = 0; i < ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups5Length(); i++) {
-				if (locationName.toUpperCase()
-						.endsWith(ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups5(i, 0))) {
-					primaryDSSName = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups5(i, 1);
-					secondaryDSSName = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups5(i, 2);
-					yLabel = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups5(i, 3);
-					title = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups5(i, 4);
-					sLabel = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups5(i, 5);
-				}
-			}
-		} else
+		} else {
+			String lookupID = locationName;
+			if (lookupID.startsWith(Constant.SCHEMATIC_PREFIX))
+				// Strip off prefix for schematic view - NOT SURE IF WE CAN'T
+				// JUST ELIMINATE PREFIX?
+				lookupID = lookupID.substring(Constant.SCHEMATIC_PREFIX.length());
 
-			for (int i = 0; i < ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookupsLength(); i++) {
-				if (locationName.endsWith(ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups(i, 0))) {
-					primaryDSSName = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups(i, 1);
-					secondaryDSSName = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups(i, 2);
-					yLabel = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups(i, 3);
-					title = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups(i, 4);
-					sLabel = ResultUtilsBO.getXMLParsingSvcImplInstance(null).getLookups(i, 5);
-				}
+			// Location name is otherwise assumed coded as "ckpbxxx"
+
+			GUILinks3BO guiLinks3BO = seedDataSvc.getObjById(locationName);
+			if (guiLinks3BO != null) {
+				primaryDSSName = guiLinks3BO.getPrimary();
+				secondaryDSSName = guiLinks3BO.getSecondary();
+				yLabel = guiLinks3BO.getyTitle();
+				title = guiLinks3BO.getTitle();
+				sLabel = guiLinks3BO.getyTitle2();
 			}
+		}
 	}
 
 	/**
@@ -607,7 +605,7 @@ public class DSSGrabber1BO {
 
 		else {
 
-			if (locationName.contains("SchVw") && primaryDSSName.contains(",")) {
+			if (locationName.contains(Constant.SCHEMATIC_PREFIX) && primaryDSSName.contains(",")) {
 
 				// Special handling for DEMO of schematic view - treat multiple
 				// series as multiple scenarios
