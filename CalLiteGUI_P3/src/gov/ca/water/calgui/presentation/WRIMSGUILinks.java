@@ -11,7 +11,6 @@ import java.util.Scanner;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -38,8 +37,6 @@ public class WRIMSGUILinks {
 
 	static Logger log = Logger.getLogger(WRIMSGUILinks.class.getName());
 
-	private static JLabel statusLabel;
-
 	public static void setStatus(String text) {
 		System.out.println(">>>" + text);
 		// statusLabel.setText(text);
@@ -51,6 +48,7 @@ public class WRIMSGUILinks {
 	 * reference to the status label.
 	 *
 	 * @param p
+	 *            Container panel for the WRIMS GUI panel
 	 */
 	public static void buildWRIMSGUI(JPanel p) {
 
@@ -69,6 +67,9 @@ public class WRIMSGUILinks {
 
 	/**
 	 * Update WRIMS GUI project file names from file list
+	 * 
+	 * @param theList
+	 *            List of file names
 	 */
 	public static void updateProjectFiles(JList theList) {
 
