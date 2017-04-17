@@ -39,6 +39,12 @@ import calsim.app.Project;
 import calsim.gui.GuiUtils;
 import gov.ca.water.calgui.presentation.ControlFrame;
 
+/**
+ * Supporting utilities for display of results
+ * 
+ * @author tslawecki
+ *
+ */
 public class ResultUtilsBO implements ChangeListener {
 	private static final Logger LOG = Logger.getLogger(ResultUtilsBO.class.getName());
 
@@ -63,6 +69,12 @@ public class ResultUtilsBO implements ChangeListener {
 		return resultUtilsBO;
 	}
 
+	/**
+	 * Constructor stores SwiXml instance, builds month-to-integer map, and sets
+	 * up a WRIMS GUI Project object for use in Custom Results
+	 * 
+	 * @param swingEngine
+	 */
 	private ResultUtilsBO(SwingEngine swingEngine) {
 		this.swingEngine = swingEngine;
 
@@ -136,6 +148,9 @@ public class ResultUtilsBO implements ChangeListener {
 		}
 	}
 
+	/**
+	 * Writes Quick Results display list, Custom Result DTS tree
+	 */
 	public void writeCGR() {
 		JFileChooser fc = new JFileChooser();
 		fc.setFileFilter(new SimpleFileFilter("cgr", "CalLite Report File (*.cgr)"));
@@ -217,6 +232,12 @@ public class ResultUtilsBO implements ChangeListener {
 		}
 	}
 
+	/**
+	 * Creates a singleton ControlFrame to receive undocked Quick Results
+	 * controls for use with Map View and Custom Results dashboards
+	 * 
+	 * @return
+	 */
 	public ControlFrame getControlFrame() {
 
 		if (_controlFrame == null)
@@ -224,6 +245,9 @@ public class ResultUtilsBO implements ChangeListener {
 		return _controlFrame;
 	}
 
+	/**
+	 * Disposes of ControlFrame
+	 */
 	public void closeControlFrame() {
 		if (_controlFrame != null) {
 			_controlFrame.dispose();
@@ -241,10 +265,18 @@ public class ResultUtilsBO implements ChangeListener {
 		return swingEngine;
 	}
 
+	/**
+	 * Getter access to WRIMS GUI project for Custom Results
+	 * 
+	 * @return
+	 */
 	public Project getProject() {
 		return project;
 	}
 
+	/**
+	 * Convert three-letter month abbreviation to integer 1-12
+	 */
 	public int monthToInt(String month) {
 		month = month.toLowerCase();
 		Integer monthCode = null;
@@ -292,7 +324,8 @@ public class ResultUtilsBO implements ChangeListener {
 	}
 
 	/**
-	 *
+	 * Sets up a spinner for months Jan - Dec
+	 * 
 	 * @param jspn
 	 *            - Swing spinner component
 	 * @param idx
@@ -320,6 +353,9 @@ public class ResultUtilsBO implements ChangeListener {
 	}
 
 	@Override
+	/**
+	 * Custom ChangeListener constrains time spinners to WY 1922 - WY 2003
+	 */
 	public void stateChanged(ChangeEvent changeEvent) {
 		Component c = (Component) changeEvent.getSource();
 		String lcName = c.getName().toLowerCase();
@@ -370,10 +406,20 @@ public class ResultUtilsBO implements ChangeListener {
 		}
 	}
 
+	/**
+	 * Return the custom file dialog containing the scenario list
+	 * 
+	 * @return
+	 */
 	public FileDialogBO getFdDSSFiles() {
 		return fdDSSFiles;
 	}
 
+	/**
+	 * Store the custom file dialog containing the Quick Results scenario list
+	 * 
+	 * @param fdDSSFiles
+	 */
 	public void setFdDSSFiles(FileDialogBO fdDSSFiles) {
 		this.fdDSSFiles = fdDSSFiles;
 	}
