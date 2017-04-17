@@ -52,7 +52,8 @@ public class FileSystemSvcImpl implements IFileSystemSvc {
 	}
 
 	@Override
-	public List<String> getFileData(String fileName, boolean isRequired, Predicate<String> selector) throws CalLiteGUIException {
+	public List<String> getFileData(String fileName, boolean isRequired, Predicate<String> selector)
+			throws CalLiteGUIException {
 		return this.getFileData(fileName, isRequired).stream().filter(selector).collect(Collectors.toList());
 	}
 
@@ -60,7 +61,8 @@ public class FileSystemSvcImpl implements IFileSystemSvc {
 	public List<String> getFileDataForTables(String fileName) throws CalLiteGUIException {
 		List<String> list = this.getFileData(fileName, false);
 		return list.stream().filter((obj) -> {
-			return (!obj.startsWith(Constant.EXCLAMATION)) || obj.startsWith(Constant.EXCLAMATION + "	" + Constant.HEADERS);
+			return (!obj.startsWith(Constant.EXCLAMATION))
+					|| obj.startsWith(Constant.EXCLAMATION + "	" + Constant.HEADERS);
 		}).map((obj) -> {
 			if (obj.startsWith(Constant.EXCLAMATION))
 				return obj.substring(2, obj.length());
