@@ -165,7 +165,7 @@ public class CalLiteInitClass {
 		JRadioButton rdb1 = (JRadioButton) swingEngine.find("rdbp001");
 		JRadioButton rdb2 = (JRadioButton) swingEngine.find("rdbp002");
 		FileDialogBO fdDSSFiles = new FileDialogBO(lstScenarios, (JLabel) swingEngine.find("lblBase"), rdb1, rdb2,
-				true);
+				(JButton) swingEngine.find("btnPower"), true);
 		resultUtilsBO.setFdDSSFiles(fdDSSFiles);
 		lstScenarios.setModel(fdDSSFiles.lmScenNames);
 		lstScenarios.setBorder(new LineBorder(Color.gray, 1));
@@ -506,7 +506,7 @@ public class CalLiteInitClass {
 	}
 
 	/**
-	 * This method is to add the listrnrt for the {@link JTextField} for
+	 * This method is to add the listener for the {@link JTextField} for
 	 * tracking the changes.
 	 * 
 	 * @param listOfNames

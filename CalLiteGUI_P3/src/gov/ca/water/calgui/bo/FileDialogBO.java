@@ -16,6 +16,7 @@ import java.util.Map;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -50,8 +51,8 @@ public class FileDialogBO implements ActionListener {
 	JTextField theTextField;
 	boolean theMultipleFlag = false;
 	String theFileExt = null;
-	JRadioButton rdbopt1;
-	JRadioButton rdbopt2;
+	JRadioButton rdbopt1 = null;;
+	JRadioButton rdbopt2 = null;;
 
 	private static Logger log = Logger.getLogger(FileDialogBO.class.getName());
 
@@ -135,6 +136,31 @@ public class FileDialogBO implements ActionListener {
 		rdbopt2 = rdb2;
 		theMultipleFlag = isMultiple;
 	}
+
+	/**
+	 * Constructor used for DSS files, result is appended to list, radiobuttons
+	 * are enabled when list length greater than 1, button is enabled when
+	 * length > 0;
+	 *
+	 * @param aList
+	 * @param aLabel
+	 * @param rdb1
+	 * @param rdb2
+	 * @param btn
+	 */
+	public FileDialogBO(JList aList, JLabel aLabel, JRadioButton rdb1, JRadioButton rdb2, JButton btn,
+			boolean isMultiple) {
+		theLabel = aLabel;
+		theFileExt = "DSS";
+		theTextField = null;
+		setup(aList);
+		rdbopt1 = rdb1;
+		rdbopt2 = rdb2;
+		btn1 = btn;
+		theMultipleFlag = isMultiple;
+	}
+
+	JButton btn1 = null;;
 
 	/**
 	 * Common code for all constructors
@@ -230,16 +256,19 @@ public class FileDialogBO implements ActionListener {
 				rdbopt2.setEnabled(lmScenNames.getSize() > 1);
 			}
 			WRIMSGUILinks.updateProjectFiles(theList);
+			if (btn1 != null)
+				btn1.setEnabled(true);
 		}
 
 		@Override
 		public void intervalRemoved(ListDataEvent e) {
-			// System.out.println(lmScenNames.getSize());
 			if (rdbopt1 != null && rdbopt2 != null) {
 				rdbopt1.setEnabled(lmScenNames.getSize() > 1);
 				rdbopt2.setEnabled(lmScenNames.getSize() > 1);
 			}
 			WRIMSGUILinks.updateProjectFiles(theList);
+			if (btn1 != null)
+				btn1.setEnabled(lmScenNames.getSize() > 0);
 		}
 	}
 

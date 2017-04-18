@@ -1077,6 +1077,7 @@ public final class ScenarioSvcImpl implements IScenarioSvc {
 				}
 			}
 		}
+		// TODO: Update if needed for new result dashboards
 		List<String> resultTabNames = Arrays.asList("Custom", "externalPDF", "Reporting", "schematics");
 		panelNames.removeAll(resultTabNames);
 		StringBuffer sb = new StringBuffer();

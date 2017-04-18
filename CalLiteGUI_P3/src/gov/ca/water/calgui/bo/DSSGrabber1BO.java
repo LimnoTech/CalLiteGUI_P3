@@ -396,6 +396,31 @@ public class DSSGrabber1BO {
 	}
 
 	/**
+	 * Checks if a DSS file has records with "HYDROPOWER" as the A-PART
+	 * 
+	 * @param dssFilename
+	 * @return
+	 */
+	public boolean hasPower(String dssFilename) {
+		try {
+			HecDss hD = HecDss.open(dssFilename);
+			@SuppressWarnings("unchecked")
+
+			Vector<String> aList = hD.getPathnameList();
+			for (String path : aList) {
+				String[] parts = path.split("/");
+				if (parts[1].startsWith("HYDROPOWER"))
+					return true;
+			}
+		} catch (Exception e) {
+
+			log.debug(e.getMessage());
+
+		}
+		return false;
+	}
+
+	/**
 	 * Reads a specified dataset from a specified HEC DSS file.
 	 *
 	 * @param dssFilename

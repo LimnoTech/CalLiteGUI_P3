@@ -94,6 +94,12 @@ public class GlobalActionListener implements ActionListener {
 		lstScenarios = (JList<String>) swingEngine.find("SelectedList");
 		JTable table = null;
 		switch (ae.getActionCommand()) {
+
+		case "AC_Power":
+
+			PowerFrame pf = new PowerFrame(lstScenarios);
+			break;
+
 		case "AC_SaveScen":
 			if (FilenameUtils.removeExtension(((JTextField) swingEngine.find("run_txfScen")).getText()).toUpperCase()
 					.equals("DEFAULT") && allButtonsDele.defaultCLSIsProtected()) {
@@ -328,6 +334,7 @@ public class GlobalActionListener implements ActionListener {
 					LOG.debug(ex);
 				}
 			}
+			break;
 		}
 	}
 
@@ -423,7 +430,7 @@ public class GlobalActionListener implements ActionListener {
 			ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
 			Object[] options = { "Yes", "No" };
 			JOptionPane optionPane = new JOptionPane(
-					"The cls file is new, do not have corresponding directory structure.\nThe batch will not run with out it.\nDo you want to save to create that directory?",
+					"The cls file does not have a corresponding directory structure.\nThe batch will not run without this.\nDo you want to save to create that directory?",
 					JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, options, options[0]);
 			JDialog dialog = optionPane.createDialog("CalLite");
 			dialog.setIconImage(icon.getImage());
