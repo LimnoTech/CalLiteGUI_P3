@@ -12,6 +12,7 @@ hyd_ckb2,GUI_HydroClimate.table,4,2,Climate Change Scenario 2,Hydroclimate,n/a,n
 hyd_ckb3,GUI_HydroClimate.table,4,3,Climate Change Scenario 3,Hydroclimate,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a
 hyd_ckb4,GUI_HydroClimate.table,4,4,Climate Change Scenario 4,Hydroclimate,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a
 hyd_ckb5,GUI_HydroClimate.table,4,5,Climate Change Scenario 5,Hydroclimate,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a
+fac_ckb7,GUI_HydroClimate.table,5,-1,Climate Change Scenario 5,Hydroclimate,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a
 dem_rdbCurSWP,GUI_SODdemand.table,0,1,SWP demand type  1=non-user-defined demands  2=user-defined demands,Demands,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a
 dem_rdbFutSWP,GUI_SODdemand.table,0,1,SWP demand type  1=non-user-defined demands  2=user-defined demands,Demands,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a
 dem_rdbUD1,GUI_SODdemand.table,0,2,SWP demand type  1=non-user-defined demands  2=user-defined demands,Demands,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a
@@ -54,6 +55,8 @@ ckbReg14,GUI_RPAsOtherRegs.table,12,-1,B2Action4,Regulations,n/a,n/a,n/a,n/a,n/a
 ckbReg15,GUI_RPAsOtherRegs.table,13,-1,B2Action5,Regulations,n/a,n/a,n/a,n/a,n/a,n/a,1,n/a,30
 ckbReg16,GUI_RPAsOtherRegs.table,14,-1,B2Action6,Regulations,n/a,n/a,n/a,n/a,n/a,n/a,1,n/a,31
 ckbReg17,GUI_RPAsOtherRegs.table,15,-1,B2Action7,Regulations,n/a,n/a,n/a,n/a,n/a,n/a,1,n/a,32
+fac_ckb8,GUI_RPAsOtherRegs.table,16,-1,B2Action7,Regulations,n/a,n/a,n/a,n/a,n/a,n/a,1,n/a,n/a
+fac_ckb9,GUI_RPAsOtherRegs.table,17,-1,B2Action7,Regulations,n/a,n/a,n/a,n/a,n/a,n/a,1,n/a,n/a
 ckbReg18,n/a,n/a,n/a,Edit the fraction of unimpaired flow as flow criteria,Regulations,perc_UnimparedFlow,16,16,n/a,n/a,n/a,n/a,1,33
 op_rdb6,GUI_Operations.table,1,-1,Cross Valley Wheeling:  0 = off - 1 = on,Operations,n/a,n/a,n/a,n/a,n/a,n/a,1,n/a,34
 op_rdb7,GUI_Operations.table,2,-1,Joint Point of diversion Wheeling:  0 = off - 1 = on,Operations,n/a,n/a,n/a,n/a,n/a,n/a,1,n/a,35

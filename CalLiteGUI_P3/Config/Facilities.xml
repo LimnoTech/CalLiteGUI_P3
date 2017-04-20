@@ -59,7 +59,6 @@
 			<gridbagconstraints anchor="GridBagConstraints.WEST" gridx="0" gridy="99" gridwidth="2" insets="5,5,5,0" />
 		</button>
 
-
 		<panel name="fac_pan1" id="fac_pan1" resizeable="false" enabled="false" visible="false"
 			border="TitledBorder(North of Delta Offstream Storage NODOS Options)" preferredsize="500,250" layout="GridBagLayout">
 			<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="0"
@@ -72,27 +71,20 @@
 			</textfield>
 			<panel layout="GridBagLayout">
 				<gridbagconstraints insets="0,15,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="1" />
-				<textfield id="fac_lstbL1" name="fac_lstbL1" enabled="false"
-					text="50"
-					HorizontalAlignment="LEFT">
-					<gridbagconstraints insets="0,0,5,5"
-						fill="GridBagConstraints.HORIZONTAL" anchor="GridBagConstraints.WEST"
+				<textfield id="fac_lstbL1" name="fac_lstbL1" enabled="false" text="50" HorizontalAlignment="LEFT">
+					<gridbagconstraints insets="0,0,5,5" fill="GridBagConstraints.HORIZONTAL" anchor="GridBagConstraints.WEST"
 						gridx="1" gridy="0" gridwidth="1" />
-				</textfield>>	
-				<linkedslider name="fac_sldr1" id="fac_sldr1" minimum="0" maximum="100" value="50"
-					LTextBoxID="fac_lstbL1" RTextBoxID="fac_lstbR1"  orientation="0">
-					<gridbagconstraints insets="0,0,5,5" gridx="2"
-						gridy="0" />
+				</textfield>
+				>
+				<linkedslider name="fac_sldr1" id="fac_sldr1" minimum="0" maximum="100" value="50" LTextBoxID="fac_lstbL1"
+					RTextBoxID="fac_lstbR1" orientation="0">
+					<gridbagconstraints insets="0,0,5,5" gridx="2" gridy="0" />
 				</linkedslider>
 				<label text="SWP(%):">
-					<gridbagconstraints insets="0,0,5,5"
-						anchor="GridBagConstraints.NORTHWEST" gridx="3" gridy="0" />
+					<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="3" gridy="0" />
 				</label>
-				<textfield id="fac_lstbR1" name="fac_lstbR1" enabled="false"
-					text="50"
-					HorizontalAlignment="RIGHT">
-					<gridbagconstraints insets="0,0,5,5"
-						fill="GridBagConstraints.HORIZONTAL" anchor="GridBagConstraints.WEST"
+				<textfield id="fac_lstbR1" name="fac_lstbR1" enabled="false" text="50" HorizontalAlignment="RIGHT">
+					<gridbagconstraints insets="0,0,5,5" fill="GridBagConstraints.HORIZONTAL" anchor="GridBagConstraints.WEST"
 						gridx="5" gridy="0" gridwidth="1" />
 				</textfield>
 			</panel>
@@ -194,8 +186,12 @@
 			</numtextfield>
 
 		</panel>
-
-		<panel name="fac_pan4" id="fac_pan4" resizeable="false" visible="true" enabled="true"
+		<panel name="fac_pan4" id="fac_pan4" resizeable="false" visible="false" enabled="false"
+			border="TitledBorder(Temperance Flat (Under Construction))" preferredsize="500,250" layout="GridBagLayout">
+			<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="0"
+				gridheight="3" />
+		</panel>
+		<panel name="fac_pan46" id="fac_pan46" resizeable="false" visible="false" enabled="false"
 			border="TitledBorder(San Luis Enlargement Options)" preferredsize="500,250" layout="GridBagLayout">
 			<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="0"
 				gridheight="3" />
@@ -427,6 +423,17 @@
 				<gridbagconstraints insets="20,5,5,5" anchor="GridBagConstraints.WEST" gridx="0" gridy="40" gridwidth="8" />
 			</label>
 		</panel>
+		<panel name="fac_pan9" id="fac_pan9" resizeable="false" visible="false" enabled="false"
+			border="TitledBorder(DWSC East Bypass (Under Construction))" preferredsize="500,250" layout="GridBagLayout">
+			<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="0"
+				gridheight="3" />
+		</panel>
+		<panel name="fac_pan10" id="fac_pan10" resizeable="false" visible="false" enabled="false"
+			border="TitledBorder(Stone Lakes Bypass (Under Construction))" preferredsize="500,250" layout="GridBagLayout">
+			<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="0"
+				gridheight="3" />
+		</panel>
+
 	</panel>
 	<panel preferredsize="300,400" visible="false">
 		<gridbagconstraints insets="0,0,0,0" anchor="GridBagConstraints.NORTH" gridx="2" gridy="0" />
