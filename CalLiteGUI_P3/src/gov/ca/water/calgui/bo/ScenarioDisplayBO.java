@@ -1,5 +1,5 @@
 package gov.ca.water.calgui.bo;
-
+//! Supporting class for scenario comparisons
 /**
  * This will hold the intermediate information used for building the Scenario
  * Display.

@@ -1,5 +1,5 @@
 package gov.ca.water.calgui.bo;
-
+//! Base DSS file access object
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;

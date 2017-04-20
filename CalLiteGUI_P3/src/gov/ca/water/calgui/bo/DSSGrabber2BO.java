@@ -1,5 +1,5 @@
 package gov.ca.water.calgui.bo;
-
+//! Variant on DSSGrabber1BO for MTS (multiple time series)
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Vector;

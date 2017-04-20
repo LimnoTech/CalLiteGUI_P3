@@ -1,5 +1,5 @@
 package gov.ca.water.calgui.bo;
-
+//! Special class combining string and radio button in a list
 /**
  * RBListItem is a helper for the FileDialog class. It holds DV and SV path information and selection (base) status of scenarios
  * listed in the results control panel.

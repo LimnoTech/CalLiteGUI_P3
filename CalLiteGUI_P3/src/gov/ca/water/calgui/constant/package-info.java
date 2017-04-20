@@ -1,3 +1,4 @@
+//! Constants
 /**
  * This package has constant values. see
  * {@link gov.ca.water.calgui.constant.Constant} class for more information.

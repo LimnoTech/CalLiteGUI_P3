@@ -1,5 +1,5 @@
 package gov.ca.water.calgui.bo;
-
+//! Derived class modifying JTextField to constrain input and range
 import java.util.regex.Pattern;
 
 import javax.swing.JTextField;

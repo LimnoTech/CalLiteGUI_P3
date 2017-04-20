@@ -1,3 +1,4 @@
+//! Presentation layer
 /**
  * In this package we have the we have the presentation class for the whole
  * application.

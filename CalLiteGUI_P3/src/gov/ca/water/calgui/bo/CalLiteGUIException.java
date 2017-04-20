@@ -1,5 +1,5 @@
 package gov.ca.water.calgui.bo;
-
+//! Root exception
 /**
  * I am the root exception for CalLiteGUI.
  * 

@@ -1,4 +1,5 @@
 package gov.ca.water.calgui.batch;
+//! Creates and executes batch files using multiple threads
 
 import java.io.IOException;
 import java.util.ArrayList;
