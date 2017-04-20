@@ -1,5 +1,5 @@
 package gov.ca.water.calgui.bo;
-
+//! Monitors changes to inputs in the GUI
 /**
  * This is holding the information for Audit.
  * 
@@ -7,7 +7,7 @@ package gov.ca.water.calgui.bo;
  */
 public class AuditBO {
 	/**
-	 * The countro Id of the record.
+	 * The control Id of the record.
 	 */
 	private String controlId;
 	/**

@@ -1,5 +1,5 @@
 package gov.ca.water.calgui.batch;
-
+//! Creates and executes a single batch file for one run
 import java.io.IOException;
 import java.util.Calendar;
 

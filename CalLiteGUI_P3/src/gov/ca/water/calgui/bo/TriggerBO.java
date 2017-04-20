@@ -1,5 +1,5 @@
 package gov.ca.water.calgui.bo;
-
+//! Representation of dynamic behavior control record
 /**
  * This is used to hold the information of Trigger*.table in memory.
  * 

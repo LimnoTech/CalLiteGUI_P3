@@ -1,5 +1,5 @@
 package gov.ca.water.calgui;
-
+//! Main class
 import gov.ca.water.calgui.presentation.CalLiteInitClass;
 
 /**

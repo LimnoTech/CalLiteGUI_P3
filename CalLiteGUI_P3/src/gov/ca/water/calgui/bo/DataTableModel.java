@@ -1,4 +1,5 @@
 package gov.ca.water.calgui.bo;
+//! Root table model for tabular data in the GUI
 
 import javax.swing.JLabel;
 import javax.swing.table.AbstractTableModel;

@@ -1,5 +1,5 @@
 package gov.ca.water.calgui.bo;
-
+//! Representation of GUI_Links3 (GUI -> DSS retrieval) record
 /**
  * This is used to hold the information of GUI_Links3.csv in memory. Please
  * refer to the Model Developers' documentation for table for more information.

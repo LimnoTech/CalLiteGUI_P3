@@ -1,5 +1,5 @@
 package gov.ca.water.calgui.bo;
-
+//! Custom file chooser for selection of different CalLite file types
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ActionEvent;

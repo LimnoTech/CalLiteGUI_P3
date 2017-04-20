@@ -1,5 +1,5 @@
 package gov.ca.water.calgui.bo;
-
+//! Representation of GUI_Links4 (Hydroclimate dashboard logic)
 /**
  * This is used to hold the information of GUI_Link4.table in memory. Please
  * refer GUI_Link4.table for more information.

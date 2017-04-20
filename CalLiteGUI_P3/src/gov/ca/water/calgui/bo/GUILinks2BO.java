@@ -1,5 +1,5 @@
 package gov.ca.water.calgui.bo;
-
+//! Representation of GUI_Links2  (GUI -> .table) record
 /**
  * This is used to hold the information of GUI_Link2.table in memory. Please
  * refer GUI_Link2.table for more information.

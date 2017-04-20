@@ -1,3 +1,4 @@
+//! Business object classes
 /**
  * In this package we have the Business objects like
  * {@link gov.ca.water.calgui.bo.AuditBO},
