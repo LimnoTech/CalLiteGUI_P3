@@ -456,16 +456,22 @@ public class CalLiteInitClass {
 
 			@Override
 			public void focusGained(FocusEvent e) {
+				System.out.println(e.getComponent().getName());
 				boolean showTablePanel = ((JRadioButton) swingEngine.find("rdbRegQS_UD")).isSelected();
 				if (showTablePanel) {
-					GUILinks2BO gUILinks2BO = SeedDataSvcImpl.getSeedDataSvcImplInstance()
-							.getObjByGuiId(e.getComponent().getName());
+					String cName = e.getComponent().getName();
+					GUILinks2BO gUILinks2BO = SeedDataSvcImpl.getSeedDataSvcImplInstance().getObjByGuiId(cName);
 
 					if (gUILinks2BO != null)
 						showTablePanel = showTablePanel || (!gUILinks2BO.getDataTables().equals(Constant.N_A));
 
 					showTablePanel = showTablePanel
 							&& (((JTabbedPane) swingEngine.find("reg_tabbedPane")).getSelectedIndex() != 2);
+
+					// Force display of panel for Trinity, Pumping
+					// showTablePanel = showTablePanel ||
+					// (cName.equals("ckbReg_TRNTY") ||
+					// cName.equals("ckbReg_PUMP"));
 
 					((JPanel) swingEngine.find("reg_panTab")).setVisible(showTablePanel);
 					((JPanel) swingEngine.find("reg_panTabPlaceholder")).setVisible(!showTablePanel);

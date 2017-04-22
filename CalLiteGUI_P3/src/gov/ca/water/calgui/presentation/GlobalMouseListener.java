@@ -3,10 +3,13 @@ package gov.ca.water.calgui.presentation;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Logger;
@@ -32,18 +35,38 @@ public class GlobalMouseListener implements MouseListener {
 	public void mouseClicked(MouseEvent me) {
 		LOG.debug("mouseClicked");
 		JComponent component = (JComponent) me.getComponent();
+		String cName = component.getName();
+
 		if (SwingUtilities.isRightMouseButton(me)) {
+
+			// Right-click on a regulations checkbox updates right-hand panel
+
 			// if (((JCheckBox) component).isSelected()) {
-			String cName = component.getName();
 			applyDynamicConDele.applyDynamicControl(cName, ((JCheckBox) component).isSelected(),
 					((JCheckBox) component).isEnabled(), false);
-			// the false value don't mean any thing because we implement right
+			// the false value don't mean any thing because we implement
+			// right
 			// click on only check box.
+			if (cName.equals("ckbReg_TRNTY") || cName.equals("ckbReg_PUMP")) {
+
+				// Special handling for Trinity and Pumping regulations
+
+				// These two regulations cannot be turned off, so their
+				// checkboxes are not enabled under user-defined. This code
+				// forces the display of the D1485/D-1641 selector in reg_panTab
+
+				((JButton) swingEngine.find("btnRegCopy")).setEnabled(false);
+				((JButton) swingEngine.find("btnRegPaste")).setEnabled(false);
+				((JRadioButton) swingEngine.find("btnRegD1641")).setEnabled(true);
+				((JRadioButton) swingEngine.find("btnRegD1485")).setEnabled(true);
+
+				((JPanel) this.swingEngine.find("reg_panTab")).setVisible(true);
+				((JPanel) this.swingEngine.find("reg_panTabPlaceholder")).setVisible(false);
+			}
 			LOG.debug(cName);
 		} else {
 			// Otherwise, we're looking for a double-click on a "ckbp"
 			// checkbox from quick results.
-			String cName = component.getName();
 			int button = me.getButton();
 			Integer iClickCount = me.getClickCount();
 			if (button != MouseEvent.NOBUTTON && button != MouseEvent.BUTTON1) {

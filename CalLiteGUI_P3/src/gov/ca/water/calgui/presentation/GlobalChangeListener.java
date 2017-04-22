@@ -48,8 +48,15 @@ public class GlobalChangeListener implements ChangeListener {
 																							// for
 																							// SJR
 																							// tab
+
+			showTablePanel = showTablePanel || (lcName.equals("ckbReg_TRNTY") || lcName.equals("ckbReg_PUMP"));
 			// Hide/show reg_panTab as needed and selected - will be updated by
 			// focus control
+
+			// Force display of panel for Trinity, Pumping
+			// showTablePanel = showTablePanel || (lcName.equals("ckbReg_TRNTY")
+			// || lcName.equals("ckbReg_PUMP"));
+
 			((JPanel) this.swingEngine.find("reg_panTab")).setVisible(showTablePanel);
 			((JPanel) this.swingEngine.find("reg_panTabPlaceholder")).setVisible(!showTablePanel);
 

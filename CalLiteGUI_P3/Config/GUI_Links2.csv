@@ -45,9 +45,9 @@ ckbRegbo4,GUI_RPAsOtherRegs.table,2,-1,Action_4_1_2,Regulations,n/a,n/a,n/a,n/a,
 ckbRegbo5,GUI_RPAsOtherRegs.table,3,-1,Action_4_2_1,Regulations,n/a,n/a,n/a,n/a,n/a,n/a,1,n/a,18
 ckbRegbo1,GUI_RPAsOtherRegs.table,4,-1,ORMROON;,Regulations,n/a,n/a,n/a,n/a,n/a,n/a,1,n/a,19
 ckbRegbo3,GUI_RPAsOtherRegs.table,5,-1,ClearCrkBOswitch ,Regulations,n/a,n/a,n/a,n/a,n/a,n/a,1,n/a,20
-ckbReg2,GUI_RPAsOtherRegs.table,6,-2,QOMR_DLTSW,Regulations,gui_qomr,2,6,n/a,n/a,n/a,n/a,1,23
-ckbReg1,GUI_RPAsOtherRegs.table,7,-2,QWEST_DLTSW,Regulations,gui_qwest,1,7,n/a,n/a,n/a,n/a,1,24
-ckbReg10,GUI_RPAsOtherRegs.table,8,-2,EISJR_DLTSW,Regulations,gui_EIsjr,10,8,n/a,n/a,n/a,n/a,1,25
+ckbReg2,GUI_RPAsOtherRegs.table,6,-2,QOMR_DLTSW,Regulations,gui_qomr,2,6,n/a,n/a,1,n/a,1,23
+ckbReg1,GUI_RPAsOtherRegs.table,7,-2,QWEST_DLTSW,Regulations,gui_qwest,1,7,n/a,n/a,1,n/a,1,24
+ckbReg10,GUI_RPAsOtherRegs.table,8,-2,EISJR_DLTSW,Regulations,gui_EIsjr,10,8,n/a,n/a,1,n/a,1,25
 ckbReg11,GUI_RPAsOtherRegs.table,9,-1,B2Action1,Regulations,n/a,n/a,n/a,n/a,n/a,n/a,1,n/a,26
 ckbReg12,GUI_RPAsOtherRegs.table,10,-1,B2Action2,Regulations,n/a,n/a,n/a,n/a,n/a,n/a,1,n/a,27
 ckbReg13,GUI_RPAsOtherRegs.table,11,-1,B2Action3,Regulations,n/a,n/a,n/a,n/a,n/a,n/a,1,n/a,28
