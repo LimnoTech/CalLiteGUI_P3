@@ -20,7 +20,7 @@ FWS BO actions implementations
 ! See SoDeltaChannels code for this modification and other information used in this code.
 !
 ! This code could be used as a prescriptive use of export restrictions either as part
-! of or separate from B2 accounting.
+! of or separate from B2 and EWA accounting.
 !
 ! **********************************************************************************************
 define OMR_background {        ! this is used as the background OMR condition in computing monthly values for partial month conditions

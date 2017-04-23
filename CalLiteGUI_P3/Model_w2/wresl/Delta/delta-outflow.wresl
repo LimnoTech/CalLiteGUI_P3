@@ -1,7 +1,7 @@
 !   This is the minimum required Delta outflow (MRDO) code
 ! A. Munevar 1/10/00
 ! Modified for D-1485 switches: Holly Canada, DWR (05/10/2012)
-! Modified to include enhanced spring outflow:  Chris Quan, DWR (11/22/2016)
+
 if int(NDO_DLTSW)==3 {  !D-1485
 
 !############################################################################
@@ -301,7 +301,7 @@ else {
 	      value 0}
 	    }
 
-	define DO_req_flow_ex {      !NDO_DLTSW switch added 10/04/2010 by Z.Q. Richard Chen, DWR
+	define DO_req_flow {          !NDO_DLTSW switch added 10/04/2010 by Z.Q. Richard Chen, DWR
 	    case    jan_pmi_LessThan_800 {
 		condition    month == JAN .and. January_PMI < 800.0 .and. NDO_DLTSW == 1
 		value        4500.}
@@ -312,9 +312,5 @@ else {
 
 	define begday_flw {value 1}                 ! beginning and ending days of current month            
 	define endday_flw {value daysin}            ! for use in final-mrdo.wresl
-	define DOreqflow_exdv {alias DO_req_flow_ex KIND 'FLOW-REQ' UNITS 'CFS'}
-}
-if int(ESO_ON)==1 {   
-	define DO_req_flow {value max(DO_req_flow_ex, DO_req_flow_fish)}
-	define DO_req_flowdv {alias DO_req_flow KIND 'FLOW-REQ' UNITS 'CFS'}
+
 }

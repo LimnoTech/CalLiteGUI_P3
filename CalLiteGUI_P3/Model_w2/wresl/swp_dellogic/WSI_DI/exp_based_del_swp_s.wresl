@@ -17,7 +17,7 @@ define Exp_Idx_SWP_adj {
     case MartoMay {
             condition month >= MAR .and. month <= MAY
             ! Taraky 20161004, DWR. Add South of Delta Storage expansion for SWP
-            value Exp_Idx_SWP_s + S_SLSWP(PrevFEB) + S_SLSWPE(PrevFEB) - init_SWPRuleDrainTar  } 
+            value Exp_Idx_SWP_s + S_SLSWP(PrevFEB) + S_SLSWPE(PrevFEB) - init_SWPRuleDrainTar  }
 
     case JuntoFeb {
            condition  always

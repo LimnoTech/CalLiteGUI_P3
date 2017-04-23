@@ -126,7 +126,7 @@ goal maxrelease_ShstaE {C_ShstaE_02<relcap_ShstaE}
 define S_Orovllevel1 {value 29.6}
 define S_Orovl_1 {std kind 'STORAGE-ZONE' units 'TAF'}
 goal S_OrovlZone1 {S_Orovl_1 < S_Orovllevel1}
-define S_Orovllevel2 {value 852.}
+define S_Orovllevel2 {value 825.}
 define S_Orovl_2 {std kind 'STORAGE-ZONE' units 'TAF'}
 goal S_OrovlZone2 {S_Orovl_2 < S_Orovllevel2-S_Orovllevel1}
 define S_Orovl_3 {std kind 'STORAGE-ZONE' units 'TAF'}
@@ -160,7 +160,7 @@ define S_Folsmlevel4 {timeseries kind 'STORAGE-LEVEL' units 'TAF'}
 define S_Folsm_4 {std kind 'STORAGE-ZONE' units 'TAF'}
 define S_Folsmlevel5 {timeseries kind 'STORAGE-LEVEL' units 'TAF'}
 define S_Folsm_5 {std kind 'STORAGE-ZONE' units 'TAF'}
-define S_Folsmlevel6 {value 966.832}
+define S_Folsmlevel6 {value 975.}
 define S_Folsm_6 {std kind 'STORAGE-ZONE' units 'TAF'}
 define S_Folsm {std kind 'STORAGE' units 'TAF'} !FOLSOM LAKE AKA RES_NUM = 8
 goal storage_Folsm {S_Folsm=S_Folsm_1+S_Folsm_2+S_Folsm_3+S_Folsm_4+S_Folsm_5+S_Folsm_6}
@@ -205,7 +205,7 @@ goal maxrelease_SLCVP {C_SLCVP<relcap_SLCVP}
 define EnlargeSLSize {
     case EnlargSL1000 {
     	condition  EnlargSLOn  == 1. .AND. EnlargSLSize == 1.
-		value 10000.}
+		value 1000.}
     case EnlargSLUserDefine {
     	condition  EnlargSLOn  == 1. .AND. EnlargSLSize == 2.
 		value SLE_UserDef}    
@@ -223,7 +223,7 @@ goal S_SLCVPEZone2 {S_SLCVPE_2 < S_SLCVPElevel2-S_SLCVPElevel1}
 define S_SLCVPElevel3 {
     case enlarge_on {
     	condition EnlargSLOn == 1. 
-		value EnlargeSLSize*.50}
+		value EnlargeSLSize*.45}
     case other  {
     	condition   always
 		value 0.}
@@ -288,8 +288,8 @@ goal S_SLSWPEZone2 {S_SLSWPE_2 < S_SLSWPElevel2-S_SLSWPElevel1}
 !define S_SLSWPElevel3 {value 5000}
 define S_SLSWPElevel3 {
     case nochange {
-    	condition EnlargSLOn == 1.
-	value EnlargeSLSize*.50}
+    	condition EnlargSLOn == 1. 
+	value EnlargeSLSize*.55}
     case other  {
     	condition   always
 	value 0.}

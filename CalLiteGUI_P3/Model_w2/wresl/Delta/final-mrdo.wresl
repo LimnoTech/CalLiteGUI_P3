@@ -50,7 +50,7 @@ else {
                                         	0., int(1), int(daysin), ! DO_req_col2,  int(begday_col2), int(endday_col2),
                                         	0., int(1), int(daysin), ! DO_req_rsl1,  int(begday_rsl1), int(endday_rsl1),
                                         	0., int(1), int(daysin), ! DO_req_rsl2,  int(begday_rsl2), int(endday_rsl2),
-                                        	DO_req_flow_ex,  int(begday_flw),  int(endday_flw),  
+                                        	DO_req_flow,  int(begday_flw),  int(endday_flw),
                                         	wateryear, month, daysin )
 	}
 }
@@ -68,7 +68,7 @@ define MRDO_X2nocap  {value getFinalMrdo ( DO_req_X2roe_nocap, int(begday_roe), 
                                         0., int(1), int(daysin), ! DO_req_col2,  int(begday_col2), int(endday_col2),
                                         0., int(1), int(daysin), ! DO_req_rsl1,  int(begday_rsl1), int(endday_rsl1),
                                         0., int(1), int(daysin), ! DO_req_rsl2,  int(begday_rsl2), int(endday_rsl2),
-                                        DO_req_flow_ex,  int(begday_flw),  int(endday_flw),  
+                                        DO_req_flow,  int(begday_flw),  int(endday_flw),
                                         wateryear, month, daysin )
 
 }
@@ -89,7 +89,7 @@ define DO_req_X2cnf_out {alias DO_req_X2cnf KIND 'FLOW-REQ-X2CNF' UNITS 'CFS'}
 !define DO_req_col2_out {alias DO_req_col2 KIND 'FLOW-REQ-COL2' UNITS 'CFS' }
 !define DO_req_rsl1_out {alias DO_req_rsl1 KIND 'FLOW-REQ-RSL1' UNITS 'CFS' }
 !define DO_req_rsl2_out {alias DO_req_rsl2 KIND 'FLOW-REQ-RSL2' UNITS 'CFS' }
-define DO_req_flow_out {alias DO_req_flow_ex KIND 'FLOW-REQ-NDOI' UNITS 'CFS' }
+define DO_req_flow_out {alias DO_req_flow KIND 'FLOW-REQ-NDOI' UNITS 'CFS' }
 
 if int(NDO_DLTSW)==3 {
 	define DO_req_flw1_out {alias DO_req_flw1 KIND 'FLOW-REQ-NDOI' UNITS 'CFS' }

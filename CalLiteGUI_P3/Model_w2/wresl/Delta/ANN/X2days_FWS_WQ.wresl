@@ -72,7 +72,7 @@ define flowcap_chs {       ! cfs for Chipps Island
           value 99999. }
      case NOV_FWS {
           condition      month == NOV .and. FallX2 == 1
-          value /*mrdo_finaldv[BASE]*/ DO_req_flow_ex + InfForX2Nov }
+          value /*mrdo_finaldv[BASE]*/ DO_req_flow + InfForX2Nov }
      case othermonths {
           condition      always
           value 99999. }
@@ -92,7 +92,7 @@ define flowcap_cnf {       ! cfs for Confluence (Sac & SJR)
           value 99999. }
      case NOV_FWS {
           condition      month == NOV .and. FallX2 == 1
-          value /*mrdo_finaldv[BASE]*/ DO_req_flow_ex + InfForX2Nov  }
+          value /*mrdo_finaldv[BASE]*/ DO_req_flow + InfForX2Nov  }
      case othermonths {
           condition      always
           value 99999. }

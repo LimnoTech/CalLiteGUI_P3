@@ -67,6 +67,6 @@ set PATH=%ExternalDir%;%JarDir%;%VistaLibDir%
 : call java to run ControllerBatch class                :
 :-------------------------------------------------------:
 
-start /min "CalLiteRun%ScenarioName%" %temp_wrims2%/../../../../jre8/bin/java -Xmx1000m -Xss1280K -Djava.library.path=%PATH% %CLASSPATH% gov.ca.water.calgui.batch.Singleton -config="%configFilePath%"
-
-rem exit
+rem start /min "CalLiteRun%ScenarioName%" 
+%temp_wrims2%/../../../../jre8/bin/java -Xmx1000m -Xss1280K -Djava.library.path=%PATH% %CLASSPATH% gov.ca.water.calgui.batch.Singleton -config="%configFilePath%"
+exit

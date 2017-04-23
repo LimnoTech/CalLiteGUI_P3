@@ -21,6 +21,3 @@ INCLUDE 'exportratio.wresl'
 INCLUDE 'april_may_maxexport.wresl'
 
 INCLUDE 'intertie.wresl'
-
-if int(banksifswitch) > 0.5 .or. int(jonesifswitch) > 0.5 {
-INCLUDE 'JUL_NOV_PREFER_TD_EXP.wresl'}
