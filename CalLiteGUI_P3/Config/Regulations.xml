@@ -262,7 +262,8 @@
 	<panel id="reg_panTabPlaceholder" visible="false" minimumsize="400,20" size="400,20">
 		<gridbagconstraints ipadx="20" ipady="20" gridx="1" gridy="1" gridheight="30" gridwidth="6"
 			anchor="GridBagConstraints.NORTHWEST" />
-		<label text="Access regulation table (where applicable) by selecting or right-clicking on a regulation name." font="Tahoma-BOLD-13" foreground="CC3333" name="labReg2" id="labReg2" preferredsize="610,15">
+		<label text="Access regulation table (where applicable) by selecting or right-clicking on a regulation name." font="Tahoma-BOLD-13"
+			foreground="CC3333" name="labReg2" id="labReg2" preferredsize="610,15">
 
 		</label>
 	</panel>
@@ -297,8 +298,12 @@
 				</table>
 			</scrollpane>
 		</HBox>
-		<label text="Access regulation table (where applicable) by selecting or right-clicking on a regulation name." name="labReg" id="labReg" font="Tahoma-BOLD-13"
-			foreground="CC3333" preferredsize="610,15">
+		<label text="Access regulation table (where applicable) by selecting or right-clicking on a regulation name." name="labReg"
+			id="labReg" font="Tahoma-BOLD-13" foreground="CC3333" preferredsize="610,15">
+			<gridbagconstraints insets="0,5,5,5" gridx="0" gridy="3" gridwidth="5" anchor="GridBagConstraints.NORTHWEST" />
+		</label>
+		<label text="No table to display - using the D-1485 striped bass survival/spawning flow requirements."
+			name="labReg_NDO" id="labReg_NDO" font="Tahoma-BOLD-13" foreground="CC3333" preferredsize="610,15" visible="false">
 			<gridbagconstraints insets="0,5,5,5" gridx="0" gridy="3" gridwidth="5" anchor="GridBagConstraints.NORTHWEST" />
 		</label>
 	</panel>

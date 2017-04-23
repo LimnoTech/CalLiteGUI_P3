@@ -21,8 +21,8 @@ import org.swixml.SwingEngine;
 
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
-import gov.ca.water.calgui.bo.GUILinks4BO;
 import gov.ca.water.calgui.bo.GUILinks2BO;
+import gov.ca.water.calgui.bo.GUILinks4BO;
 import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
 import gov.ca.water.calgui.bus_service.IDynamicControlSvc;
 import gov.ca.water.calgui.bus_service.IScenarioSvc;
@@ -316,11 +316,14 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 						((JPanel) this.swingEngine.find(panelId + "Placeholder")).setVisible(false);
 						labReg.setEnabled(true);
 						tableName = gUILinks2BO.getDataTables();
-						if (tableName.equals("gui_NDO_Flow") && optionName.equals(Constant.D1485))
-							// Hide D1485 table for Min NDO
-							scrRegValues.setVisible(false);
-						else
-							scrRegValues.setVisible(true);
+
+						// Hide D1485 table for Min NDO and show explanation
+						boolean customNDOState = (tableName.equals("gui_NDO_Flow")
+								&& optionName.equals(Constant.D1485));
+						scrRegValues.setVisible(!customNDOState);
+						swingEngine.find("labReg_NDO").setVisible(customNDOState);
+						swingEngine.find("labReg").setVisible(!customNDOState);
+
 						labReg.setForeground(scrRegValues.getBackground());
 						toDisplayMessage = loadTableToUI((JTable) this.swingEngine.find(guiTableName), tableName,
 								regFlags[regId], gUILinks2BO, optionName);
@@ -352,11 +355,11 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 				}
 				int regId = Integer.parseInt(guiLinks2BO.getRegID());
 				if (!tableName.equals(Constant.N_A)) {
-					if (tableName.equals("gui_NDO_Flow") && optionName.equals(Constant.D1485))
-						// Hide D1485 table for Min NDO
-						scrRegValues.setVisible(false);
-					else
-						scrRegValues.setVisible(true);
+					// Hide D1485 table for Min NDO and show explanation
+					boolean customNDOState = (tableName.equals("gui_NDO_Flow") && optionName.equals(Constant.D1485));
+					scrRegValues.setVisible(!customNDOState);
+					swingEngine.find("labReg_NDO").setVisible(customNDOState);
+					swingEngine.find("labReg").setVisible(!customNDOState);
 
 					labReg.setForeground(scrRegValues.getBackground());
 					toDisplayMessage = loadTableToUI((JTable) this.swingEngine.find(guiTableName), tableName,
