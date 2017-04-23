@@ -64,7 +64,7 @@ public final class ModelRunSvcImpl implements IModelRunSvc {
 		// delete previous generated batch file
 		deleteBatchFile();
 		if (isWsidi) {
-			if (scenarioNamesList.size() > 1) { 
+			if (scenarioNamesList.size() > 1) {
 				JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
 						"WSIDI generation only allowed for a single hydroclimate realization.");
 			} else {
@@ -132,6 +132,7 @@ public final class ModelRunSvcImpl implements IModelRunSvc {
 			batchFilePW = new PrintWriter(new BufferedWriter(new FileWriter(batchFile)));
 			batchFilePW.println(del);
 			for (String subBat : subBatchFileNameArray) {
+				batchFilePW.println("timeout /T 3");
 				batchFilePW.println("start /wait /min " + subBat);
 				batchFilePW.println();
 			}

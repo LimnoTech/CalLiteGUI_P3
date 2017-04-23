@@ -79,6 +79,7 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 				boolean sleepAfterDisplay = false;
 				String[] listData = null;
 				List<String> data = new ArrayList<String>();
+				List<String> scenariosToDrop = new ArrayList<String>();
 				String text = "";
 				if (scenarioNamesAndAction.isEmpty()) {
 					listData = new String[1];
@@ -93,9 +94,10 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 							data.add(text);
 							if (text.endsWith("Save is completed.")) {
 								sleepAfterDisplay = true;
-								scenarioNamesAndAction.remove(scenarioName);
+								scenariosToDrop.add(scenarioName);
 							}
 							break;
+
 						case Constant.BATCH_RUN:
 							text = monitorSvc.runModel(scenarioName);
 							data.add(text);
@@ -104,9 +106,10 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 								ResultUtilsBO.getResultUtilsInstance(null).getFdDSSFiles()
 										.addFileToList(new File(Constant.SCENARIOS_DIR + scenarioName + "_DV.DSS"));
 								sleepAfterDisplay = true;
-								scenarioNamesAndAction.remove(scenarioName);
+								scenariosToDrop.add(scenarioName);
 							}
 							break;
+
 						case Constant.BATCH_RUN_WSIDI:
 							text = monitorSvc.runWSIDI(scenarioName);
 							data.add(text);
@@ -116,13 +119,15 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 											+ ")  - DONE - run completed".toLowerCase())) {
 								sleepAfterDisplay = true;
 								loadGeneratedWSIDI(scenarioName);
-								ResultUtilsBO.getResultUtilsInstance(null).getFdDSSFiles()
-										.addFileToList(new File(Constant.SCENARIOS_DIR + scenarioName + "_DV.DSS"));
-								scenarioNamesAndAction.remove(scenarioName);
+								scenariosToDrop.add(scenarioName);
 							}
 							break;
 						}
 					}
+					for (String s : scenariosToDrop) {
+						scenarioNamesAndAction.remove(s);
+					}
+
 					listData = new String[data.size()];
 					for (int i = 0; i < data.size(); i++) {
 						listData[i] = data.get(i);
@@ -184,8 +189,9 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 		setMinimumSize(new Dimension(400, 210));
 		setLayout(new BorderLayout(5, 5));
 		setTitle(title);
-		String[] data = { "No scenarios active" };
-		list = new JList<String>(data);
+		String[] start = { "No scenarios active" };
+		list = new JList<String>(start);
+
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.setLayoutOrientation(JList.VERTICAL);
 		list.setVisibleRowCount(-1);
@@ -282,6 +288,7 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 	 */
 	public void addScenarioNamesAndAction(List<String> keys, String type) {
 		keys.forEach(key -> scenarioNamesAndAction.put(key, type));
+
 		if (listScroller.isVisible())
 			invalidate();
 	}

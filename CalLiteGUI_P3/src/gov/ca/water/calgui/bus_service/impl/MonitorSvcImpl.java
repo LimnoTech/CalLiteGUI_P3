@@ -91,15 +91,18 @@ public final class MonitorSvcImpl implements IMonitorSvc {
 				&& (System.currentTimeMillis() - fileTime.toMillis() < 300000)) {
 			line = lastLine(scenPROGRESSFile);
 			line = progressString(line);
+			System.out.println(scenPROGRESSFile + " - " + line);
 			return scenarioName + " - " + line;
-		} else {
+		} else if (Paths.get(scenWRESLCHECKFile).toFile().exists()) {
 			line = lastLine(scenWRESLCHECKFile);
 			if (line.endsWith("====================")) {
 				line = lastButOneLine(scenWRESLCHECKFile);
 			}
+			System.out.println(scenWRESLCHECKFile + " - " + line);
 			line = parsingString(line);
 			return scenarioName + " - " + line;
-		}
+		} else
+			return scenarioName + " - " + "PENDING";
 	}
 
 	/**
@@ -116,7 +119,7 @@ public final class MonitorSvcImpl implements IMonitorSvc {
 			return "RUNNING - unable to read progress.txt";
 		if (value.contains("Empty!"))
 			return "RUNNING - run starting";
-		if (value.contains("Run completed."))
+		if (value.toUpperCase().contains("RUN COMPLETED"))
 			return "DONE - run completed";
 		if (value.contains("Run failed."))
 			return "DONE - run failed.";
@@ -168,10 +171,10 @@ public final class MonitorSvcImpl implements IMonitorSvc {
 			List<String> list = stream.collect(Collectors.toList());
 			value = list.get(list.size() - 1);
 		} catch (NoSuchFileException ex) {
-			value = "Loading log file....";
+			value = "Waiting ... no progress file available";
 			LOG.debug(value);
 		} catch (AccessDeniedException ex) {
-			value = "The Access is denied for this file " + fileName;
+			value = "Access denied for file " + fileName;
 			LOG.debug(value);
 		} catch (IOException ex) {
 			value = ex.getMessage();
