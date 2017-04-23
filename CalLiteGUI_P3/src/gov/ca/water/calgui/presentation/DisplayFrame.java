@@ -243,21 +243,9 @@ public class DisplayFrame {
 							plottedOne = true;
 							tabbedpane.insertTab("Exceedance (" + monthNames[m1] + ")", null, cp3, null, 0);
 						}
-					if (exceedMonths.contains("ALL") || !plottedOne) {
-						if (doDifference)
-							cp3 = new ChartPanel1(
-									dssGrabber.getTitle() + " - Exceedance (all months)" + " - Difference from "
-											+ primary_Results[0].fileName,
-									dssGrabber.getYLabel(), dexc_Results[13], null, true, upper, lower,
-									dssGrabber.getSLabel());
-						else
-							cp3 = new ChartPanel1(dssGrabber.getTitle() + " - Exceedance (all months)",
-									dssGrabber.getYLabel(), exc_Results[13],
-									sexc_Results == null ? null : sexc_Results[13], true, upper, lower,
-									dssGrabber.getSLabel(), doBase);
-						tabbedpane.insertTab("Exceedance (all)", null, cp3, null, 0);
-					}
+
 					if (exceedMonths.contains("Annual")) {
+						plottedOne = true;
 						if (dssGrabber.getOriginalUnits().equals("CFS")) {
 							if (doDifference)
 								cp3 = new ChartPanel1(
@@ -277,6 +265,20 @@ public class DisplayFrame {
 							panel.add(new JLabel("No chart - annual totals are only calculated for flows."));
 							tabbedpane.insertTab("Exceedance (Annual Total)", null, panel, null, 0);
 						}
+						if (exceedMonths.contains("ALL") || !plottedOne) {
+							if (doDifference)
+								cp3 = new ChartPanel1(
+										dssGrabber.getTitle() + " - Exceedance (all months)" + " - Difference from "
+												+ primary_Results[0].fileName,
+										dssGrabber.getYLabel(), dexc_Results[13], null, true, upper, lower,
+										dssGrabber.getSLabel());
+							else
+								cp3 = new ChartPanel1(dssGrabber.getTitle() + " - Exceedance (all months)",
+										dssGrabber.getYLabel(), exc_Results[13],
+										sexc_Results == null ? null : sexc_Results[13], true, upper, lower,
+										dssGrabber.getSLabel(), doBase);
+							tabbedpane.insertTab("Exceedance (all)", null, cp3, null, 0);
+						}
 					}
 				}
 
@@ -288,12 +290,8 @@ public class DisplayFrame {
 							&& dssGrabber.getPrimaryDSSName().contains(",")) {
 						cp2 = new ChartPanel1(Constant.SCHEMATIC_PREFIX + dssGrabber.getTitle(), dssGrabber.getYLabel(),
 								primary_Results, secondary_Results, false, upper, lower, dssGrabber.getPrimaryDSSName(),
-								false); // abuse
-						// slabel to
-						// pass
-						// individual
-						// dataset
-						// names
+								false);
+						// abuse slabel to pass individual dataset names
 						tabbedpane.insertTab("Time Series (experimental)", null, cp2, null, 0);
 
 					} else
