@@ -280,7 +280,7 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 				}
 				Component c = this.swingEngine.find(itemName).getParent();
 				((JRadioButton) swingEngine.find(Constant.PANEL_RB_D1641))
-						.setText(c.getName().equals("Others") ? "Default" : "D1641");
+						.setText(c.getName().equals("Others") ? "Default" : "D-1641");
 
 				((JPanel) this.swingEngine.find(panelId)).repaint();
 				if (isSelected) {

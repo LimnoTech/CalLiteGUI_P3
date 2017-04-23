@@ -278,11 +278,11 @@
 			<gridbagconstraints insets="0,5,5,5" gridx="1" gridy="0" gridheight="1" anchor="GridBagConstraints.NORTHWEST" />
 		</button>
 		<buttongroup>
-			<radiobutton id="btnRegD1641" name="btnRegD1641" text="D1641" minimumsize="100,20" enabled="false"
+			<radiobutton id="btnRegD1641" name="btnRegD1641" text="D-1641" minimumsize="100,20" enabled="false"
 				ActionCommand="Reg_1641" visible="false">
 				<gridbagconstraints insets="0,5,5,5" gridx="2" gridy="0" gridheight="1" anchor="GridBagConstraints.NORTHWEST" />
 			</radiobutton>
-			<radiobutton id="btnRegD1485" name="btnRegD1485" text="D1485" minimumsize="100,20" enabled="false"
+			<radiobutton id="btnRegD1485" name="btnRegD1485" text="D-1485" minimumsize="100,20" enabled="false"
 				ActionCommand="Reg_1485" visible="false">
 				<gridbagconstraints insets="0,0,5,5" gridx="3" gridy="0" gridheight="1" anchor="GridBagConstraints.NORTHWEST" />
 			</radiobutton>
