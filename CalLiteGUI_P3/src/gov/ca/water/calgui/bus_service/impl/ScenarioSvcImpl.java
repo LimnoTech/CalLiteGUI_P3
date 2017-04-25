@@ -1000,7 +1000,7 @@ public final class ScenarioSvcImpl implements IScenarioSvc {
 									// Option = 1 for default
 									// Option = 2 for user-defined
 
-									option = String.valueOf(this.regulationoptions[rID] - 1);
+									option = String.valueOf(this.regulationoptions[rID]);
 
 								} else {
 									option = String.valueOf(this.regulationoptions[rID]);
