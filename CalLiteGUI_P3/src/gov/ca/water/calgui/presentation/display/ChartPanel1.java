@@ -265,7 +265,7 @@ public class ChartPanel1 extends JPanel implements Printable {
 				if (stscs != null) {
 					TimeSeries[] sseries = new TimeSeries[(isBase ? 1 : stscs.length)];
 					for (int i = 0; i < (isBase ? 1 : stscs.length); i++) {
-						if (stscs[i].numberValues > 0) {
+						if (stscs[i] != null && stscs[i].numberValues > 0) {
 							sseries[i] = new TimeSeries(sName);
 							double maxval = -1e37;
 							for (int j = 0; j < stscs[i].numberValues; j++) {
