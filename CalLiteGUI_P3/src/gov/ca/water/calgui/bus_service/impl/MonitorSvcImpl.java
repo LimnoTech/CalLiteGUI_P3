@@ -7,6 +7,7 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
 import java.util.List;
+import java.util.Properties;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -24,6 +25,7 @@ import gov.ca.water.calgui.constant.Constant;
 public final class MonitorSvcImpl implements IMonitorSvc {
 
 	private static final Logger LOG = Logger.getLogger(MonitorSvcImpl.class.getName());
+	private Properties properties = new Properties();
 
 	@Override
 	public String save(String scenarioName) {
@@ -43,7 +45,8 @@ public final class MonitorSvcImpl implements IMonitorSvc {
 		String line = "";
 		if (Paths.get(scenWSIDIIterationFile).toFile().exists()) {
 			String lastLineForI = lastLine(scenWSIDIIterationFile);
-			if (lastLineForI.equalsIgnoreCase("iteration 3/3")) {
+			if (lastLineForI.equalsIgnoreCase("iteration " + properties.getProperty("wsidi.iterations") + "/"
+					+ properties.getProperty("wsidi.iterations"))) {
 				try {
 					Thread.sleep(30000);
 				} catch (InterruptedException ex) {

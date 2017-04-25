@@ -7,6 +7,7 @@
 
 # python modules
 import shutil
+import time
 import os
 from os.path import basename
 #CalsimWsiDi class imports
@@ -98,6 +99,13 @@ class StudyTabCl:
       # run CALSIM and extract wsi-di data points for curve generation
       for i in range(0,numRun):
          print "Start iteration " + str(i+1)
+         # pause for CalLite GUI monitoring -----
+         if (i > 0):
+         	time.sleep(5)
+         	progress_txt=open(os.path.join(os.path.dirname(self.configPath), "run\\progress.txt"),'w')
+         	progress_txt.write("Starting next iteration")
+         	progress_txt.close()
+         	
          wsidi_log=open(os.path.join(os.path.dirname(self.configPath), "run\\wsidi_iteration.log"),'w')
          wsidi_log.write('iteration '+ str(i+1) + '/' + str(numRun) +'\n') 
          wsidi_log.close()
