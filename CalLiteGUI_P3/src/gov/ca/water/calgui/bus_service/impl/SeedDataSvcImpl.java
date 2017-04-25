@@ -153,7 +153,7 @@ public final class SeedDataSvcImpl implements ISeedDataSvc {
 	public GUILinks2BO getObjByGuiId(String guiId) {
 		GUILinks2BO gUILinks2BO = guiIdMap.get(guiId);
 		if (gUILinks2BO == null)
-			LOG.info("There is no GUI_Links3 data for this guiId = " + guiId);
+			LOG.info("There is no GUI_Links2 data for this guiId = " + guiId);
 		return gUILinks2BO;
 	}
 

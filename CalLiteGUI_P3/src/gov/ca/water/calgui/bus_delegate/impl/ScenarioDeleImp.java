@@ -22,9 +22,9 @@ import org.apache.commons.io.FilenameUtils;
 import org.swixml.SwingEngine;
 
 import gov.ca.water.calgui.bo.DataTableModel;
-import gov.ca.water.calgui.bo.ScenarioDisplayBO;
 import gov.ca.water.calgui.bo.GUILinks2BO;
 import gov.ca.water.calgui.bo.NumericTextField;
+import gov.ca.water.calgui.bo.ScenarioDisplayBO;
 import gov.ca.water.calgui.bus_delegate.IScenarioDele;
 import gov.ca.water.calgui.bus_service.IScenarioSvc;
 import gov.ca.water.calgui.bus_service.ISeedDataSvc;
@@ -189,9 +189,10 @@ public class ScenarioDeleImp implements IScenarioDele {
 		List<String> controlStrList = new ArrayList<String>();
 		List<String> dataTableModelStrList = new ArrayList<String>();
 		List<String> regulationoptionsStr = new ArrayList<String>();
+		List<String> wsidiStatusStr = new ArrayList<String>();
 		// Read in the cls file data.
 		scenarioSvc.getCLSData(Constant.SCENARIOS_DIR + fileName, controlStrList, dataTableModelStrList,
-				regulationoptionsStr);
+				regulationoptionsStr, wsidiStatusStr);
 		// This will build all the component data into list of
 		// ScenarioDisplayBO.
 		List<ScenarioDisplayBO> componentData = buildCompDataIntoScenarioDisplayBOs(controlStrList, swingEngine);

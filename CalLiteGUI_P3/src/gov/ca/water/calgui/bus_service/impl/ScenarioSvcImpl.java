@@ -25,6 +25,7 @@ import javax.swing.AbstractButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
@@ -87,17 +88,18 @@ public final class ScenarioSvcImpl implements IScenarioSvc {
 
 	@Override
 	public void getCLSData(String fileName, List<String> controlStrList, List<String> dataTableModelStrList,
-			List<String> regulationoptionsStr) {
+			List<String> regulationoptionsStr, List<String> wsidiStatusStr) {
 		List<String> data = null;
 		boolean isDataTableModel = false;
 		boolean isRegulationoptions = false;
+		boolean isWSIDIStatus = false;
 		try {
 			data = fileSystemSvc.getFileData(fileName, true);
 		} catch (CalLiteGUIException ex) {
 			errorHandlingSvc.displayErrorMessageBeforeTheUI(ex);
 		}
-		for (String stringInClSFile : data) {
-			switch (stringInClSFile) {
+		for (String stringInClsFile : data) {
+			switch (stringInClsFile) {
 			case "DATATABLEMODELS":
 				isDataTableModel = true;
 				continue;
@@ -110,14 +112,22 @@ public final class ScenarioSvcImpl implements IScenarioSvc {
 			case "END REGULATIONOPTIONS":
 				isRegulationoptions = false;
 				continue;
+			case "WSIDILABEL":
+				isWSIDIStatus = true;
+				continue;
+			case "END WSIDILABEL":
+				isWSIDIStatus = false;
+				continue;
 			}
 
 			if (isDataTableModel) {
-				dataTableModelStrList.add(stringInClSFile);
+				dataTableModelStrList.add(stringInClsFile);
 			} else if (isRegulationoptions) {
-				regulationoptionsStr.add(stringInClSFile);
+				regulationoptionsStr.add(stringInClsFile);
+			} else if (isWSIDIStatus) {
+				wsidiStatusStr.add(stringInClsFile);
 			} else {
-				controlStrList.add(stringInClSFile);
+				controlStrList.add(stringInClsFile);
 			}
 		}
 	}
@@ -129,8 +139,9 @@ public final class ScenarioSvcImpl implements IScenarioSvc {
 		List<String> dataTableModelStrList = new ArrayList<String>();
 		// List<String> userDefinedFlagsStrList = new ArrayList<String>();
 		List<String> regulationoptionsStr = new ArrayList<String>();
-		this.getCLSData(fileName, controlStrList, dataTableModelStrList, regulationoptionsStr);
-
+		List<String> wsidiStatusStr = new ArrayList<String>();
+		// Read in the cls file data.
+		scenarioSvc.getCLSData(fileName, controlStrList, dataTableModelStrList, regulationoptionsStr, wsidiStatusStr);
 		if (!regulationoptionsStr.isEmpty()) {
 			List<String> regData = Arrays.asList(regulationoptionsStr.get(0).split(Constant.PIPELINE_DELIMITER));
 			for (int i = 0; i < regData.size(); i++) {
@@ -140,7 +151,12 @@ public final class ScenarioSvcImpl implements IScenarioSvc {
 		if (!dataTableModelStrList.isEmpty()) {
 			populateClsTableMap(dataTableModelStrList, tableMap);
 		}
+
 		applyControls(controlStrList, swingEngine);
+		if (!wsidiStatusStr.isEmpty()) {
+			JLabel l = (JLabel) swingEngine.find("op_WSIDI_Status");
+			l.setText(wsidiStatusStr.get(0));
+		}
 		this.isCLSFlag = false;
 	}
 
@@ -1108,6 +1124,12 @@ public final class ScenarioSvcImpl implements IScenarioSvc {
 		}
 		sb.append(sRegFlags + Constant.NEW_LINE);
 		sb.append("END REGULATIONOPTIONS" + Constant.NEW_LINE);
+
+		sb.append("WSIDILABEL" + Constant.NEW_LINE);
+		JLabel l = (JLabel) swingEngine.find("op_WSIDI_Status");
+		sb.append(l.getText() + Constant.NEW_LINE);
+		sb.append("END WSIDILABEL" + Constant.NEW_LINE);
+
 		fileSystemSvc.saveDataToFile(fileName, sb.toString());
 	}
 

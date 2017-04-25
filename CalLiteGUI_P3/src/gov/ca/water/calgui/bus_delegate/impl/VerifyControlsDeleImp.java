@@ -101,7 +101,9 @@ public class VerifyControlsDeleImp implements IVerifyControlsDele {
 		List<String> controlStrList = new ArrayList<String>();
 		List<String> dataTableModelStrList = new ArrayList<String>();
 		List<String> regulationoptionsStr = new ArrayList<String>();
-		scenarioSvc.getCLSData(fileName, controlStrList, dataTableModelStrList, regulationoptionsStr);
+		List<String> wsidiStatusStr = new ArrayList<String>();
+		// Read in the cls file data.
+		scenarioSvc.getCLSData(fileName, controlStrList, dataTableModelStrList, regulationoptionsStr, wsidiStatusStr);
 		Set<String> guiIds = xmlParsingSvc.getIdFromXML();
 		List<String> conStr = controlStrList.stream().map((key) -> {
 			return key.split(Constant.PIPELINE_DELIMITER)[0];
