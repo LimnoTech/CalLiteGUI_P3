@@ -1,4 +1,5 @@
 package gov.ca.water.calgui.bo;
+
 //! Representation of dynamic behavior control record
 /**
  * This is used to hold the information of Trigger*.table in memory.
@@ -11,7 +12,7 @@ public class TriggerBO {
 	 */
 	private String triggerGuiId;
 	/**
-	 * The tarigger action is the one which says whether it's selected or
+	 * The trigger action is the one which says whether it's selected or
 	 * not-selected for the trigger gui id.
 	 */
 	private String triggerAction;
@@ -21,8 +22,8 @@ public class TriggerBO {
 	 */
 	private String affectdeGuiId;
 	/**
-	 * The affectde action is the one which says what should happend for the
-	 * affectde gui id.
+	 * The affected action is the one which says what should happen for the
+	 * affected gui id.
 	 */
 	private String affectdeAction;
 

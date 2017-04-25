@@ -57,7 +57,7 @@ public class ErrorHandlingSvcImpl implements IErrorHandlingSvc {
 
 	@Override
 	public void validationeErrorHandler(String displayMessage, String detailMessage, JFrame mainFrame) {
-		displayErrorMessage("Validatione Error : " + displayMessage, detailMessage, mainFrame);
+		displayErrorMessage("Validation Error : " + displayMessage, detailMessage, mainFrame);
 	}
 
 	@Override
@@ -111,7 +111,8 @@ public class ErrorHandlingSvcImpl implements IErrorHandlingSvc {
 		if (ex.isRequiredToExit()) {
 			Object[] options = new Object[1];
 			options[0] = "exit";
-			optionPane = new JOptionPane(panel, JOptionPane.ERROR_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, options, options[0]);
+			optionPane = new JOptionPane(panel, JOptionPane.ERROR_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, options,
+					options[0]);
 			JDialog dialog = optionPane.createDialog("Information");
 			dialog.setIconImage(icon.getImage());
 			dialog.setResizable(false);
@@ -121,8 +122,8 @@ public class ErrorHandlingSvcImpl implements IErrorHandlingSvc {
 			Object[] options = new Object[2];
 			options[0] = "continue";
 			options[1] = "exit";
-			optionPane = new JOptionPane(panel, JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, options,
-			        options[0]);
+			optionPane = new JOptionPane(panel, JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null,
+					options, options[0]);
 			JDialog dialog = optionPane.createDialog("Information");
 			dialog.setIconImage(icon.getImage());
 			dialog.setResizable(false);
@@ -179,8 +180,8 @@ public class ErrorHandlingSvcImpl implements IErrorHandlingSvc {
 		ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
 		ErrorHandlingSvcImpl.time = System.currentTimeMillis();
 		Object[] options = { "ok", "show details" };
-		JOptionPane optionPane = new JOptionPane(displayMessage, JOptionPane.ERROR_MESSAGE, JOptionPane.YES_NO_OPTION, null,
-		        options, options[1]);
+		JOptionPane optionPane = new JOptionPane(displayMessage, JOptionPane.ERROR_MESSAGE, JOptionPane.YES_NO_OPTION,
+				null, options, options[1]);
 		JDialog dialog = optionPane.createDialog("CalLite");
 		dialog.setIconImage(icon.getImage());
 		dialog.setResizable(false);
@@ -205,27 +206,30 @@ public class ErrorHandlingSvcImpl implements IErrorHandlingSvc {
 	 *            For displaying the message when we have a error.
 	 */
 	private void sendEmail(String message, JFrame mainFrame) {
-		Properties props = new Properties();
-		props.put("mail.smtp.host", "smtp.gmail.com");
-		props.put("mail.transport.protocol", "smtp");
-		props.put("mail.smtp.starttls.enable", "true");
+		if (Boolean.parseBoolean(properties.getProperty("email.to.developer"))) {
+			Properties props = new Properties();
+			props.put("mail.smtp.host", "smtp.gmail.com");
+			props.put("mail.transport.protocol", "smtp");
+			props.put("mail.smtp.starttls.enable", "true");
 
-		Session session = Session.getDefaultInstance(props);
+			Session session = Session.getDefaultInstance(props);
 
-		try {
-			String userName = properties.getProperty("user.name");
-			InternetAddress fromAddress = new InternetAddress(userName + "@gmail.com");
-			InternetAddress toAddress = new InternetAddress(properties.getProperty("to.address"));
+			try {
+				String userName = properties.getProperty("user.name");
+				InternetAddress fromAddress = new InternetAddress(userName + "@gmail.com");
+				InternetAddress toAddress = new InternetAddress(properties.getProperty("to.address"));
 
-			Message mes = new MimeMessage(session);
-			mes.setFrom(fromAddress);
-			mes.setRecipient(Message.RecipientType.TO, toAddress);
-			mes.setSubject(properties.getProperty("subject"));
-			mes.setText(message);
-			Transport.send(mes, userName, new String(properties.getProperty("password")));
-		} catch (MessagingException ex) {
-			LOG.error(getStackTraceAsString(ex));
-			JOptionPane.showMessageDialog(mainFrame, "Can't send email to the developer.", "Error", JOptionPane.ERROR_MESSAGE);
+				Message mes = new MimeMessage(session);
+				mes.setFrom(fromAddress);
+				mes.setRecipient(Message.RecipientType.TO, toAddress);
+				mes.setSubject(properties.getProperty("subject"));
+				mes.setText(message);
+				Transport.send(mes, userName, new String(properties.getProperty("password")));
+			} catch (MessagingException ex) {
+				LOG.error(getStackTraceAsString(ex));
+				JOptionPane.showMessageDialog(mainFrame, "Can't send email to the developer.", "Error",
+						JOptionPane.ERROR_MESSAGE);
+			}
 		}
 	}
 }
