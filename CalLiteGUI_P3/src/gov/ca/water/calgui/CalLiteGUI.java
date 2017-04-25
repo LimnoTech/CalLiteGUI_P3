@@ -1,4 +1,5 @@
 package gov.ca.water.calgui;
+
 //! Main class
 import gov.ca.water.calgui.presentation.CalLiteInitClass;
 
@@ -10,6 +11,7 @@ import gov.ca.water.calgui.presentation.CalLiteInitClass;
  */
 public class CalLiteGUI {
 	public static void main(String[] args) {
+		System.out.println(System.getProperty("sun.arch.data.model"));
 		CalLiteInitClass calLiteInit = new CalLiteInitClass();
 		calLiteInit.init();
 	}
