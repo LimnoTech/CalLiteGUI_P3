@@ -68,4 +68,13 @@ public interface IXMLParsingSvc {
 	 * @return Will return all the text fields ids.
 	 */
 	List<String> getjCheckBoxIDs();
+
+	/**
+	 * This method will tell whether the id is from the result part or not.
+	 *
+	 * @param compId
+	 *            The ID of the component.
+	 * @return Will check whether the id is from the result part of the ui.
+	 */
+	public boolean checkIsItFromResultPart(String compId);
 }

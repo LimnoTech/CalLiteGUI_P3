@@ -111,7 +111,7 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 		List<String> temp = compIds.stream().filter((compId) -> swingEngine.find(compId) instanceof JTextField)
 				.collect(Collectors.toList());
 		for (String string : temp) {
-			if (checkIsItFromResultPart(string)) {
+			if (!checkIsItFromResultPart(string)) {
 				jTextFieldIds.add(string);
 			}
 		}
@@ -121,7 +121,7 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 		temp = compIds.stream().filter((compId) -> swingEngine.find(compId) instanceof JLinkedSlider)
 				.collect(Collectors.toList());
 		for (String string : temp) {
-			if (checkIsItFromResultPart(string)) {
+			if (!checkIsItFromResultPart(string)) {
 				JLinkedSlider ls = (JLinkedSlider) swingEngine.find(string);
 				if (!ls.getLTextBoxID().equals(""))
 					jTextFieldIdsForLinkedSliders.add(ls.getLTextBoxID());
@@ -153,7 +153,7 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 	 *            The ID of the component.
 	 * @return Will check whether the id is from the result part of the ui.
 	 */
-	private boolean checkIsItFromResultPart(String compId) {
+	public boolean checkIsItFromResultPart(String compId) {
 		List<String> resultTabNames = Arrays.asList("Custom", "externalPDF", "Reporting", "schematics",
 				"Data_tabbedPane2");
 		List<String> names = new java.util.ArrayList<String>();
@@ -163,7 +163,7 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 		for (String string : resultTabNames) {
 			con = con || names.contains(string);
 		}
-		return !con;
+		return con;
 	}
 
 	/**

@@ -20,6 +20,7 @@ import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
 import gov.ca.water.calgui.bus_delegate.impl.ApplyDynamicConDeleImp;
 import gov.ca.water.calgui.bus_service.IDynamicControlSvc;
 import gov.ca.water.calgui.bus_service.IScenarioSvc;
+import gov.ca.water.calgui.bus_service.IXMLParsingSvc;
 import gov.ca.water.calgui.bus_service.impl.DynamicControlSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
@@ -40,6 +41,7 @@ public class GlobalItemListener implements ItemListener {
 	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
 	private IDynamicControlSvc dynamicControlSvc = DynamicControlSvcImpl.getDynamicControlSvcImplInstance();
 	private IAuditSvc auditSvc = AuditSvcImpl.getAuditSvcImplInstance();
+	private IXMLParsingSvc xmlParsingSvc = XMLParsingSvcImpl.getXMLParsingSvcImplInstance();
 	private IScenarioSvc scenarioSvc = ScenarioSvcImpl.getScenarioSvcImplInstance();
 	private String oldValue = "";
 	/*
@@ -189,7 +191,8 @@ public class GlobalItemListener implements ItemListener {
 		{
 			applyDynamicConDele.applyDynamicControl(itemName, isSelected, isEnabled, optionFromTheBox);
 		}
-		auditSvc.addAudit(itemName, String.valueOf(!isSelected), String.valueOf(isSelected));
+		if (!xmlParsingSvc.checkIsItFromResultPart(itemName))
+			auditSvc.addAudit(itemName, String.valueOf(!isSelected), String.valueOf(isSelected));
 	}
 
 	/**
