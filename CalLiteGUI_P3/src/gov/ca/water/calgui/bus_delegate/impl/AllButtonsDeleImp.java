@@ -45,13 +45,13 @@ import gov.ca.water.calgui.bo.DataTableModel;
 import gov.ca.water.calgui.bo.GUILinks4BO;
 import gov.ca.water.calgui.bus_delegate.IAllButtonsDele;
 import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
-import gov.ca.water.calgui.bus_service.IModelRunSvc;
 import gov.ca.water.calgui.bus_service.IDynamicControlSvc;
+import gov.ca.water.calgui.bus_service.IModelRunSvc;
 import gov.ca.water.calgui.bus_service.IScenarioSvc;
 import gov.ca.water.calgui.bus_service.ISeedDataSvc;
 import gov.ca.water.calgui.bus_service.ITableSvc;
-import gov.ca.water.calgui.bus_service.impl.ModelRunSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.DynamicControlSvcImpl;
+import gov.ca.water.calgui.bus_service.impl.ModelRunSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.SeedDataSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.TableSvcImpl;
@@ -184,8 +184,8 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 	@Override
 	public boolean saveForViewScen() {
 		try {
-			scenarioSvc.saveToCLSFile(Constant.SCENARIOS_DIR + Constant.CURRENT_SCENARIO + Constant.CLS_EXT, swingEngine,
-					seedDataSvc.getGUILinks2BOList());
+			scenarioSvc.saveToCLSFile(Constant.SCENARIOS_DIR + Constant.CURRENT_SCENARIO + Constant.CLS_EXT,
+					swingEngine, seedDataSvc.getGUILinks2BOList());
 			return true;
 		} catch (CalLiteGUIException ex) {
 			LOG.debug(ex);
@@ -715,14 +715,14 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 				System.exit(0);
 			}
 		} else {
-			Object[] options = { "Ok", "Cancel" };
+			Object[] options = { "Yes", "No", "Cancel" };
 			optionPane = new JOptionPane("Are you certain that you are ready to exit ?", JOptionPane.QUESTION_MESSAGE,
-					JOptionPane.OK_CANCEL_OPTION, null, options, options[0]);
-			JDialog dialog = optionPane.createDialog("CalLite");
+					JOptionPane.YES_NO_CANCEL_OPTION, null, options, options[0]);
+			JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "CalLite");
 			dialog.setIconImage(icon.getImage());
 			dialog.setResizable(false);
 			dialog.setVisible(true);
-			if (optionPane.getValue().toString().equals("Ok")) {
+			if (optionPane.getValue().toString().equals("Yes")) {
 				System.exit(0);
 			}
 		}
