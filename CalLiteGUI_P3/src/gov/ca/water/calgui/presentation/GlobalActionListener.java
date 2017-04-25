@@ -421,7 +421,7 @@ public class GlobalActionListener implements ActionListener {
 	 */
 	public boolean decisionBeforeTheBatchRun() {
 		String clsFileName = FilenameUtils.removeExtension(((JTextField) swingEngine.find("run_txfScen")).getText());
-		if (clsFileName.toUpperCase().equals(Constant.DEFAULT)) {
+		if (clsFileName.toUpperCase().equals(Constant.DEFAULT) && allButtonsDele.defaultCLSIsProtected()) {
 			JOptionPane.showMessageDialog(null,
 					"The CalLite GUI is not allowed to modify the default scenario 'DEFAULT.CLS'. Please use Save As to save to a different scenario file.");
 			return false;

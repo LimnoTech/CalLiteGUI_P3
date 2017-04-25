@@ -94,14 +94,13 @@ public final class MonitorSvcImpl implements IMonitorSvc {
 				&& (System.currentTimeMillis() - fileTime.toMillis() < 300000)) {
 			line = lastLine(scenPROGRESSFile);
 			line = progressString(line);
-			System.out.println(scenPROGRESSFile + " - " + line);
+
 			return scenarioName + " - " + line;
 		} else if (Paths.get(scenWRESLCHECKFile).toFile().exists()) {
 			line = lastLine(scenWRESLCHECKFile);
 			if (line.endsWith("====================")) {
 				line = lastButOneLine(scenWRESLCHECKFile);
 			}
-			System.out.println(scenWRESLCHECKFile + " - " + line);
 			line = parsingString(line);
 			return scenarioName + " - " + line;
 		} else
