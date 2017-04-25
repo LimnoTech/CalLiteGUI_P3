@@ -722,7 +722,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 			dialog.setIconImage(icon.getImage());
 			dialog.setResizable(false);
 			dialog.setVisible(true);
-			if (optionPane.getValue().toString().equals("Yes")) {
+			if (optionPane.getValue() != null && optionPane.getValue().toString().equals("Yes")) {
 				System.exit(0);
 			}
 		}
