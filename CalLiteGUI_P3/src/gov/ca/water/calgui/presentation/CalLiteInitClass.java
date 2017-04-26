@@ -91,6 +91,7 @@ public class CalLiteInitClass {
 	private SwingEngine swingEngine;
 	private IAuditSvc auditSvc;
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
+	private IXMLParsingSvc xmlParsingSvc = XMLParsingSvcImpl.getXMLParsingSvcImplInstance();
 
 	/**
 	 * This method is called to initialize the ui.
@@ -528,7 +529,8 @@ public class CalLiteInitClass {
 				JTextField field = ((JTextField) e.getComponent());
 				String newValue = field.getText();
 				if (!oldValue.equals(newValue)) {
-					auditSvc.addAudit(field.getName(), oldValue, newValue);
+					if (!xmlParsingSvc.checkIsItFromResultPart(field.getName()))
+						auditSvc.addAudit(field.getName(), oldValue, newValue);
 				}
 			}
 
@@ -545,7 +547,8 @@ public class CalLiteInitClass {
 				JTextArea field = ((JTextArea) e.getComponent());
 				String newValue = field.getText();
 				if (!oldValue.equals(newValue)) {
-					auditSvc.addAudit(field.getName(), oldValue, newValue);
+					if (!xmlParsingSvc.checkIsItFromResultPart(field.getName()))
+						auditSvc.addAudit(field.getName(), oldValue, newValue);
 				}
 			}
 

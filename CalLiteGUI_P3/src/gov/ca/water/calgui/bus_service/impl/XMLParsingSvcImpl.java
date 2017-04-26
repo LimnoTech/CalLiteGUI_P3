@@ -154,8 +154,8 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 	 * @return Will check whether the id is from the result part of the ui.
 	 */
 	public boolean checkIsItFromResultPart(String compId) {
-		List<String> resultTabNames = Arrays.asList("Custom", "externalPDF", "Reporting", "schematics",
-				"Data_tabbedPane2");
+		List<String> resultTabNames = Arrays.asList("WRIMS", "External PDF", "Reporting", "schematics",
+				"Data_tabbedPane2", "controls");
 		List<String> names = new java.util.ArrayList<String>();
 		getAllThePanelNamesOfParent(swingEngine.find(compId).getParent(), names);
 
