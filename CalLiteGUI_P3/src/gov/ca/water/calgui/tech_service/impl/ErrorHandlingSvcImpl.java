@@ -25,11 +25,12 @@ import javax.swing.JTextArea;
 import org.apache.log4j.Logger;
 
 import gov.ca.water.calgui.bo.CalLiteGUIException;
+import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 
 /**
- * This is the class for handling different type of error like validatione,
+ * This is the class for handling different type of error like validation
  * business, system and also used for displaying the error messages.
  *
  * @author Mohan
@@ -37,6 +38,8 @@ import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 public class ErrorHandlingSvcImpl implements IErrorHandlingSvc {
 
 	private static final Logger LOG = Logger.getLogger(ErrorHandlingSvcImpl.class.getName());
+	// private static SwingEngine swix =
+	// ResultUtilsBO.getResultUtilsInstance(null).getSwix();
 	private static long time = System.currentTimeMillis();
 	private static final Properties properties;
 
@@ -49,38 +52,45 @@ public class ErrorHandlingSvcImpl implements IErrorHandlingSvc {
 		}
 	}
 
+	private JFrame setFrame(JFrame mainFrame) {
+		if (mainFrame == null)
+			return (JFrame) ResultUtilsBO.getResultUtilsInstance(null).getSwix().find(Constant.MAIN_FRAME_NAME);
+		else
+			return mainFrame;
+	}
+
 	@Override
 	public void validationeErrorHandler(JFrame mainFrame, Throwable aThrowable) {
 		List<String> error = getMessageAndStackTraceFromLayeredError(aThrowable);
-		displayErrorMessage("Ssystem Error : " + error.get(0), error.get(1), mainFrame);
+		displayErrorMessage("Ssystem Error : " + error.get(0), error.get(1), setFrame(mainFrame));
 	}
 
 	@Override
 	public void validationeErrorHandler(String displayMessage, String detailMessage, JFrame mainFrame) {
-		displayErrorMessage("Validation Error : " + displayMessage, detailMessage, mainFrame);
+		displayErrorMessage("Validation Error : " + displayMessage, detailMessage, setFrame(mainFrame));
 	}
 
 	@Override
 	public void businessErrorHandler(JFrame mainFrame, Throwable aThrowable) {
 		List<String> error = getMessageAndStackTraceFromLayeredError(aThrowable);
-		displayErrorMessage("Business Error : " + error.get(0), error.get(1), mainFrame);
+		displayErrorMessage("Business Error : " + error.get(0), error.get(1), setFrame(mainFrame));
 	}
 
 	@Override
 	public void businessErrorHandler(String displayMessage, String detailMessage, JFrame mainFrame) {
-		displayErrorMessage("Business Error : " + displayMessage, detailMessage, mainFrame);
+		displayErrorMessage("Business Error : " + displayMessage, detailMessage, setFrame(mainFrame));
 	}
 
 	@Override
 	public void systemErrorHandler(JFrame mainFrame, Throwable aThrowable) {
 		List<String> error = getMessageAndStackTraceFromLayeredError(aThrowable);
-		displayErrorMessage("System Error : " + error.get(0), error.get(1), mainFrame);
+		displayErrorMessage("System Error : " + error.get(0), error.get(1), setFrame(mainFrame));
 		System.exit(-1);
 	}
 
 	@Override
 	public void systemErrorHandler(String displayMessage, String detailMessage, JFrame mainFrame) {
-		displayErrorMessage("System Error : " + displayMessage, detailMessage, mainFrame);
+		displayErrorMessage("System Error : " + displayMessage, detailMessage, setFrame(mainFrame));
 		System.exit(-1);
 	}
 
