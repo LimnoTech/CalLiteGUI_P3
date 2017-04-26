@@ -685,8 +685,9 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 		calendar.setTimeInMillis(longTime);
 		SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy");
 		String guiXmlDate = sdf.format(calendar.getTime());
-		JOptionPane.showMessageDialog(null,
-				"CalLite v. " + properties.getProperty("version.id") + "\nBuild date: "
+		JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
+				"CalLite GUI v. " + properties.getProperty("version.id") + " ("
+						+ System.getProperty("sun.arch.data.model") + "-bit)\nBuild date: "
 						+ properties.getProperty("build.date") + "\nYour last GUI xml revision date: " + guiXmlDate,
 				"About CalLite", JOptionPane.INFORMATION_MESSAGE);
 	}
