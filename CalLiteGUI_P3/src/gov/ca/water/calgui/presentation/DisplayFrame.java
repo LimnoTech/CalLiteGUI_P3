@@ -18,6 +18,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 
+import org.apache.log4j.Logger;
 import org.jfree.data.time.Month;
 import org.swixml.SwingEngine;
 
@@ -54,6 +55,7 @@ public class DisplayFrame {
 
 	private static SwingEngine swix = ResultUtilsBO.getResultUtilsInstance(null).getSwix();
 	private static IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
+	private static final Logger LOG = Logger.getLogger(DisplayFrame.class.getName());
 
 	/**
 	 *
@@ -122,7 +124,7 @@ public class DisplayFrame {
 				if (m.find())
 					dateRange = groupParts[i];
 				else
-					System.out.println("Unparsed display list component - " + groupParts[i]);
+					LOG.debug("Unparsed display list component - " + groupParts[i]);
 			}
 		}
 
@@ -147,7 +149,6 @@ public class DisplayFrame {
 			else
 				dssGrabber.setLocation(locationNames[i]);
 
-			System.out.println(locationNames[i]);
 			String message = null;
 			if (dssGrabber.getPrimaryDSSName() == null)
 				message = "No GUI_Links3.csv found for " + namesText[i] + "/" + locationNames[i] + ".";
@@ -561,7 +562,7 @@ public class DisplayFrame {
 				if (m.find())
 					dateRange = groupParts[i];
 				else
-					System.out.println("Unparsed display list component - " + groupParts[i]);
+					LOG.debug("Unparsed display list component - " + groupParts[i]);
 			}
 		}
 

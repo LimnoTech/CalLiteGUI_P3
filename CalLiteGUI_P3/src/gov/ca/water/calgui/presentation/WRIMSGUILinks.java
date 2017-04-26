@@ -35,10 +35,16 @@ import gov.ca.water.calgui.constant.Constant;
  */
 public class WRIMSGUILinks {
 
-	static Logger log = Logger.getLogger(WRIMSGUILinks.class.getName());
+	private static final Logger log = Logger.getLogger(WRIMSGUILinks.class.getName());
 
+	/**
+	 * This method is intended to update the status label inside the WRIMS GUI
+	 * panel to reflect progress reading data files. It is currently a stub.
+	 * 
+	 * @param text
+	 */
 	public static void setStatus(String text) {
-		System.out.println(">>>" + text);
+		log.debug("Status update to '" + text + "'");
 		// statusLabel.setText(text);
 		// statusLabel.invalidate();
 	}

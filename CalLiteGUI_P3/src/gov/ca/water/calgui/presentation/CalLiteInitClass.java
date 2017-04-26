@@ -275,14 +275,14 @@ public class CalLiteInitClass {
 		swingEngine.find(Constant.MAIN_FRAME_NAME).setVisible(true);
 	}
 
-	/**
-	 * Iterates through all components inside of a component and sets the
-	 * GridBagConstraints.weightx and weighty to 0.5
-	 * 
-	 * @param parent
-	 *            Starting point for iteration
-	 * 
-	 */
+	// /**
+	// * Iterates through all components inside of a component and sets the
+	// * GridBagConstraints.weightx and weighty to 0.5
+	// *
+	// * @param parent
+	// * Starting point for iteration
+	// *
+	// */
 	// private void reweightComponents(Container parent, GridBagLayout layout1)
 	// {
 	// for (Component c : parent.getComponents()) {
@@ -299,7 +299,6 @@ public class CalLiteInitClass {
 	// gbc.ipadx = 150;
 	// gbc.ipady = 15;
 	// layout1.setConstraints(c, gbc);
-	// System.out.println(c.getName());
 	//
 	// }
 	// }
@@ -457,7 +456,7 @@ public class CalLiteInitClass {
 
 			@Override
 			public void focusGained(FocusEvent e) {
-				System.out.println(e.getComponent().getName());
+
 				boolean showTablePanel = ((JRadioButton) swingEngine.find("rdbRegQS_UD")).isSelected();
 				if (showTablePanel) {
 					String cName = e.getComponent().getName();
@@ -609,7 +608,6 @@ public class CalLiteInitClass {
 				array[i] = _group.getDataReference(rows[i]);
 			// GuiUtils.displayData(array);
 			for (int i = 0; i < rows.length; i++) {
-				System.out.println(array[i]);
 
 				String[] parts = array[i].getName().split("::");
 				String[] parts2 = parts[2].split("/");

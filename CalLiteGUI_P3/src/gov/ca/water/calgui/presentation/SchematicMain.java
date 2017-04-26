@@ -14,6 +14,7 @@ import org.apache.batik.swing.gvt.GVTTreeRendererAdapter;
 import org.apache.batik.swing.gvt.GVTTreeRendererEvent;
 import org.apache.batik.swing.svg.SVGLoadEventDispatcherAdapter;
 import org.apache.batik.swing.svg.SVGLoadEventDispatcherEvent;
+import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -24,6 +25,8 @@ import org.w3c.dom.events.EventListener;
 import org.w3c.dom.events.EventTarget;
 
 import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
+import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 
 /**
  * SchematicMain: Class to handle display of SVG-formatted schematic view.
@@ -42,12 +45,12 @@ public class SchematicMain {
 	Window window;
 	SwingEngine swix;
 	JSVGScrollPane scrollPane;
+	private static IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
+	private static final Logger LOG = Logger.getLogger(SchematicMain.class.getName());
 
 	/**
-	 *
-	 *
-	 */
-	/**
+	 * 
+	 * Constructor
 	 * 
 	 * @param p
 	 *            Housing panel
@@ -75,7 +78,6 @@ public class SchematicMain {
 		canvas.setEnablePanInteractor(true);
 		canvas.setEnableZoomInteractor(true);
 		canvas.setURI(url);
-		// System.out.println(canvas.getURI());
 		canvas.addSVGLoadEventDispatcherListener(new SVGLoadEventDispatcherAdapter() {
 			@Override
 			public void svgLoadEventDispatchStarted(SVGLoadEventDispatcherEvent e) {
@@ -138,7 +140,7 @@ public class SchematicMain {
 			String label = null;
 			Element el = ((Element) evt.getTarget());
 			String tag = el.getTagName();
-			System.out.println("Clicked on: " + evt.getTarget() + " " + tag);
+			LOG.debug("Clicked on: " + evt.getTarget() + " " + tag);
 			Element pel = el;
 			// Get first text element in containing group
 			while (label == null && pel.getParentNode() != null && pel.getParentNode() instanceof Element) {
@@ -151,7 +153,7 @@ public class SchematicMain {
 						Node item = childNodes.item(i);
 						if (item instanceof Element) {
 							Element ce = (Element) item;
-							System.out.println("ce = tag:" + ce.getTagName() + " content: " + ce.getTextContent());
+							LOG.debug("ce = tag:" + ce.getTagName() + " content: " + ce.getTextContent());
 							if (ce.getTagName().startsWith("text")) {
 								label = ce.getTextContent();
 							}

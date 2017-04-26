@@ -1,4 +1,5 @@
 package gov.ca.water.calgui.bo;
+
 //! Variant on DSSGrabber1BO for MTS (multiple time series)
 import java.util.Arrays;
 import java.util.Calendar;
@@ -262,7 +263,6 @@ public class DSSGrabber2BO extends DSSGrabber1BO {
 				// Operand is reference to another DTS
 				DerivedTimeSeries adt = ResultUtilsBO.getResultUtilsInstance(null).getProject()
 						.getDTS((String) dtsNames.get(i));
-				System.out.println((String) dtsNames.get(i) + ":" + adt.getName());
 				interimResult = getOneSeries_WRIMS(dssFilename, dssName, adt);
 			} else {
 				// Operand is a DSS time series

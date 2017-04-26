@@ -57,15 +57,18 @@ public class ControlFrame extends JFrame implements WindowListener {
 
 	}
 
+	/**
+	 * Removes all "close" buttons from component and children
+	 * 
+	 * @param comp
+	 */
 	private void removeClose(Component comp) {
-		System.out.println(comp.toString());
+
 		if (comp instanceof JButton) {
 			String accName = ((JButton) comp).getAccessibleContext().getAccessibleName();
-			System.out.println(accName);
 			if (accName.equals("Close"))
 				comp.getParent().remove(comp);
 		}
-		System.out.println(comp instanceof Container);
 		if (comp instanceof Container) {
 			Component[] comps = ((java.awt.Container) comp).getComponents();
 			for (int x = 0, y = comps.length; x < y; x++) {
