@@ -63,6 +63,12 @@ set CLASSPATH=-classpath "%ExternalDir%;%AppJars%"
 set PATH=%ExternalDir%;%JarDir%;%VistaLibDir%
 
 
+: --------------------------------------------------------------------------------------:
+: Write the full java run string to last_singleton.bat for debugging if needed :
+:---------------------------------------------------------------------------------------:
+
+echo %temp_wrims2%/../../../../jre8/bin/java -Xmx1000m -Xss1280K -Djava.library.path=%PATH% %CLASSPATH% gov.ca.water.calgui.batch.Singleton -config="%configFilePath%" > last_singleton.bat
+
 :-------------------------------------------------------:
 : call java to run ControllerBatch class                :
 :-------------------------------------------------------:
