@@ -20,6 +20,7 @@ import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -91,7 +92,6 @@ public class CalLiteInitClass {
 	private SwingEngine swingEngine;
 	private IAuditSvc auditSvc;
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
-	private IXMLParsingSvc xmlParsingSvc = XMLParsingSvcImpl.getXMLParsingSvcImplInstance();
 
 	/**
 	 * This method is called to initialize the ui.
@@ -275,14 +275,14 @@ public class CalLiteInitClass {
 		swingEngine.find(Constant.MAIN_FRAME_NAME).setVisible(true);
 	}
 
-	// /**
-	// * Iterates through all components inside of a component and sets the
-	// * GridBagConstraints.weightx and weighty to 0.5
-	// *
-	// * @param parent
-	// * Starting point for iteration
-	// *
-	// */
+	/**
+	 * Iterates through all components inside of a component and sets the
+	 * GridBagConstraints.weightx and weighty to 0.5
+	 * 
+	 * @param parent
+	 *            Starting point for iteration
+	 * 
+	 */
 	// private void reweightComponents(Container parent, GridBagLayout layout1)
 	// {
 	// for (Component c : parent.getComponents()) {
@@ -299,6 +299,7 @@ public class CalLiteInitClass {
 	// gbc.ipadx = 150;
 	// gbc.ipady = 15;
 	// layout1.setConstraints(c, gbc);
+	// System.out.println(c.getName());
 	//
 	// }
 	// }
@@ -456,7 +457,7 @@ public class CalLiteInitClass {
 
 			@Override
 			public void focusGained(FocusEvent e) {
-
+				System.out.println(e.getComponent().getName());
 				boolean showTablePanel = ((JRadioButton) swingEngine.find("rdbRegQS_UD")).isSelected();
 				if (showTablePanel) {
 					String cName = e.getComponent().getName();
@@ -528,8 +529,7 @@ public class CalLiteInitClass {
 				JTextField field = ((JTextField) e.getComponent());
 				String newValue = field.getText();
 				if (!oldValue.equals(newValue)) {
-					if (!xmlParsingSvc.checkIsItFromResultPart(field.getName()))
-						auditSvc.addAudit(field.getName(), oldValue, newValue);
+					auditSvc.addAudit(field.getName(), oldValue, newValue);
 				}
 			}
 
@@ -546,8 +546,7 @@ public class CalLiteInitClass {
 				JTextArea field = ((JTextArea) e.getComponent());
 				String newValue = field.getText();
 				if (!oldValue.equals(newValue)) {
-					if (!xmlParsingSvc.checkIsItFromResultPart(field.getName()))
-						auditSvc.addAudit(field.getName(), oldValue, newValue);
+					auditSvc.addAudit(field.getName(), oldValue, newValue);
 				}
 			}
 
@@ -587,8 +586,17 @@ public class CalLiteInitClass {
 	private void retrieve() {
 		JList<?> lstScenarios = (JList<?>) swingEngine.find("SelectedList");
 		if (!AppUtils.baseOn) {
-			JOptionPane.showMessageDialog(null, "The Base DSS files need to be selected", "DSS Not Selected",
-					JOptionPane.WARNING_MESSAGE);
+//			JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "The Base DSS files need to be selected", "DSS Not Selected",
+//					JOptionPane.WARNING_MESSAGE);
+			
+			ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+			Object[] options = { "OK" };
+			JOptionPane optionPane = new JOptionPane("The Base DSS files need to be selected",
+					JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
+			JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+			dialog.setIconImage(icon.getImage());
+			dialog.setResizable(false);
+			dialog.setVisible(true);
 			return;
 		}
 		try {
@@ -598,8 +606,16 @@ public class CalLiteInitClass {
 				noRowsString = " after using \"Filter\" to load variables";
 			Group _group = GuiUtils.getCLGPanel().getRetrievePanel().getGroup();
 			if (_group == null || _table.getSelectedRowCount() == 0) {
-				JOptionPane.showMessageDialog(null, "Select one or more variables" + noRowsString,
-						"Variable(s) Not Selected", JOptionPane.INFORMATION_MESSAGE);
+//				JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "Select one or more variables" + noRowsString,
+//						"Variable(s) Not Selected", JOptionPane.INFORMATION_MESSAGE);
+				ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+				Object[] options = { "OK" };
+				JOptionPane optionPane = new JOptionPane("Select one or more variables" + noRowsString,
+						JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
+				JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+				dialog.setIconImage(icon.getImage());
+				dialog.setResizable(false);
+				dialog.setVisible(true);
 				return;
 			}
 			int[] rows = _table.getSelectedRows(); // checked if count > 0 above
@@ -608,6 +624,7 @@ public class CalLiteInitClass {
 				array[i] = _group.getDataReference(rows[i]);
 			// GuiUtils.displayData(array);
 			for (int i = 0; i < rows.length; i++) {
+				System.out.println(array[i]);
 
 				String[] parts = array[i].getName().split("::");
 				String[] parts2 = parts[2].split("/");
@@ -641,8 +658,16 @@ public class CalLiteInitClass {
 		WRIMSGUILinks.setStatus("Retrieve2");
 
 		if (!AppUtils.baseOn) {
-			JOptionPane.showMessageDialog(null, "The Base DSS files need to be selected", "DSS Not Selected",
-					JOptionPane.WARNING_MESSAGE);
+//			JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "The Base DSS files need to be selected", "DSS Not Selected",
+//					JOptionPane.WARNING_MESSAGE);
+			ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+			Object[] options = { "OK" };
+			JOptionPane optionPane = new JOptionPane("The Base DSS files need to be selected",
+					JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
+			JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+			dialog.setIconImage(icon.getImage());
+			dialog.setResizable(false);
+			dialog.setVisible(true);
 			return;
 		}
 
@@ -651,8 +676,16 @@ public class CalLiteInitClass {
 
 		if (((mts == null) && (dts == null)) || ((dts != null) && (dts.getBParts().size() < 1))
 				|| ((mts != null) && (mts.getNumberOfDataReferences() < 1))) {
-			JOptionPane.showMessageDialog(null, "Specify DTS or MTS data references", "Nothing to Display",
-					JOptionPane.WARNING_MESSAGE);
+//			JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "Specify DTS or MTS data references", "Nothing to Display",
+//					JOptionPane.WARNING_MESSAGE);
+			ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+			Object[] options = { "OK" };
+			JOptionPane optionPane = new JOptionPane("Specify DTS or MTS data references",
+					JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
+			JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+			dialog.setIconImage(icon.getImage());
+			dialog.setResizable(false);
+			dialog.setVisible(true);
 			return;
 		}
 

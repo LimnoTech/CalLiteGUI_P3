@@ -1,6 +1,8 @@
 package gov.ca.water.calgui.bo;
 //! Custom file chooser for selection of different CalLite file types
 import java.awt.Component;
+import org.swixml.SwingEngine;
+
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,6 +32,8 @@ import javax.swing.event.ListDataListener;
 
 import org.apache.log4j.Logger;
 
+import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
+import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.presentation.WRIMSGUILinks;
 
 /**
@@ -45,6 +49,8 @@ public class FileDialogBO implements ActionListener {
 	public DefaultListModel lmScenNames;
 	public JFileChooser fc = new JFileChooser2();
 	public int dialogRC;
+
+	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
 
 	JList theList;
 	JLabel theLabel;
@@ -302,7 +308,7 @@ public class FileDialogBO implements ActionListener {
 			if (theMultipleFlag) {
 				UIManager.put("FileChooser.openDialogTitleText", "Select Scenarios");
 				fc.setMultiSelectionEnabled(true);
-				dialogRC = fc.showDialog(null, "Select");
+				dialogRC = fc.showDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "Select");
 				if (theList != null & dialogRC != 1) {
 					for (File file : fc.getSelectedFiles()) {
 						addFileToList(file);
@@ -310,9 +316,9 @@ public class FileDialogBO implements ActionListener {
 				}
 			} else {
 				if (theFileExt == null)
-					rc = fc.showOpenDialog(null);
+					rc = fc.showOpenDialog(swingEngine.find(Constant.MAIN_FRAME_NAME));
 				else
-					rc = fc.showDialog(null, theFileExt.equals("DSS") ? "Open" : "Save");
+					rc = fc.showDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), theFileExt.equals("DSS") ? "Open" : "Save");
 				dialogRC = rc;
 				File file;
 				if (rc == 0) {
@@ -355,7 +361,7 @@ public class FileDialogBO implements ActionListener {
 
 			// Per client request, don't alert.
 
-			// JOptionPane.showMessageDialog(null,
+			// JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
 			// "Scenario \"" + file.getPath() + "\"\n" + "and will not be added.
 			// It is already in the Scenarios list.",
 			// "Alert", JOptionPane.ERROR_MESSAGE);

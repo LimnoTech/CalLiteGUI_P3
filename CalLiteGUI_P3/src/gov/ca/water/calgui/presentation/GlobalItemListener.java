@@ -7,7 +7,9 @@ import java.awt.event.ItemListener;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -20,7 +22,6 @@ import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
 import gov.ca.water.calgui.bus_delegate.impl.ApplyDynamicConDeleImp;
 import gov.ca.water.calgui.bus_service.IDynamicControlSvc;
 import gov.ca.water.calgui.bus_service.IScenarioSvc;
-import gov.ca.water.calgui.bus_service.IXMLParsingSvc;
 import gov.ca.water.calgui.bus_service.impl.DynamicControlSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
@@ -41,7 +42,6 @@ public class GlobalItemListener implements ItemListener {
 	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
 	private IDynamicControlSvc dynamicControlSvc = DynamicControlSvcImpl.getDynamicControlSvcImplInstance();
 	private IAuditSvc auditSvc = AuditSvcImpl.getAuditSvcImplInstance();
-	private IXMLParsingSvc xmlParsingSvc = XMLParsingSvcImpl.getXMLParsingSvcImplInstance();
 	private IScenarioSvc scenarioSvc = ScenarioSvcImpl.getScenarioSvcImplInstance();
 	private String oldValue = "";
 	/*
@@ -139,8 +139,31 @@ public class GlobalItemListener implements ItemListener {
 									+ " will also set the San Joaquin River restoration flow selection to 'full' in the Regulations dashboard.";
 						}
 						if (!confirmText.equals("")) {
-							option = JOptionPane.showConfirmDialog(null, confirmText, "", JOptionPane.OK_CANCEL_OPTION);
-							if (option == JOptionPane.CANCEL_OPTION) {
+//							option = JOptionPane.showConfirmDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), confirmText, "", JOptionPane.OK_CANCEL_OPTION);
+							
+							boolean proceed = false;
+							ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+							Object[] options = { "OK", "Cancel" };
+							JOptionPane optionPane = new JOptionPane(confirmText,
+									JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, options, options[0]);
+							JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+							dialog.setIconImage(icon.getImage());
+							dialog.setResizable(false);
+							dialog.setVisible(true);
+							switch (optionPane.getValue().toString()) {
+							case "Cancel":
+								proceed = false;
+								break;
+							case "OK":
+								proceed = true;
+								break;
+							default:
+								proceed = false;
+						        break;
+							}
+							
+							
+							if (proceed = false) {
 								rollBackFlag = true;
 								((JRadioButton) swingEngine.find(oldValue)).setSelected(true);
 								rollBackFlag = false;
@@ -169,10 +192,33 @@ public class GlobalItemListener implements ItemListener {
 			}
 			if (controlIdForDialogBox.contains(itemName)) {
 				if (isSelected) {
-					option = JOptionPane.showConfirmDialog(null,
-							"You have selected " + ((JRadioButton) ie.getItem()).getText()
-									+ ".\n  Do you wish to use the WSI/DI curves for this configuration?");
-					if (option == JOptionPane.CANCEL_OPTION) {
+//					option = JOptionPane.showConfirmDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
+//							"You have selected " + ((JRadioButton) ie.getItem()).getText()
+//									+ ".\n  Do you wish to use the WSI/DI curves for this configuration?");
+					
+					boolean proceed = false;
+					ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+					Object[] options = { "OK", "Cancel" };
+					JOptionPane optionPane = new JOptionPane("You have selected " + ((JRadioButton) ie.getItem()).getText()
+							+ ".\n  Do you wish to use the WSI/DI curves for this configuration?",
+							JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, options, options[0]);
+					JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+					dialog.setIconImage(icon.getImage());
+					dialog.setResizable(false);
+					dialog.setVisible(true);
+					switch (optionPane.getValue().toString()) {
+					case "Cancel":
+						proceed = false;
+						break;
+					case "OK":
+						proceed = true;
+						break;
+					default:
+						proceed = false;
+				        break;
+					}
+					
+					if (proceed = false) {
 						rollBackFlag = true;
 						((JRadioButton) swingEngine.find(oldValue)).setSelected(true);
 						rollBackFlag = false;
@@ -191,8 +237,7 @@ public class GlobalItemListener implements ItemListener {
 		{
 			applyDynamicConDele.applyDynamicControl(itemName, isSelected, isEnabled, optionFromTheBox);
 		}
-		if (!xmlParsingSvc.checkIsItFromResultPart(itemName))
-			auditSvc.addAudit(itemName, String.valueOf(!isSelected), String.valueOf(isSelected));
+		auditSvc.addAudit(itemName, String.valueOf(!isSelected), String.valueOf(isSelected));
 	}
 
 	/**

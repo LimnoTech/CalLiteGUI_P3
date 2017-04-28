@@ -1,24 +1,25 @@
 package gov.ca.water.calgui.presentation;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Toolkit;
 import java.util.Date;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 
-import org.apache.log4j.Logger;
 import org.jfree.data.time.Month;
 import org.swixml.SwingEngine;
 
@@ -37,9 +38,8 @@ import gov.ca.water.calgui.presentation.display.MonthlyTablePanel;
 import gov.ca.water.calgui.presentation.display.MonthlyTablePanel2;
 import gov.ca.water.calgui.presentation.display.SummaryTablePanel;
 import gov.ca.water.calgui.presentation.display.SummaryTablePanel2;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import hec.io.TimeSeriesContainer;
+
 
 /**
  * DisplayFrame class provides a frame for showing charts.
@@ -54,8 +54,6 @@ public class DisplayFrame {
 	private static int displayDeltaX = 200;
 
 	private static SwingEngine swix = ResultUtilsBO.getResultUtilsInstance(null).getSwix();
-	private static IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
-	private static final Logger LOG = Logger.getLogger(DisplayFrame.class.getName());
 
 	/**
 	 *
@@ -124,7 +122,7 @@ public class DisplayFrame {
 				if (m.find())
 					dateRange = groupParts[i];
 				else
-					LOG.debug("Unparsed display list component - " + groupParts[i]);
+					System.out.println("Unparsed display list component - " + groupParts[i]);
 			}
 		}
 
@@ -149,14 +147,29 @@ public class DisplayFrame {
 			else
 				dssGrabber.setLocation(locationNames[i]);
 
+			System.out.println(locationNames[i]);
 			String message = null;
 			if (dssGrabber.getPrimaryDSSName() == null)
-				message = "No GUI_Links3.csv found for " + namesText[i] + "/" + locationNames[i] + ".";
+				message = "No GUI table entry found for " + namesText[i] + "/" + locationNames[i] + ".";
 			else if (dssGrabber.getPrimaryDSSName().equals(""))
 				message = "No DSS time series specified for " + namesText[i] + "/" + locationNames[i] + ".";
 			if (message != null) {
-				errorHandlingSvc.businessErrorHandler(message, message, null);
 
+				final String messageText = message;
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+//						JOptionPane.showMessageDialog(swix.find(Constant.MAIN_FRAME_NAME), messageText);
+						ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+						Object[] options = { "OK" };
+						JOptionPane optionPane = new JOptionPane(messageText,
+								JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
+						JDialog dialog = optionPane.createDialog(swix.find(Constant.MAIN_FRAME_NAME), "CalLite");
+						dialog.setIconImage(icon.getImage());
+						dialog.setResizable(false);
+						dialog.setVisible(true);
+					}
+				});
 			} else {
 
 				dssGrabber.setDateRange(dateRange);
@@ -318,55 +331,30 @@ public class DisplayFrame {
 					}
 				}
 
-				List<String> missing = dssGrabber.getMissingList();
-				boolean showFrame = false;
-				if (missing.size() == 0)
-					showFrame = true;
-				else if (dssGrabber.getStopOnMissing())
-					showFrame = false;
-				else {
-					StringBuffer buffer = new StringBuffer();
-					buffer.append("<html><br>Not all DSS records were found, some results may be missing:<br><br>");
-					missing.forEach((id) -> buffer.append(id + "<br>"));
-					buffer.append("</html>");
-					JPanel panel = new JPanel();
-					panel.setLayout(new BorderLayout());
-					panel.add(new JLabel(buffer.toString()), BorderLayout.PAGE_START);
-					tabbedpane.insertTab("Alert - Missing DSS records", null, panel, null, 0);
-					showFrame = true;
-				}
-				if (showFrame) {
-					JFrame frame = new JFrame();
+				// Show the frame
+				JFrame frame = new JFrame();
 
-					Container container = frame.getContentPane();
-					container.add(tabbedpane);
+				Container container = frame.getContentPane();
+				container.add(tabbedpane);
 
-					frame.pack();
-					frame.setTitle("CalLite Results - " + namesText[i]);
-					// CalLite icon
-					java.net.URL imgURL = DisplayFrame.class.getClass().getResource("/images/CalLiteIcon.png");
-					frame.setIconImage(Toolkit.getDefaultToolkit().getImage(imgURL));
+				frame.pack();
+				frame.setTitle("CalLite Results - " + namesText[i]);
+				// CalLite icon
+				java.net.URL imgURL = DisplayFrame.class.getClass().getResource("/images/CalLiteIcon.png");
+				frame.setIconImage(Toolkit.getDefaultToolkit().getImage(imgURL));
 
-					if (!(doTimeSeries || doExceedance || doMonthlyTable || doSummaryTable))
-						if (dssGrabber.getMissingList() == null)
-							container.add(new JLabel("Nothing to show!"));
-						else {
+				if (!(doTimeSeries || doExceedance || doMonthlyTable || doSummaryTable))
+					container.add(new JLabel("Nothing to show!"));
+				else
+					tabbedpane.setSelectedIndex(0);
 
-						}
-
-					else
-						tabbedpane.setSelectedIndex(0);
-
-					frame.setVisible(true);
-					frame.setSize(980, 700);
-					frame.setLocation(displayLocationPoint());
-
-				}
+				frame.setVisible(true);
+				frame.setSize(980, 700);
+				frame.setLocation(displayLocationPoint());
 
 			}
 		}
 		return;
-
 	}
 
 	/**
@@ -562,7 +550,7 @@ public class DisplayFrame {
 				if (m.find())
 					dateRange = groupParts[i];
 				else
-					LOG.debug("Unparsed display list component - " + groupParts[i]);
+					System.out.println("Unparsed display list component - " + groupParts[i]);
 			}
 		}
 

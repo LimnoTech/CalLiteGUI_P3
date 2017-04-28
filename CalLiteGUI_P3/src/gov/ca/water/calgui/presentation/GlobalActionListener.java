@@ -103,8 +103,16 @@ public class GlobalActionListener implements ActionListener {
 		case "AC_SaveScen":
 			if (FilenameUtils.removeExtension(((JTextField) swingEngine.find("run_txfScen")).getText()).toUpperCase()
 					.equals("DEFAULT") && allButtonsDele.defaultCLSIsProtected()) {
-				JOptionPane.showMessageDialog(null,
-						"The CalLite GUI is not allowed to overwrite DEFAULT.CLS. Please use Save As to save to a different scenario file.");
+				
+				ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+				Object[] options = { "OK" };
+				JOptionPane optionPane = new JOptionPane("The CalLite GUI is not allowed to overwrite DEFAULT.CLS. Please use Save As to save to a different scenario file.",
+						JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
+				JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+				dialog.setIconImage(icon.getImage());
+				dialog.setResizable(false);
+				dialog.setVisible(true);
+
 			} else
 				this.allButtonsDele.saveCurrentStateToFile();
 			break;
@@ -121,20 +129,31 @@ public class GlobalActionListener implements ActionListener {
 			if (auditSvc.hasValues()) {
 				String clsFileName = FilenameUtils
 						.removeExtension(((JTextField) swingEngine.find("run_txfScen")).getText());
-				int option = JOptionPane.showConfirmDialog(null, "Scenario selections have changed for " + clsFileName
-						+ ". Would you like to save the changes?");
-				switch (option) {
-				case JOptionPane.CANCEL_OPTION:
+				
+				ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+				Object[] options = { "Yes", "No", "Cancel" };
+				JOptionPane optionPane = new JOptionPane("Scenario selections have changed for " + clsFileName
+						+ ". Would you like to save the changes?",
+						JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION, null, options, options[2]);
+				JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+				dialog.setIconImage(icon.getImage());
+				dialog.setResizable(false);
+				dialog.setVisible(true);
+
+				
+				//switch (option) {
+				switch (optionPane.getValue().toString()) {
+				case "Cancel":
 
 					doLoad = false;
 					break;
 
-				case JOptionPane.YES_OPTION:
+				case "Yes":
 
 					doLoad = this.allButtonsDele.saveCurrentStateToFile(clsFileName);
 					break;
 
-				case JOptionPane.NO_OPTION:
+				case "No":
 
 					doLoad = true;
 					break;
@@ -294,7 +313,15 @@ public class GlobalActionListener implements ActionListener {
 			break;
 		case "Rep_DispAll":
 			if (lstScenarios.getModel().getSize() == 0) {
-				JOptionPane.showMessageDialog(null, "No scenarios loaded", "Error", JOptionPane.ERROR_MESSAGE);
+//				JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "No scenarios loaded", "Error", JOptionPane.ERROR_MESSAGE);
+				ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+				Object[] options = { "OK" };
+				JOptionPane optionPane = new JOptionPane("No scenarios loaded",
+						JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
+				JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+				dialog.setIconImage(icon.getImage());
+				dialog.setResizable(false);
+				dialog.setVisible(true);
 			} else {
 				for (int i = 0; i < lstReports.getModel().getSize(); i++)
 					DisplayFrame.showDisplayFrames((String) (lstReports.getModel().getElementAt(i)), lstScenarios);
@@ -302,9 +329,25 @@ public class GlobalActionListener implements ActionListener {
 			break;
 		case "Rep_DispCur":
 			if (lstScenarios.getModel().getSize() == 0) {
-				JOptionPane.showMessageDialog(null, "No scenarios loaded", "Error", JOptionPane.ERROR_MESSAGE);
+//				JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "No scenarios loaded", "Error", JOptionPane.ERROR_MESSAGE);
+				ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+				Object[] options = { "OK" };
+				JOptionPane optionPane = new JOptionPane("No scenarios loaded",
+						JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
+				JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+				dialog.setIconImage(icon.getImage());
+				dialog.setResizable(false);
+				dialog.setVisible(true);
 			} else if (lstReports.getSelectedValue() == null) {
-				JOptionPane.showMessageDialog(null, "No display group selected", "Error", JOptionPane.ERROR_MESSAGE);
+//				JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "No display group selected", "Error", JOptionPane.ERROR_MESSAGE);
+				ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+				Object[] options = { "OK" };
+				JOptionPane optionPane = new JOptionPane("No display group selected",
+						JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
+				JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+				dialog.setIconImage(icon.getImage());
+				dialog.setResizable(false);
+				dialog.setVisible(true);
 			} else {
 
 				DisplayFrame.showDisplayFrames((String) ((JList) swingEngine.find("lstReports")).getSelectedValue(),
@@ -421,9 +464,19 @@ public class GlobalActionListener implements ActionListener {
 	 */
 	public boolean decisionBeforeTheBatchRun() {
 		String clsFileName = FilenameUtils.removeExtension(((JTextField) swingEngine.find("run_txfScen")).getText());
-		if (clsFileName.toUpperCase().equals(Constant.DEFAULT) && allButtonsDele.defaultCLSIsProtected()) {
-			JOptionPane.showMessageDialog(null,
-					"The CalLite GUI is not allowed to modify the default scenario 'DEFAULT.CLS'. Please use Save As to save to a different scenario file.");
+		if (clsFileName.toUpperCase().equals(Constant.DEFAULT)) {
+//			JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
+//					"The CalLite GUI is not allowed to modify the default scenario 'DEFAULT.CLS'. Please use Save As to save to a different scenario file.");
+//			
+			ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+			Object[] options = { "OK" };
+			JOptionPane optionPane = new JOptionPane("The CalLite GUI is not allowed to modify the default scenario 'DEFAULT.CLS'. Please use Save As to save to a different scenario file.",
+					JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
+			JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+			dialog.setIconImage(icon.getImage());
+			dialog.setResizable(false);
+			dialog.setVisible(true);
+			
 			return false;
 		}
 		if (!Files.isExecutable(Paths.get(Constant.RUN_DETAILS_DIR + clsFileName))) {
@@ -432,7 +485,7 @@ public class GlobalActionListener implements ActionListener {
 			JOptionPane optionPane = new JOptionPane(
 					"The cls file does not have a corresponding directory structure.\nThe batch will not run without this.\nDo you want to save to create that directory?",
 					JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, options, options[0]);
-			JDialog dialog = optionPane.createDialog("CalLite");
+			JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
 			dialog.setIconImage(icon.getImage());
 			dialog.setResizable(false);
 			dialog.setVisible(true);
@@ -445,17 +498,27 @@ public class GlobalActionListener implements ActionListener {
 		}
 		boolean isSaved = false;
 		if (auditSvc.hasValues()) {
-			int option = JOptionPane.showConfirmDialog(null,
-					"Scenario selections have changed. Would you like to save the changes?");
-			switch (option) {
-			case JOptionPane.YES_OPTION:
+			
+			ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+			Object[] options = { "Yes", "No" };
+			JOptionPane optionPane = new JOptionPane(
+					"Scenario selections have changed. Would you like to save the changes?",
+					JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION, null, options, options[1]);
+			JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+			dialog.setIconImage(icon.getImage());
+			dialog.setResizable(false);
+			dialog.setVisible(true);
+			switch (optionPane.getValue().toString()) {
+			case "Yes":
 				isSaved = this.allButtonsDele.saveCurrentStateToFile(clsFileName);
 				break;
-			case JOptionPane.NO_OPTION:
+			case "No":
 				loadScenarioButton(((JTextField) swingEngine.find("run_txfScen")).getText());
 				isSaved = true;
 				break;
 			}
+			
+			
 		} else {
 			isSaved = true;
 		}
@@ -553,8 +616,16 @@ public class GlobalActionListener implements ActionListener {
 		if (((JTextField) swingEngine.find("tfReportFILE1")).getText().isEmpty()
 				|| ((JTextField) swingEngine.find("tfReportFILE2")).getText().isEmpty()
 				|| ((JTextField) swingEngine.find("tfReportFILE3")).getText().isEmpty()) {
-			JOptionPane.showMessageDialog(null, "You must specify the source DSS files and the output PDF file",
-					"Error", JOptionPane.ERROR_MESSAGE);
+//			JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "You must specify the source DSS files and the output PDF file",
+//					"Error", JOptionPane.ERROR_MESSAGE);
+			ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+			Object[] options = { "OK" };
+			JOptionPane optionPane = new JOptionPane("You must specify the source DSS files and the output PDF file",
+					JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
+			JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+			dialog.setIconImage(icon.getImage());
+			dialog.setResizable(false);
+			dialog.setVisible(true);
 		} else {
 			try {
 				// Create an inputstream from template file;

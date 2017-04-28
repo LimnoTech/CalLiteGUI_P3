@@ -339,7 +339,7 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 			scenarioSvc.addUserDefinedTable(Constant.SWP_START_FILENAME, swpDtm);
 			scenarioSvc.addUserDefinedTable(Constant.CVP_START_FILENAME, cvpDtm);
 			/*
-			 * The following code we are setting the SWP and CVP file names as
+			 * The following code we are sedtting the SWP and CVP file names as
 			 * user defined because the table values we are getting after the
 			 * batch run we consider them as user defined.
 			 */
