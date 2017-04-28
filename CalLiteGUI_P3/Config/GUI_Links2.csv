@@ -12,6 +12,8 @@ hyd_ckb2,GUI_HydroClimate.table,4,2,Climate Change Scenario 2,Hydroclimate,n/a,n
 hyd_ckb3,GUI_HydroClimate.table,4,3,Climate Change Scenario 3,Hydroclimate,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a
 hyd_ckb4,GUI_HydroClimate.table,4,4,Climate Change Scenario 4,Hydroclimate,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a
 hyd_ckb5,GUI_HydroClimate.table,4,5,Climate Change Scenario 5,Hydroclimate,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a
+hyd_rdb_RA1,GUI_HydroClimate.table,5,0,SLR_DLTSW: Sea Level Rise Scenario: 0=Base (No SLR); 1=15cm SLR; 2=45cm SLR,Hydroclimate,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a
+hyd_rdb_RA2,GUI_HydroClimate.table,5,1,SLR_DLTSW: Sea Level Rise Scenario: 0=Base (No SLR); 1=15cm SLR; 2=45cm SLR,Hydroclimate,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a
 fac_ckb7,GUI_HydroClimate.table,5,-1,Climate Change Scenario 5,Hydroclimate,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a
 dem_rdbCurSWP,GUI_SODdemand.table,0,1,SWP demand type  1=non-user-defined demands  2=user-defined demands,Demands,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a
 dem_rdbFutSWP,GUI_SODdemand.table,0,1,SWP demand type  1=non-user-defined demands  2=user-defined demands,Demands,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a
@@ -48,9 +50,11 @@ ckbRegbo3,GUI_RPAsOtherRegs.table,5,-1,ClearCrkBOswitch ,Regulations,n/a,n/a,n/a
 ckbReg2,GUI_RPAsOtherRegs.table,6,-2,QOMR_DLTSW,Regulations,gui_qomr,2,6,n/a,n/a,n/a,n/a,1,23
 ckbReg1,GUI_RPAsOtherRegs.table,7,-2,QWEST_DLTSW,Regulations,gui_qwest,1,7,n/a,n/a,n/a,n/a,1,24
 ckbReg10,GUI_RPAsOtherRegs.table,8,-2,EISJR_DLTSW,Regulations,gui_EIsjr,10,8,n/a,n/a,n/a,n/a,1,25
+ckbReg3,GUI_RPAsOtherRegs.table,16,0,ESO,Regulations,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,103
+ckbReg4,GUI_RPAsOtherRegs.table,17,0,S6,Regulations,n/a,n/a,n/a,n/a,n/a,n/a,n/a,n/a,104
 ckbReg11,GUI_RPAsOtherRegs.table,9,-1,B2Action1,Regulations,n/a,n/a,n/a,n/a,n/a,n/a,1,n/a,26
 ckbReg12,GUI_RPAsOtherRegs.table,10,-1,B2Action2,Regulations,n/a,n/a,n/a,n/a,n/a,n/a,1,n/a,27
-ckbReg13,GUI_RPAsOtherRegs.table,11,-1,B2Action3,Regulations,n/a,n/a,n/a,n/a,n/a,n/a,1,n/a,28
+ckbReg13,GUI_RPAsOtherRegs.table,11,-1,B2Action3,Regulations,n/a,,n/a,n/a,n/a,n/a,1,n/a,28
 ckbReg14,GUI_RPAsOtherRegs.table,12,-1,B2Action4,Regulations,n/a,n/a,n/a,n/a,n/a,n/a,1,n/a,29
 ckbReg15,GUI_RPAsOtherRegs.table,13,-1,B2Action5,Regulations,n/a,n/a,n/a,n/a,n/a,n/a,1,n/a,30
 ckbReg16,GUI_RPAsOtherRegs.table,14,-1,B2Action6,Regulations,n/a,n/a,n/a,n/a,n/a,n/a,1,n/a,31

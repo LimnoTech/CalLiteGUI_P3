@@ -137,6 +137,10 @@ ckbReg1,on,reg_panTab,on
 ckbReg1,off,reg_panTab,off
 ckbReg10,on,reg_panTab,on
 ckbReg10,off,reg_panTab,off
+ckbReg3,on,reg_panTab,on
+ckbReg3,off,reg_panTab,off
+ckbReg4,on,reg_panTab,on
+ckbReg4,off,reg_panTab,off
 ckbReg11,on,reg_panTab,on
 ckbReg11,off,reg_panTab,off
 ckbReg12,on,reg_panTab,on

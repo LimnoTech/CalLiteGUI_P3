@@ -213,12 +213,22 @@
 			enabled="false">
 			<gridbagconstraints insets="0,0,5,5" gridx="0" gridy="20" anchor="GridBagConstraints.WEST" />
 			<checkBox name="ckbReg1" id="ckbReg1" text="QWEST (San Joaquin River near Jersey Point)">
-				<gridbagconstraints insets="0,0,5,5" gridx="0" gridy="3" anchor="GridBagConstraints.WEST" />
+				<gridbagconstraints insets="0,0,5,5" gridx="0" gridy="10" anchor="GridBagConstraints.WEST" />
 			</checkBox>
 			<checkbox name="ckbReg2" id="ckbReg2" text="Old and Middle River (OMR)">
-				<gridbagconstraints insets="0,0,5,5" gridx="0" gridy="4" anchor="GridBagConstraints.WEST" />
+				<gridbagconstraints insets="0,0,5,5" gridx="0" gridy="11" anchor="GridBagConstraints.WEST" />
 			</checkbox>
 			<checkbox name="ckbReg10" id="ckbReg10" text="San Joaquin River Inflow to Export ratio with offset">
+				<gridbagconstraints insets="0,0,5,5" gridx="0" gridy="12" anchor="GridBagConstraints.WEST" />
+			</checkbox>
+			<separator orientation="HORIZONTAL" preferredsize="5,2">
+				<gridbagconstraints gridx="0" gridy="13" insets="0,0,5,5" gridwidth="5" anchor="GridBagConstraints.CENTER"
+					fill="GridBagConstraints.BOTH" />
+			</separator>
+			<checkbox name="ckbReg3" id="ckbReg3" text="Enhanced Spring Outflow (ESO)">
+				<gridbagconstraints insets="0,0,5,5" gridx="0" gridy="16" anchor="GridBagConstraints.WEST" />
+			</checkbox>
+			<checkbox name="ckbReg4" id="ckbReg4" text="Scenario 6 (S6)">
 				<gridbagconstraints insets="0,0,5,5" gridx="0" gridy="17" anchor="GridBagConstraints.WEST" />
 			</checkbox>
 			<separator orientation="HORIZONTAL" preferredsize="5,2">

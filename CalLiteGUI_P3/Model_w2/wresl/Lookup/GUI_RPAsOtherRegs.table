@@ -14,7 +14,7 @@
 !13	0   !B2Action5: Off=0; On=1
 !14	0   !B2Action6: Off=0; On=1
 !15	0   !B2Action7: Off=0; On=1
-!16     0   !ESO: Off=0; On=1
+!16 0   !ESO: Off=0; On=1
 !17	0   !Scenario_6: Off=0; On=1
 GUI_RPAsOtherRegs
 Index	Option
@@ -33,5 +33,5 @@ Index	Option
 13	0	!B2Action5
 14	0	!B2Action6
 15	0	!B2Action7
-16      1       !Enhanced Spring Outflow  
-17      1       !Scenario_6  
+16  1   !Enhanced Spring Outflow  
+17  1   !Scenario_6  
