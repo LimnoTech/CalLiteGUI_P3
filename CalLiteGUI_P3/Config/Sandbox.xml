@@ -197,9 +197,9 @@
 				</checkbox>
 			</panel>
 		</panel>
-		<panel border="TitledBorder(Table)" visible="true" layout="GridBagLayout">
+		<panel border="TitledBorder(Table)" visible="true" layout="GridBagLayout" preferredsize="300,200" >
 			<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="1" gridy="3" />
-			<scrollpane preferredsize="300,300">
+			<scrollpane preferredsize="250,150" >
 				<gridbagconstraints insets="0,0,5,5" anchor="GridBagConstraints.NORTHWEST" gridx="0" gridy="0" />
 				<table id="testTable_dynamic" name="testTable_dynamic">
 				</table>
