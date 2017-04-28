@@ -41,7 +41,7 @@ set AppJars=%AppJars%;%JarDir%\lpsolve55j.jar
 set AppJars=%AppJars%;%JarDir%\commons-io-2.1.jar
 set AppJars=%AppJars%;%JarDir%\javatuples-1.2.jar
 set AppJars=%AppJars%;%JarDir%\guava-11.0.2.jar
-set AppJars=%AppJars%;%JarDir%\CalLiteV16.jar
+set AppJars=%AppJars%;%JarDir%\XAOptimizer.jar
 set AppJars=%AppJars%;%JarDir%\log4j-1.2.17.jar
 set AppJars=%AppJars%;%~dp0..\bin
 set AppJars=%AppJars%;%~dp0..\calgui.jar
@@ -67,6 +67,6 @@ set PATH=%ExternalDir%;%JarDir%;%VistaLibDir%
 : call java to run ControllerBatch class                :
 :-------------------------------------------------------:
 
-start /min "CalLiteRun%ScenarioName%" %temp_wrims2%/../../../../jre8/bin/java -Xmx1000m -Xss1280K -Djava.library.path=%PATH% %CLASSPATH% gov.ca.water.calgui.batch.Singleton -config="%configFilePath%"
+start /min /wait "CalLiteRun%ScenarioName%" %temp_wrims2%/../../../../jre8/bin/java -Xmx1000m -Xss1280K -Djava.library.path=%PATH% %CLASSPATH% gov.ca.water.calgui.batch.Singleton -config="%configFilePath%"
 
 exit
