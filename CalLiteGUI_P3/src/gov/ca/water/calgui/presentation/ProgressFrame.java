@@ -148,10 +148,12 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 					}
 				}
 			} catch (Exception e) {
-				LOG.error(e.getMessage());
-				String messageText = "Unable to display progress frame.";
-				errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME),
-						e);
+				if (!(e instanceof InterruptedException)) {
+					LOG.error(e.getMessage());
+					String messageText = "Unable to display progress frame.";
+					errorHandlingSvc.businessErrorHandler(messageText,
+							(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+				}
 			}
 			return null;
 		}
