@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JMenuBar;
@@ -37,6 +39,7 @@ import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
 import calsim.app.Project;
 import calsim.gui.GuiUtils;
+import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.presentation.ControlFrame;
 
 /**
@@ -112,7 +115,7 @@ public class ResultUtilsBO implements ChangeListener {
 		fc.setCurrentDirectory(new File(".//Config"));
 		File file = null;
 		String filename = null;
-		int retval = fc.showOpenDialog(null);
+		int retval = fc.showOpenDialog(swingEngine.find(Constant.MAIN_FRAME_NAME));
 		if (retval == JFileChooser.APPROVE_OPTION) {
 			// ... The user selected a file, get it, use it.
 			file = fc.getSelectedFile();
@@ -157,7 +160,7 @@ public class ResultUtilsBO implements ChangeListener {
 		fc.setCurrentDirectory(new File(".//Config"));
 		File file = null;
 		String filename = null;
-		int retval = fc.showSaveDialog(null);
+		int retval = fc.showSaveDialog(swingEngine.find(Constant.MAIN_FRAME_NAME));
 		if (retval == JFileChooser.APPROVE_OPTION) {
 			// ... The user selected a file, get it, use it.
 			file = fc.getSelectedFile();
@@ -165,10 +168,31 @@ public class ResultUtilsBO implements ChangeListener {
 			if (!filename.toUpperCase().endsWith(".CGR") && !filename.endsWith("."))
 				filename = filename + ".cgr";
 			boolean saveFlag = true;
-			if (new File(filename).exists())
-				saveFlag = (JOptionPane.showConfirmDialog(null,
-						"The display list file '" + filename + "' already exists. Press OK to overwrite.",
-						"CalLite GUI", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION);
+			if (new File(filename).exists())  {
+				//				saveFlag = (JOptionPane.showConfirmDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
+				//						"The display list file '" + filename + "' already exists. Press OK to overwrite.",
+				//						"CalLite GUI", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION);
+
+				ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+				Object[] options = { "OK", "Cancel" };
+				JOptionPane optionPane = new JOptionPane("The display list file '" + filename + "' already exists. Press OK to overwrite.",
+						JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, options, options[0]);
+				JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+				dialog.setIconImage(icon.getImage());
+				dialog.setResizable(false);
+				dialog.setVisible(true);
+				switch (optionPane.getValue().toString()) {
+				case "Cancel":
+					saveFlag = false;
+					break;
+				case "OK":
+					saveFlag = true;
+					break;
+				default:
+					saveFlag = false;
+					break;
+				}
+			}
 			if (saveFlag) {
 				OutputStream outputStream;
 				try {

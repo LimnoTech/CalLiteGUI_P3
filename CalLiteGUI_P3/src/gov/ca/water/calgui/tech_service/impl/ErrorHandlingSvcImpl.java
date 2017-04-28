@@ -62,7 +62,7 @@ public class ErrorHandlingSvcImpl implements IErrorHandlingSvc {
 	@Override
 	public void validationeErrorHandler(JFrame mainFrame, Throwable aThrowable) {
 		List<String> error = getMessageAndStackTraceFromLayeredError(aThrowable);
-		displayErrorMessage("Ssystem Error : " + error.get(0), error.get(1), setFrame(mainFrame));
+		displayErrorMessage("Validation Error : " + error.get(0), error.get(1), setFrame(mainFrame));
 	}
 
 	@Override
@@ -74,6 +74,12 @@ public class ErrorHandlingSvcImpl implements IErrorHandlingSvc {
 	public void businessErrorHandler(JFrame mainFrame, Throwable aThrowable) {
 		List<String> error = getMessageAndStackTraceFromLayeredError(aThrowable);
 		displayErrorMessage("Business Error : " + error.get(0), error.get(1), setFrame(mainFrame));
+	}
+	
+	@Override
+	public void businessErrorHandler(String displayMessage, JFrame mainFrame, Throwable aThrowable) {
+		List<String> error = getMessageAndStackTraceFromLayeredError(aThrowable);
+		displayErrorMessage("Business Error : " + displayMessage, error.get(1), setFrame(mainFrame));
 	}
 
 	@Override
@@ -192,7 +198,7 @@ public class ErrorHandlingSvcImpl implements IErrorHandlingSvc {
 		Object[] options = { "ok", "show details" };
 		JOptionPane optionPane = new JOptionPane(displayMessage, JOptionPane.ERROR_MESSAGE, JOptionPane.YES_NO_OPTION,
 				null, options, options[1]);
-		JDialog dialog = optionPane.createDialog("CalLite");
+		JDialog dialog = optionPane.createDialog(mainFrame, "CalLite");
 		dialog.setIconImage(icon.getImage());
 		dialog.setResizable(false);
 		dialog.setVisible(true);

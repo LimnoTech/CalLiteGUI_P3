@@ -36,6 +36,8 @@ import org.jfree.chart.renderer.category.BoxAndWhiskerRenderer;
 import org.jfree.chart.util.RectangleInsets;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 
+import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
+import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import hec.io.TimeSeriesContainer;
 
 public class BoxPlotChartPanel extends JPanel implements Printable {
@@ -44,7 +46,8 @@ public class BoxPlotChartPanel extends JPanel implements Printable {
 	 */
 	private static final long serialVersionUID = 7398804723681056388L;
 	private String buffer;
-	private static Logger log = Logger.getLogger(ChartPanel.class.getName());
+	private static Logger LOG = Logger.getLogger(ChartPanel.class.getName());
+	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	JButton btnScatter;
 
 	public BoxPlotChartPanel(String title, String yLabel, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs,
@@ -163,7 +166,7 @@ public class BoxPlotChartPanel extends JPanel implements Printable {
 				job.print(set);
 			} catch (PrinterException e) {
 				JOptionPane.showMessageDialog(this, e);
-				log.debug(e.getMessage());
+				LOG.debug(e.getMessage());
 			}
 		}
 

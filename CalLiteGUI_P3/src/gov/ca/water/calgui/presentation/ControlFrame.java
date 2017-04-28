@@ -11,10 +11,15 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
 
 import COM.objectspace.jgl.Container;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
+import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
+import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
+import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 
 /**
  * Floating frame to display Quick Result scenario and display control panels
@@ -25,35 +30,44 @@ import gov.ca.water.calgui.bo.ResultUtilsBO;
 public class ControlFrame extends JFrame implements WindowListener {
 
 	private static final long serialVersionUID = 6984886958106730868L;
-	private final SwingEngine swix;
+	//private final SwingEngine swingEngine;
+	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
+	private static final Logger LOG = Logger.getLogger(ControlFrame.class.getName());
+	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 
 	/**
 	 * Constructor moves controls from Quick Results to new frame
 	 */
 	public ControlFrame() {
+		
+		//swingEngine = ResultUtilsBO.getResultUtilsInstance(null).getSwix();
+		try {
+			removeClose(this);
 
-		swix = ResultUtilsBO.getResultUtilsInstance(null).getSwix();
-		removeClose(this);
+			JPanel p = new JPanel(new GridBagLayout());
+			add(p);
 
-		JPanel p = new JPanel(new GridBagLayout());
-		add(p);
+			GridBagConstraints c = new GridBagConstraints();
 
-		GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 0;
+			c.gridy = 0;
+			c.gridheight = 1;
+			c.anchor = GridBagConstraints.NORTHWEST;
+			p.add(swingEngine.find("ss"), c);
 
-		c.gridx = 0;
-		c.gridy = 0;
-		c.gridheight = 1;
-		c.anchor = GridBagConstraints.NORTHWEST;
-		p.add(swix.find("ss"), c);
+			c.gridy = 1;
+			p.add(swingEngine.find("Display"), c);
 
-		c.gridy = 1;
-		p.add(swix.find("Display"), c);
+			p.setSize(new Dimension(450, 748));
+			setSize(new Dimension(460, 768));
+			setTitle("Result Display Controls");
 
-		p.setSize(new Dimension(450, 748));
-		setSize(new Dimension(460, 768));
-		setTitle("Result Display Controls");
-
-		addWindowListener(this);
+			addWindowListener(this);
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			String messageText = "Unable to display control frame.";
+			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+		}
 
 	}
 
@@ -85,7 +99,7 @@ public class ControlFrame extends JFrame implements WindowListener {
 	public void display() {
 
 		setSize(new Dimension(460, 768));
-		JFrame f = (JFrame) swix.find("desktop");
+		JFrame f = (JFrame) swingEngine.find("desktop");
 		int right = f.getWidth() + f.getLocation().x;
 		if (right + getWidth() < java.awt.Toolkit.getDefaultToolkit().getScreenSize().width)
 			setLocation(right, 0);

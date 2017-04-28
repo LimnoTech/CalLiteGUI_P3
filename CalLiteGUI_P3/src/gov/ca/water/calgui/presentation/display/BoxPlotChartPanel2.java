@@ -40,6 +40,8 @@ import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 import org.jfree.data.time.TimeSeries;
 
 import calsim.app.MultipleTimeSeries;
+import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
+import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 
 /**
  * 
@@ -54,7 +56,8 @@ public class BoxPlotChartPanel2 extends JPanel implements Printable {
 	 */
 	private static final long serialVersionUID = 7398804723681056388L;
 	private String buffer;
-	private static Logger log = Logger.getLogger(ChartPanel.class.getName());
+	private static Logger LOG = Logger.getLogger(ChartPanel.class.getName());
+	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	JButton btnScatter;
 
 	public BoxPlotChartPanel2(String title, String yLabel, TimeSeriesContainer[][] mtscs, TimeSeriesContainer[][] mstscs,
@@ -182,7 +185,7 @@ public class BoxPlotChartPanel2 extends JPanel implements Printable {
 				job.print(set);
 			} catch (PrinterException e) {
 				JOptionPane.showMessageDialog(this, e);
-				log.debug(e.getMessage());
+				LOG.debug(e.getMessage());
 			}
 		}
 

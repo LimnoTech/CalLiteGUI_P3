@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 import org.apache.log4j.Logger;
@@ -43,9 +45,14 @@ import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.pdf.TextField;
 
+import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
+import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.presentation.Report;
 import gov.ca.water.calgui.presentation.Report.Writer;
-import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
-import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+
+import org.swixml.SwingEngine;
+
+
 
 public class ReportPDFWriter implements Writer {
 	Document document;
@@ -55,11 +62,12 @@ public class ReportPDFWriter implements Writer {
 	private Font subtitleFont;
 	private Font smallBoldFont;
 	private String dateStr;
+	
+	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
 
 	private Font tableFont;
 	private Font tableBoldFont;
-	private static Logger log = Logger.getLogger(ReportPDFWriter.class.getName());
-	private static IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
+	private static Logger LOG = Logger.getLogger(ReportPDFWriter.class.getName());
 
 	public ReportPDFWriter() {
 
@@ -76,7 +84,7 @@ public class ReportPDFWriter implements Writer {
 		try {
 			fontSize = Integer.parseInt(tableFontSize.trim());
 		} catch (NumberFormatException nfe) {
-			errorHandlingSvc.validationeErrorHandler("Number format exception in font size", nfe.getMessage(), null);
+			System.out.println("NumberFormatException: " + nfe.getMessage());
 		}
 
 		tableFont = FontFactory.getFont("Arial", fontSize);
@@ -100,18 +108,25 @@ public class ReportPDFWriter implements Writer {
 		document.addCreationDate();
 		try {
 			writer = PdfWriter.getInstance(
-					// that listens to the document
-					document,
-					// and directs a PDF-stream to a file
-					new FileOutputStream(filename));
+			// that listens to the document
+			        document,
+			        // and directs a PDF-stream to a file
+			        new FileOutputStream(filename));
 			document.open();
 		} catch (DocumentException de) {
-			log.debug(de.getMessage());
+			LOG.debug(de.getMessage());
 		} catch (IOException ioe) {
-			log.debug(ioe.getMessage());
-			JOptionPane.showMessageDialog(null,
-					"Please close the file " + (new File(filename).getName()) + " if it is open.", "Warning!",
-					JOptionPane.WARNING_MESSAGE);
+			LOG.debug(ioe.getMessage());
+//			JOptionPane.showMessageDialog(null, "Please close the file " + (new File(filename).getName()) + " if it is open.",
+//			        "Warning!", JOptionPane.WARNING_MESSAGE);
+			ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+			Object[] options = { "OK" };
+			JOptionPane optionPane = new JOptionPane("Please close the file " + (new File(filename).getName()) + " if it is open.",
+					JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
+			JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+			dialog.setIconImage(icon.getImage());
+			dialog.setResizable(false);
+			dialog.setVisible(true);
 			return;
 		}
 	}
@@ -120,12 +135,10 @@ public class ReportPDFWriter implements Writer {
 	public void addTitlePage(String compareInfo, String author, String fileBase, String fileAlt) {
 		document.newPage();
 		try {
-			Paragraph title = new Paragraph("\n\n\n\n" + compareInfo,
-					FontFactory.getFont("Arial", 24, Font.BOLD, Color.BLUE));
+			Paragraph title = new Paragraph("\n\n\n\n" + compareInfo, FontFactory.getFont("Arial", 24, Font.BOLD, Color.BLUE));
 			title.setAlignment(Element.ALIGN_CENTER);
 			document.add(title);
-			Paragraph pauthor = new Paragraph("\n\n" + "Author: " + author,
-					FontFactory.getFont("Arial", 16, Font.BOLD));
+			Paragraph pauthor = new Paragraph("\n\n" + "Author: " + author, FontFactory.getFont("Arial", 16, Font.BOLD));
 			pauthor.setAlignment(Element.ALIGN_CENTER);
 			document.add(pauthor);
 			dateStr = new SimpleDateFormat("dd-MMM-yyyy").format(new Date());
@@ -156,8 +169,8 @@ public class ReportPDFWriter implements Writer {
 	@Override
 	public void setAuthor(String author) {
 		/*
-		 * footer = new HeaderFooter(new Phrase(author), new Phrase(dateStr));
-		 * document.setFooter(footer); document.addAuthor(author);
+		 * footer = new HeaderFooter(new Phrase(author), new Phrase(dateStr)); document.setFooter(footer);
+		 * document.addAuthor(author);
 		 */
 	}
 
@@ -233,7 +246,7 @@ public class ReportPDFWriter implements Writer {
 			document.newPage();
 			document.add(new Paragraph(title, bigFont));
 		} catch (DocumentException ex) {
-			log.debug(ex.getMessage());
+			LOG.debug(ex.getMessage());
 			throw new RuntimeException("Write Error: Close the PDF report file");
 		}
 	}
@@ -243,7 +256,7 @@ public class ReportPDFWriter implements Writer {
 		try {
 			document.add(new Paragraph(subtitle + "\n", subtitleFont));
 		} catch (DocumentException ex) {
-			log.debug(ex.getMessage());
+			LOG.debug(ex.getMessage());
 			throw new RuntimeException(ex);
 		}
 	}
@@ -283,7 +296,7 @@ public class ReportPDFWriter implements Writer {
 			}
 			document.add(summaryTable);
 		} catch (DocumentException ex) {
-			log.debug(ex.getMessage());
+			LOG.debug(ex.getMessage());
 			throw new RuntimeException(ex);
 		}
 	}
@@ -322,8 +335,8 @@ public class ReportPDFWriter implements Writer {
 	}
 
 	@Override
-	public void addExceedancePlot(ArrayList<double[]> buildDataArray, String title, String[] seriesName,
-			String xAxisLabel, String yAxisLabel) {
+	public void addExceedancePlot(ArrayList<double[]> buildDataArray, String title, String[] seriesName, String xAxisLabel,
+	        String yAxisLabel) {
 		DefaultXYDataset dataset = new DefaultXYDataset();
 		for (int i = seriesName.length - 1; i >= 0; i--) {
 			double[][] seriesData = new double[2][buildDataArray.size()];
@@ -348,8 +361,8 @@ public class ReportPDFWriter implements Writer {
 	}
 
 	@Override
-	public void addTimeSeriesPlot(ArrayList<double[]> buildDataArray, String title, String[] seriesName,
-			String xAxisLabel, String yAxisLabel) {
+	public void addTimeSeriesPlot(ArrayList<double[]> buildDataArray, String title, String[] seriesName, String xAxisLabel,
+	        String yAxisLabel) {
 		TimeSeriesCollection datasets = new TimeSeriesCollection();
 		for (int i = seriesName.length - 1; i >= 0; i--) {
 			TimeSeries ts = new TimeSeries(seriesName[i]);

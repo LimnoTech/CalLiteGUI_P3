@@ -51,6 +51,8 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
+import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
 
@@ -60,7 +62,8 @@ public class ChartPanel1 extends JPanel implements Printable {
 	 */
 	private static final long serialVersionUID = 7398804723681056388L;
 	private String buffer;
-	private static Logger log = Logger.getLogger(ChartPanel.class.getName());
+	private static Logger LOG = Logger.getLogger(ChartPanel.class.getName());
+	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	JButton btnScatter;
 
 	public ChartPanel1(String title, String yLabel, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs,
@@ -72,7 +75,6 @@ public class ChartPanel1 extends JPanel implements Printable {
 			boolean isExceed, Date lower, Date upper, String sLabel, boolean isBase) {
 
 		super();
-
 		// create datasets ...
 
 		double ymax = -1e20;
@@ -522,7 +524,7 @@ public class ChartPanel1 extends JPanel implements Printable {
 				job.print(set);
 			} catch (PrinterException e) {
 				JOptionPane.showMessageDialog(this, e);
-				log.debug(e.getMessage());
+				LOG.debug(e.getMessage());
 			}
 		}
 

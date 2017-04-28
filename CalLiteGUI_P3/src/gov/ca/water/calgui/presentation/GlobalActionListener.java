@@ -1,6 +1,7 @@
 package gov.ca.water.calgui.presentation;
 
 import java.awt.Component;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -90,251 +91,300 @@ public class GlobalActionListener implements ActionListener {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void actionPerformed(ActionEvent ae) {
-		lstReports = (JList<String>) swingEngine.find("lstReports");
-		lstScenarios = (JList<String>) swingEngine.find("SelectedList");
-		JTable table = null;
-		switch (ae.getActionCommand()) {
+		try {
+			lstReports = (JList<String>) swingEngine.find("lstReports");
+			lstScenarios = (JList<String>) swingEngine.find("SelectedList");
+			JTable table = null;
+			switch (ae.getActionCommand()) {
 
-		case "AC_Power":
+			case "AC_Power":
 
-			PowerFrame pf = new PowerFrame(lstScenarios);
-			break;
+				PowerFrame pf = new PowerFrame(lstScenarios);
+				break;
 
-		case "AC_SaveScen":
-			if (FilenameUtils.removeExtension(((JTextField) swingEngine.find("run_txfScen")).getText()).toUpperCase()
-					.equals("DEFAULT") && allButtonsDele.defaultCLSIsProtected()) {
-				JOptionPane.showMessageDialog(null,
-						"The CalLite GUI is not allowed to overwrite DEFAULT.CLS. Please use Save As to save to a different scenario file.");
-			} else
-				this.allButtonsDele.saveCurrentStateToFile();
-			break;
-		case "AC_SaveScenAs":
-			this.allButtonsDele.saveAsButton();
-			break;
-		case "AC_ViewScen":
-			loadViewScen();
-			break;
-		case "AC_LoadScen":
+			case "AC_SaveScen":
+				if (FilenameUtils.removeExtension(((JTextField) swingEngine.find("run_txfScen")).getText()).toUpperCase()
+						.equals("DEFAULT") && allButtonsDele.defaultCLSIsProtected()) {
+					
+					ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+					Object[] options = { "OK" };
+					JOptionPane optionPane = new JOptionPane("The CalLite GUI is not allowed to overwrite DEFAULT.CLS. Please use Save As to save to a different scenario file.",
+							JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
+					JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+					dialog.setIconImage(icon.getImage());
+					dialog.setResizable(false);
+					dialog.setVisible(true);
 
-			boolean doLoad = true; // Check for changed scenario prior to load -
-									// tad 20170202
-			if (auditSvc.hasValues()) {
-				String clsFileName = FilenameUtils
-						.removeExtension(((JTextField) swingEngine.find("run_txfScen")).getText());
-				int option = JOptionPane.showConfirmDialog(null, "Scenario selections have changed for " + clsFileName
-						+ ". Would you like to save the changes?");
-				switch (option) {
-				case JOptionPane.CANCEL_OPTION:
+				} else
+					this.allButtonsDele.saveCurrentStateToFile();
+				break;
+			case "AC_SaveScenAs":
+				this.allButtonsDele.saveAsButton();
+				break;
+			case "AC_ViewScen":
+				loadViewScen();
+				break;
+			case "AC_LoadScen":
 
-					doLoad = false;
-					break;
+				boolean doLoad = true; // Check for changed scenario prior to load -
+										// tad 20170202
+				if (auditSvc.hasValues()) {
+					String clsFileName = FilenameUtils
+							.removeExtension(((JTextField) swingEngine.find("run_txfScen")).getText());
+					
+					ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+					Object[] options = { "Yes", "No", "Cancel" };
+					JOptionPane optionPane = new JOptionPane("Scenario selections have changed for " + clsFileName
+							+ ". Would you like to save the changes?",
+							JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_CANCEL_OPTION, null, options, options[2]);
+					JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+					dialog.setIconImage(icon.getImage());
+					dialog.setResizable(false);
+					dialog.setVisible(true);
 
-				case JOptionPane.YES_OPTION:
+					
+					//switch (option) {
+					switch (optionPane.getValue().toString()) {
+					case "Cancel":
 
-					doLoad = this.allButtonsDele.saveCurrentStateToFile(clsFileName);
-					break;
+						doLoad = false;
+						break;
 
-				case JOptionPane.NO_OPTION:
+					case "Yes":
 
-					doLoad = true;
-					break;
+						doLoad = this.allButtonsDele.saveCurrentStateToFile(clsFileName);
+						break;
+
+					case "No":
+
+						doLoad = true;
+						break;
+					}
 				}
-			}
-			if (doLoad) {
-				JFileChooser fChooser = new JFileChooser(Constant.SCENARIOS_DIR);
-				fChooser.setMultiSelectionEnabled(false);
-				FileNameExtensionFilter filter = new FileNameExtensionFilter("CLS FILES (.cls)", "cls");
-				fChooser.setFileFilter(filter);
-				int val = fChooser.showOpenDialog(swingEngine.find(Constant.MAIN_FRAME_NAME));
-				if (val == JFileChooser.APPROVE_OPTION
-						&& this.allButtonsDele.verifyTheSelectedFiles(fChooser, Constant.CLS_EXT)) {
-					String fileName = fChooser.getSelectedFile().getName();
-					loadScenarioButton(fileName);
+				if (doLoad) {
+					JFileChooser fChooser = new JFileChooser(Constant.SCENARIOS_DIR);
+					fChooser.setMultiSelectionEnabled(false);
+					FileNameExtensionFilter filter = new FileNameExtensionFilter("CLS FILES (.cls)", "cls");
+					fChooser.setFileFilter(filter);
+					int val = fChooser.showOpenDialog(swingEngine.find(Constant.MAIN_FRAME_NAME));
+					if (val == JFileChooser.APPROVE_OPTION
+							&& this.allButtonsDele.verifyTheSelectedFiles(fChooser, Constant.CLS_EXT)) {
+						String fileName = fChooser.getSelectedFile().getName();
+						loadScenarioButton(fileName);
+					}
 				}
-			}
-			break;
-		case "AC_Help":
-			this.allButtonsDele.helpButton();
-			break;
-		case "AC_RUN":
-			runSingleBatch();
-			break;
-		case "AC_BATCH":
-			this.allButtonsDele.runMultipleBatch();
-			break;
-		case "AC_About":
-			this.allButtonsDele.aboutButton();
-			break;
-		case "AC_Exit":
-			this.allButtonsDele.windowClosing();
-			break;
-		case "AC_Select_DSS_SV":
-			this.allButtonsDele.selectingSVAndInitFile("hyd_DSS_SV", "hyd_DSS_SV_F", "txf_Manual_SV",
-					"txf_Manual_SV_F");
-			break;
-		case "AC_Select_DSS_Init":
-			this.allButtonsDele.selectingSVAndInitFile("hyd_DSS_Init", "hyd_DSS_Init_F", "txf_Manual_Init",
-					"txf_Manual_Init_F");
-			break;
-		case "Fac_TableEdit":
-			TitledBorder title = null;
-			if (ae.getSource() instanceof JButton) {
-				JButton btn = (JButton) ae.getSource();
-				String titlestr = btn.getText();
-				title = BorderFactory.createTitledBorder(titlestr);
-			}
-			JPanel pan = (JPanel) swingEngine.find("fac_pan6");
-			pan.setBorder(title);
-			break;
-		case "Reg_Copy":
-			table = (JTable) swingEngine.find("tblRegValues");
-			this.allButtonsDele.copyTableValues(table);
-			break;
-		case "Reg_Paste":
-			table = (JTable) swingEngine.find("tblRegValues");
-			JRadioButton userDefined = (JRadioButton) swingEngine.find("btnRegUD");
-			if (userDefined.isSelected()) {
+				break;
+			case "AC_Help":
+				this.allButtonsDele.helpButton();
+				break;
+			case "AC_RUN":
+				runSingleBatch();
+				break;
+			case "AC_BATCH":
+				this.allButtonsDele.runMultipleBatch();
+				break;
+			case "AC_About":
+				this.allButtonsDele.aboutButton();
+				break;
+			case "AC_Exit":
+				this.allButtonsDele.windowClosing();
+				break;
+			case "AC_Select_DSS_SV":
+				this.allButtonsDele.selectingSVAndInitFile("hyd_DSS_SV", "hyd_DSS_SV_F", "txf_Manual_SV",
+						"txf_Manual_SV_F");
+				break;
+			case "AC_Select_DSS_Init":
+				this.allButtonsDele.selectingSVAndInitFile("hyd_DSS_Init", "hyd_DSS_Init_F", "txf_Manual_Init",
+						"txf_Manual_Init_F");
+				break;
+			case "Fac_TableEdit":
+				TitledBorder title = null;
+				if (ae.getSource() instanceof JButton) {
+					JButton btn = (JButton) ae.getSource();
+					String titlestr = btn.getText();
+					title = BorderFactory.createTitledBorder(titlestr);
+				}
+				JPanel pan = (JPanel) swingEngine.find("fac_pan6");
+				pan.setBorder(title);
+				break;
+			case "Reg_Copy":
+				table = (JTable) swingEngine.find("tblRegValues");
+				this.allButtonsDele.copyTableValues(table);
+				break;
+			case "Reg_Paste":
+				table = (JTable) swingEngine.find("tblRegValues");
+				JRadioButton userDefined = (JRadioButton) swingEngine.find("btnRegUD");
+				if (userDefined.isSelected()) {
+					this.allButtonsDele.pasteTableValues(table);
+				} else {
+					errorHandlingSvc.validationeErrorHandler("You can't paste untel you select user defined.",
+							"You can't paste untel you select user defined.",
+							(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME));
+				}
+				break;
+			case "Op_TableEdit":
+				this.allButtonsDele.editButtonOnOperations((JComponent) ae.getSource());
+				break;
+			case "Op_Generate":
+
+				runSingleBatchForWsiDi();
+				break;
+			case "Op_Read":
+				this.allButtonsDele.readButtonInOperations();
+				break;
+			case "Op_Default":
+				this.allButtonsDele.defaultButtonOnOperations();
+				break;
+			case "Op_Copy":
+				table = (JTable) swingEngine.find("tblOpValues");
+				this.allButtonsDele.copyTableValues(table);
+				break;
+			case "Op_Paste":
+				table = (JTable) swingEngine.find("tblOpValues");
 				this.allButtonsDele.pasteTableValues(table);
-			} else {
-				errorHandlingSvc.validationeErrorHandler("You can't paste untel you select user defined.",
-						"You can't paste untel you select user defined.",
-						(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME));
-			}
-			break;
-		case "Op_TableEdit":
-			this.allButtonsDele.editButtonOnOperations((JComponent) ae.getSource());
-			break;
-		case "Op_Generate":
+				break;
 
-			runSingleBatchForWsiDi();
-			break;
-		case "Op_Read":
-			this.allButtonsDele.readButtonInOperations();
-			break;
-		case "Op_Default":
-			this.allButtonsDele.defaultButtonOnOperations();
-			break;
-		case "Op_Copy":
-			table = (JTable) swingEngine.find("tblOpValues");
-			this.allButtonsDele.copyTableValues(table);
-			break;
-		case "Op_Paste":
-			table = (JTable) swingEngine.find("tblOpValues");
-			this.allButtonsDele.pasteTableValues(table);
-			break;
+			// From Custom Results dashboard
 
-		// From Custom Results dashboard
+			case "AC_Controls":
+				ControlFrame cf = ResultUtilsBO.getResultUtilsInstance(null).getControlFrame();
+				cf.display();
+				if (cf.getExtendedState() == JFrame.ICONIFIED)
+					cf.setExtendedState(JFrame.NORMAL);
+				break;
 
-		case "AC_Controls":
-			ControlFrame cf = ResultUtilsBO.getResultUtilsInstance(null).getControlFrame();
-			cf.display();
-			if (cf.getExtendedState() == JFrame.ICONIFIED)
-				cf.setExtendedState(JFrame.NORMAL);
-			break;
+			case "CR_LoadList":
+				ResultUtilsBO.getResultUtilsInstance(null).readCGR();
+				break;
 
-		case "CR_LoadList":
-			ResultUtilsBO.getResultUtilsInstance(null).readCGR();
-			break;
+			case "CR_SaveList":
+				ResultUtilsBO.getResultUtilsInstance(null).writeCGR();
+				break;
 
-		case "CR_SaveList":
-			ResultUtilsBO.getResultUtilsInstance(null).writeCGR();
-			break;
+			case "CR_ClearTree":
+				Project p = ResultUtilsBO.getResultUtilsInstance(null).getProject();
+				p.clearMTSList();
+				p.clearDTSList();
+				DtsTreePanel dtp = GuiUtils.getCLGPanel().getDtsTreePanel();
+				DtsTreeModel dtm = dtp.getCurrentModel();
+				dtm.clearVectors();
+				dtm.createTreeFromPrj(null, null, "");
+				GuiUtils.getCLGPanel().repaint();
+				break;
 
-		case "CR_ClearTree":
-			Project p = ResultUtilsBO.getResultUtilsInstance(null).getProject();
-			p.clearMTSList();
-			p.clearDTSList();
-			DtsTreePanel dtp = GuiUtils.getCLGPanel().getDtsTreePanel();
-			DtsTreeModel dtm = dtp.getCurrentModel();
-			dtm.clearVectors();
-			dtm.createTreeFromPrj(null, null, "");
-			GuiUtils.getCLGPanel().repaint();
-			break;
+			// From Quick Results and External PDF
 
-		// From Quick Results and External PDF
-
-		case "AC_PresetClear":
-			clearQRCheckBoxes("presets");
-			break;
-		case "AC_ShortageClear":
-			clearQRCheckBoxes("shortage");
-			break;
-		case "AC_SJRClear":
-			clearQRCheckBoxes("SJR Results");
-			break;
-		case "AC_WMAClear":
-			clearQRCheckBoxes("WMA");
-			break;
-		case "AC_DShortClear":
-			clearQRCheckBoxes("DShort");
-			break;
-		case "AC_DfcClear":
-			clearQRCheckBoxes("delta_flow_criteria");
-			break;
-		case "AC_GenReport":
-			generateReport();
-			break;
-		case "Rep_All":
-			setQRMonthCheckBoxesSelected(true);
-			break;
-		case "Rep_ClearMonths":
-			setQRMonthCheckBoxesSelected(false);
-			break;
-		case "Rep_AddList":
-			addToQRReportList();
-			break;
-		case "Rep_ClearList":
-			lstReports.setListData(new String[0]);
-			break;
-		case "Rep_LoadList":
-			ResultUtilsBO.getResultUtilsInstance(null).readCGR();
-			break;
-		case "Rep_SaveList":
-			ResultUtilsBO.getResultUtilsInstance(null).writeCGR();
-			break;
-		case "Rep_DispAll":
-			if (lstScenarios.getModel().getSize() == 0) {
-				JOptionPane.showMessageDialog(null, "No scenarios loaded", "Error", JOptionPane.ERROR_MESSAGE);
-			} else {
-				for (int i = 0; i < lstReports.getModel().getSize(); i++)
-					DisplayFrame.showDisplayFrames((String) (lstReports.getModel().getElementAt(i)), lstScenarios);
-			}
-			break;
-		case "Rep_DispCur":
-			if (lstScenarios.getModel().getSize() == 0) {
-				JOptionPane.showMessageDialog(null, "No scenarios loaded", "Error", JOptionPane.ERROR_MESSAGE);
-			} else if (lstReports.getSelectedValue() == null) {
-				JOptionPane.showMessageDialog(null, "No display group selected", "Error", JOptionPane.ERROR_MESSAGE);
-			} else {
-
-				DisplayFrame.showDisplayFrames((String) ((JList) swingEngine.find("lstReports")).getSelectedValue(),
-						lstScenarios);
-			}
-			break;
-		case "Time_SELECT":
-
-			break;
-		case "AC_CompScen":
-			IScenarioDele scenarioDele = new ScenarioDeleImp();
-			boolean proceed = this.allButtonsDele.saveForViewScen();
-			List<String> fileNames = new ArrayList<>();
-			for (int i = 0; i < ((DefaultListModel) lstScenarios.getModel()).getSize(); i++) {
-				String name = Paths.get(((DefaultListModel) lstScenarios.getModel()).getElementAt(i).toString())
-						.getFileName().toString();
-				fileNames.add(name.substring(0, name.length() - 7) + Constant.CLS_EXT);
-			}
-			if (proceed) {
-				List<DataTableModel> dtmList = scenarioDele.getScenarioTableData(fileNames);
-				ScenarioFrame scenarioFrame = new ScenarioFrame(dtmList);
-				scenarioFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-				scenarioFrame.setVisible(true);
-				try {
-					Files.delete(Paths.get(Constant.SCENARIOS_DIR + Constant.CURRENT_SCENARIO + Constant.CLS_EXT));
-				} catch (IOException ex) {
-					LOG.debug(ex);
+			case "AC_PresetClear":
+				clearQRCheckBoxes("presets");
+				break;
+			case "AC_ShortageClear":
+				clearQRCheckBoxes("shortage");
+				break;
+			case "AC_SJRClear":
+				clearQRCheckBoxes("SJR Results");
+				break;
+			case "AC_WMAClear":
+				clearQRCheckBoxes("WMA");
+				break;
+			case "AC_DShortClear":
+				clearQRCheckBoxes("DShort");
+				break;
+			case "AC_DfcClear":
+				clearQRCheckBoxes("delta_flow_criteria");
+				break;
+			case "AC_GenReport":
+				generateReport();
+				break;
+			case "Rep_All":
+				setQRMonthCheckBoxesSelected(true);
+				break;
+			case "Rep_ClearMonths":
+				setQRMonthCheckBoxesSelected(false);
+				break;
+			case "Rep_AddList":
+				addToQRReportList();
+				break;
+			case "Rep_ClearList":
+				lstReports.setListData(new String[0]);
+				break;
+			case "Rep_LoadList":
+				ResultUtilsBO.getResultUtilsInstance(null).readCGR();
+				break;
+			case "Rep_SaveList":
+				ResultUtilsBO.getResultUtilsInstance(null).writeCGR();
+				break;
+			case "Rep_DispAll":
+				if (lstScenarios.getModel().getSize() == 0) {
+//				JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "No scenarios loaded", "Error", JOptionPane.ERROR_MESSAGE);
+					ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+					Object[] options = { "OK" };
+					JOptionPane optionPane = new JOptionPane("No scenarios loaded",
+							JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
+					JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+					dialog.setIconImage(icon.getImage());
+					dialog.setResizable(false);
+					dialog.setVisible(true);
+				} else {
+					for (int i = 0; i < lstReports.getModel().getSize(); i++)
+						DisplayFrame.showDisplayFrames((String) (lstReports.getModel().getElementAt(i)), lstScenarios);
 				}
+				break;
+			case "Rep_DispCur":
+				if (lstScenarios.getModel().getSize() == 0) {
+//				JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "No scenarios loaded", "Error", JOptionPane.ERROR_MESSAGE);
+					ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+					Object[] options = { "OK" };
+					JOptionPane optionPane = new JOptionPane("No scenarios loaded",
+							JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
+					JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+					dialog.setIconImage(icon.getImage());
+					dialog.setResizable(false);
+					dialog.setVisible(true);
+				} else if (lstReports.getSelectedValue() == null) {
+//				JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "No display group selected", "Error", JOptionPane.ERROR_MESSAGE);
+					ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+					Object[] options = { "OK" };
+					JOptionPane optionPane = new JOptionPane("No display group selected",
+							JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
+					JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+					dialog.setIconImage(icon.getImage());
+					dialog.setResizable(false);
+					dialog.setVisible(true);
+				} else {
+
+					DisplayFrame.showDisplayFrames((String) ((JList) swingEngine.find("lstReports")).getSelectedValue(),
+							lstScenarios);
+				}
+				break;
+			case "Time_SELECT":
+
+				break;
+			case "AC_CompScen":
+				IScenarioDele scenarioDele = new ScenarioDeleImp();
+				boolean proceed = this.allButtonsDele.saveForViewScen();
+				List<String> fileNames = new ArrayList<>();
+				for (int i = 0; i < ((DefaultListModel) lstScenarios.getModel()).getSize(); i++) {
+					String name = Paths.get(((DefaultListModel) lstScenarios.getModel()).getElementAt(i).toString())
+							.getFileName().toString();
+					fileNames.add(name.substring(0, name.length() - 7) + Constant.CLS_EXT);
+				}
+				if (proceed) {
+					List<DataTableModel> dtmList = scenarioDele.getScenarioTableData(fileNames);
+					ScenarioFrame scenarioFrame = new ScenarioFrame(dtmList);
+					scenarioFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+					scenarioFrame.setVisible(true);
+					try {
+						Files.delete(Paths.get(Constant.SCENARIOS_DIR + Constant.CURRENT_SCENARIO + Constant.CLS_EXT));
+					} catch (IOException ex) {
+						LOG.debug(ex);
+					}
+				}
+				break;
 			}
-			break;
+		} catch (HeadlessException e) {
+			LOG.error(e.getMessage());
+			String messageText = "Unable to initialize action listeners.";
+			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
 	}
 
@@ -346,20 +396,26 @@ public class GlobalActionListener implements ActionListener {
 	 *            The Name of the file.
 	 */
 	public void loadScenarioButton(String fileName) {
-		LOG.debug("loading this cls file " + fileName);
-		fileName = FilenameUtils.removeExtension(fileName);
-		this.verifyControlsDele.verifyTheDataBeforeUI(Constant.SCENARIOS_DIR + fileName + Constant.CLS_EXT);
-		this.scenarioSvc.applyClsFile(Constant.SCENARIOS_DIR + fileName + Constant.CLS_EXT, swingEngine,
-				seedDataSvc.getTableIdMap());
-		((JTextField) swingEngine.find("run_txfScen")).setText(fileName + Constant.CLS_EXT);
-		((JTextField) swingEngine.find("run_txfoDSS")).setText(fileName + Constant.DV_NAME + Constant.DSS_EXT);
-		applyDynamicConDele.changeSVInitFilesAndTableInOperations(true);
-		String[] c1 = new String[0];
-		Object[][] data = new Object[0][0];
-		((JTable) this.swingEngine.find("tblOpValues")).setModel(new DataTableModel("", c1, data, false));
-		applyDynamicConDele.applyDynamicControlForListFromFile();
-		allButtonsDele.decisionSVInitFilesAndTableInOperations();
-		auditSvc.clearAudit();
+		try {
+			LOG.debug("loading this cls file " + fileName);
+			fileName = FilenameUtils.removeExtension(fileName);
+			this.verifyControlsDele.verifyTheDataBeforeUI(Constant.SCENARIOS_DIR + fileName + Constant.CLS_EXT);
+			this.scenarioSvc.applyClsFile(Constant.SCENARIOS_DIR + fileName + Constant.CLS_EXT, swingEngine,
+					seedDataSvc.getTableIdMap());
+			((JTextField) swingEngine.find("run_txfScen")).setText(fileName + Constant.CLS_EXT);
+			((JTextField) swingEngine.find("run_txfoDSS")).setText(fileName + Constant.DV_NAME + Constant.DSS_EXT);
+			applyDynamicConDele.changeSVInitFilesAndTableInOperations(true);
+			String[] c1 = new String[0];
+			Object[][] data = new Object[0][0];
+			((JTable) this.swingEngine.find("tblOpValues")).setModel(new DataTableModel("", c1, data, false));
+			applyDynamicConDele.applyDynamicControlForListFromFile();
+			allButtonsDele.decisionSVInitFilesAndTableInOperations();
+			auditSvc.clearAudit();
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			String messageText = "Unable to load scenarios.";
+			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+		}
 	}
 
 	/**
@@ -376,7 +432,10 @@ public class GlobalActionListener implements ActionListener {
 			try {
 				Files.delete(Paths.get(Constant.SCENARIOS_DIR + Constant.CURRENT_SCENARIO + Constant.CLS_EXT));
 			} catch (IOException ex) {
-				LOG.debug(ex);
+				//LOG.debug(ex);
+				LOG.error(ex.getMessage());
+				String messageText = "Unable to load scenarios.";
+				errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), ex);
 			}
 		}
 	}
@@ -385,15 +444,21 @@ public class GlobalActionListener implements ActionListener {
 	 * This method is used to run single batch program.
 	 */
 	public void runSingleBatch() {
-		String clsFileName = ((JTextField) swingEngine.find("run_txfScen")).getText();
-		clsFileName = FilenameUtils.removeExtension(clsFileName);
-		if (decisionBeforeTheBatchRun()) {
-			ProgressFrame progressFrame = ProgressFrame.getProgressFrameInstance();
-			List<String> fileName = Arrays.asList(clsFileName);
-			progressFrame.addScenarioNamesAndAction(clsFileName, Constant.BATCH_RUN);
-			progressFrame.setBtnText(Constant.STATUS_BTN_TEXT_STOP);
-			progressFrame.makeDialogVisible();
-			modelRunSvc.doBatch(fileName, swingEngine, false);
+		try {
+			String clsFileName = ((JTextField) swingEngine.find("run_txfScen")).getText();
+			clsFileName = FilenameUtils.removeExtension(clsFileName);
+			if (decisionBeforeTheBatchRun()) {
+				ProgressFrame progressFrame = ProgressFrame.getProgressFrameInstance();
+				List<String> fileName = Arrays.asList(clsFileName);
+				progressFrame.addScenarioNamesAndAction(clsFileName, Constant.BATCH_RUN);
+				progressFrame.setBtnText(Constant.STATUS_BTN_TEXT_STOP);
+				progressFrame.makeDialogVisible();
+				modelRunSvc.doBatch(fileName, swingEngine, false);
+			}
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			String messageText = "Unable to run batch file.";
+			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
 	}
 
@@ -401,15 +466,21 @@ public class GlobalActionListener implements ActionListener {
 	 * This method is used to run batch program for wsidi.
 	 */
 	public void runSingleBatchForWsiDi() {
-		String clsFileName = ((JTextField) swingEngine.find("run_txfScen")).getText();
-		clsFileName = FilenameUtils.removeExtension(clsFileName);
-		if (decisionBeforeTheBatchRun()) {
-			ProgressFrame progressFrame = ProgressFrame.getProgressFrameInstance();
-			List<String> fileName = Arrays.asList(clsFileName);
-			progressFrame.addScenarioNamesAndAction(clsFileName, Constant.BATCH_RUN_WSIDI);
-			progressFrame.setBtnText(Constant.STATUS_BTN_TEXT_STOP);
-			progressFrame.makeDialogVisible();
-			modelRunSvc.doBatch(fileName, swingEngine, true);
+		try {
+			String clsFileName = ((JTextField) swingEngine.find("run_txfScen")).getText();
+			clsFileName = FilenameUtils.removeExtension(clsFileName);
+			if (decisionBeforeTheBatchRun()) {
+				ProgressFrame progressFrame = ProgressFrame.getProgressFrameInstance();
+				List<String> fileName = Arrays.asList(clsFileName);
+				progressFrame.addScenarioNamesAndAction(clsFileName, Constant.BATCH_RUN_WSIDI);
+				progressFrame.setBtnText(Constant.STATUS_BTN_TEXT_STOP);
+				progressFrame.makeDialogVisible();
+				modelRunSvc.doBatch(fileName, swingEngine, true);
+			}
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			String messageText = "Unable to run wsidi.";
+			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
 	}
 
@@ -420,46 +491,74 @@ public class GlobalActionListener implements ActionListener {
 	 * @return Will return true if the user wants to run the batch program.
 	 */
 	public boolean decisionBeforeTheBatchRun() {
-		String clsFileName = FilenameUtils.removeExtension(((JTextField) swingEngine.find("run_txfScen")).getText());
-		if (clsFileName.toUpperCase().equals(Constant.DEFAULT) && allButtonsDele.defaultCLSIsProtected()) {
-			JOptionPane.showMessageDialog(null,
-					"The CalLite GUI is not allowed to modify the default scenario 'DEFAULT.CLS'. Please use Save As to save to a different scenario file.");
-			return false;
-		}
-		if (!Files.isExecutable(Paths.get(Constant.RUN_DETAILS_DIR + clsFileName))) {
-			ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-			Object[] options = { "Yes", "No" };
-			JOptionPane optionPane = new JOptionPane(
-					"The cls file does not have a corresponding directory structure.\nThe batch will not run without this.\nDo you want to save to create that directory?",
-					JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, options, options[0]);
-			JDialog dialog = optionPane.createDialog("CalLite");
-			dialog.setIconImage(icon.getImage());
-			dialog.setResizable(false);
-			dialog.setVisible(true);
-			switch (optionPane.getValue().toString()) {
-			case "Yes":
-				return this.allButtonsDele.saveCurrentStateToFile(clsFileName);
-			case "No":
+		boolean isSaved;
+		try {
+			String clsFileName = FilenameUtils.removeExtension(((JTextField) swingEngine.find("run_txfScen")).getText());
+			if (clsFileName.toUpperCase().equals(Constant.DEFAULT)) {
+//			JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
+//					"The CalLite GUI is not allowed to modify the default scenario 'DEFAULT.CLS'. Please use Save As to save to a different scenario file.");
+//			
+				ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+				Object[] options = { "OK" };
+				JOptionPane optionPane = new JOptionPane("The CalLite GUI is not allowed to modify the default scenario 'DEFAULT.CLS'. Please use Save As to save to a different scenario file.",
+						JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
+				JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+				dialog.setIconImage(icon.getImage());
+				dialog.setResizable(false);
+				dialog.setVisible(true);
+				
 				return false;
 			}
-		}
-		boolean isSaved = false;
-		if (auditSvc.hasValues()) {
-			int option = JOptionPane.showConfirmDialog(null,
-					"Scenario selections have changed. Would you like to save the changes?");
-			switch (option) {
-			case JOptionPane.YES_OPTION:
-				isSaved = this.allButtonsDele.saveCurrentStateToFile(clsFileName);
-				break;
-			case JOptionPane.NO_OPTION:
-				loadScenarioButton(((JTextField) swingEngine.find("run_txfScen")).getText());
-				isSaved = true;
-				break;
+			if (!Files.isExecutable(Paths.get(Constant.RUN_DETAILS_DIR + clsFileName))) {
+				ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+				Object[] options = { "Yes", "No" };
+				JOptionPane optionPane = new JOptionPane(
+						"The cls file does not have a corresponding directory structure.\nThe batch will not run without this.\nDo you want to save to create that directory?",
+						JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, options, options[0]);
+				JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+				dialog.setIconImage(icon.getImage());
+				dialog.setResizable(false);
+				dialog.setVisible(true);
+				switch (optionPane.getValue().toString()) {
+				case "Yes":
+					return this.allButtonsDele.saveCurrentStateToFile(clsFileName);
+				case "No":
+					return false;
+				}
 			}
-		} else {
-			isSaved = true;
+			isSaved = false;
+			if (auditSvc.hasValues()) {
+				
+				ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+				Object[] options = { "Yes", "No" };
+				JOptionPane optionPane = new JOptionPane(
+						"Scenario selections have changed. Would you like to save the changes?",
+						JOptionPane.QUESTION_MESSAGE, JOptionPane.YES_NO_OPTION, null, options, options[1]);
+				JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+				dialog.setIconImage(icon.getImage());
+				dialog.setResizable(false);
+				dialog.setVisible(true);
+				switch (optionPane.getValue().toString()) {
+				case "Yes":
+					isSaved = this.allButtonsDele.saveCurrentStateToFile(clsFileName);
+					break;
+				case "No":
+					loadScenarioButton(((JTextField) swingEngine.find("run_txfScen")).getText());
+					isSaved = true;
+					break;
+				}
+				
+				
+			} else {
+				isSaved = true;
+			}
+			return isSaved;
+		} catch (HeadlessException e) {
+			LOG.error(e.getMessage());
+			String messageText = "Unable to run batch file.";
+			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
-		return isSaved;
+		return false;
 	}
 
 	/**
@@ -468,44 +567,50 @@ public class GlobalActionListener implements ActionListener {
 	 * 
 	 */
 	private void addToQRReportList() {
-		// Store previous list items
-		int size = lstReports.getModel().getSize(); // 4
-		int n;
-		n = 0;
-		String[] lstArray = new String[size];
-		for (int i = 0; i < size; i++) {
-			Object item = lstReports.getModel().getElementAt(i);
-			if (item.toString() != " ") {
-				lstArray[n] = item.toString();
-				n = n + 1;
+		try {
+			// Store previous list items
+			int size = lstReports.getModel().getSize(); // 4
+			int n;
+			n = 0;
+			String[] lstArray = new String[size];
+			for (int i = 0; i < size; i++) {
+				Object item = lstReports.getModel().getElementAt(i);
+				if (item.toString() != " ") {
+					lstArray[n] = item.toString();
+					n = n + 1;
+				}
 			}
-		}
-		String[] lstArray1 = new String[n + 1];
-		for (int i = 0; i < n; i++) {
-			lstArray1[i] = lstArray[i];
-		}
-		// Add new items
-		String cSTOR = ";Locs-";
-		String cSTORIdx = ";Index-";
-		Component[] components = ((JTabbedPane) swingEngine.find("variables")).getComponents();
-		for (Component c : components) {
-			if (c instanceof JPanel) {
-				Component[] components2 = ((JPanel) c).getComponents();
-				for (Component c2 : components2)
-					if (c2 instanceof JCheckBox) {
-						JCheckBox cb = (JCheckBox) c2;
-						String cName = cb.getName();
-						if (cName.startsWith("ckbp")) {
-							if (cb.isSelected()) {
-								cSTOR = cSTOR + cb.getText().trim() + ",";
-								cSTORIdx = cSTORIdx + cName + ",";
+			String[] lstArray1 = new String[n + 1];
+			for (int i = 0; i < n; i++) {
+				lstArray1[i] = lstArray[i];
+			}
+			// Add new items
+			String cSTOR = ";Locs-";
+			String cSTORIdx = ";Index-";
+			Component[] components = ((JTabbedPane) swingEngine.find("variables")).getComponents();
+			for (Component c : components) {
+				if (c instanceof JPanel) {
+					Component[] components2 = ((JPanel) c).getComponents();
+					for (Component c2 : components2)
+						if (c2 instanceof JCheckBox) {
+							JCheckBox cb = (JCheckBox) c2;
+							String cName = cb.getName();
+							if (cName.startsWith("ckbp")) {
+								if (cb.isSelected()) {
+									cSTOR = cSTOR + cb.getText().trim() + ",";
+									cSTORIdx = cSTORIdx + cName + ",";
+								}
 							}
+							lstArray1[n] = DisplayFrame.quickState() + cSTOR + cSTORIdx;
+							// String[] reportNamesEG = {cDate};
+							lstReports.setListData(lstArray1);
 						}
-						lstArray1[n] = DisplayFrame.quickState() + cSTOR + cSTORIdx;
-						// String[] reportNamesEG = {cDate};
-						lstReports.setListData(lstArray1);
-					}
+				}
 			}
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			String messageText = "Unable to display frame.";
+			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
 	}
 
@@ -553,8 +658,16 @@ public class GlobalActionListener implements ActionListener {
 		if (((JTextField) swingEngine.find("tfReportFILE1")).getText().isEmpty()
 				|| ((JTextField) swingEngine.find("tfReportFILE2")).getText().isEmpty()
 				|| ((JTextField) swingEngine.find("tfReportFILE3")).getText().isEmpty()) {
-			JOptionPane.showMessageDialog(null, "You must specify the source DSS files and the output PDF file",
-					"Error", JOptionPane.ERROR_MESSAGE);
+//			JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "You must specify the source DSS files and the output PDF file",
+//					"Error", JOptionPane.ERROR_MESSAGE);
+			ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+			Object[] options = { "OK" };
+			JOptionPane optionPane = new JOptionPane("You must specify the source DSS files and the output PDF file",
+					JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
+			JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+			dialog.setIconImage(icon.getImage());
+			dialog.setResizable(false);
+			dialog.setVisible(true);
 		} else {
 			try {
 				// Create an inputstream from template file;
@@ -604,12 +717,17 @@ public class GlobalActionListener implements ActionListener {
 					Report report = new Report(bs, ((JTextField) swingEngine.find("tfReportFILE3")).getToolTipText());
 					report.execute();
 				} catch (IOException e1) {
-					LOG.debug(e1.getMessage()); // Not sure - should catch
-												// thread problems like
-												// already-open PDF?
+//					LOG.debug(e1.getMessage()); // Not sure - should catch
+//												// thread problems like
+//												// already-open PDF?
+					LOG.error(e1.getMessage());
+					String messageText = "Unable to display report.";
+					errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e1);
 				}
 			} catch (IOException e1) {
-				LOG.debug(e1.getMessage()); // Failure to open template file
+				LOG.error(e1.getMessage());
+				String messageText = "Unable to display report.";
+				errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e1);
 											// (?)
 			}
 		}

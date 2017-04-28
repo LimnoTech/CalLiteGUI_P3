@@ -1,7 +1,10 @@
 package gov.ca.water.calgui.bo;
 //! Custom file chooser for selection of different CalLite file types
 import java.awt.Component;
+import org.swixml.SwingEngine;
+
 import java.awt.Container;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -18,6 +21,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JRadioButton;
@@ -30,7 +34,11 @@ import javax.swing.event.ListDataListener;
 
 import org.apache.log4j.Logger;
 
+import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
+import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.presentation.WRIMSGUILinks;
+import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
+import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 
 /**
  * Supports selection of different types of CalLite files from customized
@@ -46,6 +54,8 @@ public class FileDialogBO implements ActionListener {
 	public JFileChooser fc = new JFileChooser2();
 	public int dialogRC;
 
+	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
+
 	JList theList;
 	JLabel theLabel;
 	JTextField theTextField;
@@ -54,8 +64,8 @@ public class FileDialogBO implements ActionListener {
 	JRadioButton rdbopt1 = null;;
 	JRadioButton rdbopt2 = null;;
 
-	private static Logger log = Logger.getLogger(FileDialogBO.class.getName());
-
+	private static Logger LOG = Logger.getLogger(FileDialogBO.class.getName());
+	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	/**
 	 * Basic constructor for use with DSS files. Result is appended to aList.
 	 *
@@ -169,71 +179,77 @@ public class FileDialogBO implements ActionListener {
 	 */
 	private void setup(JList aList) {
 
-		// Set up file chooser
+		try {
+			// Set up file chooser
 
-		if (theFileExt.equals("DSS")) {
-			fc.setFileFilter(new SimpleFileFilter("DSS"));
-			fc.setCurrentDirectory(new File(".//Scenarios"));
-		} else if (theFileExt.equals("DSS2")) {
-			theFileExt = "DSS";
-			fc.setFileFilter(new SimpleFileFilter("DSS"));
-			fc.setCurrentDirectory(new File(".//Model_w2/DSS_Files"));
-		} else {
-			fc.setFileFilter(new SimpleFileFilter(theFileExt));
-			if (theFileExt.equals("PDF") || theFileExt.equals("CLS"))
+			if (theFileExt.equals("DSS")) {
+				fc.setFileFilter(new SimpleFileFilter("DSS"));
 				fc.setCurrentDirectory(new File(".//Scenarios"));
-			else
-				fc.setCurrentDirectory(new File(".//Config"));
-		}
+			} else if (theFileExt.equals("DSS2")) {
+				theFileExt = "DSS";
+				fc.setFileFilter(new SimpleFileFilter("DSS"));
+				fc.setCurrentDirectory(new File(".//Model_w2/DSS_Files"));
+			} else {
+				fc.setFileFilter(new SimpleFileFilter(theFileExt));
+				if (theFileExt.equals("PDF") || theFileExt.equals("CLS"))
+					fc.setCurrentDirectory(new File(".//Scenarios"));
+				else
+					fc.setCurrentDirectory(new File(".//Config"));
+			}
 
-		// If a list is specified, create customized JList for handling of
-		// files.
+			// If a list is specified, create customized JList for handling of
+			// files.
 
-		if (aList != null) {
+			if (aList != null) {
 
-			lmScenNames = new DefaultListModel();
-			lmScenNames.addListDataListener(new MyListDataListener());
+				lmScenNames = new DefaultListModel();
+				lmScenNames.addListDataListener(new MyListDataListener());
 
-			theList = aList;
-			theList.setCellRenderer(new RBListRenderer());
-			theList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+				theList = aList;
+				theList.setCellRenderer(new RBListRenderer());
+				theList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-			// Add a mouse listener to handle changing selection
+				// Add a mouse listener to handle changing selection
 
-			theList.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent event) {
+				theList.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent event) {
 
-					JList list = (JList) event.getSource();
+						JList list = (JList) event.getSource();
 
-					// Get index of item clicked
+						// Get index of item clicked
 
-					if (list.getModel().getSize() > 0) {
-						int index = list.locationToIndex(event.getPoint());
+						if (list.getModel().getSize() > 0) {
+							int index = list.locationToIndex(event.getPoint());
 
-						// Toggle selected state
+							// Toggle selected state
 
-						for (int i = 0; i < list.getModel().getSize(); i++) {
-							RBListItemBO item = (RBListItemBO) list.getModel().getElementAt(i);
-							if (i == index) {
-								item.setSelected(true);
-								list.repaint(list.getCellBounds(i, i));
-							} else {
-								if (item.isSelected())
+							for (int i = 0; i < list.getModel().getSize(); i++) {
+								RBListItemBO item = (RBListItemBO) list.getModel().getElementAt(i);
+								if (i == index) {
+									item.setSelected(true);
 									list.repaint(list.getCellBounds(i, i));
-								item.setSelected(false);
+								} else {
+									if (item.isSelected())
+										list.repaint(list.getCellBounds(i, i));
+									item.setSelected(false);
+								}
 							}
+
+							// Repaint cell
+
+							list.repaint(list.getCellBounds(index, index));
+
+							WRIMSGUILinks.updateProjectFiles(list);
+
 						}
-
-						// Repaint cell
-
-						list.repaint(list.getCellBounds(index, index));
-
-						WRIMSGUILinks.updateProjectFiles(list);
-
 					}
-				}
-			});
+				});
+			}
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			String messageText = "Unable to set up file dialog.";
+			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
 	}
 
@@ -274,66 +290,72 @@ public class FileDialogBO implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		Object obj = null;
-		if (e != null)
-			obj = e.getSource();
-		if ((obj != null) && (((Component) obj).getName() != null)
-				&& ((Component) obj).getName().equals("btnDelScenario")) {
-			// If invoked by QR DelScenario button, delete a scenario from Quick
-			// Results scenario list
-			if ((theList != null) && lmScenNames.getSize() > 0) {
-				int todel = -1;
-				for (int i = 0; i < lmScenNames.getSize(); i++)
-					if (((RBListItemBO) lmScenNames.getElementAt(i)).isSelected())
-						todel = i;
-				if (todel > 0)
-					((RBListItemBO) lmScenNames.getElementAt(todel - 1)).setSelected(true);
-				else if (todel < lmScenNames.getSize() - 1)
-					((RBListItemBO) lmScenNames.getElementAt(todel + 1)).setSelected(true);
-				lmScenNames.remove(todel);
-			}
-		} else if (e.getActionCommand().equals("btnClearScenario")) {
-			((DefaultListModel) theList.getModel()).clear();
-			theList.repaint();
+		try {
+			Object obj = null;
+			if (e != null)
+				obj = e.getSource();
+			if ((obj != null) && (((Component) obj).getName() != null)
+					&& ((Component) obj).getName().equals("btnDelScenario")) {
+				// If invoked by QR DelScenario button, delete a scenario from Quick
+				// Results scenario list
+				if ((theList != null) && lmScenNames.getSize() > 0) {
+					int todel = -1;
+					for (int i = 0; i < lmScenNames.getSize(); i++)
+						if (((RBListItemBO) lmScenNames.getElementAt(i)).isSelected())
+							todel = i;
+					if (todel > 0)
+						((RBListItemBO) lmScenNames.getElementAt(todel - 1)).setSelected(true);
+					else if (todel < lmScenNames.getSize() - 1)
+						((RBListItemBO) lmScenNames.getElementAt(todel + 1)).setSelected(true);
+					lmScenNames.remove(todel);
+				}
+			} else if (e.getActionCommand().equals("btnClearScenario")) {
+				((DefaultListModel) theList.getModel()).clear();
+				theList.repaint();
 
-		} else {
-			// Otherwise, show dialog
-			int rc;
-			if (theMultipleFlag) {
-				UIManager.put("FileChooser.openDialogTitleText", "Select Scenarios");
-				fc.setMultiSelectionEnabled(true);
-				dialogRC = fc.showDialog(null, "Select");
-				if (theList != null & dialogRC != 1) {
-					for (File file : fc.getSelectedFiles()) {
-						addFileToList(file);
-					}
-				}
 			} else {
-				if (theFileExt == null)
-					rc = fc.showOpenDialog(null);
-				else
-					rc = fc.showDialog(null, theFileExt.equals("DSS") ? "Open" : "Save");
-				dialogRC = rc;
-				File file;
-				if (rc == 0) {
-					file = fc.getSelectedFile();
-					if (theFileExt.equals("PDF") && !file.getName().toLowerCase().endsWith(".pdf")) {
-						file = new File(file.getPath() + ".PDF");
+				// Otherwise, show dialog
+				int rc;
+				if (theMultipleFlag) {
+					UIManager.put("FileChooser.openDialogTitleText", "Select Scenarios");
+					fc.setMultiSelectionEnabled(true);
+					dialogRC = fc.showDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "Select");
+					if (theList != null & dialogRC != 1) {
+						for (File file : fc.getSelectedFiles()) {
+							addFileToList(file);
+						}
 					}
-					if (theFileExt.equals("CLS") && !file.getName().toLowerCase().endsWith(".cls")) {
-						file = new File(file.getPath() + ".CLS");
-					}
-					if (theList != null) {
-						addFileToList(file);
-					} else if (theLabel != null) {
-						// theLabel.setText(file.getName());
-						// theLabel.setToolTipText(file.getPath());
-					} else if (theTextField != null) {
-						theTextField.setText(file.getName());
-						theTextField.setToolTipText(file.getPath());
+				} else {
+					if (theFileExt == null)
+						rc = fc.showOpenDialog(swingEngine.find(Constant.MAIN_FRAME_NAME));
+					else
+						rc = fc.showDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), theFileExt.equals("DSS") ? "Open" : "Save");
+					dialogRC = rc;
+					File file;
+					if (rc == 0) {
+						file = fc.getSelectedFile();
+						if (theFileExt.equals("PDF") && !file.getName().toLowerCase().endsWith(".pdf")) {
+							file = new File(file.getPath() + ".PDF");
+						}
+						if (theFileExt.equals("CLS") && !file.getName().toLowerCase().endsWith(".cls")) {
+							file = new File(file.getPath() + ".CLS");
+						}
+						if (theList != null) {
+							addFileToList(file);
+						} else if (theLabel != null) {
+							// theLabel.setText(file.getName());
+							// theLabel.setToolTipText(file.getPath());
+						} else if (theTextField != null) {
+							theTextField.setText(file.getName());
+							theTextField.setToolTipText(file.getPath());
+						}
 					}
 				}
 			}
+		} catch (HeadlessException e1) {
+			LOG.error(e1.getMessage());
+			String messageText = "Unable to show file chooser.";
+			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e1);
 		}
 		return;
 	}
@@ -345,29 +367,35 @@ public class FileDialogBO implements ActionListener {
 	 * @param file
 	 */
 	public void addFileToList(File file) {
-		boolean match = false;
-		for (int i = 0; i < lmScenNames.getSize(); i++) {
-			RBListItemBO rbli = (RBListItemBO) lmScenNames.getElementAt(i);
-			match = match | (rbli.toString().equals(file.getPath()));
-		}
+		try {
+			boolean match = false;
+			for (int i = 0; i < lmScenNames.getSize(); i++) {
+				RBListItemBO rbli = (RBListItemBO) lmScenNames.getElementAt(i);
+				match = match | (rbli.toString().equals(file.getPath()));
+			}
 
-		if (match)
+			if (match)
 
-			// Per client request, don't alert.
+				// Per client request, don't alert.
 
-			// JOptionPane.showMessageDialog(null,
-			// "Scenario \"" + file.getPath() + "\"\n" + "and will not be added.
-			// It is already in the Scenarios list.",
-			// "Alert", JOptionPane.ERROR_MESSAGE);
-			;
-		else {
-			lmScenNames.addElement(new RBListItemBO(file.getPath(), file.getName()));
-			if (lmScenNames.getSize() == 1)
-				((RBListItemBO) lmScenNames.getElementAt(0)).setSelected(true);
-			theList.ensureIndexIsVisible(lmScenNames.getSize() - 1);
-			theList.revalidate();
-			theList.validate();
-			theList.getParent().invalidate();
+				// JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
+				// "Scenario \"" + file.getPath() + "\"\n" + "and will not be added.
+				// It is already in the Scenarios list.",
+				// "Alert", JOptionPane.ERROR_MESSAGE);
+				;
+			else {
+				lmScenNames.addElement(new RBListItemBO(file.getPath(), file.getName()));
+				if (lmScenNames.getSize() == 1)
+					((RBListItemBO) lmScenNames.getElementAt(0)).setSelected(true);
+				theList.ensureIndexIsVisible(lmScenNames.getSize() - 1);
+				theList.revalidate();
+				theList.validate();
+				theList.getParent().invalidate();
+			}
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			String messageText = "Unable to update list.";
+			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
 	}
 
@@ -412,7 +440,7 @@ public class FileDialogBO implements ActionListener {
 								theToolTips.put(theKey.toLowerCase(), theValue);
 								br.close();
 							} catch (IOException e1) {
-								log.debug(e1.getMessage());
+								LOG.debug(e1.getMessage());
 
 							}
 
