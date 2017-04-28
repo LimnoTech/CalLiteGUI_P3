@@ -98,181 +98,187 @@ public class CalLiteInitClass {
 	 */
 	public void init() {
 
-		// ----- Build all the Services.
-		ISeedDataSvc seedDataSvc = SeedDataSvcImpl.getSeedDataSvcImplInstance();
-		IXMLParsingSvc xmlParsingSvc = XMLParsingSvcImpl.getXMLParsingSvcImplInstance();
-		IVerifyControlsDele verifyControlsDele = new VerifyControlsDeleImp();
-		verifyControlsDele.verifyTheDataBeforeUI(Constant.SCENARIOS_DIR + Constant.DEFAULT + Constant.CLS_EXT);
-		DynamicControlSvcImpl.getDynamicControlSvcImplInstance();
-		ITableSvc tableSvc = TableSvcImpl.getTableSvcImplInstance(seedDataSvc.getUserTables());
-		this.swingEngine = xmlParsingSvc.getSwingEngine();
-		IScenarioSvc scenarioSvc = ScenarioSvcImpl.getScenarioSvcImplInstance();
-		IAllButtonsDele allButtonsDele = new AllButtonsDeleImp();
+		try {
+			// ----- Build all the Services.
+			ISeedDataSvc seedDataSvc = SeedDataSvcImpl.getSeedDataSvcImplInstance();
+			IXMLParsingSvc xmlParsingSvc = XMLParsingSvcImpl.getXMLParsingSvcImplInstance();
+			IVerifyControlsDele verifyControlsDele = new VerifyControlsDeleImp();
+			verifyControlsDele.verifyTheDataBeforeUI(Constant.SCENARIOS_DIR + Constant.DEFAULT + Constant.CLS_EXT);
+			DynamicControlSvcImpl.getDynamicControlSvcImplInstance();
+			ITableSvc tableSvc = TableSvcImpl.getTableSvcImplInstance(seedDataSvc.getUserTables());
+			this.swingEngine = xmlParsingSvc.getSwingEngine();
+			IScenarioSvc scenarioSvc = ScenarioSvcImpl.getScenarioSvcImplInstance();
+			IAllButtonsDele allButtonsDele = new AllButtonsDeleImp();
 
-		// ----- Set up the GUI
+			// ----- Set up the GUI
 
-		// Set up month spinners
-		JSpinner spnSM1 = (JSpinner) swingEngine.find("spnRunStartMonth");
-		setMonthModelAndIndex(spnSM1, 9);
-		JSpinner spnEM1 = (JSpinner) swingEngine.find("spnRunEndMonth");
-		setMonthModelAndIndex(spnEM1, 8);
-		// Set up year spinners
-		JSpinner spnSY1 = (JSpinner) swingEngine.find("spnRunStartYear");
-		setNumberModelAndIndex(spnSY1, 1921, Constant.MIN_YEAR, Constant.MAX_YEAR, 1, "####");
-		JSpinner spnEY1 = (JSpinner) swingEngine.find("spnRunEndYear");
-		setNumberModelAndIndex(spnEY1, 2003, Constant.MIN_YEAR, Constant.MAX_YEAR, 1, "####");
-		addJSpinnerListener();
-		// Set up the global Listeners.
-		swingEngine.setActionListener(swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalActionListener());
-		setCheckBoxorMouseListener(swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalMouseListener());
-		setCheckBoxorRadioButtonItemListener(swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalItemListener());
-		setLinkedSliderChangeListener(swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalChangeListener());
-		ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-		((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME)).setIconImage(icon.getImage());
-		((JTabbedPane) swingEngine.find("reg_tabbedPane")).addChangeListener(new GlobalChangeListener());
+			// Set up month spinners
+			JSpinner spnSM1 = (JSpinner) swingEngine.find("spnRunStartMonth");
+			setMonthModelAndIndex(spnSM1, 9);
+			JSpinner spnEM1 = (JSpinner) swingEngine.find("spnRunEndMonth");
+			setMonthModelAndIndex(spnEM1, 8);
+			// Set up year spinners
+			JSpinner spnSY1 = (JSpinner) swingEngine.find("spnRunStartYear");
+			setNumberModelAndIndex(spnSY1, 1921, Constant.MIN_YEAR, Constant.MAX_YEAR, 1, "####");
+			JSpinner spnEY1 = (JSpinner) swingEngine.find("spnRunEndYear");
+			setNumberModelAndIndex(spnEY1, 2003, Constant.MIN_YEAR, Constant.MAX_YEAR, 1, "####");
+			addJSpinnerListener();
+			// Set up the global Listeners.
+			swingEngine.setActionListener(swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalActionListener());
+			setCheckBoxorMouseListener(swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalMouseListener());
+			setCheckBoxorRadioButtonItemListener(swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalItemListener());
+			setLinkedSliderChangeListener(swingEngine.find(Constant.MAIN_FRAME_NAME), new GlobalChangeListener());
+			ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+			((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME)).setIconImage(icon.getImage());
+			((JTabbedPane) swingEngine.find("reg_tabbedPane")).addChangeListener(new GlobalChangeListener());
 
-		((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME))
-				.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);// EXIT_ON_CLOSE
-		((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME)).addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent we) {
-				allButtonsDele.windowClosing();
-			}
-		});
-		// Load the default cls file.
-		scenarioSvc.applyClsFile(Constant.SCENARIOS_DIR + Constant.DEFAULT + Constant.CLS_EXT, swingEngine,
-				seedDataSvc.getTableIdMap());
-		// check
-		checkForNewUserDefinedTables(xmlParsingSvc.getNewUserDefinedTables(), scenarioSvc, tableSvc, swingEngine);
-		auditSvc = AuditSvcImpl.getAuditSvcImplInstance();
-		auditSvc.clearAudit(); // we clear because when we 1st load the cls file
-								// we should not have any records.
-		addJTextFieldListener(xmlParsingSvc.getjTextFieldIds());
-		addJCheckBoxListener(xmlParsingSvc.getjCheckBoxIDs());
-		// Count threads and update batch run selector appropriately
-		int maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors());
-		ModelRunSvcImpl.simultaneousRuns = maxThreads;
-		((JSlider) swingEngine.find("run_sldThreads")).addChangeListener(new GlobalChangeListener());
-		((JSlider) swingEngine.find("run_sldThreads")).setEnabled(maxThreads > 1);
-		((JSlider) swingEngine.find("run_sldThreads")).setMaximum(maxThreads);
-		((JLabel) swingEngine.find("run_lblThreads")).setText(" " + maxThreads + ((maxThreads > 1) ? " runs" : " run"));
-		((JLabel) swingEngine.find("run_lblThreadsInfo"))
-				.setText("Simultaneous runs " + ((maxThreads > 1) ? "(1-" + maxThreads + ")" : "(1)"));
-		// For Result part.
-		ResultUtilsBO resultUtilsBO = ResultUtilsBO.getResultUtilsInstance(swingEngine);
-		// Setup for Reporting page
-		// Set up additional UI elements
-		JList<?> lstScenarios = (JList<?>) swingEngine.find("SelectedList");
-		JRadioButton rdb1 = (JRadioButton) swingEngine.find("rdbp001");
-		JRadioButton rdb2 = (JRadioButton) swingEngine.find("rdbp002");
-		FileDialogBO fdDSSFiles = new FileDialogBO(lstScenarios, (JLabel) swingEngine.find("lblBase"), rdb1, rdb2,
-				(JButton) swingEngine.find("btnPower"), true);
-		resultUtilsBO.setFdDSSFiles(fdDSSFiles);
-		lstScenarios.setModel(fdDSSFiles.lmScenNames);
-		lstScenarios.setBorder(new LineBorder(Color.gray, 1));
-		JButton btnScenario = (JButton) swingEngine.find("btnAddScenario");
-		btnScenario.addActionListener(fdDSSFiles);
-		JButton btnScenarioDel = (JButton) swingEngine.find("btnDelScenario");
-		btnScenarioDel.addActionListener(fdDSSFiles);
-		JButton btnClearAll = (JButton) swingEngine.find("btnClearScenario");
-		btnClearAll.addActionListener(fdDSSFiles);
-		// Set up month spinners on result page
-		JSpinner spnSM = (JSpinner) swingEngine.find("spnStartMonth");
-		ResultUtilsBO.SetMonthModelAndIndex(spnSM, 9, resultUtilsBO, true);
-		JSpinner spnEM = (JSpinner) swingEngine.find("spnEndMonth");
-		ResultUtilsBO.SetMonthModelAndIndex(spnEM, 8, resultUtilsBO, true);
-		// Set up year spinners
-		JSpinner spnSY = (JSpinner) swingEngine.find("spnStartYear");
-		ResultUtilsBO.SetNumberModelAndIndex(spnSY, 1921, 1921, 2003, 1, "####", resultUtilsBO, true);
-		JSpinner spnEY = (JSpinner) swingEngine.find("spnEndYear");
-		ResultUtilsBO.SetNumberModelAndIndex(spnEY, 2003, 1921, 2003, 1, "####", resultUtilsBO, true);
-		// Set up report list
-		JList<?> lstReports = (JList<?>) swingEngine.find("lstReports");
-		lstReports.setBorder(new LineBorder(Color.gray, 1));
-		lstReports.setVisible(true);
-
-		// For Custom Results ....
-
-		WRIMSGUILinks.buildWRIMSGUI((JPanel) swingEngine.find("WRIMS"));
-		WRIMSGUILinks.setStatus("Initialized.");
-		// Replace WRIMS GUI display action with CalLite GUI action
-		JButton retrieveBtn = GuiUtils.getCLGPanel().getRetrievePanel().getRetrieveBtn();
-		for (ActionListener al : retrieveBtn.getActionListeners()) {
-			retrieveBtn.removeActionListener(al);
-		}
-		retrieveBtn.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				retrieve();
-			}
-		});
-		Component openButtonComponent = findFirstButtonMatchingText(GuiUtils.getCLGPanel(), "Open");
-		if (openButtonComponent != null) {
-			JButton openButton = (JButton) openButtonComponent;
-			for (ActionListener al : openButton.getActionListeners()) {
-				openButton.removeActionListener(al);
-			}
-			openButton.addActionListener(new ActionListener() {
+			((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME))
+					.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);// EXIT_ON_CLOSE
+			((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME)).addWindowListener(new WindowAdapter() {
 				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					retrieve2();
+				public void windowClosing(WindowEvent we) {
+					allButtonsDele.windowClosing();
 				}
 			});
-		}
-		// For PDF Report ...
-		((JButton) swingEngine.find("btnGetTemplateFile"))
-				.addActionListener(new FileDialogBO(null, (JTextField) swingEngine.find("tfTemplateFILE"), "inp"));
-		((JButton) swingEngine.find("btnGetReportFile1"))
-				.addActionListener(new FileDialogBO(null, (JTextField) swingEngine.find("tfReportFILE1")));
-		((JButton) swingEngine.find("btnGetReportFile2"))
-				.addActionListener(new FileDialogBO(null, (JTextField) swingEngine.find("tfReportFILE2")));
-		((JButton) swingEngine.find("btnGetReportFile3"))
-				.addActionListener(new FileDialogBO(null, (JTextField) swingEngine.find("tfReportFILE3"), "PDF"));
+			// Load the default cls file.
+			scenarioSvc.applyClsFile(Constant.SCENARIOS_DIR + Constant.DEFAULT + Constant.CLS_EXT, swingEngine,
+					seedDataSvc.getTableIdMap());
+			// check
+			checkForNewUserDefinedTables(xmlParsingSvc.getNewUserDefinedTables(), scenarioSvc, tableSvc, swingEngine);
+			auditSvc = AuditSvcImpl.getAuditSvcImplInstance();
+			auditSvc.clearAudit(); // we clear because when we 1st load the cls file
+									// we should not have any records.
+			addJTextFieldListener(xmlParsingSvc.getjTextFieldIds());
+			addJCheckBoxListener(xmlParsingSvc.getjCheckBoxIDs());
+			// Count threads and update batch run selector appropriately
+			int maxThreads = Math.max(1, Runtime.getRuntime().availableProcessors());
+			ModelRunSvcImpl.simultaneousRuns = maxThreads;
+			((JSlider) swingEngine.find("run_sldThreads")).addChangeListener(new GlobalChangeListener());
+			((JSlider) swingEngine.find("run_sldThreads")).setEnabled(maxThreads > 1);
+			((JSlider) swingEngine.find("run_sldThreads")).setMaximum(maxThreads);
+			((JLabel) swingEngine.find("run_lblThreads")).setText(" " + maxThreads + ((maxThreads > 1) ? " runs" : " run"));
+			((JLabel) swingEngine.find("run_lblThreadsInfo"))
+					.setText("Simultaneous runs " + ((maxThreads > 1) ? "(1-" + maxThreads + ")" : "(1)"));
+			// For Result part.
+			ResultUtilsBO resultUtilsBO = ResultUtilsBO.getResultUtilsInstance(swingEngine);
+			// Setup for Reporting page
+			// Set up additional UI elements
+			JList<?> lstScenarios = (JList<?>) swingEngine.find("SelectedList");
+			JRadioButton rdb1 = (JRadioButton) swingEngine.find("rdbp001");
+			JRadioButton rdb2 = (JRadioButton) swingEngine.find("rdbp002");
+			FileDialogBO fdDSSFiles = new FileDialogBO(lstScenarios, (JLabel) swingEngine.find("lblBase"), rdb1, rdb2,
+					(JButton) swingEngine.find("btnPower"), true);
+			resultUtilsBO.setFdDSSFiles(fdDSSFiles);
+			lstScenarios.setModel(fdDSSFiles.lmScenNames);
+			lstScenarios.setBorder(new LineBorder(Color.gray, 1));
+			JButton btnScenario = (JButton) swingEngine.find("btnAddScenario");
+			btnScenario.addActionListener(fdDSSFiles);
+			JButton btnScenarioDel = (JButton) swingEngine.find("btnDelScenario");
+			btnScenarioDel.addActionListener(fdDSSFiles);
+			JButton btnClearAll = (JButton) swingEngine.find("btnClearScenario");
+			btnClearAll.addActionListener(fdDSSFiles);
+			// Set up month spinners on result page
+			JSpinner spnSM = (JSpinner) swingEngine.find("spnStartMonth");
+			ResultUtilsBO.SetMonthModelAndIndex(spnSM, 9, resultUtilsBO, true);
+			JSpinner spnEM = (JSpinner) swingEngine.find("spnEndMonth");
+			ResultUtilsBO.SetMonthModelAndIndex(spnEM, 8, resultUtilsBO, true);
+			// Set up year spinners
+			JSpinner spnSY = (JSpinner) swingEngine.find("spnStartYear");
+			ResultUtilsBO.SetNumberModelAndIndex(spnSY, 1921, 1921, 2003, 1, "####", resultUtilsBO, true);
+			JSpinner spnEY = (JSpinner) swingEngine.find("spnEndYear");
+			ResultUtilsBO.SetNumberModelAndIndex(spnEY, 2003, 1921, 2003, 1, "####", resultUtilsBO, true);
+			// Set up report list
+			JList<?> lstReports = (JList<?>) swingEngine.find("lstReports");
+			lstReports.setBorder(new LineBorder(Color.gray, 1));
+			lstReports.setVisible(true);
 
-		// Schematic views
+			// For Custom Results ....
 
-		new SchematicMain((JPanel) swingEngine.find("schematic_holder"),
-				"file:///" + System.getProperty("user.dir") + "/Config/callite_merged.svg", swingEngine, 1.19, 0.0, 0.0,
-				1.19, -8.0, 5.0);
-		new SchematicMain((JPanel) swingEngine.find("schematic_holder2"),
-				"file:///" + System.getProperty("user.dir") + "/Config/callite-massbalance_working.svg", swingEngine,
-				1.2, 0, 0.0, 1.2, 21.0, 15.0);
-
-		// Recolor results tabs
-		JTabbedPane jTabbedPane = (JTabbedPane) swingEngine.find("tabbedPane1");
-		jTabbedPane.setForegroundAt(6, Color.blue);
-		jTabbedPane.setForegroundAt(7, Color.blue);
-		jTabbedPane.setForegroundAt(8, Color.blue);
-		jTabbedPane.setForegroundAt(9, Color.blue);
-		jTabbedPane.setBackgroundAt(6, Color.WHITE);
-		jTabbedPane.setBackgroundAt(7, Color.WHITE);
-		jTabbedPane.setBackgroundAt(8, Color.WHITE);
-		jTabbedPane.setBackgroundAt(9, Color.WHITE);
-		jTabbedPane.addChangeListener(resultUtilsBO);
-
-		JMenuBar menuBar = (JMenuBar) this.swingEngine.find("menu");
-		((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME)).setJMenuBar(menuBar);
-		menuBar.setVisible(true);
-		((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME)).addComponentListener(new ComponentAdapter() {
-			@Override
-			// Kludge to encourage consistent sizing
-			public void componentResized(ComponentEvent event) {
-				int height = event.getComponent().getHeight();
-				int width = event.getComponent().getWidth();
-				((JPanel) swingEngine.find("schematic_holder"))
-						.setPreferredSize(new Dimension(width - 50, height - 200));
-				SwingUtilities.updateComponentTreeUI(event.getComponent());
+			WRIMSGUILinks.buildWRIMSGUI((JPanel) swingEngine.find("WRIMS"));
+			WRIMSGUILinks.setStatus("Initialized.");
+			// Replace WRIMS GUI display action with CalLite GUI action
+			JButton retrieveBtn = GuiUtils.getCLGPanel().getRetrievePanel().getRetrieveBtn();
+			for (ActionListener al : retrieveBtn.getActionListeners()) {
+				retrieveBtn.removeActionListener(al);
 			}
-		});
-		new ApplyDynamicConDeleImp().applyDynamicControlForListFromFile();
+			retrieveBtn.addActionListener(new ActionListener() {
 
-		// reweightComponents((Container) swingEngine.find("runsettings"),
-		// null);
-		// reweightComponents((Container) swingEngine.find("Reporting"), null);
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					retrieve();
+				}
+			});
+			Component openButtonComponent = findFirstButtonMatchingText(GuiUtils.getCLGPanel(), "Open");
+			if (openButtonComponent != null) {
+				JButton openButton = (JButton) openButtonComponent;
+				for (ActionListener al : openButton.getActionListeners()) {
+					openButton.removeActionListener(al);
+				}
+				openButton.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						retrieve2();
+					}
+				});
+			}
+			// For PDF Report ...
+			((JButton) swingEngine.find("btnGetTemplateFile"))
+					.addActionListener(new FileDialogBO(null, (JTextField) swingEngine.find("tfTemplateFILE"), "inp"));
+			((JButton) swingEngine.find("btnGetReportFile1"))
+					.addActionListener(new FileDialogBO(null, (JTextField) swingEngine.find("tfReportFILE1")));
+			((JButton) swingEngine.find("btnGetReportFile2"))
+					.addActionListener(new FileDialogBO(null, (JTextField) swingEngine.find("tfReportFILE2")));
+			((JButton) swingEngine.find("btnGetReportFile3"))
+					.addActionListener(new FileDialogBO(null, (JTextField) swingEngine.find("tfReportFILE3"), "PDF"));
 
-		// Display the GUI
-		swingEngine.find(Constant.MAIN_FRAME_NAME).setVisible(true);
+			// Schematic views
+
+			new SchematicMain((JPanel) swingEngine.find("schematic_holder"),
+					"file:///" + System.getProperty("user.dir") + "/Config/callite_merged.svg", swingEngine, 1.19, 0.0, 0.0,
+					1.19, -8.0, 5.0);
+			new SchematicMain((JPanel) swingEngine.find("schematic_holder2"),
+					"file:///" + System.getProperty("user.dir") + "/Config/callite-massbalance_working.svg", swingEngine,
+					1.2, 0, 0.0, 1.2, 21.0, 15.0);
+
+			// Recolor results tabs
+			JTabbedPane jTabbedPane = (JTabbedPane) swingEngine.find("tabbedPane1");
+			jTabbedPane.setForegroundAt(6, Color.blue);
+			jTabbedPane.setForegroundAt(7, Color.blue);
+			jTabbedPane.setForegroundAt(8, Color.blue);
+			jTabbedPane.setForegroundAt(9, Color.blue);
+			jTabbedPane.setBackgroundAt(6, Color.WHITE);
+			jTabbedPane.setBackgroundAt(7, Color.WHITE);
+			jTabbedPane.setBackgroundAt(8, Color.WHITE);
+			jTabbedPane.setBackgroundAt(9, Color.WHITE);
+			jTabbedPane.addChangeListener(resultUtilsBO);
+
+			JMenuBar menuBar = (JMenuBar) this.swingEngine.find("menu");
+			((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME)).setJMenuBar(menuBar);
+			menuBar.setVisible(true);
+			((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME)).addComponentListener(new ComponentAdapter() {
+				@Override
+				// Kludge to encourage consistent sizing
+				public void componentResized(ComponentEvent event) {
+					int height = event.getComponent().getHeight();
+					int width = event.getComponent().getWidth();
+					((JPanel) swingEngine.find("schematic_holder"))
+							.setPreferredSize(new Dimension(width - 50, height - 200));
+					SwingUtilities.updateComponentTreeUI(event.getComponent());
+				}
+			});
+			new ApplyDynamicConDeleImp().applyDynamicControlForListFromFile();
+
+			// reweightComponents((Container) swingEngine.find("runsettings"),
+			// null);
+			// reweightComponents((Container) swingEngine.find("Reporting"), null);
+
+			// Display the GUI
+			swingEngine.find(Constant.MAIN_FRAME_NAME).setVisible(true);
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			String messageText = "Unable to initialize GUI.";
+			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+		}
 	}
 
 	/**

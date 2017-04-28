@@ -2,6 +2,7 @@ package gov.ca.water.calgui.presentation;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,6 +16,12 @@ import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
 import org.apache.log4j.Logger;
+import org.swixml.SwingEngine;
+
+import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
+import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
+import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 
 /**
  * This frame is used for displaying the monitored status of run and save
@@ -29,7 +36,9 @@ public final class ProgressFrameForPDF extends JFrame implements ActionListener 
 	private static ProgressFrameForPDF progressFrame;
 	private JList list;
 	private JScrollPane listScroller;
-
+	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
+	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
+	
 	/**
 	 * This method is for implementing the singleton.
 	 *
@@ -47,36 +56,42 @@ public final class ProgressFrameForPDF extends JFrame implements ActionListener 
 	 *
 	 */
 	private ProgressFrameForPDF() {
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setPreferredSize(new Dimension(400, 210));
-		setMinimumSize(new Dimension(400, 210));
-		setLayout(new BorderLayout(5, 5));
-		setTitle("Monitor for PDF");
-		String[] data = { "No reports active" };
-		list = new JList(data);
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list.setLayoutOrientation(JList.VERTICAL);
-		list.setVisibleRowCount(-1);
-		list.setDragEnabled(true);
-		list.setVisible(true);
-		listScroller = new JScrollPane(list);
-		listScroller.setPreferredSize(new Dimension(350, 150));
-		listScroller.setMinimumSize(new Dimension(350, 150));
-		listScroller.setVisible(true);
-		add(BorderLayout.PAGE_START, listScroller);
-		JButton btnClose = new JButton("Stop all runs");
-		btnClose.setPreferredSize(new Dimension(50, 20));
-		btnClose.setMinimumSize(new Dimension(50, 20));
-		btnClose.addActionListener(this);
-		btnClose.setActionCommand("Stop");
-		btnClose.setVisible(true);
-		add(BorderLayout.PAGE_END, btnClose);
-		pack();
-		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		setLocation((dim.width - 400) / 2, (dim.height - 200) / 2);
-		java.net.URL imgURL = getClass().getResource("/images/CalLiteIcon.png");
-		setIconImage(Toolkit.getDefaultToolkit().getImage(imgURL));
-		setVisible(true);
+		try {
+			setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			setPreferredSize(new Dimension(400, 210));
+			setMinimumSize(new Dimension(400, 210));
+			setLayout(new BorderLayout(5, 5));
+			setTitle("Monitor for PDF");
+			String[] data = { "No reports active" };
+			list = new JList(data);
+			list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			list.setLayoutOrientation(JList.VERTICAL);
+			list.setVisibleRowCount(-1);
+			list.setDragEnabled(true);
+			list.setVisible(true);
+			listScroller = new JScrollPane(list);
+			listScroller.setPreferredSize(new Dimension(350, 150));
+			listScroller.setMinimumSize(new Dimension(350, 150));
+			listScroller.setVisible(true);
+			add(BorderLayout.PAGE_START, listScroller);
+			JButton btnClose = new JButton("Stop all runs");
+			btnClose.setPreferredSize(new Dimension(50, 20));
+			btnClose.setMinimumSize(new Dimension(50, 20));
+			btnClose.addActionListener(this);
+			btnClose.setActionCommand("Stop");
+			btnClose.setVisible(true);
+			add(BorderLayout.PAGE_END, btnClose);
+			pack();
+			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+			setLocation((dim.width - 400) / 2, (dim.height - 200) / 2);
+			java.net.URL imgURL = getClass().getResource("/images/CalLiteIcon.png");
+			setIconImage(Toolkit.getDefaultToolkit().getImage(imgURL));
+			setVisible(true);
+		} catch (HeadlessException e) {
+			LOG.error(e.getMessage());
+			String messageText = "Unable to display PDF progress frame.";
+			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+		}
 	}
 
 	/**

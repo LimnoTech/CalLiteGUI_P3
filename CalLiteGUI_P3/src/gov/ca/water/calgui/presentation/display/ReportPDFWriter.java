@@ -67,7 +67,7 @@ public class ReportPDFWriter implements Writer {
 
 	private Font tableFont;
 	private Font tableBoldFont;
-	private static Logger log = Logger.getLogger(ReportPDFWriter.class.getName());
+	private static Logger LOG = Logger.getLogger(ReportPDFWriter.class.getName());
 
 	public ReportPDFWriter() {
 
@@ -114,9 +114,9 @@ public class ReportPDFWriter implements Writer {
 			        new FileOutputStream(filename));
 			document.open();
 		} catch (DocumentException de) {
-			log.debug(de.getMessage());
+			LOG.debug(de.getMessage());
 		} catch (IOException ioe) {
-			log.debug(ioe.getMessage());
+			LOG.debug(ioe.getMessage());
 //			JOptionPane.showMessageDialog(null, "Please close the file " + (new File(filename).getName()) + " if it is open.",
 //			        "Warning!", JOptionPane.WARNING_MESSAGE);
 			ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
@@ -246,7 +246,7 @@ public class ReportPDFWriter implements Writer {
 			document.newPage();
 			document.add(new Paragraph(title, bigFont));
 		} catch (DocumentException ex) {
-			log.debug(ex.getMessage());
+			LOG.debug(ex.getMessage());
 			throw new RuntimeException("Write Error: Close the PDF report file");
 		}
 	}
@@ -256,7 +256,7 @@ public class ReportPDFWriter implements Writer {
 		try {
 			document.add(new Paragraph(subtitle + "\n", subtitleFont));
 		} catch (DocumentException ex) {
-			log.debug(ex.getMessage());
+			LOG.debug(ex.getMessage());
 			throw new RuntimeException(ex);
 		}
 	}
@@ -296,7 +296,7 @@ public class ReportPDFWriter implements Writer {
 			}
 			document.add(summaryTable);
 		} catch (DocumentException ex) {
-			log.debug(ex.getMessage());
+			LOG.debug(ex.getMessage());
 			throw new RuntimeException(ex);
 		}
 	}

@@ -22,6 +22,8 @@ import gov.ca.dsm2.input.parser.Parser;
 import gov.ca.dsm2.input.parser.Tables;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.presentation.display.ReportPDFWriter;
+import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
+import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import vista.db.dss.DSSUtil;
 import vista.report.TSMath;
 import vista.set.Constants;
@@ -51,6 +53,7 @@ public class Report extends SwingWorker<Void, String> {
 	private static SwingEngine swix = ResultUtilsBO.getResultUtilsInstance(null).getSwix();
 	private ProgressFrameForPDF progressFrameForPDF;
 	private static final Logger LOG = Logger.getLogger(Report.class.getName());
+	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private StringBuffer messages = new StringBuffer();
 
 	/**
@@ -107,7 +110,7 @@ public class Report extends SwingWorker<Void, String> {
 		publish("Generating report in background thread.");
 		((JButton) swix.find("btnReport")).setEnabled(false);
 
-		logger.fine("Parsing input template");
+		LOG.fine("Parsing input template");
 		publish("Parsing input template.");
 		parseTemplateFile(inputStream);
 
@@ -115,7 +118,7 @@ public class Report extends SwingWorker<Void, String> {
 		doProcessing();
 		publish("Done");
 
-		logger.fine("Done generating report");
+		LOG.fine("Done generating report");
 
 		return null;
 	}
@@ -152,7 +155,7 @@ public class Report extends SwingWorker<Void, String> {
 	 * ********* END SwingWorker additions
 	 */
 
-	static final Logger logger = Logger.getLogger("callite.report");
+	//static final Logger LOG = Logger.getLogger("callite.report");
 	private ArrayList<ArrayList<String>> twValues;
 	private ArrayList<PathnameMap> pathnameMaps;
 	private HashMap<String, String> scalars;
@@ -167,11 +170,11 @@ public class Report extends SwingWorker<Void, String> {
 	}
 
 	void generateReport(InputStream templateContentStream) throws IOException {
-		logger.fine("Parsing input template");
+		LOG.fine("Parsing input template");
 		clearMessages();
 		parseTemplateFile(templateContentStream);
 		doProcessing();
-		logger.fine("Done generating report");
+		LOG.fine("Done generating report");
 	}
 
 	void parseTemplateFile(InputStream templateFileStream) throws IOException {
@@ -242,7 +245,7 @@ public class Report extends SwingWorker<Void, String> {
 		writer.setAuthor(author);
 		if ((dssGroupBase == null) || (dssGroupAlt == null)) {
 			String msg = "No data available in either : " + scalars.get("FILE_BASE") + " or " + scalars.get("FILE_ALT");
-			logger.severe(msg);
+			LOG.severe(msg);
 			addMessage(msg);
 			return;
 		}
@@ -255,13 +258,13 @@ public class Report extends SwingWorker<Void, String> {
 				publish("Generating plot " + dataIndex + " of " + pathnameMaps.size() + ".");
 			}
 
-			logger.fine("Working on index: " + dataIndex);
+			LOG.fine("Working on index: " + dataIndex);
 			if ((pathMap.pathAlt == null) || (pathMap.pathAlt == "")) {
 				pathMap.pathAlt = pathMap.pathBase;
 			}
 			boolean calculate_dts = false;
 			if (pathMap.var_category.equals("HEADER")) {
-				logger.fine("Inserting header");
+				LOG.fine("Inserting header");
 				continue;
 			}
 			if (pathMap.report_type.endsWith("_post")) {
@@ -435,7 +438,7 @@ public class Report extends SwingWorker<Void, String> {
 		} else {
 			String msg = "Requested unknown plot type: " + plotType + " for title: " + title + " seriesName: "
 					+ seriesName[0] + ",..";
-			logger.warning(msg);
+			LOG.warning(msg);
 			addMessage(msg);
 		}
 	}
@@ -575,7 +578,7 @@ public class Report extends SwingWorker<Void, String> {
 		try {
 			return Stats.avg(data.createSlice(tw)) * 12;
 		} catch (Exception ex) {
-			logger.fine(ex.getMessage());
+			LOG.fine(ex.getMessage());
 			return Double.NaN;
 		}
 	}
@@ -604,7 +607,7 @@ public class Report extends SwingWorker<Void, String> {
 				return ref;
 			} catch (Exception ex) {
 				addMessage(ex.getMessage());
-				logger.fine(ex.getMessage());
+				LOG.fine(ex.getMessage());
 				return null;
 			}
 		} else {

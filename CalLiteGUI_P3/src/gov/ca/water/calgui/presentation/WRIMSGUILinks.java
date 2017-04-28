@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.log4j.Logger;
+import org.swixml.SwingEngine;
 
 import calsim.app.AppUtils;
 import calsim.app.Project;
@@ -23,7 +24,10 @@ import calsim.gui.CalLiteGUIPanelWrapper;
 import calsim.gui.GuiUtils;
 import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
+import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
+import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 
 /**
  *
@@ -35,7 +39,9 @@ import gov.ca.water.calgui.constant.Constant;
  */
 public class WRIMSGUILinks {
 
-	private static final Logger log = Logger.getLogger(WRIMSGUILinks.class.getName());
+	private static SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
+	private static final Logger LOG = Logger.getLogger(WRIMSGUILinks.class.getName());
+	private static IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 
 	/**
 	 * This method is intended to update the status label inside the WRIMS GUI
@@ -44,7 +50,7 @@ public class WRIMSGUILinks {
 	 * @param text
 	 */
 	public static void setStatus(String text) {
-		log.debug("Status update to '" + text + "'");
+		LOG.debug("Status update to '" + text + "'");
 		// statusLabel.setText(text);
 		// statusLabel.invalidate();
 	}
@@ -58,15 +64,21 @@ public class WRIMSGUILinks {
 	 */
 	public static void buildWRIMSGUI(JPanel p) {
 
-		p.setSize(900, 650);
+		try {
+			p.setSize(900, 650);
 
-		CalLiteGUIPanelWrapper pw = new CalLiteGUIPanelWrapper(
-				(JFrame) ResultUtilsBO.getResultUtilsInstance(null).getSwix().find(Constant.MAIN_FRAME_NAME));
-		pw.getPanel().setSize(900, 650);
-		p.add(pw.getPanel(), BorderLayout.NORTH);
-		JPanel statusPanel = GuiUtils.getStatusPanel();
-		p.add(statusPanel, BorderLayout.CENTER);
-		GuiUtils.setStatus("Initialized.");
+			CalLiteGUIPanelWrapper pw = new CalLiteGUIPanelWrapper(
+					(JFrame) ResultUtilsBO.getResultUtilsInstance(null).getSwix().find(Constant.MAIN_FRAME_NAME));
+			pw.getPanel().setSize(900, 650);
+			p.add(pw.getPanel(), BorderLayout.NORTH);
+			JPanel statusPanel = GuiUtils.getStatusPanel();
+			p.add(statusPanel, BorderLayout.CENTER);
+			GuiUtils.setStatus("Initialized.");
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			String messageText = "Unable to update WRIMS GUI files.";
+			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+		}
 
 		// statusLabel = (JLabel) statusPanel.getComponent(2);
 	}
@@ -81,72 +93,78 @@ public class WRIMSGUILinks {
 
 		// Get project and clear
 
-		Project project = ResultUtilsBO.getResultUtilsInstance(null).getProject();
-		project.setDVFile("");
-		project.setDV2File("");
-		project.setDV3File("");
-		project.setDV4File("");
-		AppUtils.baseOn = false;
+		try {
+			Project project = ResultUtilsBO.getResultUtilsInstance(null).getProject();
+			project.setDVFile("");
+			project.setDV2File("");
+			project.setDV3File("");
+			project.setDV4File("");
+			AppUtils.baseOn = false;
 
-		// Find and set files
+			// Find and set files
 
-		if (theList.getModel().getSize() == 1) {
+			if (theList.getModel().getSize() == 1) {
 
-			RBListItemBO item = (RBListItemBO) theList.getModel().getElementAt(0);
-			String dvFileName = item.toString();
-			project.setDVFile(dvFileName);
-			project.setDVHashtable();
-
-			String svFileName = item.getSVFilename();
-			if (svFileName.equals("")) {
-				svFileName = findSVFileName(dvFileName);
-				item.setSVFilename(svFileName);
-			}
-
-			project.setSVFile(svFileName);
-			if (!(svFileName == null)) {
-				File svFile = new File(svFileName);
-				if (svFile.exists() && !svFile.isDirectory()) {
-					project.setSVHashtable();
-				}
-			}
-
-			AppUtils.baseOn = true;
-
-		} else {
-
-			int dssCount = 1;
-			for (int i = 0; i < theList.getModel().getSize(); i++) {
-
-				RBListItemBO item = (RBListItemBO) theList.getModel().getElementAt(i);
+				RBListItemBO item = (RBListItemBO) theList.getModel().getElementAt(0);
 				String dvFileName = item.toString();
+				project.setDVFile(dvFileName);
+				project.setDVHashtable();
+
 				String svFileName = item.getSVFilename();
 				if (svFileName.equals("")) {
 					svFileName = findSVFileName(dvFileName);
 					item.setSVFilename(svFileName);
 				}
-				if (item.isSelected()) {
-					project.setDVFile(dvFileName);
-					project.setSVFile(svFileName);
-					AppUtils.baseOn = true;
-				} else {
-					dssCount++;
-					switch (dssCount) {
-					case 2:
-						project.setDV2File(dvFileName);
-						project.setSV2File(svFileName);
-						break;
-					case 3:
-						project.setDV3File(dvFileName);
-						project.setSV3File(svFileName);
-						break;
-					case 4:
-						project.setDV4File(dvFileName);
-						project.setSV4File(svFileName);
-						break;
+
+				project.setSVFile(svFileName);
+				if (!(svFileName == null)) {
+					File svFile = new File(svFileName);
+					if (svFile.exists() && !svFile.isDirectory()) {
+						project.setSVHashtable();
+					}
+				}
+
+				AppUtils.baseOn = true;
+
+			} else {
+
+				int dssCount = 1;
+				for (int i = 0; i < theList.getModel().getSize(); i++) {
+
+					RBListItemBO item = (RBListItemBO) theList.getModel().getElementAt(i);
+					String dvFileName = item.toString();
+					String svFileName = item.getSVFilename();
+					if (svFileName.equals("")) {
+						svFileName = findSVFileName(dvFileName);
+						item.setSVFilename(svFileName);
+					}
+					if (item.isSelected()) {
+						project.setDVFile(dvFileName);
+						project.setSVFile(svFileName);
+						AppUtils.baseOn = true;
+					} else {
+						dssCount++;
+						switch (dssCount) {
+						case 2:
+							project.setDV2File(dvFileName);
+							project.setSV2File(svFileName);
+							break;
+						case 3:
+							project.setDV3File(dvFileName);
+							project.setSV3File(svFileName);
+							break;
+						case 4:
+							project.setDV4File(dvFileName);
+							project.setSV4File(svFileName);
+							break;
+						}
 					}
 				}
 			}
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			String messageText = "Unable to update WRIMS GUI files.";
+			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
 	}
 
@@ -179,7 +197,7 @@ public class WRIMSGUILinks {
 			scanner.close();
 
 		} catch (IOException e) {
-			log.info(clsF.getName() + " not openable - checking for like-named SV file");
+			LOG.info(clsF.getName() + " not openable - checking for like-named SV file");
 		}
 
 		if (!svFileName.equals("")) {
@@ -202,7 +220,7 @@ public class WRIMSGUILinks {
 				svFileName = dvFileName.substring(0, dvFileName.length() - 6) + "SV.dss";
 				File svF = new File(svFileName);
 				if (svF.exists() && !svF.isDirectory())
-					log.info("Found like-named SV file - " + svFileName);
+					LOG.info("Found like-named SV file - " + svFileName);
 				else
 					svFileName = "";
 
@@ -216,9 +234,9 @@ public class WRIMSGUILinks {
 					fc.setFileFilter(new FileNameExtensionFilter("DSS File *.dss", "dss"));
 					if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 						svFileName = fc.getSelectedFile().getAbsolutePath();
-						log.info("SV file set - " + svFileName);
+						LOG.info("SV file set - " + svFileName);
 					} else
-						log.info("No SV file set for " + dvFileName + "!");
+						LOG.info("No SV file set for " + dvFileName + "!");
 				}
 			}
 		}

@@ -2,6 +2,7 @@ package gov.ca.water.calgui.presentation;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,6 +44,8 @@ import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.TableSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
+import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 
 /**
  * This frame is used for displaying updated status during long-duration
@@ -66,82 +69,90 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
 	private IDynamicControlSvc dynamicControlSvc = DynamicControlSvcImpl.getDynamicControlSvcImplInstance();
 	private SwingWorker<Void, String> workerScenarioMonitor = new SwingWorker<Void, String>() {
-
+	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
+		
 		private String[] oldValue;
 
 		@Override
 		protected Void doInBackground() throws InterruptedException {
-			while (true) {
-				if (isCancelled()) {
-					return null;
-				}
-				Thread.sleep(2000);
-				boolean sleepAfterDisplay = false;
-				String[] listData = null;
-				List<String> data = new ArrayList<String>();
-				List<String> scenariosToDrop = new ArrayList<String>();
-				String text = "";
-				if (scenarioNamesAndAction.isEmpty()) {
-					listData = new String[1];
-					listData[0] = "No active scenarios";
-					setBtnText(Constant.STATUS_BTN_TEXT_CLOSE);
-				} else {
+			try {
+				while (true) {
+					if (isCancelled()) {
+						return null;
+					}
+					Thread.sleep(2000);
+					boolean sleepAfterDisplay = false;
+					String[] listData = null;
+					List<String> data = new ArrayList<String>();
+					List<String> scenariosToDrop = new ArrayList<String>();
+					String text = "";
+					if (scenarioNamesAndAction.isEmpty()) {
+						listData = new String[1];
+						listData[0] = "No active scenarios";
+						setBtnText(Constant.STATUS_BTN_TEXT_CLOSE);
+					} else {
 
-					for (String scenarioName : scenarioNamesAndAction.keySet()) {
-						switch (scenarioNamesAndAction.get(scenarioName)) {
-						case Constant.SAVE:
-							text = monitorSvc.save(scenarioName);
-							data.add(text);
-							if (text.endsWith("Save is completed.")) {
-								sleepAfterDisplay = true;
-								scenariosToDrop.add(scenarioName);
-							}
-							break;
+						for (String scenarioName : scenarioNamesAndAction.keySet()) {
+							switch (scenarioNamesAndAction.get(scenarioName)) {
+							case Constant.SAVE:
+								text = monitorSvc.save(scenarioName);
+								data.add(text);
+								if (text.endsWith("Save is completed.")) {
+									sleepAfterDisplay = true;
+									scenariosToDrop.add(scenarioName);
+								}
+								break;
 
-						case Constant.BATCH_RUN:
-							text = monitorSvc.runModel(scenarioName);
-							data.add(text);
-							if (text.toLowerCase().endsWith("Run completed".toLowerCase())) {
-								LOG.info(text);
-								ResultUtilsBO.getResultUtilsInstance(null).getFdDSSFiles()
-										.addFileToList(new File(Constant.SCENARIOS_DIR + scenarioName + "_DV.DSS"));
-								sleepAfterDisplay = true;
-								scenariosToDrop.add(scenarioName);
-							}
-							break;
+							case Constant.BATCH_RUN:
+								text = monitorSvc.runModel(scenarioName);
+								data.add(text);
+								if (text.toLowerCase().endsWith("Run completed".toLowerCase())) {
+									LOG.info(text);
+									ResultUtilsBO.getResultUtilsInstance(null).getFdDSSFiles()
+											.addFileToList(new File(Constant.SCENARIOS_DIR + scenarioName + "_DV.DSS"));
+									sleepAfterDisplay = true;
+									scenariosToDrop.add(scenarioName);
+								}
+								break;
 
-						case Constant.BATCH_RUN_WSIDI:
-							text = monitorSvc.runWSIDI(scenarioName);
-							data.add(text);
-							if (text.toLowerCase()
-									.endsWith("(wsidi iteration " + properties.getProperty("wsidi.iterations") + "/"
-											+ properties.getProperty("wsidi.iterations")
-											+ ")  - DONE - run completed".toLowerCase())) {
-								sleepAfterDisplay = true;
-								loadGeneratedWSIDI(scenarioName);
-								scenariosToDrop.add(scenarioName);
+							case Constant.BATCH_RUN_WSIDI:
+								text = monitorSvc.runWSIDI(scenarioName);
+								data.add(text);
+								if (text.toLowerCase()
+										.endsWith("(wsidi iteration " + properties.getProperty("wsidi.iterations") + "/"
+												+ properties.getProperty("wsidi.iterations")
+												+ ")  - DONE - run completed".toLowerCase())) {
+									sleepAfterDisplay = true;
+									loadGeneratedWSIDI(scenarioName);
+									scenariosToDrop.add(scenarioName);
+								}
+								break;
 							}
-							break;
+						}
+						for (String s : scenariosToDrop) {
+							scenarioNamesAndAction.remove(s);
+						}
+
+						listData = new String[data.size()];
+						for (int i = 0; i < data.size(); i++) {
+							listData[i] = data.get(i);
 						}
 					}
-					for (String s : scenariosToDrop) {
-						scenarioNamesAndAction.remove(s);
+					if (!Arrays.equals(oldValue, listData)) {
+						setList(listData);
+						oldValue = listData;
 					}
-
-					listData = new String[data.size()];
-					for (int i = 0; i < data.size(); i++) {
-						listData[i] = data.get(i);
+					if (sleepAfterDisplay) {
+						Thread.sleep(2000);
+						sleepAfterDisplay = false;
 					}
 				}
-				if (!Arrays.equals(oldValue, listData)) {
-					setList(listData);
-					oldValue = listData;
-				}
-				if (sleepAfterDisplay) {
-					Thread.sleep(2000);
-					sleepAfterDisplay = false;
-				}
+			} catch (Exception e) {
+				LOG.error(e.getMessage());
+				String messageText = "Unable to display progress frame.";
+				errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 			}
+			return null;
 		}
 
 		@Override
@@ -183,54 +194,61 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 	 *            The title of the frame.
 	 */
 	private ProgressFrame(String title) {
-		this.scenarioNamesAndAction = new HashMap<String, String>();
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setPreferredSize(new Dimension(400, 210));
-		setMinimumSize(new Dimension(400, 210));
-		setLayout(new BorderLayout(5, 5));
-		setTitle(title);
-		String[] start = { "No scenarios active" };
-		list = new JList<String>(start);
-
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list.setLayoutOrientation(JList.VERTICAL);
-		list.setVisibleRowCount(-1);
-		list.setDragEnabled(true);
-		list.setVisible(true);
-		listScroller = new JScrollPane(list);
-		listScroller.setPreferredSize(new Dimension(350, 150));
-		listScroller.setMinimumSize(new Dimension(350, 150));
-		listScroller.setVisible(true);
-		add(BorderLayout.PAGE_START, listScroller);
-		btnClose = new JButton(Constant.STATUS_BTN_TEXT_CLOSE);
-		btnClose.setPreferredSize(new Dimension(50, 20));
-		btnClose.setMinimumSize(new Dimension(50, 20));
-		btnClose.addActionListener(this);
-		btnClose.setActionCommand("Stop");
-		btnClose.setVisible(true);
-		add(BorderLayout.PAGE_END, btnClose);
-		pack();
-		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-		setLocation((dim.width - 400) / 2, (dim.height - 200) / 2);
-		java.net.URL imgURL = getClass().getResource("/images/CalLiteIcon.png");
-		setIconImage(Toolkit.getDefaultToolkit().getImage(imgURL));
-		addWindowListener(new java.awt.event.WindowAdapter() {
-			@Override
-			public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-				workerScenarioMonitor.cancel(true);
-				progressFrame = null;
-			}
-		});
+		IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 		try {
-			properties.load(GlobalActionListener.class.getClassLoader().getResourceAsStream("callite-gui.properties"));
-		} catch (Exception e) {
-			LOG.debug("Problem loading properties. " + e.getMessage());
-		}
+			this.scenarioNamesAndAction = new HashMap<String, String>();
+			setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			setPreferredSize(new Dimension(400, 210));
+			setMinimumSize(new Dimension(400, 210));
+			setLayout(new BorderLayout(5, 5));
+			setTitle(title);
+			String[] start = { "No scenarios active" };
+			list = new JList<String>(start);
 
-		setVisible(true);
-		list.invalidate();
-		repaint();
-		workerScenarioMonitor.execute();
+			list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			list.setLayoutOrientation(JList.VERTICAL);
+			list.setVisibleRowCount(-1);
+			list.setDragEnabled(true);
+			list.setVisible(true);
+			listScroller = new JScrollPane(list);
+			listScroller.setPreferredSize(new Dimension(350, 150));
+			listScroller.setMinimumSize(new Dimension(350, 150));
+			listScroller.setVisible(true);
+			add(BorderLayout.PAGE_START, listScroller);
+			btnClose = new JButton(Constant.STATUS_BTN_TEXT_CLOSE);
+			btnClose.setPreferredSize(new Dimension(50, 20));
+			btnClose.setMinimumSize(new Dimension(50, 20));
+			btnClose.addActionListener(this);
+			btnClose.setActionCommand("Stop");
+			btnClose.setVisible(true);
+			add(BorderLayout.PAGE_END, btnClose);
+			pack();
+			Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+			setLocation((dim.width - 400) / 2, (dim.height - 200) / 2);
+			java.net.URL imgURL = getClass().getResource("/images/CalLiteIcon.png");
+			setIconImage(Toolkit.getDefaultToolkit().getImage(imgURL));
+			addWindowListener(new java.awt.event.WindowAdapter() {
+				@Override
+				public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+					workerScenarioMonitor.cancel(true);
+					progressFrame = null;
+				}
+			});
+			try {
+				properties.load(GlobalActionListener.class.getClassLoader().getResourceAsStream("callite-gui.properties"));
+			} catch (Exception e) {
+				LOG.debug("Problem loading properties. " + e.getMessage());
+			}
+
+			setVisible(true);
+			list.invalidate();
+			repaint();
+			workerScenarioMonitor.execute();
+		} catch (HeadlessException e) {
+			LOG.error(e.getMessage());
+			String messageText = "Unable to display progress frame.";
+			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+		}
 	}
 
 	/**

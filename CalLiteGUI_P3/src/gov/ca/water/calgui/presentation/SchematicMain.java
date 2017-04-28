@@ -6,6 +6,7 @@ import java.awt.geom.AffineTransform;
 
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -17,6 +18,7 @@ import org.apache.batik.swing.gvt.GVTTreeRendererAdapter;
 import org.apache.batik.swing.gvt.GVTTreeRendererEvent;
 import org.apache.batik.swing.svg.SVGLoadEventDispatcherAdapter;
 import org.apache.batik.swing.svg.SVGLoadEventDispatcherEvent;
+import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -28,6 +30,9 @@ import org.w3c.dom.events.EventTarget;
 
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
+import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
+
 import org.swixml.SwingEngine;
 
 
@@ -49,7 +54,9 @@ public class SchematicMain {
 	SwingEngine swix;
 	JSVGScrollPane scrollPane;
 
-
+	private static final Logger LOG = Logger.getLogger(SchematicMain.class.getName());
+	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
+	
 	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
 	/**
 	 *
@@ -75,40 +82,46 @@ public class SchematicMain {
 	public SchematicMain(JPanel p, String url, SwingEngine swix, double m0, double m1, double m2, double m3, double m4,
 			double m5) {
 		this.swix = swix;
-		theAT = new AffineTransform(m0, m1, m2, m3, m4, m5);
-		canvas = new JSVGCanvas();
-		// Forces the canvas to always be dynamic even if the current
-		// document does not contain scripting or animation.
-		canvas.setDocumentState(JSVGCanvas.ALWAYS_DYNAMIC);
-		canvas.setEnablePanInteractor(true);
-		canvas.setEnableZoomInteractor(true);
-		canvas.setURI(url);
-		// System.out.println(canvas.getURI());
-		canvas.addSVGLoadEventDispatcherListener(new SVGLoadEventDispatcherAdapter() {
-			@Override
-			public void svgLoadEventDispatchStarted(SVGLoadEventDispatcherEvent e) {
-				// At this time the document is available...
-				document = canvas.getSVGDocument();
-				// ...and the window object too.
-				window = canvas.getUpdateManager().getScriptingEnvironment().createWindow();
-				// Registers the listeners on the document
-				// just before the SVGLoad event is
-				// dispatched.
-				registerListeners();
-				// It is time to pack the frame.
-			}
-		});
-		canvas.addGVTTreeRendererListener(new GVTTreeRendererAdapter() {
-			@Override
-			public void gvtRenderingCompleted(GVTTreeRendererEvent e) {
-				super.gvtRenderingCompleted(e);
-				canvas.setRenderingTransform(theAT, true);
-			}
-		});
-		scrollPane = new JSVGScrollPane(canvas);
-		scrollPane.setSize(400, 400);
-		scrollPane.setScrollbarsAlwaysVisible(true);
-		p.add(scrollPane);
+		try {
+			theAT = new AffineTransform(m0, m1, m2, m3, m4, m5);
+			canvas = new JSVGCanvas();
+			// Forces the canvas to always be dynamic even if the current
+			// document does not contain scripting or animation.
+			canvas.setDocumentState(JSVGCanvas.ALWAYS_DYNAMIC);
+			canvas.setEnablePanInteractor(true);
+			canvas.setEnableZoomInteractor(true);
+			canvas.setURI(url);
+			// System.out.println(canvas.getURI());
+			canvas.addSVGLoadEventDispatcherListener(new SVGLoadEventDispatcherAdapter() {
+				@Override
+				public void svgLoadEventDispatchStarted(SVGLoadEventDispatcherEvent e) {
+					// At this time the document is available...
+					document = canvas.getSVGDocument();
+					// ...and the window object too.
+					window = canvas.getUpdateManager().getScriptingEnvironment().createWindow();
+					// Registers the listeners on the document
+					// just before the SVGLoad event is
+					// dispatched.
+					registerListeners();
+					// It is time to pack the frame.
+				}
+			});
+			canvas.addGVTTreeRendererListener(new GVTTreeRendererAdapter() {
+				@Override
+				public void gvtRenderingCompleted(GVTTreeRendererEvent e) {
+					super.gvtRenderingCompleted(e);
+					canvas.setRenderingTransform(theAT, true);
+				}
+			});
+			scrollPane = new JSVGScrollPane(canvas);
+			scrollPane.setSize(400, 400);
+			scrollPane.setScrollbarsAlwaysVisible(true);
+			p.add(scrollPane);
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			String messageText = "Unable to display schematic.";
+			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+		}
 
 	}
 

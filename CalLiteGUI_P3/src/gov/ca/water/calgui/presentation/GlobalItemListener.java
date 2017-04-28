@@ -2,6 +2,7 @@ package gov.ca.water.calgui.presentation;
 
 import java.awt.CardLayout;
 import java.awt.Dimension;
+import java.awt.HeadlessException;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Arrays;
@@ -27,7 +28,9 @@ import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IAuditSvc;
+import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.AuditSvcImpl;
+import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 
 /**
  * This class is for Listening all the item events(radio button, check box)
@@ -44,6 +47,7 @@ public class GlobalItemListener implements ItemListener {
 	private IAuditSvc auditSvc = AuditSvcImpl.getAuditSvcImplInstance();
 	private IScenarioSvc scenarioSvc = ScenarioSvcImpl.getScenarioSvcImplInstance();
 	private String oldValue = "";
+	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	/*
 	 * we use the rollBackFlag to avoid a cascade effect when we show a
 	 * ConfirmDialog and user selects cancel
@@ -53,191 +57,197 @@ public class GlobalItemListener implements ItemListener {
 
 	@Override
 	public void itemStateChanged(ItemEvent ie) {
-		if (scenarioSvc.isCLSFileLoading())
-			return;
-		if (dynamicControlSvc.isPreventRoeTrigger())
-			return;
-		String itemName = ((JComponent) ie.getItem()).getName();
-		LOG.debug(itemName);
+		try {
+			if (scenarioSvc.isCLSFileLoading())
+				return;
+			if (dynamicControlSvc.isPreventRoeTrigger())
+				return;
+			String itemName = ((JComponent) ie.getItem()).getName();
+			LOG.debug(itemName);
 
-		// ----- Insert ReportListener handling
-		if (itemName != null) {
-			if (itemName.startsWith("Repckb")) {
-				// Checkbox in Reporting page changed
-				// if (itemName.startsWith("RepckbExceedancePlot") ||
-				// itemName.startsWith("RepckbBAWPlot")) {
-				// // Month controls should be turned on if *either* exceedance
-				// // or B&W plots are asked for;
-				// JPanel controls2 = (JPanel) swingEngine.find("controls2");
-				// ResultUtils.getXMLParsingSvcImplInstance(null).toggleEnComponentAndChildren(controls2,
-				// (ie.getStateChange() == ItemEvent.SELECTED)
-				// || ((JCheckBox)
-				// swingEngine.find("RepckbBAWPlot")).isSelected()
-				// || ((JCheckBox)
-				// swingEngine.find("RepckbExceedancePlot")).isSelected());
-				// } else
-				// if (itemName.startsWith("RepckbSummaryTable")) {
-				// JPanel controls3 = (JPanel) swingEngine.find("controls3");
-				// ResultUtilsBO.getResultUtilsInstance(null).toggleEnComponentAndChildren(controls3,
-				// ie.getStateChange() == ItemEvent.SELECTED);
-				// }
+			// ----- Insert ReportListener handling
+			if (itemName != null) {
+				if (itemName.startsWith("Repckb")) {
+					// Checkbox in Reporting page changed
+					// if (itemName.startsWith("RepckbExceedancePlot") ||
+					// itemName.startsWith("RepckbBAWPlot")) {
+					// // Month controls should be turned on if *either* exceedance
+					// // or B&W plots are asked for;
+					// JPanel controls2 = (JPanel) swingEngine.find("controls2");
+					// ResultUtils.getXMLParsingSvcImplInstance(null).toggleEnComponentAndChildren(controls2,
+					// (ie.getStateChange() == ItemEvent.SELECTED)
+					// || ((JCheckBox)
+					// swingEngine.find("RepckbBAWPlot")).isSelected()
+					// || ((JCheckBox)
+					// swingEngine.find("RepckbExceedancePlot")).isSelected());
+					// } else
+					// if (itemName.startsWith("RepckbSummaryTable")) {
+					// JPanel controls3 = (JPanel) swingEngine.find("controls3");
+					// ResultUtilsBO.getResultUtilsInstance(null).toggleEnComponentAndChildren(controls3,
+					// ie.getStateChange() == ItemEvent.SELECTED);
+					// }
 
-			} else if (itemName.startsWith("rdbSchem")) {
+				} else if (itemName.startsWith("rdbSchem")) {
 
-				// Schematic (map) view
+					// Schematic (map) view
 
-				JPanel p = (JPanel) swingEngine.find("schematic_card_layout");
-				CardLayout cl = (CardLayout) p.getLayout();
-				if (ie.getStateChange() == ItemEvent.SELECTED) {
+					JPanel p = (JPanel) swingEngine.find("schematic_card_layout");
+					CardLayout cl = (CardLayout) p.getLayout();
+					if (ie.getStateChange() == ItemEvent.SELECTED) {
 
-					if (itemName.equals("rdbSchemNormal")) {
-						cl.show(p, "First");
-						updateSchematicLayout();
-					} else if (itemName.equals("rdbSchemMB")) {
-						cl.show(p, "Second");
-						updateSchematicLayout();
+						if (itemName.equals("rdbSchemNormal")) {
+							cl.show(p, "First");
+							updateSchematicLayout();
+						} else if (itemName.equals("rdbSchemMB")) {
+							cl.show(p, "Second");
+							updateSchematicLayout();
+						}
 					}
 				}
 			}
-		}
 
-		// End ReportListener handling -----
+			// End ReportListener handling -----
 
-		boolean isSelected = ie.getStateChange() == ItemEvent.SELECTED;
-		boolean isEnabled = ((JComponent) ie.getItem()).isEnabled();
-		boolean optionFromTheBox = false;
-		if (!rollBackFlag) {
-			/*
-			 * The following code is used for the special case where we show a
-			 * popup box for some controls in the "Run Setting" and
-			 * "Hydroclimate" tabs.
-			 * 
-			 * Extended by tad 20160206 to handle special warning that a change
-			 * to the climate projection period will change a Regulations SJR
-			 * setting
-			 * 
-			 */
+			boolean isSelected = ie.getStateChange() == ItemEvent.SELECTED;
+			boolean isEnabled = ((JComponent) ie.getItem()).isEnabled();
+			boolean optionFromTheBox = false;
+			if (!rollBackFlag) {
+				/*
+				 * The following code is used for the special case where we show a
+				 * popup box for some controls in the "Run Setting" and
+				 * "Hydroclimate" tabs.
+				 * 
+				 * Extended by tad 20160206 to handle special warning that a change
+				 * to the climate projection period will change a Regulations SJR
+				 * setting
+				 * 
+				 */
 
-			int option = JOptionPane.OK_OPTION;
-			List<String> controlIdForExtendedDialogBox = Arrays.asList("hyd_rdb2005", "hyd_rdb2030", "hyd_rdbCCEL",
-					"hyd_rdbCCLL");
+				int option = JOptionPane.OK_OPTION;
+				List<String> controlIdForExtendedDialogBox = Arrays.asList("hyd_rdb2005", "hyd_rdb2030", "hyd_rdbCCEL",
+						"hyd_rdbCCLL");
 
-			if (controlIdForExtendedDialogBox.contains(itemName)) {
-				if (!isSelected) {
-					oldValue = itemName;
-				} else {
-					JRadioButton regrdb = (JRadioButton) swingEngine.find("rdbRegQS_UD");
-					if (!regrdb.isSelected()) {
-						String confirmText = "";
-						if (itemName.equals("hyd_rdb2005")
-								&& !((JRadioButton) swingEngine.find("SJR_interim")).isSelected()) {
-							confirmText = "Changing to " + ((JRadioButton) ie.getItem()).getText()
-									+ " will also set the San Joaquin River restoration flow selection to 'interim' in the Regulations dashboard.";
-						} else if (!itemName.equals("hyd_rdb2005")
-								&& !((JRadioButton) swingEngine.find("SJR_full")).isSelected()) {
-							confirmText = "Changing to " + ((JRadioButton) ie.getItem()).getText()
-									+ " will also set the San Joaquin River restoration flow selection to 'full' in the Regulations dashboard.";
-						}
-						if (!confirmText.equals("")) {
+				if (controlIdForExtendedDialogBox.contains(itemName)) {
+					if (!isSelected) {
+						oldValue = itemName;
+					} else {
+						JRadioButton regrdb = (JRadioButton) swingEngine.find("rdbRegQS_UD");
+						if (!regrdb.isSelected()) {
+							String confirmText = "";
+							if (itemName.equals("hyd_rdb2005")
+									&& !((JRadioButton) swingEngine.find("SJR_interim")).isSelected()) {
+								confirmText = "Changing to " + ((JRadioButton) ie.getItem()).getText()
+										+ " will also set the San Joaquin River restoration flow selection to 'interim' in the Regulations dashboard.";
+							} else if (!itemName.equals("hyd_rdb2005")
+									&& !((JRadioButton) swingEngine.find("SJR_full")).isSelected()) {
+								confirmText = "Changing to " + ((JRadioButton) ie.getItem()).getText()
+										+ " will also set the San Joaquin River restoration flow selection to 'full' in the Regulations dashboard.";
+							}
+							if (!confirmText.equals("")) {
 //							option = JOptionPane.showConfirmDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), confirmText, "", JOptionPane.OK_CANCEL_OPTION);
-							
-							boolean proceed = false;
-							ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-							Object[] options = { "OK", "Cancel" };
-							JOptionPane optionPane = new JOptionPane(confirmText,
-									JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, options, options[0]);
-							JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
-							dialog.setIconImage(icon.getImage());
-							dialog.setResizable(false);
-							dialog.setVisible(true);
-							switch (optionPane.getValue().toString()) {
-							case "Cancel":
-								proceed = false;
-								break;
-							case "OK":
-								proceed = true;
-								break;
-							default:
-								proceed = false;
-						        break;
-							}
-							
-							
-							if (proceed = false) {
-								rollBackFlag = true;
-								((JRadioButton) swingEngine.find(oldValue)).setSelected(true);
-								rollBackFlag = false;
-								return;
+								
+								boolean proceed = false;
+								ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+								Object[] options = { "OK", "Cancel" };
+								JOptionPane optionPane = new JOptionPane(confirmText,
+										JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, options, options[0]);
+								JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+								dialog.setIconImage(icon.getImage());
+								dialog.setResizable(false);
+								dialog.setVisible(true);
+								switch (optionPane.getValue().toString()) {
+								case "Cancel":
+									proceed = false;
+									break;
+								case "OK":
+									proceed = true;
+									break;
+								default:
+									proceed = false;
+							        break;
+								}
+								
+								
+								if (proceed = false) {
+									rollBackFlag = true;
+									((JRadioButton) swingEngine.find(oldValue)).setSelected(true);
+									rollBackFlag = false;
+									return;
+								}
 							}
 						}
 					}
 				}
-			}
 
-			List<String> controlIdForDialogBox;
-			if (!oldValue.equals("hyd_rdbCCEL") && !oldValue.equals("hyd_rdbCCLL"))
-				controlIdForDialogBox = Arrays.asList("run_rdbD1485", "run_rdbD1641", "run_rdbBO", "hyd_rdb2005",
-						"hyd_rdb2030", "hyd_rdbCCLL", "hyd_rdbCCEL");
-			else
-				controlIdForDialogBox = Arrays.asList("run_rdbD1485", "run_rdbD1641", "run_rdbBO", "hyd_rdb2005",
-						"hyd_rdb2030");
+				List<String> controlIdForDialogBox;
+				if (!oldValue.equals("hyd_rdbCCEL") && !oldValue.equals("hyd_rdbCCLL"))
+					controlIdForDialogBox = Arrays.asList("run_rdbD1485", "run_rdbD1641", "run_rdbBO", "hyd_rdb2005",
+							"hyd_rdb2030", "hyd_rdbCCLL", "hyd_rdbCCEL");
+				else
+					controlIdForDialogBox = Arrays.asList("run_rdbD1485", "run_rdbD1641", "run_rdbBO", "hyd_rdb2005",
+							"hyd_rdb2030");
 
-			List<String> controlIdOfCPP = Arrays.asList("hyd_rdbCCEL", "hyd_rdbCCLL", "hyd_ckb1", "hyd_ckb2",
-					"hyd_ckb3", "hyd_ckb4", "hyd_ckb5");
-			List<String> controlIdForOldValue = Arrays.asList("run_rdbD1485", "run_rdbD1641", "run_rdbBO",
-					"hyd_rdb2005", "hyd_rdb2030", "hyd_rdbCCEL", "hyd_rdbCCLL");
-			if (controlIdForOldValue.contains(itemName)) {
-				if (!isSelected)
-					oldValue = itemName;
-			}
-			if (controlIdForDialogBox.contains(itemName)) {
-				if (isSelected) {
+				List<String> controlIdOfCPP = Arrays.asList("hyd_rdbCCEL", "hyd_rdbCCLL", "hyd_ckb1", "hyd_ckb2",
+						"hyd_ckb3", "hyd_ckb4", "hyd_ckb5");
+				List<String> controlIdForOldValue = Arrays.asList("run_rdbD1485", "run_rdbD1641", "run_rdbBO",
+						"hyd_rdb2005", "hyd_rdb2030", "hyd_rdbCCEL", "hyd_rdbCCLL");
+				if (controlIdForOldValue.contains(itemName)) {
+					if (!isSelected)
+						oldValue = itemName;
+				}
+				if (controlIdForDialogBox.contains(itemName)) {
+					if (isSelected) {
 //					option = JOptionPane.showConfirmDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
 //							"You have selected " + ((JRadioButton) ie.getItem()).getText()
 //									+ ".\n  Do you wish to use the WSI/DI curves for this configuration?");
-					
-					boolean proceed = false;
-					ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-					Object[] options = { "OK", "Cancel" };
-					JOptionPane optionPane = new JOptionPane("You have selected " + ((JRadioButton) ie.getItem()).getText()
-							+ ".\n  Do you wish to use the WSI/DI curves for this configuration?",
-							JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, options, options[0]);
-					JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
-					dialog.setIconImage(icon.getImage());
-					dialog.setResizable(false);
-					dialog.setVisible(true);
-					switch (optionPane.getValue().toString()) {
-					case "Cancel":
-						proceed = false;
-						break;
-					case "OK":
-						proceed = true;
-						break;
-					default:
-						proceed = false;
-				        break;
+						
+						boolean proceed = false;
+						ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+						Object[] options = { "OK", "Cancel" };
+						JOptionPane optionPane = new JOptionPane("You have selected " + ((JRadioButton) ie.getItem()).getText()
+								+ ".\n  Do you wish to use the WSI/DI curves for this configuration?",
+								JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, options, options[0]);
+						JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+						dialog.setIconImage(icon.getImage());
+						dialog.setResizable(false);
+						dialog.setVisible(true);
+						switch (optionPane.getValue().toString()) {
+						case "Cancel":
+							proceed = false;
+							break;
+						case "OK":
+							proceed = true;
+							break;
+						default:
+							proceed = false;
+					        break;
+						}
+						
+						if (proceed = false) {
+							rollBackFlag = true;
+							((JRadioButton) swingEngine.find(oldValue)).setSelected(true);
+							rollBackFlag = false;
+							return;
+						} else if (option == JOptionPane.YES_OPTION) {
+							optionFromTheBox = true;
+						}
 					}
-					
-					if (proceed = false) {
-						rollBackFlag = true;
-						((JRadioButton) swingEngine.find(oldValue)).setSelected(true);
-						rollBackFlag = false;
-						return;
-					} else if (option == JOptionPane.YES_OPTION) {
+				} else if (controlIdOfCPP.contains(itemName)) {
+					if (isSelected)
 						optionFromTheBox = true;
-					}
 				}
-			} else if (controlIdOfCPP.contains(itemName)) {
-				if (isSelected)
-					optionFromTheBox = true;
 			}
-		}
-		if (isEnabled)
+			if (isEnabled)
 
-		{
-			applyDynamicConDele.applyDynamicControl(itemName, isSelected, isEnabled, optionFromTheBox);
+			{
+				applyDynamicConDele.applyDynamicControl(itemName, isSelected, isEnabled, optionFromTheBox);
+			}
+			auditSvc.addAudit(itemName, String.valueOf(!isSelected), String.valueOf(isSelected));
+		} catch (HeadlessException e) {
+			LOG.error(e.getMessage());
+			String messageText = "Unable to initialize item listeners";
+			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
-		auditSvc.addAudit(itemName, String.valueOf(!isSelected), String.valueOf(isSelected));
 	}
 
 	/**

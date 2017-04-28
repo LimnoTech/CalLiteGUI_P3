@@ -48,7 +48,7 @@ public class ExceedanceChartPanel extends JPanel implements Printable {
 	 */
 	private static final long serialVersionUID = 7398804723681056388L;
 	private String buffer;
-	private static Logger log = Logger.getLogger(ChartPanel.class.getName());
+	private static Logger LOG = Logger.getLogger(ChartPanel.class.getName());
 	JButton btnScatter;
 
 	public ExceedanceChartPanel(String title, String yLabel, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs, Date lower,
@@ -274,7 +274,7 @@ public class ExceedanceChartPanel extends JPanel implements Printable {
 				job.print(set);
 			} catch (PrinterException e) {
 				JOptionPane.showMessageDialog(this, e);
-				log.debug(e.getMessage());
+				LOG.debug(e.getMessage());
 			}
 		}
 

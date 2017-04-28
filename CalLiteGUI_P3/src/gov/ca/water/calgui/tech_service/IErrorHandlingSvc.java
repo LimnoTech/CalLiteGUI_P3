@@ -112,4 +112,14 @@ public interface IErrorHandlingSvc {
 	 */
 	public void displayErrorMessageBeforeTheUI(CalLiteGUIException ex);
 
+	/**
+	 * 
+	 * 
+	 * @param displayMessage
+	 * @param mainFrame
+	 * @param aThrowable
+	 */
+	public void businessErrorHandler(String displayMessage, JFrame mainFrame, Throwable aThrowable);
+
+
 }
