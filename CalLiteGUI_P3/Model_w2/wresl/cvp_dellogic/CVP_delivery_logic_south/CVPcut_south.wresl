@@ -20,8 +20,8 @@ define perdel_sys_dr { value min(1.0, deltar_cvp_sys/acvpdem_dr_sys) }
 define perdel_sys { value min(1.0, deltar_cvp_sys/(acvpdem_tot_sys * CVP_tot_ratio_sys)) }
 define perdel_s   { value min(1.0, deltar_cvp_s/(acvpdem_total_s * CVP_tot_ratio_s)) }
 
-!define perdel_sysdv {alias perdel_sys kind 'percent-delivery' units 'none'}	! Taraky 20161005, DWR. disabled for SODS implementation
-!define perdel_sdv {alias perdel_s kind 'percent-delivery' units 'none'}	! Taraky 20161005, DWR. disabled for SODS implementation
+define perdel_sysdv {alias perdel_sys kind 'percent-delivery' units 'none'}
+define perdel_sdv {alias perdel_s kind 'percent-delivery' units 'none'}
 
 ! deltar_cvp_s    Forecast CVP delivery - Input from CVP delivery logic
 ! With addition of user-defined demands, demands could be less than delivery target, so cutback has to have a min of 0
@@ -130,62 +130,10 @@ define perdel_cvprf_s1 { value max(0.0, 1 - cut_prf_s/(acvpdem_prf_s * CVP_prf_r
 !********** Now the final Percent Delivery for the south is the minimum of perdel_cvpag_s1 and perdel_cvpag_sys. ***
 ! Calculate percent of full demand to deliver based on the the south delivery logic and system delivery logic
 
-!define perdel_cvpag_s {value min(perdel_cvpag_s1, perdel_cvpag_sys) }      !Percent of full delivery for AG	! Taraky 20161005, DWR. disabled for SODS implementation
-!define perdel_cvpmi_s {value min(perdel_cvpmi_s1, perdel_cvpmi_sys) }      !Percent of full delivery for MI	! Taraky 20161005, DWR. disabled for SODS implementation
-!define perdel_cvpex_s {value min(perdel_cvpex_s1, perdel_cvpex_sys) }      !Percent of full delivery for Exchange	! Taraky 20161005, DWR. disabled for SODS implementation
-!define perdel_cvprf_s {value min(perdel_cvprf_s1, perdel_cvprf_sys) }      !Percent of full delivery for REF	! Taraky 20161005, DWR. disabled for SODS implementation
-
-! Taraky 20161005, DWR. Add South of Delta Storage expansion for CVP delivery calculation
-define delTarIncCVPSAll {
-	case incrMar {
-		condition	month==MAR .and. S_SLCVP(-1) > 900.
-		value		1.0 }
-	case incrApr {
-		condition	month==APR .and. S_SLCVP(-1) > 850.
-		value		1.0 }
-	case incrMay {
-		condition	month==MAY .and. S_SLCVP(-1) > 800.
-		value		1.0 }
-	case NoIncr {
-		condition	always
-		value		0.0 }
-}
-
-define perdel_cvpag_s {
-    case Increase {
-        condition   delTarIncCVPSAll > 0.001
-        value           perdel_cvpag_s1 }
-    case NoIncrease {
-        condition   always
-        value       min(perdel_cvpag_s1, perdel_cvpag_sys) }      !Percent of full delivery for AG
-}
-
-define perdel_cvpmi_s {
-    case Increase {
-        condition   delTarIncCVPSAll > 0.001
-        value           perdel_cvpmi_s1 }
-    case NoIncrease {
-        condition   always
-        value       min(perdel_cvpmi_s1, perdel_cvpmi_sys) }      !Percent of full delivery for AG
-}
-
-define perdel_cvpex_s {
-    case Increase {
-        condition   delTarIncCVPSAll > 0.001
-        value           perdel_cvpex_s1 }
-    case NoIncrease {
-        condition   always
-        value       min(perdel_cvpex_s1, perdel_cvpex_sys) }      !Percent of full delivery for AG
-}
-
-define perdel_cvprf_s {
-    case Increase {
-        condition   delTarIncCVPSAll > 0.001
-        value           perdel_cvprf_s1 }
-    case NoIncrease {
-        condition   always
-        value       min(perdel_cvprf_s1, perdel_cvprf_sys) }      !Percent of full delivery for AG
-}
+define perdel_cvpag_s {value min(perdel_cvpag_s1, perdel_cvpag_sys) }      !Percent of full delivery for AG
+define perdel_cvpmi_s {value min(perdel_cvpmi_s1, perdel_cvpmi_sys) }      !Percent of full delivery for MI
+define perdel_cvpex_s {value min(perdel_cvpex_s1, perdel_cvpex_sys) }      !Percent of full delivery for Exchange
+define perdel_cvprf_s {value min(perdel_cvprf_s1, perdel_cvprf_sys) }      !Percent of full delivery for REF
 
 ! Calculate current ANNUAL delivery based on perdel1
 define acvpdel_ag_s { value perdel_cvpag_s * acvpdem_pag_s * CVP_pag_ratio_s}
@@ -199,10 +147,6 @@ define perdv_cvpag_s { alias  perdel_cvpag_s kind 'percent-delivery' units 'perc
 define perdv_cvpmi_s { alias  perdel_cvpmi_s kind 'percent-delivery' units 'none'}
 define perdv_cvpex_s { alias  perdel_cvpex_s kind 'percent-delivery' units 'none'}
 define perdv_cvprf_s { alias  perdel_cvprf_s kind 'percent-delivery' units 'none'}
-
-! Taraky 20161005, DWR. Added for CVP delivery of South of Delta Storage expansion 
-define perdel_sysdv {alias perdel_sys kind 'percent-delivery' units 'none'}
-define perdel_sdv {alias perdel_s kind 'percent-delivery' units 'none'}
 
 
 

@@ -16,17 +16,17 @@ define OctExpLimit {
 		condition	always
 		value		MAXEXP_RPA } }
 
-define MAXEXP_OCT_CVP {value max(tracyminpump,min(0.5*OctExpLimit,maxTracycalc)) }
+define MAXEXP_OCT_CVP {value max(Jonesminpump,min(0.5*OctExpLimit,maxJonescalc)) }
 define MAXEXP_OCT_SWP {value max(banksminpump,OctExpLimit - MAXEXP_OCT_CVP) }
 
 goal set_MAXEXP_OCT_SWP {
-    lhs     D419_TD
+    lhs     D_BANKS_TD
     rhs     MAXEXP_OCT_SWP
     lhs<rhs penalty    0}
 define MAXEXP_OCT_SWPdv {alias MAXEXP_OCT_SWP kind 'EXPORT-LIMIT' units 'CFS'}
 
 goal set_MAXEXP_OCT_CVP {
-    lhs     D418_TD
+    lhs     D_JONES_TD
     rhs     MAXEXP_OCT_CVP
     lhs<rhs penalty    0}
 define MAXEXP_OCT_CVPdv {alias MAXEXP_OCT_CVP kind 'EXPORT-LIMIT' units 'CFS'}

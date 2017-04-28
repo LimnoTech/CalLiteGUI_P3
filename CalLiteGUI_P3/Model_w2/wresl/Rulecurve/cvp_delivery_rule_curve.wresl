@@ -33,12 +33,14 @@ define CVP_Rule_Max {
   from    CVPrule_deltar
   given   deltar = 9999
   use     linear}
-
+  
 define CVP_Rule_Cap_Shasta {
   select  RuleCurve_Cap
   from    CVPrule_cap_Shasta
   given   shasta = S_Shsta(-1) + S_ShstaE(-1)
   use     linear}
+
+
 define CVP_rule_Cap {alias CVP_Rule_Cap_Shasta units 'NONE'}
 
 define CVP_Rule_Sha_Cut {
