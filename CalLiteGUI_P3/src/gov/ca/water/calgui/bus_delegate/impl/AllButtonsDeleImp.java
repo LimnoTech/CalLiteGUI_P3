@@ -744,7 +744,8 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 		
 		ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
 		Object[] options = { "OK" };
-		JOptionPane optionPane = new JOptionPane("CalLite v. " + properties.getProperty("version.id") + "\nBuild date: "
+		JOptionPane optionPane = new JOptionPane(	"CalLite GUI v. " + properties.getProperty("version.id") + " ("
+				+ System.getProperty("sun.arch.data.model") + "-bit)\nBuild date: "
 				+ properties.getProperty("build.date") + "\nYour last GUI xml revision date: " + guiXmlDate,
 				JOptionPane.INFORMATION_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
 		JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"About CalLite");

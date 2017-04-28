@@ -1,8 +1,7 @@
 package gov.ca.water.calgui.bo;
+
 //! Custom file chooser for selection of different CalLite file types
 import java.awt.Component;
-import org.swixml.SwingEngine;
-
 import java.awt.Container;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
@@ -33,6 +32,7 @@ import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
 import org.apache.log4j.Logger;
+import org.swixml.SwingEngine;
 
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
@@ -66,6 +66,7 @@ public class FileDialogBO implements ActionListener {
 
 	private static Logger LOG = Logger.getLogger(FileDialogBO.class.getName());
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
+
 	/**
 	 * Basic constructor for use with DSS files. Result is appended to aList.
 	 *
@@ -149,8 +150,8 @@ public class FileDialogBO implements ActionListener {
 
 	/**
 	 * Constructor used for DSS files, result is appended to list, radiobuttons
-	 * are enabled when list length greater than 1, button is enabled when
-	 * length > 0;
+	 * are enabled when list length greater than 1, button is enabled when list
+	 * is not empty;
 	 *
 	 * @param aList
 	 * @param aLabel
@@ -249,7 +250,7 @@ public class FileDialogBO implements ActionListener {
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 			String messageText = "Unable to set up file dialog.";
-			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
 	}
 
@@ -296,7 +297,8 @@ public class FileDialogBO implements ActionListener {
 				obj = e.getSource();
 			if ((obj != null) && (((Component) obj).getName() != null)
 					&& ((Component) obj).getName().equals("btnDelScenario")) {
-				// If invoked by QR DelScenario button, delete a scenario from Quick
+				// If invoked by QR DelScenario button, delete a scenario from
+				// Quick
 				// Results scenario list
 				if ((theList != null) && lmScenNames.getSize() > 0) {
 					int todel = -1;
@@ -329,7 +331,8 @@ public class FileDialogBO implements ActionListener {
 					if (theFileExt == null)
 						rc = fc.showOpenDialog(swingEngine.find(Constant.MAIN_FRAME_NAME));
 					else
-						rc = fc.showDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), theFileExt.equals("DSS") ? "Open" : "Save");
+						rc = fc.showDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
+								theFileExt.equals("DSS") ? "Open" : "Save");
 					dialogRC = rc;
 					File file;
 					if (rc == 0) {
@@ -355,7 +358,7 @@ public class FileDialogBO implements ActionListener {
 		} catch (HeadlessException e1) {
 			LOG.error(e1.getMessage());
 			String messageText = "Unable to show file chooser.";
-			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e1);
+			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e1);
 		}
 		return;
 	}
@@ -379,7 +382,8 @@ public class FileDialogBO implements ActionListener {
 				// Per client request, don't alert.
 
 				// JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-				// "Scenario \"" + file.getPath() + "\"\n" + "and will not be added.
+				// "Scenario \"" + file.getPath() + "\"\n" + "and will not be
+				// added.
 				// It is already in the Scenarios list.",
 				// "Alert", JOptionPane.ERROR_MESSAGE);
 				;
@@ -395,7 +399,7 @@ public class FileDialogBO implements ActionListener {
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 			String messageText = "Unable to update list.";
-			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
 	}
 

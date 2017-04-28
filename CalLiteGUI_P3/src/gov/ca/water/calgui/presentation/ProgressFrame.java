@@ -6,7 +6,6 @@ import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -31,7 +30,6 @@ import org.swixml.SwingEngine;
 
 import gov.ca.water.calgui.bo.CalLiteGUIException;
 import gov.ca.water.calgui.bo.DataTableModel;
-import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.bus_delegate.IAllButtonsDele;
 import gov.ca.water.calgui.bus_delegate.impl.AllButtonsDeleImp;
 import gov.ca.water.calgui.bus_service.IDynamicControlSvc;
@@ -69,8 +67,8 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
 	private IDynamicControlSvc dynamicControlSvc = DynamicControlSvcImpl.getDynamicControlSvcImplInstance();
 	private SwingWorker<Void, String> workerScenarioMonitor = new SwingWorker<Void, String>() {
-	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
-		
+		private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
+
 		private String[] oldValue;
 
 		@Override
@@ -106,10 +104,12 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 							case Constant.BATCH_RUN:
 								text = monitorSvc.runModel(scenarioName);
 								data.add(text);
-								if (text.toLowerCase().endsWith("Run completed".toLowerCase())) {
+								if (text.toLowerCase().contains("done - run c".toLowerCase())) {
 									LOG.info(text);
-									ResultUtilsBO.getResultUtilsInstance(null).getFdDSSFiles()
-											.addFileToList(new File(Constant.SCENARIOS_DIR + scenarioName + "_DV.DSS"));
+									// ResultUtilsBO.getResultUtilsInstance(null).getFdDSSFiles()
+									// .addFileToList(new
+									// File(Constant.SCENARIOS_DIR +
+									// scenarioName + "_DV.DSS"));
 									sleepAfterDisplay = true;
 									scenariosToDrop.add(scenarioName);
 								}
@@ -150,7 +150,8 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 			} catch (Exception e) {
 				LOG.error(e.getMessage());
 				String messageText = "Unable to display progress frame.";
-				errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+				errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME),
+						e);
 			}
 			return null;
 		}
@@ -235,7 +236,8 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 				}
 			});
 			try {
-				properties.load(GlobalActionListener.class.getClassLoader().getResourceAsStream("callite-gui.properties"));
+				properties.load(
+						GlobalActionListener.class.getClassLoader().getResourceAsStream("callite-gui.properties"));
 			} catch (Exception e) {
 				LOG.debug("Problem loading properties. " + e.getMessage());
 			}
@@ -247,7 +249,7 @@ public final class ProgressFrame extends JFrame implements ActionListener {
 		} catch (HeadlessException e) {
 			LOG.error(e.getMessage());
 			String messageText = "Unable to display progress frame.";
-			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
 	}
 

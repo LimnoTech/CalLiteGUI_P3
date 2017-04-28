@@ -38,7 +38,7 @@ public interface IScenarioSvc {
 	 *            It will take the empty list. When the method is completed this
 	 *            is filled with the regulation options string from the cls
 	 *            file.
-	 * @param wsidiStatuStr
+	 * @param wsidiStatusStr
 	 *            List to be filled with WSIDISTATUS entries from cls file
 	 * 
 	 */

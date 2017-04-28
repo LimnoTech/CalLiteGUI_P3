@@ -330,6 +330,8 @@ public final class TableSvcImpl implements ITableSvc {
 		} else {
 			String name = dataTableName.replace("gui_", "");
 			List<DataTableModel> dtmList = new ArrayList<DataTableModel>();
+			// The test below may be unneeded as the three listed tables are the
+			// only dual tables, signaled by D1485D1461 non-NA
 			if (dataTableName.equals("gui_xchanneldays") || dataTableName.equals("gui_RioVista")
 					|| dataTableName.equals("gui_NDO_Flow")) {
 				dtmList = handleTableFileWithTwoTableData(name);

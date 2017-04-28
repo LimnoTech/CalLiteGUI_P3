@@ -994,7 +994,7 @@ public final class ScenarioSvcImpl implements IScenarioSvc {
 							if (!gUILinks2BO.getRegID().equals("n/a")) {
 								int rID = Integer.parseInt(gUILinks2BO.getRegID());
 								if (tableName.equals("GUI_RPAsOtherRegs.table")
-										&& !gUILinks2BO.getSwitchID().equals(Constant.N_A)) {
+										&& !gUILinks2BO.getTableID().equals(Constant.N_A)) {
 
 									// Special case for tables under Other regs:
 									// Option = 1 for default
