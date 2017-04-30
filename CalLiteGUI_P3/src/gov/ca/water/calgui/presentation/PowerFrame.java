@@ -9,8 +9,9 @@ import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 
-import gov.ca.water.calgui.bo.DSSGrabber1BO;
 import gov.ca.water.calgui.bo.RBListItemBO;
+import gov.ca.water.calgui.bus_service.IDSSGrabber1Svc;
+import gov.ca.water.calgui.bus_service.impl.DSSGrabber1SvcImpl;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
@@ -30,7 +31,7 @@ public class PowerFrame {
 
 		try {
 			String dssFilename = "";
-			DSSGrabber1BO dssGrabber = new DSSGrabber1BO(lstScenarios);
+			IDSSGrabber1Svc dssGrabber = new DSSGrabber1SvcImpl(lstScenarios);
 			for (int i = 0; i < lstScenarios.getModel().getSize(); i++) {
 				RBListItemBO item = (RBListItemBO) lstScenarios.getModel().getElementAt(i);
 				if (item.isSelected()) {

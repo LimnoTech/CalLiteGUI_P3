@@ -1,4 +1,4 @@
-package gov.ca.water.calgui.bo;
+package gov.ca.water.calgui.bus_service.impl;
 
 //! Variant on DSSGrabber1BO for MTS (multiple time series)
 import java.util.Arrays;
@@ -13,9 +13,10 @@ import org.swixml.SwingEngine;
 
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
+import gov.ca.water.calgui.bo.GUILinks3BO;
+import gov.ca.water.calgui.bo.RBListItemBO;
+import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.bus_service.ISeedDataSvc;
-import gov.ca.water.calgui.bus_service.impl.SeedDataSvcImpl;
-import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
@@ -45,11 +46,11 @@ import hec.io.TimeSeriesContainer;
  * <li>Other calculations</li>
  * </ul>
  */
-public class DSSGrabber2BO extends DSSGrabber1BO {
+public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl {
 
 	private ISeedDataSvc seedDataSvc = SeedDataSvcImpl.getSeedDataSvcImplInstance();
 
-	static Logger LOG = Logger.getLogger(DSSGrabber2BO.class.getName());
+	static Logger LOG = Logger.getLogger(DSSGrabber2SvcImpl.class.getName());
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
 
@@ -61,7 +62,7 @@ public class DSSGrabber2BO extends DSSGrabber1BO {
 	private double[][][] annualCFSs;
 	private double[][][] annualCFSsDiff;
 
-	public DSSGrabber2BO(JList list, DerivedTimeSeries dts, MultipleTimeSeries mts) {
+	public DSSGrabber2SvcImpl(JList list, DerivedTimeSeries dts, MultipleTimeSeries mts) {
 
 		super(list);
 		this.dts = dts;

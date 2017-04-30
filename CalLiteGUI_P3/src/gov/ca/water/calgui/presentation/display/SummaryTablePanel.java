@@ -26,8 +26,8 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
-import gov.ca.water.calgui.bo.DSSGrabber1BO;
-import gov.ca.water.calgui.bo.DSSGrabber2BO;
+import gov.ca.water.calgui.bus_service.IDSSGrabber1Svc;
+import gov.ca.water.calgui.bus_service.impl.DSSGrabber2SvcImpl;
 import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
 
@@ -128,35 +128,35 @@ public class SummaryTablePanel extends JPanel implements ActionListener, Compone
 	Vector<String> columns;
 
 	public SummaryTablePanel(String title, TimeSeriesContainer tscs[], TimeSeriesContainer stscs[], String tagString,
-			String sName, DSSGrabber1BO dss_Grabber) {
+			String sName, IDSSGrabber1Svc dss_Grabber) {
 
 		this(title, tscs, stscs, tagString, sName, dss_Grabber, null, false);
 
 	}
 
 	public SummaryTablePanel(String title, TimeSeriesContainer tscs[], TimeSeriesContainer stscs[], String tagString,
-			String sName, DSSGrabber2BO dss_Grabber) {
+			String sName, DSSGrabber2SvcImpl dss_Grabber) {
 
 		this(title, tscs, stscs, tagString, sName, null, dss_Grabber, false);
 
 	}
 
 	public SummaryTablePanel(String title, TimeSeriesContainer tscs[], TimeSeriesContainer stscs[], String tagString,
-			String sName, DSSGrabber1BO dss_Grabber, boolean isBase) {
+			String sName, IDSSGrabber1Svc dss_Grabber, boolean isBase) {
 
 		this(title, tscs, stscs, tagString, sName, dss_Grabber, null, isBase);
 
 	}
 
 	public SummaryTablePanel(String title, TimeSeriesContainer tscs[], TimeSeriesContainer stscs[], String tagString,
-			String sName, DSSGrabber2BO dss_Grabber, boolean isBase) {
+			String sName, DSSGrabber2SvcImpl dss_Grabber, boolean isBase) {
 
 		this(title, tscs, stscs, tagString, sName, null, dss_Grabber, isBase);
 
 	}
 
 	public SummaryTablePanel(String title, TimeSeriesContainer tscs[], TimeSeriesContainer stscs[], String tagString,
-			String sName, DSSGrabber1BO dss_Grabber, DSSGrabber2BO dss_Grabber2, boolean isBase) {
+			String sName, IDSSGrabber1Svc dss_Grabber, DSSGrabber2SvcImpl dss_Grabber2, boolean isBase) {
 
 		super();
 

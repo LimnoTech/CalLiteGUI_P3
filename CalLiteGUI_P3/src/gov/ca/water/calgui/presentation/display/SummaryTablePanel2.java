@@ -27,8 +27,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import calsim.app.MultipleTimeSeries;
-import gov.ca.water.calgui.bo.DSSGrabber1BO;
-import gov.ca.water.calgui.bo.DSSGrabber2BO;
+import gov.ca.water.calgui.bus_service.IDSSGrabber1Svc;
+import gov.ca.water.calgui.bus_service.impl.DSSGrabber2SvcImpl;
 import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
 
@@ -171,7 +171,7 @@ public class SummaryTablePanel2 extends JPanel implements ActionListener, Compon
 	// }
 
 	public SummaryTablePanel2(String title, TimeSeriesContainer[][] results, String summaryTags, String sLabel,
-			DSSGrabber2BO dssGrabber, boolean doBase, MultipleTimeSeries mts) {
+			DSSGrabber2SvcImpl dssGrabber, boolean doBase, MultipleTimeSeries mts) {
 		this(title, results, null, summaryTags, sLabel, null, dssGrabber, doBase, mts); // TODO
 																						// Auto-generated
 																						// constructor
@@ -179,7 +179,7 @@ public class SummaryTablePanel2 extends JPanel implements ActionListener, Compon
 	}
 
 	public SummaryTablePanel2(String title, TimeSeriesContainer mtscs[][], TimeSeriesContainer stscs[],
-			String tagString, String sName, DSSGrabber1BO dss_Grabber, DSSGrabber2BO dss_Grabber2, boolean isBase,
+			String tagString, String sName, IDSSGrabber1Svc dss_Grabber, DSSGrabber2SvcImpl dss_Grabber2, boolean isBase,
 			MultipleTimeSeries mts) {
 
 		super();

@@ -24,8 +24,8 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import gov.ca.water.calgui.bo.DSSGrabber1BO;
-import gov.ca.water.calgui.bo.DSSGrabber2BO;
+import gov.ca.water.calgui.bus_service.IDSSGrabber1Svc;
+import gov.ca.water.calgui.bus_service.impl.DSSGrabber2SvcImpl;
 import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
 
@@ -43,29 +43,29 @@ public class MonthlyTablePanel extends JPanel implements ActionListener, Compone
 	final Clipboard CLIPBOARD = Toolkit.getDefaultToolkit().getSystemClipboard();
 
 	public MonthlyTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs,
-			DSSGrabber1BO dss_Grabber, String sName) {
+			IDSSGrabber1Svc dss_Grabber, String sName) {
 		this(title, tscs, stscs, dss_Grabber, null, sName, false);
 
 	}
 
 	public MonthlyTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs,
-			DSSGrabber2BO dss_Grabber, String sName) {
+			DSSGrabber2SvcImpl dss_Grabber, String sName) {
 		this(title, tscs, stscs, null, dss_Grabber, sName, false);
 
 	}
 
 	public MonthlyTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs,
-			DSSGrabber1BO dss_Grabber, String sName, boolean isBase) {
+			IDSSGrabber1Svc dss_Grabber, String sName, boolean isBase) {
 		this(title, tscs, stscs, dss_Grabber, null, sName, isBase);
 	}
 
 	public MonthlyTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs,
-			DSSGrabber2BO dss_Grabber, String sName, boolean isBase) {
+			DSSGrabber2SvcImpl dss_Grabber, String sName, boolean isBase) {
 		this(title, tscs, stscs, null, dss_Grabber, sName, isBase);
 	}
 
 	public MonthlyTablePanel(String title, TimeSeriesContainer[] tscs, TimeSeriesContainer[] stscs,
-			DSSGrabber1BO dss_Grabber, DSSGrabber2BO dss_Grabber2, String sName, boolean isBase) {
+			IDSSGrabber1Svc dss_Grabber, DSSGrabber2SvcImpl dss_Grabber2, String sName, boolean isBase) {
 
 		super();
 

@@ -1,7 +1,7 @@
-package gov.ca.water.calgui.bo;
-//! Base DSS file access object
-import java.io.File;
+package gov.ca.water.calgui.bus_service.impl;
 
+//! Base DSS file access service
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
@@ -20,17 +20,17 @@ import org.apache.log4j.Logger;
 import org.swixml.SwingEngine;
 
 import calsim.app.Project;
+import gov.ca.water.calgui.bo.GUILinks3BO;
+import gov.ca.water.calgui.bo.RBListItemBO;
+import gov.ca.water.calgui.bo.ResultUtilsBO;
+import gov.ca.water.calgui.bus_service.IDSSGrabber1Svc;
 import gov.ca.water.calgui.bus_service.ISeedDataSvc;
-import gov.ca.water.calgui.bus_service.impl.SeedDataSvcImpl;
-import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import hec.heclib.dss.HecDss;
 import hec.heclib.util.HecTime;
 import hec.io.TimeSeriesContainer;
-
-import org.swixml.SwingEngine;
 
 /**
  * Class to grab (load) DSS time series for a set of scenarios passed in a
@@ -54,12 +54,12 @@ import org.swixml.SwingEngine;
  * <li>Other calculations</li>
  * </ul>
  */
-public class DSSGrabber1BO {
+public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc {
 
 	private ISeedDataSvc seedDataSvc = SeedDataSvcImpl.getSeedDataSvcImplInstance();
 	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
 
-	static Logger LOG = Logger.getLogger(DSSGrabber1BO.class.getName());
+	static Logger LOG = Logger.getLogger(DSSGrabber1SvcImpl.class.getName());
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	static final double CFS_2_TAF_DAY = 0.001983471;
 	static final double TAF_DAY_2_CFS = 504.166667;
@@ -91,32 +91,31 @@ public class DSSGrabber1BO {
 
 	protected Project project = ResultUtilsBO.getResultUtilsInstance(null).getProject();
 
-	public DSSGrabber1BO(JList list) {
+	public DSSGrabber1SvcImpl(JList list) {
 
 		this.lstScenarios = list;
 
 	}
 
-	/**
-	 * Sets the isCFS flag.
-	 *
-	 * @param isCFS
-	 *            set to True if flows are to be displayed in CFS, False for
-	 *            TAFY.
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#setIsCFS(boolean)
 	 */
+	@Override
 	public void setIsCFS(boolean isCFS) {
 		this.isCFS = isCFS;
 	}
 
-	/**
-	 * Sets the date range. Results are trimmed to the date range when read in
-	 * GetOneSeries method.
-	 *
-	 * @param dateRange
-	 *            string describing the date range in format mmmyyyy-mmmyyyy.
-	 *            For example, the string "Apr1961-Mar1962" sets the date range
-	 *            to run from April 1961 to March 1962.
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#setDateRange(java.
+	 * lang.String)
 	 */
+	@Override
 	public void setDateRange(String dateRange) {
 
 		try {
@@ -133,6 +132,9 @@ public class DSSGrabber1BO {
 			ht.setYearMonthDay(m == 12 ? y + 1 : y, m == 12 ? 1 : m + 1, 1, 0);
 			endTime = ht.value();
 			endWY = ((m < 10) ? y : y + 1);
+		} catch (UnsatisfiedLinkError | NoClassDefFoundError e) {
+			errorHandlingSvc.systemErrorHandler("Possible javaheclib.dll issue - CalLite GUI will close",
+					"javaHecLib.dll may be the wrong version or missing.", null);
 		} catch (Exception e) {
 
 			startTime = -1;
@@ -141,24 +143,25 @@ public class DSSGrabber1BO {
 
 	}
 
-	/**
-	 * Sets base scenario for calculations and display. The base scenario is
-	 * listed first in legends and used as the basis for difference
-	 * calculations.
-	 *
-	 * @param baseName
-	 *            name of scenario/DSS file to use as base.
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#setBase(java.lang.
+	 * String)
 	 */
+	@Override
 	public void setBase(String baseName) {
 
 		this.baseName = baseName;
 	}
 
-	/**
-	 * Gets name part of base scenario file in baseName.
-	 *
-	 * @return name of the base scenario file WITHOUT the file extension
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getBase()
 	 */
+	@Override
 	public String getBase() {
 
 		String delimiter;
@@ -180,16 +183,14 @@ public class DSSGrabber1BO {
 		return fileName;
 	}
 
-	/**
-	 * Sets dataset (DSS) names to read from scenario DSS files, title, and axis
-	 * labels according to location specified using a coded string. The string
-	 * is currently used as a lookup into either Schematic_DSS_Links4.table (if
-	 * it starts with Constant.SCHEMATIC_PREFIX) or into GUI_Links3.table. These
-	 * tables may be combined in Phase 2.
-	 *
-	 * @param locationName
-	 *            index into GUI_Links3.table or Schematic_DSS_Link4.table
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#setLocation(java.
+	 * lang.String)
 	 */
+	@Override
 	public void setLocation(String locationName) {
 
 		locationName = locationName.trim();
@@ -256,13 +257,14 @@ public class DSSGrabber1BO {
 		return type;
 	}
 
-	/**
-	 * Sets dataset (DSS) names to read from scenario DSS files, title, and axis
-	 * labels be parsing string defined in web viewer.
-	 *
-	 * @param locationName
-	 *            coded location string passed
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#setLocationWeb(java.
+	 * lang.String)
 	 */
+	@Override
 	public void setLocationWeb(String locationName) {
 
 		String type = getType(locationName);
@@ -273,33 +275,32 @@ public class DSSGrabber1BO {
 		sLabel = "";
 	}
 
-	/**
-	 * Gets primary y-axis label assigned by DSS_Grabber to the results read in
-	 * from DSS file.
-	 *
-	 * @return string containing primary y-axis label
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getYLabel()
 	 */
+	@Override
 	public String getYLabel() {
 		return yLabel;
 	}
 
-	/**
-	 * Gets secondary y-axis label assigned by DSS_Grabber to the results read
-	 * in from DSS file.
-	 *
-	 * @return string containing secondary y-axis label
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getSLabel()
 	 */
+	@Override
 	public String getSLabel() {
 		return sLabel;
 	}
 
-	/**
-	 * Gets chart/table title assigned by DSS_Grabber to the results read in
-	 * from DSS file. If no title is set, the name of the primary DSS dataset is
-	 * returned instad.,
-	 *
-	 * @return string containing title
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getTitle()
 	 */
+	@Override
 	public String getTitle() {
 		if (title != "")
 			return title;
@@ -407,12 +408,14 @@ public class DSSGrabber1BO {
 		return (LVE_State.equals("true"));
 	}
 
-	/**
-	 * Checks if a DSS file has records with "HYDROPOWER" as the A-PART
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param dssFilename
-	 * @return
+	 * @see
+	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#hasPower(java.lang.
+	 * String)
 	 */
+	@Override
 	public boolean hasPower(String dssFilename) {
 		try {
 			HecDss hD = HecDss.open(dssFilename);
@@ -517,16 +520,18 @@ public class DSSGrabber1BO {
 						|| (dssNames[0].equals("D_FKCNL/FLOW-DELIVERY")))) {
 
 					result = null;
-//					JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-//							" Could not find " + dssNames[0] + " in " + dssFilename
-//									+ ".\n The selected scenario was not run using dynamic SJR simulation.",
-//							"Error", JOptionPane.ERROR_MESSAGE);
+					// JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
+					// " Could not find " + dssNames[0] + " in " + dssFilename
+					// + ".\n The selected scenario was not run using dynamic
+					// SJR simulation.",
+					// "Error", JOptionPane.ERROR_MESSAGE);
 					ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
 					Object[] options = { "OK" };
-					JOptionPane optionPane = new JOptionPane(" Could not find " + dssNames[0] + " in " + dssFilename
-							+ ".\n The selected scenario was not run using dynamic SJR simulation.",
+					JOptionPane optionPane = new JOptionPane(
+							" Could not find " + dssNames[0] + " in " + dssFilename
+									+ ".\n The selected scenario was not run using dynamic SJR simulation.",
 							JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
-					JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+					JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "CalLite");
 					dialog.setIconImage(icon.getImage());
 					dialog.setResizable(false);
 					dialog.setVisible(true);
@@ -536,16 +541,18 @@ public class DSSGrabber1BO {
 						&& ((dssNames[0].equals("AN_EC_STD/SALINITY")) || (dssNames[0].equals("CH_EC_STD/SALINITY")))) {
 
 					result = null;
-//					JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-//							" Could not find " + dssNames[0] + " in " + dssFilename
-//									+ ".\n The selected scenario was not run with D-1485 Fish and Wildlife (at Antioch and Chipps) regulations.",
-//							"Error", JOptionPane.ERROR_MESSAGE);
+					// JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
+					// " Could not find " + dssNames[0] + " in " + dssFilename
+					// + ".\n The selected scenario was not run with D-1485 Fish
+					// and Wildlife (at Antioch and Chipps) regulations.",
+					// "Error", JOptionPane.ERROR_MESSAGE);
 					ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
 					Object[] options = { "OK" };
-					JOptionPane optionPane = new JOptionPane(" Could not find " + dssNames[0] + " in " + dssFilename
-							+ ".\n The selected scenario was not run with D-1485 Fish and Wildlife (at Antioch and Chipps) regulations.",
+					JOptionPane optionPane = new JOptionPane(
+							" Could not find " + dssNames[0] + " in " + dssFilename
+									+ ".\n The selected scenario was not run with D-1485 Fish and Wildlife (at Antioch and Chipps) regulations.",
 							JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
-					JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+					JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "CalLite");
 					dialog.setIconImage(icon.getImage());
 					dialog.setResizable(false);
 					dialog.setVisible(true);
@@ -560,29 +567,33 @@ public class DSSGrabber1BO {
 						|| (dssNames[0].equals("D408_RS/FLOW-DELIVERY")) || (dssNames[0].equals("WQ420/SALINITY")))) {
 
 					result = null;
-//					JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-//							" Could not find " + dssNames[0] + " in " + dssFilename
-//									+ ".\n The selected scenario was not run with Los Vaqueros Enlargement.",
-//							"Error", JOptionPane.ERROR_MESSAGE);
+					// JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
+					// " Could not find " + dssNames[0] + " in " + dssFilename
+					// + ".\n The selected scenario was not run with Los
+					// Vaqueros Enlargement.",
+					// "Error", JOptionPane.ERROR_MESSAGE);
 					ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
 					Object[] options = { "OK" };
-					JOptionPane optionPane = new JOptionPane(" Could not find " + dssNames[0] + " in " + dssFilename
-							+ ".\n The selected scenario was not run with Los Vaqueros Enlargement.",
+					JOptionPane optionPane = new JOptionPane(
+							" Could not find " + dssNames[0] + " in " + dssFilename
+									+ ".\n The selected scenario was not run with Los Vaqueros Enlargement.",
 							JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
-					JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+					JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "CalLite");
 					dialog.setIconImage(icon.getImage());
 					dialog.setResizable(false);
 					dialog.setVisible(true);
 				}
 
 				else {
-//					JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "Could not find " + dssNames[0] + " in " + dssFilename, "Error",
-//							JOptionPane.ERROR_MESSAGE);
+					// JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
+					// "Could not find " + dssNames[0] + " in " + dssFilename,
+					// "Error",
+					// JOptionPane.ERROR_MESSAGE);
 					ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
 					Object[] options = { "OK" };
 					JOptionPane optionPane = new JOptionPane("Could not find " + dssNames[0] + " in " + dssFilename,
 							JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
-					JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+					JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "CalLite");
 					dialog.setIconImage(icon.getImage());
 					dialog.setResizable(false);
 					dialog.setVisible(true);
@@ -598,13 +609,15 @@ public class DSSGrabber1BO {
 					TimeSeriesContainer result2 = (TimeSeriesContainer) hD
 							.get("/" + hecAPart + "/" + dssNames[i] + "/01JAN2020/1MON/" + hecFParts[i], true);
 					if (result2 == null) {
-//						JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "Could not find " + dssNames[0] + " in " + dssFilename,
-//								"Error", JOptionPane.ERROR_MESSAGE);
+						// JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
+						// "Could not find " + dssNames[0] + " in " +
+						// dssFilename,
+						// "Error", JOptionPane.ERROR_MESSAGE);
 						ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
 						Object[] options = { "OK" };
 						JOptionPane optionPane = new JOptionPane("Could not find " + dssNames[0] + " in " + dssFilename,
 								JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
-						JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+						JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "CalLite");
 						dialog.setIconImage(icon.getImage());
 						dialog.setResizable(false);
 						dialog.setVisible(true);
@@ -648,7 +661,7 @@ public class DSSGrabber1BO {
 			LOG.debug(e.getMessage());
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time series.";
-			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 
 		}
 
@@ -672,13 +685,14 @@ public class DSSGrabber1BO {
 		return result;
 	}
 
-	/**
-	 * Reads the DSS results for the primary series for each scenario. Also
-	 * stores for reference the units of measure for the primary series in the
-	 * private variable originalUnits.
-	 *
-	 * @return Array of HEC TimeSeriesContainer - one TSC for each scenario
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getPrimarySeries(
+	 * java.lang.String)
 	 */
+	@Override
 	public TimeSeriesContainer[] getPrimarySeries(String locationName) {
 
 		TimeSeriesContainer[] results = null;
@@ -691,7 +705,8 @@ public class DSSGrabber1BO {
 
 				if (locationName.contains(Constant.SCHEMATIC_PREFIX) && primaryDSSName.contains(",")) {
 
-					// Special handling for DEMO of schematic view - treat multiple
+					// Special handling for DEMO of schematic view - treat
+					// multiple
 					// series as multiple scenarios
 					// TODO: Longer-term approach is probably to add a rank to
 					// arrays storing all series
@@ -722,7 +737,8 @@ public class DSSGrabber1BO {
 					for (int i = 0; i < scenarios; i++) {
 						String scenarioName;
 						if (baseName.toUpperCase().contains("_SV.DSS")) {
-							// For SVars, use WRIMS GUI Project object to determine
+							// For SVars, use WRIMS GUI Project object to
+							// determine
 							// input files
 							switch (i) {
 							case 0:
@@ -753,17 +769,19 @@ public class DSSGrabber1BO {
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time series.";
-			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
 
 		return results;
 	}
 
-	/**
-	 * Reads the DSS results for the secondary series for each scenario.
-	 *
-	 * @return Array of HEC TimeSeriesContainer - one TSC for each scenario
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getSecondarySeries()
 	 */
+	@Override
 	public TimeSeriesContainer[] getSecondarySeries() {
 
 		if (secondaryDSSName.equals("") || secondaryDSSName.equals("null")) {
@@ -794,17 +812,14 @@ public class DSSGrabber1BO {
 		}
 	}
 
-	/**
-	 * Calculates the difference between scenarios and the base for a set of DSS
-	 * results.
-	 *
-	 * @param timeSeriesResults
-	 *            array of HEC TimeSeriesContainer objects, each representing a
-	 *            set of results for a scenario. Base is in position [0].
-	 * @return array of HEC TimeSeriesContainer objects (size one less than
-	 *         timeSeriesResult. Position [0] contains difference [1]-[0],
-	 *         position [1] contains difference [2]-[0], ...
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getDifferenceSeries(
+	 * hec.io.TimeSeriesContainer[])
 	 */
+	@Override
 	public TimeSeriesContainer[] getDifferenceSeries(TimeSeriesContainer[] timeSeriesResults) {
 
 		TimeSeriesContainer[] results = new TimeSeriesContainer[scenarios - 1];
@@ -817,13 +832,14 @@ public class DSSGrabber1BO {
 		return results;
 	}
 
-	/**
-	 * Calculates annual volume in TAF for any CFS dataset, and replaces monthly
-	 * values if TAF flag is checked.
-	 *
-	 * @param primaryResults
-	 * @param secondaryResults
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#calcTAFforCFS(hec.io
+	 * .TimeSeriesContainer[], hec.io.TimeSeriesContainer[])
 	 */
+	@Override
 	public void calcTAFforCFS(TimeSeriesContainer[] primaryResults, TimeSeriesContainer[] secondaryResults) {
 
 		try {
@@ -853,8 +869,8 @@ public class DSSGrabber1BO {
 
 						ht.set(primaryResults[i].times[j]);
 						calendar.set(ht.year(), ht.month() - 1, 1);
-						double monthlyTAF = primaryResults[i].values[j] * calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
-								* CFS_2_TAF_DAY;
+						double monthlyTAF = primaryResults[i].values[j]
+								* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * CFS_2_TAF_DAY;
 						int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - startWY;
 						if (wy >= 0)
 							annualTAFs[i][wy] += monthlyTAF;
@@ -899,37 +915,70 @@ public class DSSGrabber1BO {
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 			String messageText = "Unable to calculate TAF.";
-			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getAnnualTAF(int,
+	 * int)
+	 */
+	@Override
 	public double getAnnualTAF(int i, int wy) {
 
 		return wy < startWY ? -1 : annualTAFs[i][wy - startWY];
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getAnnualTAFDiff(
+	 * int, int)
+	 */
+	@Override
 	public double getAnnualTAFDiff(int i, int wy) {
 
 		return wy < startWY ? -1 : annualTAFsDiff[i][wy - startWY];
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getAnnualCFS(int,
+	 * int)
+	 */
+	@Override
 	public double getAnnualCFS(int i, int wy) {
 
 		return wy < startWY ? -1 : annualCFSs[i][wy - startWY];
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getAnnualCFSDiff(
+	 * int, int)
+	 */
+	@Override
 	public double getAnnualCFSDiff(int i, int wy) {
 
 		return wy < startWY ? -1 : annualCFSsDiff[i][wy - startWY];
 	}
 
-	/**
-	 * Calculates annual volume in CFS for any TAF dataset, and replaces monthly
-	 * values if CFS flag is checked.
-	 *
-	 * @param primaryResults
-	 * @param secondaryResults
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#calcCFSforTAF(hec.io
+	 * .TimeSeriesContainer[], hec.io.TimeSeriesContainer[])
 	 */
+	@Override
 	public void calcCFSforTAF(TimeSeriesContainer[] primaryResults, TimeSeriesContainer[] secondaryResults) {
 
 		try {
@@ -959,8 +1008,8 @@ public class DSSGrabber1BO {
 
 						ht.set(primaryResults[i].times[j]);
 						calendar.set(ht.year(), ht.month() - 1, 1);
-						double monthlyCFS = primaryResults[i].values[j] * calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
-								* TAF_DAY_2_CFS;
+						double monthlyCFS = primaryResults[i].values[j]
+								* calendar.getActualMaximum(Calendar.DAY_OF_MONTH) * TAF_DAY_2_CFS;
 						int wy = ((ht.month() < 10) ? ht.year() : ht.year() + 1) - startWY;
 						if (wy >= 0)
 							annualCFSs[i][wy] += monthlyCFS;
@@ -1005,20 +1054,18 @@ public class DSSGrabber1BO {
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 			String messageText = "Unable to calculate CFS.";
-			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
 	}
 
-	/**
-	 * Generates exceedance time series from monthly DSS results.
-	 *
-	 * @param timeSeriesResults
-	 *            array of HEC TimeSeriesContainer objects, each representing a
-	 *            set of results for a scenario.
-	 * @return array of HEC TimeSeriesContainer objects - 14 for each input.
-	 *         Exceedances for all values are in [index=0], for each month's
-	 *         values [1..12], and [13] for annual totals [Index=13]
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getExceedanceSeries(
+	 * hec.io.TimeSeriesContainer[])
 	 */
+	@Override
 	public TimeSeriesContainer[][] getExceedanceSeries(TimeSeriesContainer[] timeSeriesResults) {
 
 		TimeSeriesContainer[][] results;
@@ -1098,11 +1145,19 @@ public class DSSGrabber1BO {
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time-series.";
-			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
 		return null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getExceedanceSeriesD
+	 * (hec.io.TimeSeriesContainer[])
+	 */
+	@Override
 	public TimeSeriesContainer[][] getExceedanceSeriesD(TimeSeriesContainer[] timeSeriesResults) {
 
 		/*
@@ -1162,7 +1217,8 @@ public class DSSGrabber1BO {
 								}
 								times2 = new int[n];
 								values2 = new double[n];
-								int nmax = n; // Added to trap Schematic View case
+								int nmax = n; // Added to trap Schematic View
+												// case
 												// where required flow has extra
 												// values
 								n = 0;
@@ -1195,23 +1251,53 @@ public class DSSGrabber1BO {
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time-series.";
-			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
 		return null;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getOriginalUnits()
+	 */
+	@Override
 	public String getOriginalUnits() {
 		return originalUnits;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#setOriginalUnits(
+	 * java.lang.String)
+	 */
+	@Override
 	public void setOriginalUnits(String originalUnits) {
 		this.originalUnits = originalUnits;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#getPrimaryDSSName()
+	 */
+	@Override
 	public String getPrimaryDSSName() {
 		return primaryDSSName;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * gov.ca.water.calgui.bus_service.impl.IDSSGrabber1Svc#setPrimaryDSSName(
+	 * java.lang.String)
+	 */
+	@Override
 	public void setPrimaryDSSName(String primaryDSSName) {
 		this.primaryDSSName = primaryDSSName;
 	}

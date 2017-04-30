@@ -28,10 +28,11 @@ import org.swixml.SwingEngine;
 import calsim.app.DerivedTimeSeries;
 import calsim.app.MultipleTimeSeries;
 import gov.ca.water.calgui.bo.CalLiteGUIException;
-import gov.ca.water.calgui.bo.DSSGrabber1BO;
-import gov.ca.water.calgui.bo.DSSGrabber2BO;
 import gov.ca.water.calgui.bo.RBListItemBO;
 import gov.ca.water.calgui.bo.ResultUtilsBO;
+import gov.ca.water.calgui.bus_service.IDSSGrabber1Svc;
+import gov.ca.water.calgui.bus_service.impl.DSSGrabber1SvcImpl;
+import gov.ca.water.calgui.bus_service.impl.DSSGrabber2SvcImpl;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.presentation.display.BoxPlotChartPanel;
 import gov.ca.water.calgui.presentation.display.BoxPlotChartPanel2;
@@ -73,7 +74,7 @@ public class DisplayFrame {
 	public static void showDisplayFrames(String displayGroup, JList lstScenarios) {
 
 		try {
-			DSSGrabber1BO dssGrabber = new DSSGrabber1BO(lstScenarios);
+			IDSSGrabber1Svc dssGrabber = new DSSGrabber1SvcImpl(lstScenarios);
 			boolean doComparison = false;
 			boolean doDifference = false;
 			boolean doTimeSeries = false;
@@ -521,7 +522,7 @@ public class DisplayFrame {
 			MultipleTimeSeries mts) {
 
 		try {
-			DSSGrabber2BO dssGrabber = new DSSGrabber2BO(lstScenarios, dts, mts);
+			DSSGrabber2SvcImpl dssGrabber = new DSSGrabber2SvcImpl(lstScenarios, dts, mts);
 			boolean doComparison = false;
 			boolean doDifference = false;
 			boolean doTimeSeries = false;
