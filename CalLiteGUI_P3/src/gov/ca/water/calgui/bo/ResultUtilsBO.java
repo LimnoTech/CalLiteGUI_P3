@@ -1,4 +1,5 @@
 package gov.ca.water.calgui.bo;
+
 //! Utilities for display of results
 import java.awt.Component;
 import java.awt.GridBagConstraints;
@@ -16,8 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JMenuBar;
@@ -41,6 +40,8 @@ import calsim.app.Project;
 import calsim.gui.GuiUtils;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.presentation.ControlFrame;
+import gov.ca.water.calgui.tech_service.IDialogSvc;
+import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 
 /**
  * Supporting utilities for display of results
@@ -50,6 +51,7 @@ import gov.ca.water.calgui.presentation.ControlFrame;
  */
 public class ResultUtilsBO implements ChangeListener {
 	private static final Logger LOG = Logger.getLogger(ResultUtilsBO.class.getName());
+	private IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
 
 	private static ResultUtilsBO resultUtilsBO;
 	private HashMap<String, Integer> monthMap;
@@ -168,30 +170,42 @@ public class ResultUtilsBO implements ChangeListener {
 			if (!filename.toUpperCase().endsWith(".CGR") && !filename.endsWith("."))
 				filename = filename + ".cgr";
 			boolean saveFlag = true;
-			if (new File(filename).exists())  {
-				//				saveFlag = (JOptionPane.showConfirmDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-				//						"The display list file '" + filename + "' already exists. Press OK to overwrite.",
-				//						"CalLite GUI", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION);
+			if (new File(filename).exists()) {
+				// saveFlag =
+				// (JOptionPane.showConfirmDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
+				// "The display list file '" + filename + "' already exists.
+				// Press OK to overwrite.",
+				// "CalLite GUI", JOptionPane.OK_CANCEL_OPTION) ==
+				// JOptionPane.OK_OPTION);
 
-				ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-				Object[] options = { "OK", "Cancel" };
-				JOptionPane optionPane = new JOptionPane("The display list file '" + filename + "' already exists. Press OK to overwrite.",
-						JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, options, options[0]);
-				JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
-				dialog.setIconImage(icon.getImage());
-				dialog.setResizable(false);
-				dialog.setVisible(true);
-				switch (optionPane.getValue().toString()) {
-				case "Cancel":
-					saveFlag = false;
-					break;
-				case "OK":
-					saveFlag = true;
-					break;
-				default:
-					saveFlag = false;
-					break;
-				}
+				// ImageIcon icon = new
+				// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+				// Object[] options = { "OK", "Cancel" };
+				// JOptionPane optionPane = new JOptionPane("The display list
+				// file '" + filename + "' already exists. Press OK to
+				// overwrite.",
+				// JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION,
+				// null, options, options[0]);
+				// JDialog dialog =
+				// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+				// dialog.setIconImage(icon.getImage());
+				// dialog.setResizable(false);
+				// dialog.setVisible(true);
+				// switch (optionPane.getValue().toString()) {
+				// case "Cancel":
+				// saveFlag = false;
+				// break;
+				// case "OK":
+				// saveFlag = true;
+				// break;
+				// default:
+				// saveFlag = false;
+				// break;
+				// }
+				saveFlag = (dialogSvc
+						.getOKCancel("The display list file '" + filename + "' already exists. Press OK to overwrite.",
+								JOptionPane.QUESTION_MESSAGE)
+						.equals("OK"));
 			}
 			if (saveFlag) {
 				OutputStream outputStream;

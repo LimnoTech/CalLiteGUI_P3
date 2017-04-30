@@ -10,8 +10,6 @@ import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Vector;
 
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -26,7 +24,9 @@ import gov.ca.water.calgui.bo.ResultUtilsBO;
 import gov.ca.water.calgui.bus_service.IDSSGrabber1Svc;
 import gov.ca.water.calgui.bus_service.ISeedDataSvc;
 import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
+import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 import hec.heclib.dss.HecDss;
 import hec.heclib.util.HecTime;
@@ -61,6 +61,8 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc {
 
 	static Logger LOG = Logger.getLogger(DSSGrabber1SvcImpl.class.getName());
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
+	private IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
+
 	static final double CFS_2_TAF_DAY = 0.001983471;
 	static final double TAF_DAY_2_CFS = 504.166667;
 
@@ -525,16 +527,26 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc {
 					// + ".\n The selected scenario was not run using dynamic
 					// SJR simulation.",
 					// "Error", JOptionPane.ERROR_MESSAGE);
-					ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-					Object[] options = { "OK" };
-					JOptionPane optionPane = new JOptionPane(
+					// ImageIcon icon = new
+					// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+					// Object[] options = { "OK" };
+					// JOptionPane optionPane = new JOptionPane(
+					// " Could not find " + dssNames[0] + " in " + dssFilename
+					// + ".\n The selected scenario was not run using dynamic
+					// SJR simulation.",
+					// JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null,
+					// options, options[0]);
+					// JDialog dialog =
+					// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
+					// "CalLite");
+					// dialog.setIconImage(icon.getImage());
+					// dialog.setResizable(false);
+					// dialog.setVisible(true);
+					dialogSvc.getOK(
 							" Could not find " + dssNames[0] + " in " + dssFilename
 									+ ".\n The selected scenario was not run using dynamic SJR simulation.",
-							JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
-					JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "CalLite");
-					dialog.setIconImage(icon.getImage());
-					dialog.setResizable(false);
-					dialog.setVisible(true);
+							JOptionPane.ERROR_MESSAGE);
+
 				}
 
 				else if (!clsAntiochChipps(dssFilename)
@@ -546,16 +558,25 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc {
 					// + ".\n The selected scenario was not run with D-1485 Fish
 					// and Wildlife (at Antioch and Chipps) regulations.",
 					// "Error", JOptionPane.ERROR_MESSAGE);
-					ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-					Object[] options = { "OK" };
-					JOptionPane optionPane = new JOptionPane(
-							" Could not find " + dssNames[0] + " in " + dssFilename
+					// ImageIcon icon = new
+					// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+					// Object[] options = { "OK" };
+					// JOptionPane optionPane = new JOptionPane(
+					// "Could not find " + dssNames[0] + " in " + dssFilename
+					// + ".\n The selected scenario was not run with D-1485 Fish
+					// and Wildlife (at Antioch and Chipps) regulations.",
+					// JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null,
+					// options, options[0]);
+					// JDialog dialog =
+					// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
+					// "CalLite");
+					// dialog.setIconImage(icon.getImage());
+					// dialog.setResizable(false);
+					// dialog.setVisible(true);
+					dialogSvc.getOK(
+							"Could not find " + dssNames[0] + " in " + dssFilename
 									+ ".\n The selected scenario was not run with D-1485 Fish and Wildlife (at Antioch and Chipps) regulations.",
-							JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
-					JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "CalLite");
-					dialog.setIconImage(icon.getImage());
-					dialog.setResizable(false);
-					dialog.setVisible(true);
+							JOptionPane.ERROR_MESSAGE);
 				}
 
 				else if (!clsLVE(dssFilename) && ((dssNames[0].equals("S422/STORAGE"))
@@ -572,16 +593,25 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc {
 					// + ".\n The selected scenario was not run with Los
 					// Vaqueros Enlargement.",
 					// "Error", JOptionPane.ERROR_MESSAGE);
-					ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-					Object[] options = { "OK" };
-					JOptionPane optionPane = new JOptionPane(
-							" Could not find " + dssNames[0] + " in " + dssFilename
+					// ImageIcon icon = new
+					// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+					// Object[] options = { "OK" };
+					// JOptionPane optionPane = new JOptionPane(
+					// "Could not find " + dssNames[0] + " in " + dssFilename
+					// + ".\n The selected scenario was not run with Los
+					// Vaqueros Enlargement.",
+					// JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null,
+					// options, options[0]);
+					// JDialog dialog =
+					// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
+					// "CalLite");
+					// dialog.setIconImage(icon.getImage());
+					// dialog.setResizable(false);
+					// dialog.setVisible(true);
+					dialogSvc.getOK(
+							"Could not find " + dssNames[0] + " in " + dssFilename
 									+ ".\n The selected scenario was not run with Los Vaqueros Enlargement.",
-							JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
-					JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "CalLite");
-					dialog.setIconImage(icon.getImage());
-					dialog.setResizable(false);
-					dialog.setVisible(true);
+							JOptionPane.ERROR_MESSAGE);
 				}
 
 				else {
@@ -589,14 +619,20 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc {
 					// "Could not find " + dssNames[0] + " in " + dssFilename,
 					// "Error",
 					// JOptionPane.ERROR_MESSAGE);
-					ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-					Object[] options = { "OK" };
-					JOptionPane optionPane = new JOptionPane("Could not find " + dssNames[0] + " in " + dssFilename,
-							JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
-					JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "CalLite");
-					dialog.setIconImage(icon.getImage());
-					dialog.setResizable(false);
-					dialog.setVisible(true);
+					// ImageIcon icon = new
+					// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+					// Object[] options = { "OK" };
+					// JOptionPane optionPane = new JOptionPane("Could not find
+					// " + dssNames[0] + " in " + dssFilename,
+					// JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null,
+					// options, options[0]);
+					// JDialog dialog =
+					// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
+					// "CalLite");
+					// dialog.setIconImage(icon.getImage());
+					// dialog.setResizable(false);
+					// dialog.setVisible(true);
+					dialogSvc.getOK("Could not find " + dssNames[0] + " in " + dssFilename, JOptionPane.ERROR_MESSAGE);
 				}
 
 			} else {
@@ -613,14 +649,21 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc {
 						// "Could not find " + dssNames[0] + " in " +
 						// dssFilename,
 						// "Error", JOptionPane.ERROR_MESSAGE);
-						ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-						Object[] options = { "OK" };
-						JOptionPane optionPane = new JOptionPane("Could not find " + dssNames[0] + " in " + dssFilename,
-								JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
-						JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "CalLite");
-						dialog.setIconImage(icon.getImage());
-						dialog.setResizable(false);
-						dialog.setVisible(true);
+						// ImageIcon icon = new
+						// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+						// Object[] options = { "OK" };
+						// JOptionPane optionPane = new JOptionPane("Could not
+						// find " + dssNames[0] + " in " + dssFilename,
+						// JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION,
+						// null, options, options[0]);
+						// JDialog dialog =
+						// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
+						// "CalLite");
+						// dialog.setIconImage(icon.getImage());
+						// dialog.setResizable(false);
+						// dialog.setVisible(true);
+						dialogSvc.getOK("Could not find " + dssNames[0] + " in " + dssFilename,
+								JOptionPane.ERROR_MESSAGE);
 					} else {
 						for (int j = 0; j < result2.numberValues; j++)
 							result.values[j] = result.values[j] + result2.values[j];

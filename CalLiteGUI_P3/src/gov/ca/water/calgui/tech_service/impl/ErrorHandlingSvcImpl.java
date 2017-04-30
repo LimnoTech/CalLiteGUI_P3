@@ -75,7 +75,7 @@ public class ErrorHandlingSvcImpl implements IErrorHandlingSvc {
 		List<String> error = getMessageAndStackTraceFromLayeredError(aThrowable);
 		displayErrorMessage("Business Error : " + error.get(0), error.get(1), setFrame(mainFrame));
 	}
-	
+
 	@Override
 	public void businessErrorHandler(String displayMessage, JFrame mainFrame, Throwable aThrowable) {
 		List<String> error = getMessageAndStackTraceFromLayeredError(aThrowable);
@@ -198,7 +198,7 @@ public class ErrorHandlingSvcImpl implements IErrorHandlingSvc {
 		Object[] options = { "ok", "show details" };
 		JOptionPane optionPane = new JOptionPane(displayMessage, JOptionPane.ERROR_MESSAGE, JOptionPane.YES_NO_OPTION,
 				null, options, options[1]);
-		JDialog dialog = optionPane.createDialog(mainFrame, "CalLite");
+		JDialog dialog = optionPane.createDialog(mainFrame, "CalLite GUI");
 		dialog.setIconImage(icon.getImage());
 		dialog.setResizable(false);
 		dialog.setVisible(true);

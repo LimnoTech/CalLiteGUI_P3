@@ -4,11 +4,9 @@ import java.awt.HeadlessException;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -23,7 +21,9 @@ import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
 import gov.ca.water.calgui.bus_delegate.impl.ApplyDynamicConDeleImp;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
+import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 
 /**
@@ -38,6 +38,7 @@ public class GlobalMouseListener implements MouseListener {
 	private IApplyDynamicConDele applyDynamicConDele = new ApplyDynamicConDeleImp();
 	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
+	private IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
 
 	@Override
 	public void mouseClicked(MouseEvent me) {
@@ -48,7 +49,8 @@ public class GlobalMouseListener implements MouseListener {
 
 			if (SwingUtilities.isRightMouseButton(me)) {
 
-				// Right-click on a regulations checkbox updates right-hand panel
+				// Right-click on a regulations checkbox updates right-hand
+				// panel
 
 				// if (((JCheckBox) component).isSelected()) {
 				applyDynamicConDele.applyDynamicControl(cName, ((JCheckBox) component).isSelected(),
@@ -62,7 +64,8 @@ public class GlobalMouseListener implements MouseListener {
 
 					// These two regulations cannot be turned off, so their
 					// checkboxes are not enabled under user-defined. This code
-					// forces the display of the D1485/D-1641 selector in reg_panTab
+					// forces the display of the D1485/D-1641 selector in
+					// reg_panTab
 
 					((JButton) swingEngine.find("btnRegCopy")).setEnabled(false);
 					((JButton) swingEngine.find("btnRegPaste")).setEnabled(false);
@@ -87,20 +90,26 @@ public class GlobalMouseListener implements MouseListener {
 							JCheckBox chk = (JCheckBox) component;
 							JList lstScenarios = (JList) swingEngine.find("SelectedList");
 							if (lstScenarios.getModel().getSize() == 0) {
-//							JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), "No scenarios loaded", "Error",
-//									JOptionPane.ERROR_MESSAGE);
-								ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-								Object[] options = { "OK" };
-								JOptionPane optionPane = new JOptionPane("No scenarios loaded",
-										JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
-								JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
-								dialog.setIconImage(icon.getImage());
-								dialog.setResizable(false);
-								dialog.setVisible(true);
+								// JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
+								// "No scenarios loaded", "Error",
+								// JOptionPane.ERROR_MESSAGE);
+								// ImageIcon icon = new
+								// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+								// Object[] options = { "OK" };
+								// JOptionPane optionPane = new JOptionPane("No
+								// scenarios loaded",
+								// JOptionPane.ERROR_MESSAGE,
+								// JOptionPane.OK_OPTION, null, options,
+								// options[0]);
+								// JDialog dialog =
+								// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+								// dialog.setIconImage(icon.getImage());
+								// dialog.setResizable(false);
+								// dialog.setVisible(true);
+								dialogSvc.getOK("Error - No scenarios loaded", JOptionPane.ERROR_MESSAGE);
 							} else {
-								DisplayFrame.showDisplayFrames(
-										DisplayFrame.quickState() + ";Locs-" + chk.getText() + ";Index-" + chk.getName(),
-										lstScenarios);
+								DisplayFrame.showDisplayFrames(DisplayFrame.quickState() + ";Locs-" + chk.getText()
+										+ ";Index-" + chk.getName(), lstScenarios);
 							}
 
 						}
@@ -111,7 +120,7 @@ public class GlobalMouseListener implements MouseListener {
 		} catch (HeadlessException e) {
 			LOG.error(e.getMessage());
 			String messageText = "Unable to initialize mouse listeners.";
-			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
 	}
 

@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 import org.apache.log4j.Logger;
@@ -26,6 +24,7 @@ import org.jfree.data.time.Month;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.DefaultXYDataset;
+import org.swixml.SwingEngine;
 
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
@@ -46,13 +45,9 @@ import com.lowagie.text.pdf.PdfWriter;
 import com.lowagie.text.pdf.TextField;
 
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
-import gov.ca.water.calgui.constant.Constant;
-import gov.ca.water.calgui.presentation.Report;
 import gov.ca.water.calgui.presentation.Report.Writer;
-
-import org.swixml.SwingEngine;
-
-
+import gov.ca.water.calgui.tech_service.IDialogSvc;
+import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 
 public class ReportPDFWriter implements Writer {
 	Document document;
@@ -62,12 +57,13 @@ public class ReportPDFWriter implements Writer {
 	private Font subtitleFont;
 	private Font smallBoldFont;
 	private String dateStr;
-	
+
 	private SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
 
 	private Font tableFont;
 	private Font tableBoldFont;
 	private static Logger LOG = Logger.getLogger(ReportPDFWriter.class.getName());
+	private IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
 
 	public ReportPDFWriter() {
 
@@ -108,25 +104,34 @@ public class ReportPDFWriter implements Writer {
 		document.addCreationDate();
 		try {
 			writer = PdfWriter.getInstance(
-			// that listens to the document
-			        document,
-			        // and directs a PDF-stream to a file
-			        new FileOutputStream(filename));
+					// that listens to the document
+					document,
+					// and directs a PDF-stream to a file
+					new FileOutputStream(filename));
 			document.open();
 		} catch (DocumentException de) {
 			LOG.debug(de.getMessage());
 		} catch (IOException ioe) {
 			LOG.debug(ioe.getMessage());
-//			JOptionPane.showMessageDialog(null, "Please close the file " + (new File(filename).getName()) + " if it is open.",
-//			        "Warning!", JOptionPane.WARNING_MESSAGE);
-			ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-			Object[] options = { "OK" };
-			JOptionPane optionPane = new JOptionPane("Please close the file " + (new File(filename).getName()) + " if it is open.",
-					JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
-			JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
-			dialog.setIconImage(icon.getImage());
-			dialog.setResizable(false);
-			dialog.setVisible(true);
+			// JOptionPane.showMessageDialog(null, "Please close the file " +
+			// (new File(filename).getName()) + " if it is open.",
+			// "Warning!", JOptionPane.WARNING_MESSAGE);
+			// ImageIcon icon = new
+			// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+			// Object[] options = { "OK" };
+			// JOptionPane optionPane = new JOptionPane(
+			// "Please close the file " + (new File(filename).getName()) + " if
+			// it is open.",
+			// JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options,
+			// options[0]);
+			// JDialog dialog =
+			// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
+			// "CalLite");
+			// dialog.setIconImage(icon.getImage());
+			// dialog.setResizable(false);
+			// dialog.setVisible(true);
+			dialogSvc.getOK("Please close the file " + (new File(filename).getName()) + " if it is open.",
+					JOptionPane.WARNING_MESSAGE);
 			return;
 		}
 	}
@@ -135,10 +140,12 @@ public class ReportPDFWriter implements Writer {
 	public void addTitlePage(String compareInfo, String author, String fileBase, String fileAlt) {
 		document.newPage();
 		try {
-			Paragraph title = new Paragraph("\n\n\n\n" + compareInfo, FontFactory.getFont("Arial", 24, Font.BOLD, Color.BLUE));
+			Paragraph title = new Paragraph("\n\n\n\n" + compareInfo,
+					FontFactory.getFont("Arial", 24, Font.BOLD, Color.BLUE));
 			title.setAlignment(Element.ALIGN_CENTER);
 			document.add(title);
-			Paragraph pauthor = new Paragraph("\n\n" + "Author: " + author, FontFactory.getFont("Arial", 16, Font.BOLD));
+			Paragraph pauthor = new Paragraph("\n\n" + "Author: " + author,
+					FontFactory.getFont("Arial", 16, Font.BOLD));
 			pauthor.setAlignment(Element.ALIGN_CENTER);
 			document.add(pauthor);
 			dateStr = new SimpleDateFormat("dd-MMM-yyyy").format(new Date());
@@ -169,8 +176,8 @@ public class ReportPDFWriter implements Writer {
 	@Override
 	public void setAuthor(String author) {
 		/*
-		 * footer = new HeaderFooter(new Phrase(author), new Phrase(dateStr)); document.setFooter(footer);
-		 * document.addAuthor(author);
+		 * footer = new HeaderFooter(new Phrase(author), new Phrase(dateStr));
+		 * document.setFooter(footer); document.addAuthor(author);
 		 */
 	}
 
@@ -335,8 +342,8 @@ public class ReportPDFWriter implements Writer {
 	}
 
 	@Override
-	public void addExceedancePlot(ArrayList<double[]> buildDataArray, String title, String[] seriesName, String xAxisLabel,
-	        String yAxisLabel) {
+	public void addExceedancePlot(ArrayList<double[]> buildDataArray, String title, String[] seriesName,
+			String xAxisLabel, String yAxisLabel) {
 		DefaultXYDataset dataset = new DefaultXYDataset();
 		for (int i = seriesName.length - 1; i >= 0; i--) {
 			double[][] seriesData = new double[2][buildDataArray.size()];
@@ -361,8 +368,8 @@ public class ReportPDFWriter implements Writer {
 	}
 
 	@Override
-	public void addTimeSeriesPlot(ArrayList<double[]> buildDataArray, String title, String[] seriesName, String xAxisLabel,
-	        String yAxisLabel) {
+	public void addTimeSeriesPlot(ArrayList<double[]> buildDataArray, String title, String[] seriesName,
+			String xAxisLabel, String yAxisLabel) {
 		TimeSeriesCollection datasets = new TimeSeriesCollection();
 		for (int i = seriesName.length - 1; i >= 0; i--) {
 			TimeSeries ts = new TimeSeries(seriesName[i]);

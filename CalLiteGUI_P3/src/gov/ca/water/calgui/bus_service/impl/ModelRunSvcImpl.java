@@ -1,7 +1,6 @@
 package gov.ca.water.calgui.bus_service.impl;
 
 import java.io.BufferedWriter;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,9 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
@@ -24,12 +21,10 @@ import org.swixml.SwingEngine;
 
 import gov.ca.water.calgui.bus_service.IModelRunSvc;
 import gov.ca.water.calgui.constant.Constant;
+import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
+import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
-
-import org.swixml.SwingEngine;
-
-
 
 /**
  * This class will handle the batch run.
@@ -37,12 +32,14 @@ import org.swixml.SwingEngine;
  * @author Mohan
  */
 public final class ModelRunSvcImpl implements IModelRunSvc {
-	
+
 	private static SwingEngine swingEngine = XMLParsingSvcImpl.getXMLParsingSvcImplInstance().getSwingEngine();
 	private static final Logger LOG = Logger.getLogger(ModelRunSvcImpl.class.getName());
 	private Properties properties = new Properties();
 	private int wsdiIterations;
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
+	private IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
+
 	public static int simultaneousRuns;
 
 	public ModelRunSvcImpl() {
@@ -73,16 +70,23 @@ public final class ModelRunSvcImpl implements IModelRunSvc {
 		deleteBatchFile();
 		if (isWsidi) {
 			if (scenarioNamesList.size() > 1) {
-//				JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-//						"WSIDI generation only allowed for a single hydroclimate realization.");
-				ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-				Object[] options = { "OK" };
-				JOptionPane optionPane = new JOptionPane("WSIDI generation only allowed for a single hydroclimate realization.",
-						JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null, options, options[0]);
-				JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
-				dialog.setIconImage(icon.getImage());
-				dialog.setResizable(false);
-				dialog.setVisible(true);
+				// JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
+				// "WSIDI generation only allowed for a single hydroclimate
+				// realization.");
+				// ImageIcon icon = new
+				// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+				// Object[] options = { "OK" };
+				// JOptionPane optionPane = new JOptionPane("WSIDI generation
+				// only allowed for a single hydroclimate realization.",
+				// JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null,
+				// options, options[0]);
+				// JDialog dialog =
+				// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+				// dialog.setIconImage(icon.getImage());
+				// dialog.setResizable(false);
+				// dialog.setVisible(true);
+				dialogSvc.getOK("WSIDI generation only allowed for a single hydroclimate realization.",
+						JOptionPane.ERROR_MESSAGE);
 			} else {
 				setupMainBatchFileWSIDI(null, scenarioNamesList.get(0), wsdiIterations);
 				runBatch();
@@ -255,7 +259,8 @@ public final class ModelRunSvcImpl implements IModelRunSvc {
 			int exitVal = proc.waitFor();
 			LOG.debug("Return from batch run " + exitVal);
 		} catch (Throwable t) {
-			JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), t.getMessage(), "Run failure!", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), t.getMessage(), "Run failure!",
+					JOptionPane.ERROR_MESSAGE);
 			LOG.debug(t.getStackTrace());
 		}
 	}

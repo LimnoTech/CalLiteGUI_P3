@@ -8,9 +8,7 @@ import java.awt.event.ItemListener;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.ImageIcon;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -28,8 +26,10 @@ import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.constant.Constant;
 import gov.ca.water.calgui.tech_service.IAuditSvc;
+import gov.ca.water.calgui.tech_service.IDialogSvc;
 import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.AuditSvcImpl;
+import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
 import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 
 /**
@@ -48,6 +48,8 @@ public class GlobalItemListener implements ItemListener {
 	private IScenarioSvc scenarioSvc = ScenarioSvcImpl.getScenarioSvcImplInstance();
 	private String oldValue = "";
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
+	private IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
+
 	/*
 	 * we use the rollBackFlag to avoid a cascade effect when we show a
 	 * ConfirmDialog and user selects cancel
@@ -71,9 +73,11 @@ public class GlobalItemListener implements ItemListener {
 					// Checkbox in Reporting page changed
 					// if (itemName.startsWith("RepckbExceedancePlot") ||
 					// itemName.startsWith("RepckbBAWPlot")) {
-					// // Month controls should be turned on if *either* exceedance
+					// // Month controls should be turned on if *either*
+					// exceedance
 					// // or B&W plots are asked for;
-					// JPanel controls2 = (JPanel) swingEngine.find("controls2");
+					// JPanel controls2 = (JPanel)
+					// swingEngine.find("controls2");
 					// ResultUtils.getXMLParsingSvcImplInstance(null).toggleEnComponentAndChildren(controls2,
 					// (ie.getStateChange() == ItemEvent.SELECTED)
 					// || ((JCheckBox)
@@ -82,7 +86,8 @@ public class GlobalItemListener implements ItemListener {
 					// swingEngine.find("RepckbExceedancePlot")).isSelected());
 					// } else
 					// if (itemName.startsWith("RepckbSummaryTable")) {
-					// JPanel controls3 = (JPanel) swingEngine.find("controls3");
+					// JPanel controls3 = (JPanel)
+					// swingEngine.find("controls3");
 					// ResultUtilsBO.getResultUtilsInstance(null).toggleEnComponentAndChildren(controls3,
 					// ie.getStateChange() == ItemEvent.SELECTED);
 					// }
@@ -113,13 +118,13 @@ public class GlobalItemListener implements ItemListener {
 			boolean optionFromTheBox = false;
 			if (!rollBackFlag) {
 				/*
-				 * The following code is used for the special case where we show a
-				 * popup box for some controls in the "Run Setting" and
+				 * The following code is used for the special case where we show
+				 * a popup box for some controls in the "Run Setting" and
 				 * "Hydroclimate" tabs.
 				 * 
-				 * Extended by tad 20160206 to handle special warning that a change
-				 * to the climate projection period will change a Regulations SJR
-				 * setting
+				 * Extended by tad 20160206 to handle special warning that a
+				 * change to the climate projection period will change a
+				 * Regulations SJR setting
 				 * 
 				 */
 
@@ -144,30 +149,39 @@ public class GlobalItemListener implements ItemListener {
 										+ " will also set the San Joaquin River restoration flow selection to 'full' in the Regulations dashboard.";
 							}
 							if (!confirmText.equals("")) {
-//							option = JOptionPane.showConfirmDialog(swingEngine.find(Constant.MAIN_FRAME_NAME), confirmText, "", JOptionPane.OK_CANCEL_OPTION);
-								
+								// option =
+								// JOptionPane.showConfirmDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
+								// confirmText, "",
+								// JOptionPane.OK_CANCEL_OPTION);
+
 								boolean proceed = false;
-								ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-								Object[] options = { "OK", "Cancel" };
-								JOptionPane optionPane = new JOptionPane(confirmText,
-										JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, options, options[0]);
-								JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
-								dialog.setIconImage(icon.getImage());
-								dialog.setResizable(false);
-								dialog.setVisible(true);
-								switch (optionPane.getValue().toString()) {
-								case "Cancel":
-									proceed = false;
-									break;
-								case "OK":
-									proceed = true;
-									break;
-								default:
-									proceed = false;
-							        break;
-								}
-								
-								
+								// ImageIcon icon = new
+								// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+								// Object[] options = { "OK", "Cancel" };
+								// JOptionPane optionPane = new
+								// JOptionPane(confirmText,
+								// JOptionPane.QUESTION_MESSAGE,
+								// JOptionPane.OK_CANCEL_OPTION, null, options,
+								// options[0]);
+								// JDialog dialog =
+								// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+								// dialog.setIconImage(icon.getImage());
+								// dialog.setResizable(false);
+								// dialog.setVisible(true);
+								// switch (optionPane.getValue().toString()) {
+								// case "Cancel":
+								// proceed = false;
+								// break;
+								// case "OK":
+								// proceed = true;
+								// break;
+								// default:
+								// proceed = false;
+								// break;
+								// }
+								proceed = (dialogSvc.getOKCancel(confirmText, JOptionPane.QUESTION_MESSAGE)
+										.equals("OK"));
+
 								if (proceed = false) {
 									rollBackFlag = true;
 									((JRadioButton) swingEngine.find(oldValue)).setSelected(true);
@@ -197,32 +211,44 @@ public class GlobalItemListener implements ItemListener {
 				}
 				if (controlIdForDialogBox.contains(itemName)) {
 					if (isSelected) {
-//					option = JOptionPane.showConfirmDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-//							"You have selected " + ((JRadioButton) ie.getItem()).getText()
-//									+ ".\n  Do you wish to use the WSI/DI curves for this configuration?");
-						
+						// option =
+						// JOptionPane.showConfirmDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
+						// "You have selected " + ((JRadioButton)
+						// ie.getItem()).getText()
+						// + ".\n Do you wish to use the WSI/DI curves for this
+						// configuration?");
+
 						boolean proceed = false;
-						ImageIcon icon = new ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-						Object[] options = { "OK", "Cancel" };
-						JOptionPane optionPane = new JOptionPane("You have selected " + ((JRadioButton) ie.getItem()).getText()
-								+ ".\n  Do you wish to use the WSI/DI curves for this configuration?",
-								JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION, null, options, options[0]);
-						JDialog dialog = optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
-						dialog.setIconImage(icon.getImage());
-						dialog.setResizable(false);
-						dialog.setVisible(true);
-						switch (optionPane.getValue().toString()) {
-						case "Cancel":
-							proceed = false;
-							break;
-						case "OK":
-							proceed = true;
-							break;
-						default:
-							proceed = false;
-					        break;
-						}
-						
+						// ImageIcon icon = new
+						// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
+						// Object[] options = { "OK", "Cancel" };
+						// JOptionPane optionPane = new JOptionPane("You have
+						// selected " + ((JRadioButton) ie.getItem()).getText()
+						// + ".\n Do you wish to use the WSI/DI curves for this
+						// configuration?",
+						// JOptionPane.QUESTION_MESSAGE,
+						// JOptionPane.OK_CANCEL_OPTION, null, options,
+						// options[0]);
+						// JDialog dialog =
+						// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
+						// dialog.setIconImage(icon.getImage());
+						// dialog.setResizable(false);
+						// dialog.setVisible(true);
+						// switch (optionPane.getValue().toString()) {
+						// case "Cancel":
+						// proceed = false;
+						// break;
+						// case "OK":
+						// proceed = true;
+						// break;
+						// default:
+						// proceed = false;
+						// break;
+						// }
+						proceed = (dialogSvc.getOKCancel(
+								"You have selected " + ((JRadioButton) ie.getItem()).getText()
+										+ ".\n  Do you wish to use the WSI/DI curves for this configuration?",
+								JOptionPane.QUESTION_MESSAGE).equals("OK"));
 						if (proceed = false) {
 							rollBackFlag = true;
 							((JRadioButton) swingEngine.find(oldValue)).setSelected(true);
@@ -246,7 +272,7 @@ public class GlobalItemListener implements ItemListener {
 		} catch (HeadlessException e) {
 			LOG.error(e.getMessage());
 			String messageText = "Unable to initialize item listeners";
-			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
 	}
 
