@@ -289,8 +289,10 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 			String swpFileName = scenarioSvc.getUserDefinedTable(Constant.SWP_START_FILENAME).getTableName();
 			String cvpFileName = scenarioSvc.getUserDefinedTable(Constant.CVP_START_FILENAME).getTableName();
 
-			if (!fileSystemSvc.getTheLookupFromTheFullFileName(tableSvc.getWsidiForSWPFullFileName())
-					.equalsIgnoreCase(swpFileName)) {
+			// if
+			// (!fileSystemSvc.getTheLookupFromTheFullFileName(tableSvc.getWsidiForSWPFullFileName())
+			// .equalsIgnoreCase(swpFileName))
+			if (tableSvc.getWsidiForSWPFullFileName() != Constant.USER_DEFINED) {
 				try {
 					scenarioSvc.addUserDefinedTable(Constant.SWP_START_FILENAME,
 							tableSvc.getWsiDiTable(tableSvc.getWsidiForSWPFullFileName()));
@@ -300,8 +302,11 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 					return false;
 				}
 			}
-			if (!fileSystemSvc.getTheLookupFromTheFullFileName(tableSvc.getWsidiForCVPFullFileName())
-					.equalsIgnoreCase(cvpFileName)) {
+			// if
+			// (!fileSystemSvc.getTheLookupFromTheFullFileName(tableSvc.getWsidiForCVPFullFileName())
+			// .equalsIgnoreCase(cvpFileName))
+			if (tableSvc.getWsidiForCVPFullFileName() != Constant.USER_DEFINED) {
+
 				try {
 					scenarioSvc.addUserDefinedTable(Constant.CVP_START_FILENAME,
 							tableSvc.getWsiDiTable(tableSvc.getWsidiForCVPFullFileName()));

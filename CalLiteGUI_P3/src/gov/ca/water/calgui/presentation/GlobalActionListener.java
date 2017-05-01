@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -505,15 +506,22 @@ public class GlobalActionListener implements ActionListener {
 	 */
 	public void runSingleBatchForWsiDi() {
 		try {
+
 			String clsFileName = ((JTextField) swingEngine.find("run_txfScen")).getText();
 			clsFileName = FilenameUtils.removeExtension(clsFileName);
-			if (decisionBeforeTheBatchRun()) {
-				ProgressFrame progressFrame = ProgressFrame.getProgressFrameInstance();
-				List<String> fileName = Arrays.asList(clsFileName);
-				progressFrame.addScenarioNamesAndAction(clsFileName, Constant.BATCH_RUN_WSIDI);
-				progressFrame.setBtnText(Constant.STATUS_BTN_TEXT_STOP);
-				progressFrame.makeDialogVisible();
-				modelRunSvc.doBatch(fileName, swingEngine, true);
+			File f = new File(Constant.SCENARIOS_DIR + clsFileName + Constant.DV_NAME + Constant.DSS_EXT);
+			if (!f.exists() || f.isDirectory()) {
+				dialogSvc.getOK("You must run the scenario before generating WSI-DI curves.",
+						JOptionPane.WARNING_MESSAGE);
+			} else {
+				if (decisionBeforeTheBatchRun()) {
+					ProgressFrame progressFrame = ProgressFrame.getProgressFrameInstance();
+					List<String> fileName = Arrays.asList(clsFileName);
+					progressFrame.addScenarioNamesAndAction(clsFileName, Constant.BATCH_RUN_WSIDI);
+					progressFrame.setBtnText(Constant.STATUS_BTN_TEXT_STOP);
+					progressFrame.makeDialogVisible();
+					modelRunSvc.doBatch(fileName, swingEngine, true);
+				}
 			}
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
