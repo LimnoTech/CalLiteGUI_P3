@@ -536,18 +536,28 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc {
 					dssNames[i] = nameParts[0] + "/" + nameParts[1];
 					if (nameParts.length == 2)
 						hecFParts[i] = hecFPart;
-					else
+					else {
 						// TODO: Use nameParts UNLESS it's "LOOKUP", in which
 						// case we should look up the value by matching B and C
 						// parts
+
 						hecFParts[i] = nameParts[nameParts.length - 1] + "/";
+						if (hecFParts[i].equals("LOOKUP/")) {
+							for (String path : aList) {
+								String[] parts = path.split("/");
+								if (dssNames[i].equals(parts[2] + "/" + parts[3]))
+									hecFParts[i] = parts[6] + "/";
+
+							}
+						}
+					}
 				}
 			}
 
 			// TODO: Note hard-coded D- and E-PART
 			result = (TimeSeriesContainer) hD
 					.get("/" + hecAPart + "/" + dssNames[0] + "/01JAN1930/1MON/" + hecFParts[0], true);
-
+			System.out.println("/" + hecAPart + "/" + dssNames[0] + "/01JAN1930/1MON/" + hecFParts[0]);
 			if ((result == null) || (result.numberValues < 1)) {
 
 				String message;
@@ -653,7 +663,9 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc {
 				}
 			}
 
-		} catch (Exception e) {
+		} catch (
+
+		Exception e) {
 
 			LOG.debug(e.getMessage());
 			LOG.error(e.getMessage());

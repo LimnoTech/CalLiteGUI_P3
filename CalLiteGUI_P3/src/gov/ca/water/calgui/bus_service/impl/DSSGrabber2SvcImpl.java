@@ -290,6 +290,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl {
 			Vector<?> dtsNames = dts2.getDtsNames();
 
 			TimeSeriesContainer result = null;
+			boolean first = true;
 			for (int i = 0; i < dts2.getNumberOfDataReferences(); i++) {
 				TimeSeriesContainer interimResult;
 				if (!((String) dtsNames.get(i)).isEmpty()) {
@@ -299,7 +300,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl {
 					interimResult = getOneSeries_WRIMS(dssFilename, dssName, adt);
 				} else {
 					// Operand is a DSS time series
-					primaryDSSName = (dts2.getBPartAt(i) + "//" + dts2.getCPartAt(i));
+					primaryDSSName = (dts2.getBPartAt(i) + "/" + dts2.getCPartAt(i));
 					if (dts2.getVarTypeAt(i).equals("DVAR")) {
 						interimResult = getOneSeries(dssFilename,
 								(dts2.getBPartAt(i) + "/" + dts2.getCPartAt(i) + "/LOOKUP"));
@@ -319,54 +320,55 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl {
 								(dts2.getBPartAt(i) + "/" + dts2.getCPartAt(i) + "/LOOKUP"));
 					}
 				}
-				if (i == 0) {
+				if (interimResult != null) {
+					if (first) {
 
-					// First time through, copy Interim result into result
-					result = interimResult;
-					if (dts2.getOperationIdAt(i) < 1)
+						// First time through, copy Interim result into result
+						result = interimResult;
+						if (dts2.getOperationIdAt(i) < 1)
 
-						// Iff operation is "?", treat as a control and convert
-						// to
-						// on/off
-						for (int j = 0; j < interimResult.numberValues; j++)
-						result.values[j] = (result.values[j] > 0.1) ? 9876.5 : 0;
-				} else
-					switch (dts2.getOperationIdAt(i)) {
+							// Iff operation is "?", treat as a control and
+							// convert to on/off
+							for (int j = 0; j < interimResult.numberValues; j++)
+							result.values[j] = (result.values[j] > 0.1) ? 9876.5 : 0;
+						first = false;
+					} else
+						switch (dts2.getOperationIdAt(i)) {
 
-					case 0:
+						case 0:
 
-						// Iff operation is "?", treat as a control
+							// Iff operation is "?", treat as a control
 
-						for (int j = 0; j < interimResult.numberValues; j++)
-							result.values[j] = ((result.values[j] > 0.1) && (interimResult.values[j] > 0.1)) ? 9876.5
-									: 0;
-						break;
+							for (int j = 0; j < interimResult.numberValues; j++)
+								result.values[j] = ((result.values[j] > 0.1) && (interimResult.values[j] > 0.1))
+										? 9876.5 : 0;
+							break;
 
-					case 1:
-						for (int j = 0; j < interimResult.numberValues; j++)
-							result.values[j] = result.values[j] + interimResult.values[j];
-						break;
+						case 1:
+							for (int j = 0; j < interimResult.numberValues; j++)
+								result.values[j] = result.values[j] + interimResult.values[j];
+							break;
 
-					case 2:
-						for (int j = 0; j < interimResult.numberValues; j++)
-							result.values[j] = result.values[j] - interimResult.values[j];
-						break;
+						case 2:
+							for (int j = 0; j < interimResult.numberValues; j++)
+								result.values[j] = result.values[j] - interimResult.values[j];
+							break;
 
-					case 3:
-						for (int j = 0; j < interimResult.numberValues; j++)
-							result.values[j] = result.values[j] * interimResult.values[j];
-						break;
+						case 3:
+							for (int j = 0; j < interimResult.numberValues; j++)
+								result.values[j] = result.values[j] * interimResult.values[j];
+							break;
 
-					case 4:
-						for (int j = 0; j < interimResult.numberValues; j++)
-							result.values[j] = result.values[j] / interimResult.values[j];
-						break;
+						case 4:
+							for (int j = 0; j < interimResult.numberValues; j++)
+								result.values[j] = result.values[j] / interimResult.values[j];
+							break;
 
-					default:
-						break;
+						default:
+							break;
 
-					}
-
+						}
+				}
 			}
 			return result;
 		} catch (Exception e) {
