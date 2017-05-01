@@ -94,7 +94,7 @@ public class CalLiteInitClass {
 	private IAuditSvc auditSvc;
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
-	private IXMLParsingSvc xmlParsingSvc;
+	private IXMLParsingSvc xmlParsingSvc = XMLParsingSvcImpl.getXMLParsingSvcImplInstance();
 
 	/**
 	 * This method is called to initialize the ui.
@@ -104,7 +104,7 @@ public class CalLiteInitClass {
 		try {
 			// ----- Build all the Services.
 			ISeedDataSvc seedDataSvc = SeedDataSvcImpl.getSeedDataSvcImplInstance();
-			xmlParsingSvc = XMLParsingSvcImpl.getXMLParsingSvcImplInstance();
+			;
 			IVerifyControlsDele verifyControlsDele = new VerifyControlsDeleImp();
 			verifyControlsDele.verifyTheDataBeforeUI(Constant.SCENARIOS_DIR + Constant.DEFAULT + Constant.CLS_EXT);
 			DynamicControlSvcImpl.getDynamicControlSvcImplInstance();
@@ -570,7 +570,11 @@ public class CalLiteInitClass {
 			}
 		};
 		for (String name : listOfNames) {
-			((JTextField) swingEngine.find(name)).addFocusListener(focusListenerForTextField);
+			Component c = swingEngine.find(name);
+			if (c instanceof JTextField)
+				((JTextField) swingEngine.find(name)).addFocusListener(focusListenerForTextField);
+			else
+				((JTextArea) swingEngine.find(name)).addFocusListener(focusListenerForTextArea);
 		}
 	}
 

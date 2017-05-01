@@ -13,6 +13,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import org.apache.log4j.Logger;
@@ -117,6 +118,13 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 				jTextFieldIds.add(string);
 			}
 		}
+		temp = compIds.stream().filter((compId) -> swingEngine.find(compId) instanceof JTextArea)
+				.collect(Collectors.toList());
+		for (String string : temp) {
+			if (!checkIsItFromResultPart(string)) {
+				jTextFieldIds.add(string);
+			}
+		}
 
 		// Build a list of TextBoxes that are referenced by JLinkedSliders
 
@@ -159,7 +167,8 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 		List<String> resultTabNames = Arrays.asList("WRIMS", "External PDF", "Reporting", "schematics",
 				"Data_tabbedPane2", "controls");
 		List<String> names = new java.util.ArrayList<String>();
-		getAllThePanelNamesOfParent(swingEngine.find(compId).getParent(), names);
+		System.out.println("****" + compId);
+		getAllThePanelNamesOfParent(swingEngine.find(compId), names);
 
 		boolean con = false;
 		for (String string : resultTabNames) {
@@ -193,6 +202,7 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 		if (component instanceof JPanel) {
 			if (((JPanel) component).getName() != null) {
 				names.add(((JPanel) component).getName());
+				System.out.println(names.toString());
 			}
 		}
 
