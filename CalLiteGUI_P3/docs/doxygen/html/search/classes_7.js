@@ -3,6 +3,7 @@ var searchData=
   ['iallbuttonsdele',['IAllButtonsDele',['../interfacegov_1_1ca_1_1water_1_1calgui_1_1bus__delegate_1_1_i_all_buttons_dele.html',1,'gov::ca::water::calgui::bus_delegate']]],
   ['iapplydynamiccondele',['IApplyDynamicConDele',['../interfacegov_1_1ca_1_1water_1_1calgui_1_1bus__delegate_1_1_i_apply_dynamic_con_dele.html',1,'gov::ca::water::calgui::bus_delegate']]],
   ['iauditsvc',['IAuditSvc',['../interfacegov_1_1ca_1_1water_1_1calgui_1_1tech__service_1_1_i_audit_svc.html',1,'gov::ca::water::calgui::tech_service']]],
+  ['idialogsvc',['IDialogSvc',['../interfacegov_1_1ca_1_1water_1_1calgui_1_1tech__service_1_1_i_dialog_svc.html',1,'gov::ca::water::calgui::tech_service']]],
   ['idynamiccontrolsvc',['IDynamicControlSvc',['../interfacegov_1_1ca_1_1water_1_1calgui_1_1bus__service_1_1_i_dynamic_control_svc.html',1,'gov::ca::water::calgui::bus_service']]],
   ['ierrorhandlingsvc',['IErrorHandlingSvc',['../interfacegov_1_1ca_1_1water_1_1calgui_1_1tech__service_1_1_i_error_handling_svc.html',1,'gov::ca::water::calgui::tech_service']]],
   ['ifilesystemsvc',['IFileSystemSvc',['../interfacegov_1_1ca_1_1water_1_1calgui_1_1tech__service_1_1_i_file_system_svc.html',1,'gov::ca::water::calgui::tech_service']]],

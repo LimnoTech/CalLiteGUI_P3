@@ -63,22 +63,14 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classgov_1_1ca_1_1water_1_1calgui_1_1bo_1_1_file_dialog_b_o-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">gov.ca.water.calgui.bo.FileDialogBO Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="dynheader">
-Inheritance diagram for gov.ca.water.calgui.bo.FileDialogBO:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="classgov_1_1ca_1_1water_1_1calgui_1_1bo_1_1_file_dialog_b_o.png" usemap="#gov.ca.water.calgui.bo.FileDialogBO_map" alt=""/>
-  <map id="gov.ca.water.calgui.bo.FileDialogBO_map" name="gov.ca.water.calgui.bo.FileDialogBO_map">
-</map>
- </div></div>
+
+<p>Inherits ActionListener.</p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -94,23 +86,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a577addeb7a68c0ed62ac519223e92140"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a20dbe16a392369f2b4fea7f420fefb52"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgov_1_1ca_1_1water_1_1calgui_1_1bo_1_1_file_dialog_b_o.html#a20dbe16a392369f2b4fea7f420fefb52">FileDialogBO</a> (JList aList, JLabel aLabel, JRadioButton rdb1, JRadioButton rdb2, JButton btn, boolean isMultiple)</td></tr>
 <tr class="separator:a20dbe16a392369f2b4fea7f420fefb52"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5048aeeb3b303ce04a0d362be34b474f"><td class="memItemLeft" align="right" valign="top"><a id="a5048aeeb3b303ce04a0d362be34b474f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>actionPerformed</b> (ActionEvent e)</td></tr>
-<tr class="separator:a5048aeeb3b303ce04a0d362be34b474f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a05bf93b28ea7b6942c88faa464a628f2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classgov_1_1ca_1_1water_1_1calgui_1_1bo_1_1_file_dialog_b_o.html#a05bf93b28ea7b6942c88faa464a628f2">addFileToList</a> (File file)</td></tr>
 <tr class="separator:a05bf93b28ea7b6942c88faa464a628f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:a5d6d3395966ca9e4733a2126bd08eade"><td class="memItemLeft" align="right" valign="top"><a id="a5d6d3395966ca9e4733a2126bd08eade"></a>
-DefaultListModel&#160;</td><td class="memItemRight" valign="bottom"><b>lmScenNames</b></td></tr>
-<tr class="separator:a5d6d3395966ca9e4733a2126bd08eade"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a072cc4034a91b7c99677f70f1439b5de"><td class="memItemLeft" align="right" valign="top"><a id="a072cc4034a91b7c99677f70f1439b5de"></a>
-JFileChooser&#160;</td><td class="memItemRight" valign="bottom"><b>fc</b> = new JFileChooser2()</td></tr>
-<tr class="separator:a072cc4034a91b7c99677f70f1439b5de"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af51c4fbf3e48b9349abc33faf9292c54"><td class="memItemLeft" align="right" valign="top"><a id="af51c4fbf3e48b9349abc33faf9292c54"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>dialogRC</b></td></tr>
-<tr class="separator:af51c4fbf3e48b9349abc33faf9292c54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Supports selection of different types of CalLite files from customized JFileChoosers.</p>
@@ -392,7 +369,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>dialogRC</b></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Constructor used for DSS files, result is appended to list, radiobuttons are enabled when list length greater than 1, button is enabled when length &gt; 0;</p>
+<p>Constructor used for DSS files, result is appended to list, radiobuttons are enabled when list length greater than 1, button is enabled when list is not empty;</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">aList</td><td></td></tr>
