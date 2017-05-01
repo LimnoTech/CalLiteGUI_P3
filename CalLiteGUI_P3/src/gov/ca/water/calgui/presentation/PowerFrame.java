@@ -2,6 +2,11 @@ package gov.ca.water.calgui.presentation;
 
 import java.awt.Dimension;
 import java.awt.HeadlessException;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.swing.JFrame;
 import javax.swing.JList;
@@ -28,7 +33,6 @@ public class PowerFrame {
 	private IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
 
 	public PowerFrame(JList lstScenarios) {
-
 		try {
 			String dssFilename = "";
 			IDSSGrabber1Svc dssGrabber = new DSSGrabber1SvcImpl(lstScenarios);
@@ -40,21 +44,11 @@ public class PowerFrame {
 				}
 			}
 			if (!dssGrabber.hasPower(dssFilename)) {
-				// JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-				// "No power records in Base scenario");
-				// ImageIcon icon = new
-				// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-				// Object[] options = { "OK" };
-				// JOptionPane optionPane = new JOptionPane("No power records in
-				// Base scenario",
-				// JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null,
-				// options, options[0]);
-				// JDialog dialog =
-				// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),"CalLite");
-				// dialog.setIconImage(icon.getImage());
-				// dialog.setResizable(false);
-				// dialog.setVisible(true);
-				dialogSvc.getOK("Error - No power records found in Base scenario", JOptionPane.ERROR_MESSAGE);
+				if (dialogSvc.getOKCancel(
+						"There are no power records in " + dssGrabber.getBase() + ". Press OK to run the Power Module.",
+						JOptionPane.PLAIN_MESSAGE).equals("OK")) {
+					runPowerModule("DEFAULT");
+				}
 			} else {
 				frame = new JFrame("Power Viewer:" + dssGrabber.getBase());
 				frame.setPreferredSize(new Dimension(800, 600));
@@ -68,4 +62,52 @@ public class PowerFrame {
 			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
 	}
+
+	private boolean runPowerModule(String scenarioName) {
+
+		boolean success = false;
+
+		String scenarioPath = new File(Constant.RUN_DETAILS_DIR + scenarioName).getAbsolutePath();
+		String progressFilePath = new File(scenarioPath, "run\\progress.txt").getAbsolutePath();
+
+		File batchFile = new File(System.getProperty("user.dir"), "CalLite_w2.bat");
+		PrintWriter batchFilePW;
+		try {
+			batchFilePW = new PrintWriter(new BufferedWriter(new FileWriter(batchFile)));
+			batchFilePW.println("del /F /Q " + progressFilePath);
+			batchFilePW.println("start /wait group_0.bat");
+			batchFilePW.println();
+			batchFilePW.flush();
+			batchFilePW.close();
+		} catch (IOException e) {
+			LOG.debug("Unable to create group_0.bat");
+		}
+
+		File groupBatchFile = new File(System.getProperty("user.dir"), "group_0.bat");
+		try {
+			batchFilePW = new PrintWriter(new BufferedWriter(new FileWriter(groupBatchFile)));
+			batchFilePW.println("echo Power Module Executing > " + progressFilePath);
+			batchFilePW.println("pause");
+			batchFilePW.println("echo Power Module Done > " + progressFilePath);
+			batchFilePW.println("exit");
+			batchFilePW.flush();
+			batchFilePW.close();
+		} catch (IOException e) {
+			LOG.debug("Unable to create group_0.bat");
+		}
+
+		try {
+			Runtime rt = Runtime.getRuntime();
+			Process proc = rt
+					.exec("cmd /c start /min \"CalLiteRun\" " + System.getProperty("user.dir") + "\\CalLite_w2.bat");
+			int exitVal = proc.waitFor();
+			success = (exitVal == 0);
+			LOG.debug("Return from batch run " + exitVal);
+		} catch (Throwable t) {
+			errorHandlingSvc.businessErrorHandler("Run failure!", "Power Generation module did not run.", null);
+			LOG.debug(t.getStackTrace());
+		}
+		return success;
+	}
+
 }
