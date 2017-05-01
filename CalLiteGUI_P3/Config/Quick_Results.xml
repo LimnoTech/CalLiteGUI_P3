@@ -1,5 +1,5 @@
-<panel id="Reporting" layout="GridBagLayout">
-	<panel id="controls" resizeable="true" layout="GridBagLayout">
+<panel id="Reporting" name="Reporting" layout="GridBagLayout">
+	<panel id="controls" name="controls" resizeable="true" layout="GridBagLayout">
 		<gridbagconstraints anchor="GridBagConstraints.NORTHWEST" insets="0,0,20,0" gridx="0" gridy="0"
 			gridheight="2" />
 		<panel id="ss" resizeable="false" border="TitledBorder(Scenarios)" layout="GridBagLayout">
