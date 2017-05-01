@@ -94,6 +94,7 @@ public class CalLiteInitClass {
 	private IAuditSvc auditSvc;
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
+	private IXMLParsingSvc xmlParsingSvc;
 
 	/**
 	 * This method is called to initialize the ui.
@@ -103,7 +104,7 @@ public class CalLiteInitClass {
 		try {
 			// ----- Build all the Services.
 			ISeedDataSvc seedDataSvc = SeedDataSvcImpl.getSeedDataSvcImplInstance();
-			IXMLParsingSvc xmlParsingSvc = XMLParsingSvcImpl.getXMLParsingSvcImplInstance();
+			xmlParsingSvc = XMLParsingSvcImpl.getXMLParsingSvcImplInstance();
 			IVerifyControlsDele verifyControlsDele = new VerifyControlsDeleImp();
 			verifyControlsDele.verifyTheDataBeforeUI(Constant.SCENARIOS_DIR + Constant.DEFAULT + Constant.CLS_EXT);
 			DynamicControlSvcImpl.getDynamicControlSvcImplInstance();
@@ -468,7 +469,6 @@ public class CalLiteInitClass {
 
 			@Override
 			public void focusGained(FocusEvent e) {
-				System.out.println(e.getComponent().getName());
 				boolean showTablePanel = ((JRadioButton) swingEngine.find("rdbRegQS_UD")).isSelected();
 				if (showTablePanel) {
 					String cName = e.getComponent().getName();
@@ -540,7 +540,9 @@ public class CalLiteInitClass {
 				JTextField field = ((JTextField) e.getComponent());
 				String newValue = field.getText();
 				if (!oldValue.equals(newValue)) {
-					auditSvc.addAudit(field.getName(), oldValue, newValue);
+					if (!xmlParsingSvc.checkIsItFromResultPart(field.getName()))
+						auditSvc.addAudit(field.getName(), oldValue, newValue);
+
 				}
 			}
 
@@ -557,7 +559,8 @@ public class CalLiteInitClass {
 				JTextArea field = ((JTextArea) e.getComponent());
 				String newValue = field.getText();
 				if (!oldValue.equals(newValue)) {
-					auditSvc.addAudit(field.getName(), oldValue, newValue);
+					if (!xmlParsingSvc.checkIsItFromResultPart(field.getName()))
+						auditSvc.addAudit(field.getName(), oldValue, newValue);
 				}
 			}
 
@@ -648,8 +651,6 @@ public class CalLiteInitClass {
 				array[i] = _group.getDataReference(rows[i]);
 			// GuiUtils.displayData(array);
 			for (int i = 0; i < rows.length; i++) {
-				System.out.println(array[i]);
-
 				String[] parts = array[i].getName().split("::");
 				String[] parts2 = parts[2].split("/");
 				parts[2] = "/" + parts2[1] + "/" + parts2[2] + "/" + parts2[3] + "/" + parts[3] + "/" + parts2[5] + "/"
@@ -735,6 +736,7 @@ public class CalLiteInitClass {
 		} catch (Exception e) {
 			// VistaUtils.displayException(GuiUtils.getCLGPanel(), e);
 			LOG.debug("Error in retrieve2() -", e);
+			errorHandlingSvc.businessErrorHandler(null, (Throwable) e);
 
 		}
 		WRIMSGUILinks.setStatus("Done??");

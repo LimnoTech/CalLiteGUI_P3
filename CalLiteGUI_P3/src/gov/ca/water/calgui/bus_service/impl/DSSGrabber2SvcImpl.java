@@ -107,7 +107,8 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl {
 			} else {
 				String lookupID = locationName;
 				if (lookupID.startsWith(Constant.SCHEMATIC_PREFIX))
-					// Strip off prefix for schematic view - NOT SURE IF WE CAN'T
+					// Strip off prefix for schematic view - NOT SURE IF WE
+					// CAN'T
 					// JUST ELIMINATE PREFIX?
 					lookupID = lookupID.substring(Constant.SCHEMATIC_PREFIX.length());
 
@@ -125,7 +126,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl {
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 			String messageText = "Unable to set location.";
-			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
 	}
 
@@ -148,7 +149,8 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl {
 
 				if (locationName.contains(Constant.SCHEMATIC_PREFIX) && primaryDSSName.contains(",")) {
 
-					// Special handling for DEMO of schematic view - treat multiple
+					// Special handling for DEMO of schematic view - treat
+					// multiple
 					// series as multiple scenarios
 					// TODO: Longer-term approach is probably to add a rank to
 					// arrays storing all series
@@ -179,7 +181,8 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl {
 					for (int i = 0; i < scenarios; i++) {
 						String scenarioName;
 						if (baseName.contains("_SV.DSS")) {
-							// For SVars, use WRIMS GUI Project object to determine
+							// For SVars, use WRIMS GUI Project object to
+							// determine
 							// input files
 							switch (i) {
 							case 0:
@@ -212,7 +215,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl {
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time-series.";
-			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
 		return null;
 	}
@@ -275,7 +278,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl {
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time-series.";
-			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
 		return null;
 	}
@@ -321,7 +324,8 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl {
 					result = interimResult;
 					if (dts2.getOperationIdAt(i) < 1)
 
-						// Iff operation is "?", treat as a control and convert to
+						// Iff operation is "?", treat as a control and convert
+						// to
 						// on/off
 						for (int j = 0; j < interimResult.numberValues; j++)
 						result.values[j] = (result.values[j] > 0.1) ? 9876.5 : 0;
@@ -333,7 +337,8 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl {
 						// Iff operation is "?", treat as a control
 
 						for (int j = 0; j < interimResult.numberValues; j++)
-							result.values[j] = ((result.values[j] > 0.1) && (interimResult.values[j] > 0.1)) ? 9876.5 : 0;
+							result.values[j] = ((result.values[j] > 0.1) && (interimResult.values[j] > 0.1)) ? 9876.5
+									: 0;
 						break;
 
 					case 1:
@@ -366,7 +371,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl {
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time-series.";
-			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
 		return null;
 
@@ -378,7 +383,8 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl {
 			TimeSeriesContainer result = null;
 			if (!mts2.getDTSNameAt(i).equals("")) {
 				// Operand is reference to a DTS
-				DerivedTimeSeries adt = ResultUtilsBO.getResultUtilsInstance(null).getProject().getDTS(mts.getDTSNameAt(i));
+				DerivedTimeSeries adt = ResultUtilsBO.getResultUtilsInstance(null).getProject()
+						.getDTS(mts.getDTSNameAt(i));
 				result = getOneSeries_WRIMS(dssFilename, "", adt);
 				primaryDSSName = mts.getDTSNameAt(i);
 
@@ -405,8 +411,8 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl {
 			return result;
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
-			String messageText = "Unable to get time-series.";
-			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			String messageText = "Unable to get time series from.";
+			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
 		return null;
 	}
@@ -440,7 +446,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl {
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time-series.";
-			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
 		return timeSeriesResults;
 	}
@@ -506,7 +512,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl {
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 			String messageText = "Unable to calculate TAF.";
-			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
 
 	}
@@ -547,8 +553,8 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl {
 							} else {
 
 								int n;
-								int times2[];
-								double values2[];
+								int times2[] = null;
+								double values2[] = null;
 
 								results[month][mtsI][i] = new TimeSeriesContainer();
 
@@ -569,20 +575,22 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl {
 									int[] times = timeSeriesResults[mtsI][i].times;
 									double[] values = timeSeriesResults[mtsI][i].values;
 									n = 0;
-									for (int j = 0; j < times.length; j++) {
-										ht.set(times[j]);
-										if (ht.month() == month + 1)
-											n = n + 1;
-									}
-									times2 = new int[n];
-									values2 = new double[n];
-									n = 0;
-									for (int j = 0; j < times.length; j++) {
-										ht.set(times[j]);
-										if (ht.month() == month + 1) {
-											times2[n] = times[j];
-											values2[n] = values[j];
-											n = n + 1;
+									if (times != null) {
+										for (int j = 0; j < times.length; j++) {
+											ht.set(times[j]);
+											if (ht.month() == month + 1)
+												n = n + 1;
+										}
+										times2 = new int[n];
+										values2 = new double[n];
+										n = 0;
+										for (int j = 0; j < times.length; j++) {
+											ht.set(times[j]);
+											if (ht.month() == month + 1) {
+												times2[n] = times[j];
+												values2[n] = values[j];
+												n = n + 1;
+											}
 										}
 									}
 								}
@@ -606,7 +614,7 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl {
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time-series.";
-			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
 		return null;
 	}
@@ -673,8 +681,10 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl {
 									}
 									times2 = new int[n];
 									values2 = new double[n];
-									int nmax = n; // Added to trap Schematic View
-													// case where required flow has
+									int nmax = n; // Added to trap Schematic
+													// View
+													// case where required flow
+													// has
 													// extra values
 									n = 0;
 									for (int j = 0; j < times.length; j++) {
@@ -707,9 +717,8 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl {
 		} catch (Exception e) {
 			LOG.error(e.getMessage());
 			String messageText = "Unable to get time-series.";
-			errorHandlingSvc.businessErrorHandler(messageText,(JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
 		}
 		return null;
 	}
-
 }

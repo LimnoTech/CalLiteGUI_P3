@@ -4,9 +4,12 @@ package gov.ca.water.calgui.bus_service.impl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -93,10 +96,46 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc {
 
 	protected Project project = ResultUtilsBO.getResultUtilsInstance(null).getProject();
 
+	private boolean stopOnMissing = true;
+	private List<String> missingDSSRecords = new ArrayList<String>();
+	private Properties properties = new Properties();
+
 	public DSSGrabber1SvcImpl(JList list) {
 
 		this.lstScenarios = list;
+		try {
+			properties.load(ModelRunSvcImpl.class.getClassLoader().getResourceAsStream("callite-gui.properties"));
+			stopOnMissing = Boolean.parseBoolean(properties.getProperty("stop.display.on.null"));
+		} catch (Exception e) {
+			stopOnMissing = true;
+		}
+		clearMissingList();
+	}
 
+	/**
+	 * Clears list of DSS records that were not found in scenario DV.DSS files
+	 */
+	public void clearMissingList() {
+		missingDSSRecords.clear();
+	}
+
+	/**
+	 * Provide access to list of DSS records not found during processing
+	 * 
+	 * @return list, or null if not tracked due to property setting
+	 */
+	public List<String> getMissingList() {
+		return missingDSSRecords;
+	}
+
+	/**
+	 * Provide access to stopOnMissing flag read from callite-gui.properties
+	 * 
+	 * @return true = stop display task when missing a record, false = continue
+	 *         with task
+	 */
+	public boolean getStopOnMissing() {
+		return stopOnMissing;
 	}
 
 	/*
@@ -506,6 +545,9 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc {
 
 			if ((result == null) || (result.numberValues < 1)) {
 
+				String message;
+				result = null;
+
 				if (!clsIsDynamicSJR(dssFilename) && ((dssNames[0].equals("S_MELON/STORAGE"))
 						|| (dssNames[0].equals("S_PEDRO/STORAGE")) || (dssNames[0].equals("S_MCLRE/STORAGE"))
 						|| (dssNames[0].equals("S_MLRTN/STORAGE")) || (dssNames[0].equals("C_STANRIPN/FLOW-CHANNEL"))
@@ -521,62 +563,16 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc {
 						|| (dssNames[0].equals("D_MDRCNL/FLOW-DELIVERY"))
 						|| (dssNames[0].equals("D_FKCNL/FLOW-DELIVERY")))) {
 
-					result = null;
-					// JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-					// " Could not find " + dssNames[0] + " in " + dssFilename
-					// + ".\n The selected scenario was not run using dynamic
-					// SJR simulation.",
-					// "Error", JOptionPane.ERROR_MESSAGE);
-					// ImageIcon icon = new
-					// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-					// Object[] options = { "OK" };
-					// JOptionPane optionPane = new JOptionPane(
-					// " Could not find " + dssNames[0] + " in " + dssFilename
-					// + ".\n The selected scenario was not run using dynamic
-					// SJR simulation.",
-					// JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null,
-					// options, options[0]);
-					// JDialog dialog =
-					// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-					// "CalLite");
-					// dialog.setIconImage(icon.getImage());
-					// dialog.setResizable(false);
-					// dialog.setVisible(true);
-					dialogSvc.getOK(
-							" Could not find " + dssNames[0] + " in " + dssFilename
-									+ ".\n The selected scenario was not run using dynamic SJR simulation.",
-							JOptionPane.ERROR_MESSAGE);
+					message = " Could not find " + dssNames[0] + " in " + dssFilename
+							+ ".\n The selected scenario was not run using dynamic SJR simulation;";
 
 				}
 
 				else if (!clsAntiochChipps(dssFilename)
 						&& ((dssNames[0].equals("AN_EC_STD/SALINITY")) || (dssNames[0].equals("CH_EC_STD/SALINITY")))) {
 
-					result = null;
-					// JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-					// " Could not find " + dssNames[0] + " in " + dssFilename
-					// + ".\n The selected scenario was not run with D-1485 Fish
-					// and Wildlife (at Antioch and Chipps) regulations.",
-					// "Error", JOptionPane.ERROR_MESSAGE);
-					// ImageIcon icon = new
-					// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-					// Object[] options = { "OK" };
-					// JOptionPane optionPane = new JOptionPane(
-					// "Could not find " + dssNames[0] + " in " + dssFilename
-					// + ".\n The selected scenario was not run with D-1485 Fish
-					// and Wildlife (at Antioch and Chipps) regulations.",
-					// JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null,
-					// options, options[0]);
-					// JDialog dialog =
-					// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-					// "CalLite");
-					// dialog.setIconImage(icon.getImage());
-					// dialog.setResizable(false);
-					// dialog.setVisible(true);
-					dialogSvc.getOK(
-							"Could not find " + dssNames[0] + " in " + dssFilename
-									+ ".\n The selected scenario was not run with D-1485 Fish and Wildlife (at Antioch and Chipps) regulations.",
-							JOptionPane.ERROR_MESSAGE);
+					message = " Could not find " + dssNames[0] + " in " + dssFilename
+							+ ".\n The selected scenario was not run with D-1485 Fish and Wildlife (at Antioch and Chipps) regulations.";
 				}
 
 				else if (!clsLVE(dssFilename) && ((dssNames[0].equals("S422/STORAGE"))
@@ -587,54 +583,16 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc {
 						|| (dssNames[0].equals("D408_VC/FLOW-DELIVERY"))
 						|| (dssNames[0].equals("D408_RS/FLOW-DELIVERY")) || (dssNames[0].equals("WQ420/SALINITY")))) {
 
-					result = null;
-					// JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-					// " Could not find " + dssNames[0] + " in " + dssFilename
-					// + ".\n The selected scenario was not run with Los
-					// Vaqueros Enlargement.",
-					// "Error", JOptionPane.ERROR_MESSAGE);
-					// ImageIcon icon = new
-					// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-					// Object[] options = { "OK" };
-					// JOptionPane optionPane = new JOptionPane(
-					// "Could not find " + dssNames[0] + " in " + dssFilename
-					// + ".\n The selected scenario was not run with Los
-					// Vaqueros Enlargement.",
-					// JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null,
-					// options, options[0]);
-					// JDialog dialog =
-					// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-					// "CalLite");
-					// dialog.setIconImage(icon.getImage());
-					// dialog.setResizable(false);
-					// dialog.setVisible(true);
-					dialogSvc.getOK(
-							"Could not find " + dssNames[0] + " in " + dssFilename
-									+ ".\n The selected scenario was not run with Los Vaqueros Enlargement.",
-							JOptionPane.ERROR_MESSAGE);
+					message = "Could not find " + dssNames[0] + " in " + dssFilename
+							+ ".\n The selected scenario was not run with Los Vaqueros Enlargement.";
 				}
 
 				else {
-					// JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-					// "Could not find " + dssNames[0] + " in " + dssFilename,
-					// "Error",
-					// JOptionPane.ERROR_MESSAGE);
-					// ImageIcon icon = new
-					// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-					// Object[] options = { "OK" };
-					// JOptionPane optionPane = new JOptionPane("Could not find
-					// " + dssNames[0] + " in " + dssFilename,
-					// JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION, null,
-					// options, options[0]);
-					// JDialog dialog =
-					// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-					// "CalLite");
-					// dialog.setIconImage(icon.getImage());
-					// dialog.setResizable(false);
-					// dialog.setVisible(true);
-					dialogSvc.getOK("Could not find " + dssNames[0] + " in " + dssFilename, JOptionPane.ERROR_MESSAGE);
+					message = "Could not find " + dssNames[0] + " in " + dssFilename;
 				}
-
+				if (stopOnMissing)
+					dialogSvc.getOK("Could not find " + dssNames[0] + " in " + dssFilename, JOptionPane.ERROR_MESSAGE);
+				missingDSSRecords.add(message);
 			} else {
 
 				// If no error, add results from other datasets in dssNames
@@ -644,26 +602,13 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc {
 					// TODO: Note hard-coded D- and E-PART
 					TimeSeriesContainer result2 = (TimeSeriesContainer) hD
 							.get("/" + hecAPart + "/" + dssNames[i] + "/01JAN2020/1MON/" + hecFParts[i], true);
-					if (result2 == null) {
-						// JOptionPane.showMessageDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-						// "Could not find " + dssNames[0] + " in " +
-						// dssFilename,
-						// "Error", JOptionPane.ERROR_MESSAGE);
-						// ImageIcon icon = new
-						// ImageIcon(getClass().getResource("/images/CalLiteIcon.png"));
-						// Object[] options = { "OK" };
-						// JOptionPane optionPane = new JOptionPane("Could not
-						// find " + dssNames[0] + " in " + dssFilename,
-						// JOptionPane.ERROR_MESSAGE, JOptionPane.OK_OPTION,
-						// null, options, options[0]);
-						// JDialog dialog =
-						// optionPane.createDialog(swingEngine.find(Constant.MAIN_FRAME_NAME),
-						// "CalLite");
-						// dialog.setIconImage(icon.getImage());
-						// dialog.setResizable(false);
-						// dialog.setVisible(true);
-						dialogSvc.getOK("Could not find " + dssNames[0] + " in " + dssFilename,
-								JOptionPane.ERROR_MESSAGE);
+					if (result2 == null || result2.numberValues < 1) {
+						result2 = null;
+						String message = "Could not find " + dssNames[0] + " in " + dssFilename;
+						if (stopOnMissing)
+							JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
+						else
+							missingDSSRecords.add(message);
 					} else {
 						for (int j = 0; j < result2.numberValues; j++)
 							result.values[j] = result.values[j] + result2.values[j];
@@ -672,31 +617,35 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc {
 			}
 
 			// Trim to date range
+			if (result != null) {
+				int first = 0; // Find starting index
+				for (int i = 0; (i < result.numberValues) && (result.times[i] < startTime); i++)
+					first = i + 1;
 
-			int first = 0; // Find starting index
-			for (int i = 0; (i < result.numberValues) && (result.times[i] < startTime); i++)
-				first = i + 1;
+				int last = result.numberValues - 1; // find ending index
+				for (int i = result.numberValues - 1; (i >= 0) && (result.times[i] >= endTime); i--)
+					last = i;
 
-			int last = result.numberValues - 1; // find ending index
-			for (int i = result.numberValues - 1; (i >= 0) && (result.times[i] >= endTime); i--)
-				last = i;
+				if (first != 0) // Shift results in array to start
+					for (int i = 0; i <= (last - first); i++) { // TODO: Think
+																// through
+																// change to
+																// <= done 11/9
+						result.times[i] = result.times[i + first];
+						result.values[i] = result.values[i + first];
+					}
 
-			if (first != 0) // Shift results in array to start
-				for (int i = 0; i <= (last - first); i++) { // TODO: Think
-															// through change to
-															// <= done 11/9
-					result.times[i] = result.times[i + first];
-					result.values[i] = result.values[i + first];
+				result.numberValues = last - first + 1; // Adjust count of
+														// results
+
+				// Do time shift where indicated (when a dataset has suffix
+				// "(-1)"
+
+				if (doTimeShift) {
+					for (int i = result.numberValues; i < result.numberValues - 1; i++)
+						result.times[i] = result.times[i + 1];
+					result.numberValues = result.numberValues - 1;
 				}
-
-			result.numberValues = last - first + 1; // Adjust count of results
-
-			// Do time shift where indicated (when a dataset has suffix "(-1)"
-
-			if (doTimeShift) {
-				for (int i = result.numberValues; i < result.numberValues - 1; i++)
-					result.times[i] = result.times[i + 1];
-				result.numberValues = result.numberValues - 1;
 			}
 
 		} catch (Exception e) {
@@ -711,7 +660,8 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc {
 		// Store name portion of DSS file in TimeSeriesContainer
 
 		String shortFileName = new File(dssFilename).getName();
-		result.fileName = shortFileName;
+		if (result != null)
+			result.fileName = shortFileName;
 
 		return result;
 	}
@@ -1113,7 +1063,7 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc {
 
 		TimeSeriesContainer[][] results;
 		try {
-			if (timeSeriesResults == null || timeSeriesResults[0].times == null)
+			if (timeSeriesResults == null || timeSeriesResults[0] == null || timeSeriesResults[0].times == null)
 				results = null;
 			else {
 				results = new TimeSeriesContainer[14][scenarios];

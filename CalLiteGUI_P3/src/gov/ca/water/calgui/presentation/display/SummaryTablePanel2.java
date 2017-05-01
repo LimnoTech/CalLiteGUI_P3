@@ -179,8 +179,8 @@ public class SummaryTablePanel2 extends JPanel implements ActionListener, Compon
 	}
 
 	public SummaryTablePanel2(String title, TimeSeriesContainer mtscs[][], TimeSeriesContainer stscs[],
-			String tagString, String sName, IDSSGrabber1Svc dss_Grabber, DSSGrabber2SvcImpl dss_Grabber2, boolean isBase,
-			MultipleTimeSeries mts) {
+			String tagString, String sName, IDSSGrabber1Svc dss_Grabber, DSSGrabber2SvcImpl dss_Grabber2,
+			boolean isBase, MultipleTimeSeries mts) {
 
 		super();
 
@@ -233,6 +233,7 @@ public class SummaryTablePanel2 extends JPanel implements ActionListener, Compon
 					else
 						tsc = stscs[t - tscs.length];
 				}
+
 				// Initialize accumulators
 
 				n = new int[6][6][14];
@@ -435,31 +436,33 @@ public class SummaryTablePanel2 extends JPanel implements ActionListener, Compon
 
 				// Delete extra blank row at end of table
 
-				for (int i = 0; i < 15; i++)
-					data[t].removeElementAt(data[t].size() - 1);
+				if (data[t].size() > 0) {
+					for (int i = 0; i < 15; i++)
+						data[t].removeElementAt(data[t].size() - 1);
 
-				SimpleTableModel model = new SimpleTableModel(data[t], columns);
-				JTable table = new JTable(model);
-				table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-				for (int c = 0; c < 15; c++) {
-					TableColumn col = table.getColumnModel().getColumn(c);
-					col.setPreferredWidth((c == 0) ? 150 : 45);
+					SimpleTableModel model = new SimpleTableModel(data[t], columns);
+					JTable table = new JTable(model);
+					table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+					for (int c = 0; c < 15; c++) {
+						TableColumn col = table.getColumnModel().getColumn(c);
+						col.setPreferredWidth((c == 0) ? 150 : 45);
+					}
+					table.setCellSelectionEnabled(true);
+					DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) table
+							.getDefaultRenderer(String.class);
+					renderer.setHorizontalAlignment(JLabel.RIGHT);
+
+					String labelText = (mts.getDTSNameAt(mtsI).equals("")
+							? mts.getBPartAt(mtsI) + "/" + mts.getCPartAt(mtsI) : mts.getDTSNameAt(mtsI));
+
+					JLabel label = new JLabel();
+					label.setText(labelText + " (" + tsc.units + ") - " + tsc.fileName);
+					label.setPreferredSize(new Dimension(500, 30));
+
+					panel.add(label);
+					panel.add(table.getTableHeader(), BorderLayout.NORTH);
+					panel.add(table);
 				}
-				table.setCellSelectionEnabled(true);
-				DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) table.getDefaultRenderer(String.class);
-				renderer.setHorizontalAlignment(JLabel.RIGHT);
-
-				String labelText = (mts.getDTSNameAt(mtsI).equals("")
-						? mts.getBPartAt(mtsI) + "/" + mts.getCPartAt(mtsI) : mts.getDTSNameAt(mtsI));
-
-				JLabel label = new JLabel();
-				label.setText(labelText + " (" + tsc.units + ") - " + tsc.fileName);
-				label.setPreferredSize(new Dimension(500, 30));
-
-				panel.add(label);
-				panel.add(table.getTableHeader(), BorderLayout.NORTH);
-				panel.add(table);
-
 			}
 		}
 		addComponentListener(this);

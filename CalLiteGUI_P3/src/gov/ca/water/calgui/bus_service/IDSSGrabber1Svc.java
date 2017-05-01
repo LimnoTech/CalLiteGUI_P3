@@ -1,5 +1,7 @@
 package gov.ca.water.calgui.bus_service;
 
+import java.util.List;
+
 import hec.io.TimeSeriesContainer;
 
 public interface IDSSGrabber1Svc {
@@ -177,5 +179,25 @@ public interface IDSSGrabber1Svc {
 	String getPrimaryDSSName();
 
 	void setPrimaryDSSName(String primaryDSSName);
+
+	/**
+	 * Clears list of DSS records that were not found in scenario DV.DSS files
+	 */
+	public void clearMissingList();
+
+	/**
+	 * Provide access to list of DSS records not found during processing
+	 * 
+	 * @return list, or null if not tracked due to property setting
+	 */
+	public List<String> getMissingList();
+
+	/**
+	 * Provide access to stopOnMissing flag read from callite-gui.properties
+	 * 
+	 * @return true = stop display task when missing a record, false = continue
+	 *         with task
+	 */
+	public boolean getStopOnMissing();
 
 }

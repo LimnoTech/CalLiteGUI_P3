@@ -47,7 +47,9 @@ import com.lowagie.text.pdf.TextField;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
 import gov.ca.water.calgui.presentation.Report.Writer;
 import gov.ca.water.calgui.tech_service.IDialogSvc;
+import gov.ca.water.calgui.tech_service.IErrorHandlingSvc;
 import gov.ca.water.calgui.tech_service.impl.DialogSvcImpl;
+import gov.ca.water.calgui.tech_service.impl.ErrorHandlingSvcImpl;
 
 public class ReportPDFWriter implements Writer {
 	Document document;
@@ -64,6 +66,7 @@ public class ReportPDFWriter implements Writer {
 	private Font tableBoldFont;
 	private static Logger LOG = Logger.getLogger(ReportPDFWriter.class.getName());
 	private IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
+	private static IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 
 	public ReportPDFWriter() {
 
@@ -80,7 +83,7 @@ public class ReportPDFWriter implements Writer {
 		try {
 			fontSize = Integer.parseInt(tableFontSize.trim());
 		} catch (NumberFormatException nfe) {
-			System.out.println("NumberFormatException: " + nfe.getMessage());
+			errorHandlingSvc.validationeErrorHandler("Number format exception in font size", nfe.getMessage(), null);
 		}
 
 		tableFont = FontFactory.getFont("Arial", fontSize);

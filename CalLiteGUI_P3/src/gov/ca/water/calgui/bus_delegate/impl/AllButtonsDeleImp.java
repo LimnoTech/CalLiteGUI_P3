@@ -105,6 +105,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 
 	@Override
 	public void saveAsButton() {
+		setOKToSkipConfirmation(false);
 		JFileChooser fileChooser = new JFileChooser(Constant.SCENARIOS_DIR);
 		fileChooser.setMultiSelectionEnabled(false);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("CLS FILES (.cls)", "cls");
@@ -162,8 +163,11 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 
 	@Override
 	public boolean saveCurrentStateToFile(String clsFileName) {
-		if (decisionToSaveOrNot(clsFileName))
+		this.setOKToSkipConfirmation(false);
+		if (decisionToSaveOrNot(clsFileName)) {
+			this.setOKToSkipConfirmation(true);
 			return save(clsFileName);
+		}
 		return true;
 	}
 
@@ -267,7 +271,7 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 			// proceed = false;
 			// break;
 			// }
-			proceed = (dialogSvc
+			proceed = isOKToSkipConfirmation() || (dialogSvc
 					.getOKCancel("The scenario file '" + tempName + "' already exists. Press OK to overwrite.",
 							JOptionPane.QUESTION_MESSAGE)
 					.equals("OK"));
@@ -318,6 +322,31 @@ public class AllButtonsDeleImp implements IAllButtonsDele {
 			return proceed;
 		}
 		return false;
+	}
+
+	boolean okToSkipConfirmation = false;
+
+	/**
+	 * Controls whether or not the user is asked to confirm overwriting a
+	 * scenario. The use should *not* be asked if they've already confirmed
+	 * saving an up-to-date scenario; this is done by setting to true
+	 * 
+	 * @param value
+	 *            Set to true if the overwrite confirmation question can be
+	 *            skipped
+	 * 
+	 */
+	private void setOKToSkipConfirmation(boolean value) {
+		okToSkipConfirmation = value;
+	}
+
+	/**
+	 * 
+	 * @return Current setting for whether or not the confirmation question can
+	 *         be skipped
+	 */
+	private boolean isOKToSkipConfirmation() {
+		return okToSkipConfirmation;
 	}
 
 	@Override

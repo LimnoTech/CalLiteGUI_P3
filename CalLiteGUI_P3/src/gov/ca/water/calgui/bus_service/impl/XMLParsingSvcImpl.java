@@ -94,8 +94,10 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 		compIds.stream().forEach((compId) -> {
 			Component component = this.swingEngine.find(compId);
 			if (component instanceof JCheckBox) {
-				if (!((JCheckBox) component).getName().equals(compId))
+				if (!((JCheckBox) component).getName().equals(compId)) {
+					System.out.println(compId + " " + component.getName());
 					((JCheckBox) component).setName(compId);
+				}
 			} else if (component instanceof JRadioButton) {
 				if (!((JRadioButton) component).getName().equals(compId))
 					((JRadioButton) component).setName(compId);
@@ -193,6 +195,7 @@ public final class XMLParsingSvcImpl implements IXMLParsingSvc {
 				names.add(((JPanel) component).getName());
 			}
 		}
+
 		if (component.getParent() != null) {
 			getAllThePanelNamesOfParent(component.getParent(), names);
 		}

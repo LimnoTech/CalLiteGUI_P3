@@ -1,8 +1,5 @@
 package gov.ca.water.calgui.presentation.display;
 
-import hec.heclib.util.HecTime;
-import hec.io.TimeSeriesContainer;
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -29,6 +26,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import calsim.app.MultipleTimeSeries;
 import gov.ca.water.calgui.bus_service.impl.DSSGrabber2SvcImpl;
+import hec.heclib.util.HecTime;
+import hec.io.TimeSeriesContainer;
 
 /**
  * Monthly table panel for mts
@@ -46,8 +45,8 @@ public class MonthlyTablePanel2 extends JPanel implements ActionListener, Compon
 	final String CELL_BREAK = "\t";
 	final Clipboard CLIPBOARD = Toolkit.getDefaultToolkit().getSystemClipboard();
 
-	public MonthlyTablePanel2(String title, TimeSeriesContainer[][] mtscs, DSSGrabber2SvcImpl dss_Grabber2, String sName, boolean isBase,
-	        MultipleTimeSeries mts) {
+	public MonthlyTablePanel2(String title, TimeSeriesContainer[][] mtscs, DSSGrabber2SvcImpl dss_Grabber2,
+			String sName, boolean isBase, MultipleTimeSeries mts) {
 
 		super();
 
@@ -89,94 +88,96 @@ public class MonthlyTablePanel2 extends JPanel implements ActionListener, Compon
 
 				TimeSeriesContainer tsc;
 				tsc = tscs[s];
-				String sLabel = (mts.getDTSNameAt(mtsI).equals("") ? mts.getBPartAt(mtsI) + "/" + mts.getCPartAt(mtsI) : mts
-				        .getDTSNameAt(mtsI));
+				if (tsc != null && tsc.numberValues > 0) {
+					String sLabel = (mts.getDTSNameAt(mtsI).equals("")
+							? mts.getBPartAt(mtsI) + "/" + mts.getCPartAt(mtsI) : mts.getDTSNameAt(mtsI));
 
-				JLabel label = new JLabel();
-				label.setText(sLabel + " (" + tsc.units + ") - " + tsc.fileName);
-				panel.add(label);
+					JLabel label = new JLabel();
+					label.setText(sLabel + " (" + tsc.units + ") - " + tsc.fileName);
+					panel.add(label);
 
-				int first = 0;
-				ht.set(tsc.times[first]);
-				while (ht.month() != 10) {
-					first++;
+					int first = 0;
 					ht.set(tsc.times[first]);
-				}
-
-				Vector<String> data = new Vector<String>();
-				double sum = 0;
-				double[] mins, maxs, avgs;
-				mins = new double[13];
-				maxs = new double[13];
-				avgs = new double[13];
-				double minTAFY = 1e10;
-				double maxTAFY = 0;
-				double sumTAFY = 0;
-				int years = 0;
-				int wy = 0;
-				for (int i = first; i < tsc.numberValues; i++) {
-					ht.set(tsc.times[i]);
-					int y = ht.year();
-					int m = ht.month();
-					wy = (m < 10) ? y : y + 1;
-					if ((i - first) % 12 == 0) {
-						if (i != first && isCFS) {
-							double aTAFY = dss_Grabber2.getAnnualTAF(s, wy - 1);
-							data.addElement(df1.format(aTAFY));
-							minTAFY = Math.min(minTAFY, aTAFY);
-							maxTAFY = Math.max(maxTAFY, aTAFY);
-							sumTAFY += aTAFY;
-
-						}
-						data.addElement(Integer.toString(wy));
-						years++;
+					while (ht.month() != 10) {
+						first++;
+						ht.set(tsc.times[first]);
 					}
-					sum = sum + tsc.values[i];
-					m = (m + 2) % 12;
-					avgs[m] = avgs[m] + tsc.values[i];
-					mins[m] = (years == 1) ? tsc.values[i] : Math.min(mins[m], tsc.values[i]);
-					maxs[m] = (years == 1) ? tsc.values[i] : Math.max(maxs[m], tsc.values[i]);
-					data.addElement(df1.format(tsc.values[i]));
+
+					Vector<String> data = new Vector<String>();
+					double sum = 0;
+					double[] mins, maxs, avgs;
+					mins = new double[13];
+					maxs = new double[13];
+					avgs = new double[13];
+					double minTAFY = 1e10;
+					double maxTAFY = 0;
+					double sumTAFY = 0;
+					int years = 0;
+					int wy = 0;
+					for (int i = first; i < tsc.numberValues; i++) {
+						ht.set(tsc.times[i]);
+						int y = ht.year();
+						int m = ht.month();
+						wy = (m < 10) ? y : y + 1;
+						if ((i - first) % 12 == 0) {
+							if (i != first && isCFS) {
+								double aTAFY = dss_Grabber2.getAnnualTAF(s, wy - 1);
+								data.addElement(df1.format(aTAFY));
+								minTAFY = Math.min(minTAFY, aTAFY);
+								maxTAFY = Math.max(maxTAFY, aTAFY);
+								sumTAFY += aTAFY;
+
+							}
+							data.addElement(Integer.toString(wy));
+							years++;
+						}
+						sum = sum + tsc.values[i];
+						m = (m + 2) % 12;
+						avgs[m] = avgs[m] + tsc.values[i];
+						mins[m] = (years == 1) ? tsc.values[i] : Math.min(mins[m], tsc.values[i]);
+						maxs[m] = (years == 1) ? tsc.values[i] : Math.max(maxs[m], tsc.values[i]);
+						data.addElement(df1.format(tsc.values[i]));
+					}
+					if (isCFS) {
+						double aTAFY = dss_Grabber2.getAnnualTAF(s, wy - 1);
+						data.addElement(df1.format(aTAFY));
+						minTAFY = Math.min(minTAFY, aTAFY);
+						maxTAFY = Math.max(maxTAFY, aTAFY);
+						sumTAFY += aTAFY;
+					}
+
+					data.addElement("Min");
+					for (int i = 0; i < 12; i++)
+						data.addElement(df1.format(mins[i]));
+					if (isCFS)
+						data.addElement(df1.format(minTAFY));
+
+					data.addElement("Max");
+					for (int i = 0; i < 12; i++)
+						data.addElement(df1.format(maxs[i]));
+					if (isCFS)
+						data.addElement(df1.format(maxTAFY));
+					data.addElement("Avg");
+					for (int i = 0; i < 12; i++)
+						data.addElement(df1.format(avgs[i] / years));
+					if (isCFS)
+						data.addElement(df1.format(sumTAFY / years));
+
+					SimpleTableModel2 model = new SimpleTableModel2(data, columns);
+					JTable table = new JTable(model);
+					table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+					for (int c = 0; c < table.getColumnCount(); c++)
+						table.getColumnModel().getColumn(c).setPreferredWidth((c == 0) ? 50 : 30);
+
+					table.setCellSelectionEnabled(true);
+					DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) table
+							.getDefaultRenderer(String.class);
+					renderer.setHorizontalAlignment(JLabel.RIGHT);
+
+					addComponentListener(this);
+					panel.add(table.getTableHeader(), BorderLayout.NORTH);
+					panel.add(table);
 				}
-				if (isCFS) {
-					double aTAFY = dss_Grabber2.getAnnualTAF(s, wy - 1);
-					data.addElement(df1.format(aTAFY));
-					minTAFY = Math.min(minTAFY, aTAFY);
-					maxTAFY = Math.max(maxTAFY, aTAFY);
-					sumTAFY += aTAFY;
-				}
-
-				data.addElement("Min");
-				for (int i = 0; i < 12; i++)
-					data.addElement(df1.format(mins[i]));
-				if (isCFS)
-					data.addElement(df1.format(minTAFY));
-
-				data.addElement("Max");
-				for (int i = 0; i < 12; i++)
-					data.addElement(df1.format(maxs[i]));
-				if (isCFS)
-					data.addElement(df1.format(maxTAFY));
-				data.addElement("Avg");
-				for (int i = 0; i < 12; i++)
-					data.addElement(df1.format(avgs[i] / years));
-				if (isCFS)
-					data.addElement(df1.format(sumTAFY / years));
-
-				SimpleTableModel2 model = new SimpleTableModel2(data, columns);
-				JTable table = new JTable(model);
-				table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-				for (int c = 0; c < table.getColumnCount(); c++)
-					table.getColumnModel().getColumn(c).setPreferredWidth((c == 0) ? 50 : 30);
-
-				table.setCellSelectionEnabled(true);
-				DefaultTableCellRenderer renderer = (DefaultTableCellRenderer) table.getDefaultRenderer(String.class);
-				renderer.setHorizontalAlignment(JLabel.RIGHT);
-
-				addComponentListener(this);
-				panel.add(table.getTableHeader(), BorderLayout.NORTH);
-				panel.add(table);
-
 			}
 		}
 		Box box = Box.createVerticalBox();

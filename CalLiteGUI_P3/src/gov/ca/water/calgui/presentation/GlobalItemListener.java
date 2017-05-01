@@ -21,6 +21,7 @@ import gov.ca.water.calgui.bus_delegate.IApplyDynamicConDele;
 import gov.ca.water.calgui.bus_delegate.impl.ApplyDynamicConDeleImp;
 import gov.ca.water.calgui.bus_service.IDynamicControlSvc;
 import gov.ca.water.calgui.bus_service.IScenarioSvc;
+import gov.ca.water.calgui.bus_service.IXMLParsingSvc;
 import gov.ca.water.calgui.bus_service.impl.DynamicControlSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.ScenarioSvcImpl;
 import gov.ca.water.calgui.bus_service.impl.XMLParsingSvcImpl;
@@ -49,6 +50,7 @@ public class GlobalItemListener implements ItemListener {
 	private String oldValue = "";
 	private IErrorHandlingSvc errorHandlingSvc = new ErrorHandlingSvcImpl();
 	private IDialogSvc dialogSvc = DialogSvcImpl.getDialogSvcInstance();
+	private IXMLParsingSvc xmlParsingSvc = XMLParsingSvcImpl.getXMLParsingSvcImplInstance();
 
 	/*
 	 * we use the rollBackFlag to avoid a cascade effect when we show a
@@ -268,7 +270,9 @@ public class GlobalItemListener implements ItemListener {
 			{
 				applyDynamicConDele.applyDynamicControl(itemName, isSelected, isEnabled, optionFromTheBox);
 			}
-			auditSvc.addAudit(itemName, String.valueOf(!isSelected), String.valueOf(isSelected));
+			if (!xmlParsingSvc.checkIsItFromResultPart(itemName))
+				auditSvc.addAudit(itemName, String.valueOf(!isSelected), String.valueOf(isSelected));
+
 		} catch (HeadlessException e) {
 			LOG.error(e.getMessage());
 			String messageText = "Unable to initialize item listeners";
