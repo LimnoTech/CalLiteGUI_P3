@@ -924,27 +924,50 @@ public class DisplayFrame {
 					}
 				}
 			}
-			// Show the frame
-			JFrame frame = new JFrame();
+			List<String> missing = dssGrabber.getMissingList();
+			boolean showFrame = false;
+			if (missing.size() == 0)
+				showFrame = true;
+			else if (dssGrabber.getStopOnMissing())
+				showFrame = false;
+			else {
+				StringBuffer buffer = new StringBuffer();
+				buffer.append("<html><br>Not all DSS records were found, some results may be missing:<br><br>");
+				missing.forEach((id) -> buffer.append(id + "<br>"));
+				buffer.append("</html>");
+				JPanel panel = new JPanel();
+				panel.setLayout(new BorderLayout());
+				panel.add(new JLabel(buffer.toString()), BorderLayout.PAGE_START);
+				tabbedpane.insertTab("Alert - Missing DSS records", null, panel, null, 0);
+				showFrame = true;
+			}
+			if (showFrame) {
+				JFrame frame = new JFrame();
 
-			Container container = frame.getContentPane();
-			container.add(tabbedpane);
+				Container container = frame.getContentPane();
+				container.add(tabbedpane);
 
-			frame.pack();
-			frame.setTitle("CalLite Results - WRIMS GUI");
-			// CalLite icon
-			java.net.URL imgURL = DisplayFrame.class.getClass().getResource("/images/CalLiteIcon.png");
-			frame.setIconImage(Toolkit.getDefaultToolkit().getImage(imgURL));
+				frame.pack();
+				frame.setTitle("CalLite Results - WRIMS GUI");
+				;
+				// CalLite icon
+				java.net.URL imgURL = DisplayFrame.class.getClass().getResource("/images/CalLiteIcon.png");
+				frame.setIconImage(Toolkit.getDefaultToolkit().getImage(imgURL));
 
-			if (!(doTimeSeries || doExceedance || doMonthlyTable || doSummaryTable))
-				container.add(new JLabel("Nothing to show!"));
-			else
-				tabbedpane.setSelectedIndex(0);
+				if (!(doTimeSeries || doExceedance || doMonthlyTable || doSummaryTable))
+					if (dssGrabber.getMissingList() == null)
+						container.add(new JLabel("Nothing to show!"));
+					else {
 
-			frame.setVisible(true);
-			frame.setSize(980, 700);
-			frame.setLocation(displayLocationPoint());
+					}
 
+				else
+					tabbedpane.setSelectedIndex(0);
+
+				frame.setVisible(true);
+				frame.setSize(980, 700);
+				frame.setLocation(displayLocationPoint());
+			}
 			return;
 		} catch (HeadlessException e) {
 			LOG.error(e.getMessage());

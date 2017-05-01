@@ -530,13 +530,18 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc {
 			String[] hecFParts = new String[dssNames1.length];
 			for (int i = 0; i < dssNames1.length; i++) {
 				String[] nameParts = dssNames1[i].split("/");
-				dssNames[i] = nameParts[0] + "/" + nameParts[1];
-				if (nameParts.length == 2)
-					hecFParts[i] = hecFPart;
-				else
-					// TODO: Use nameParts UNLESS it's "LOOKUP", in which case
-					// we should look up the value by matching B and C partstep
-					hecFParts[i] = nameParts[nameParts.length - 1] + "/";
+				if (nameParts.length < 2)
+					dssNames[i] = "MISSING_B/OR_CPART";
+				else {
+					dssNames[i] = nameParts[0] + "/" + nameParts[1];
+					if (nameParts.length == 2)
+						hecFParts[i] = hecFPart;
+					else
+						// TODO: Use nameParts UNLESS it's "LOOKUP", in which
+						// case we should look up the value by matching B and C
+						// parts
+						hecFParts[i] = nameParts[nameParts.length - 1] + "/";
+				}
 			}
 
 			// TODO: Note hard-coded D- and E-PART
@@ -652,9 +657,14 @@ public class DSSGrabber1SvcImpl implements IDSSGrabber1Svc {
 
 			LOG.debug(e.getMessage());
 			LOG.error(e.getMessage());
-			String messageText = "Unable to get time series.";
-			errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME), e);
+			if (e.getMessage().contains("Unable to recognize record")) {
+				this.missingDSSRecords.add("Could not find record - HEC message was '" + e.getMessage() + "'");
+			} else {
+				String messageText = "Unable to get time series." + e.getMessage();
 
+				errorHandlingSvc.businessErrorHandler(messageText, (JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME),
+						e);
+			}
 		}
 
 		// Store name portion of DSS file in TimeSeriesContainer

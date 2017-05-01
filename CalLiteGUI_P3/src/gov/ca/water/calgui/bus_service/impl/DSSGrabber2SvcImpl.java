@@ -238,7 +238,8 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl {
 				// Base first
 
 				results[0] = getOneSeries_WRIMS(baseName, mtsI, mts);
-				originalUnits = results[0].units;
+				if (results[0] != null)
+					originalUnits = results[0].units;
 
 				// Then scenarios
 
@@ -547,61 +548,62 @@ public class DSSGrabber2SvcImpl extends DSSGrabber1SvcImpl {
 
 						HecTime ht = new HecTime();
 						for (int i = 0; i < scenarios; i++) {
-
-							if (month == 13) {
-								results[month][mtsI][i] = (TimeSeriesContainer) timeSeriesResults[mtsI][i].clone();
-							} else {
-
-								int n;
-								int times2[] = null;
-								double values2[] = null;
-
-								results[month][mtsI][i] = new TimeSeriesContainer();
-
-								if (month == 12) {
-
-									// Annual totals - grab from annualTAFs
-									n = annualTAFs[i].length;
-									times2 = new int[n];
-									values2 = new double[n];
-									for (int j = 0; j < n; j++) {
-										ht.setYearMonthDay(j + startWY, 11, 1, 0);
-										times2[j] = ht.value();
-										values2[j] = annualTAFs[mtsI][i][j];
-									}
-
+							if (timeSeriesResults[mtsI][i] != null) {
+								if (month == 13) {
+									results[month][mtsI][i] = (TimeSeriesContainer) timeSeriesResults[mtsI][i].clone();
 								} else {
 
-									int[] times = timeSeriesResults[mtsI][i].times;
-									double[] values = timeSeriesResults[mtsI][i].values;
-									n = 0;
-									if (times != null) {
-										for (int j = 0; j < times.length; j++) {
-											ht.set(times[j]);
-											if (ht.month() == month + 1)
-												n = n + 1;
-										}
+									int n;
+									int times2[] = null;
+									double values2[] = null;
+
+									results[month][mtsI][i] = new TimeSeriesContainer();
+
+									if (month == 12) {
+
+										// Annual totals - grab from annualTAFs
+										n = annualTAFs[i].length;
 										times2 = new int[n];
 										values2 = new double[n];
+										for (int j = 0; j < n; j++) {
+											ht.setYearMonthDay(j + startWY, 11, 1, 0);
+											times2[j] = ht.value();
+											values2[j] = annualTAFs[mtsI][i][j];
+										}
+
+									} else {
+
+										int[] times = timeSeriesResults[mtsI][i].times;
+										double[] values = timeSeriesResults[mtsI][i].values;
 										n = 0;
-										for (int j = 0; j < times.length; j++) {
-											ht.set(times[j]);
-											if (ht.month() == month + 1) {
-												times2[n] = times[j];
-												values2[n] = values[j];
-												n = n + 1;
+										if (times != null) {
+											for (int j = 0; j < times.length; j++) {
+												ht.set(times[j]);
+												if (ht.month() == month + 1)
+													n = n + 1;
+											}
+											times2 = new int[n];
+											values2 = new double[n];
+											n = 0;
+											for (int j = 0; j < times.length; j++) {
+												ht.set(times[j]);
+												if (ht.month() == month + 1) {
+													times2[n] = times[j];
+													values2[n] = values[j];
+													n = n + 1;
+												}
 											}
 										}
 									}
+									results[month][mtsI][i].times = times2;
+									results[month][mtsI][i].values = values2;
+									results[month][mtsI][i].numberValues = n;
+									results[month][mtsI][i].units = timeSeriesResults[mtsI][i].units;
+									results[month][mtsI][i].fullName = timeSeriesResults[mtsI][i].fullName;
+									results[month][mtsI][i].fileName = timeSeriesResults[mtsI][i].fileName;
 								}
-								results[month][mtsI][i].times = times2;
-								results[month][mtsI][i].values = values2;
-								results[month][mtsI][i].numberValues = n;
-								results[month][mtsI][i].units = timeSeriesResults[mtsI][i].units;
-								results[month][mtsI][i].fullName = timeSeriesResults[mtsI][i].fullName;
-								results[month][mtsI][i].fileName = timeSeriesResults[mtsI][i].fileName;
 							}
-							if (results[month][mtsI][i].values != null) {
+							if (results[month][mtsI][i] != null && results[month][mtsI][i].values != null) {
 								double[] sortArray = results[month][mtsI][i].values;
 								Arrays.sort(sortArray);
 								results[month][mtsI][i].values = sortArray;
