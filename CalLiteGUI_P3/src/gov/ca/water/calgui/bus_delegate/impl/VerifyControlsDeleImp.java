@@ -84,8 +84,12 @@ public class VerifyControlsDeleImp implements IVerifyControlsDele {
 		errorControlsIds.removeAll(removeList);
 		if (!errorControlsIds.isEmpty()) {
 			StringBuffer buffer = new StringBuffer();
-			buffer.append("The GUI_Link2 Data is missing for these Control Ids : " + Constant.NEW_LINE);
-			errorControlsIds.forEach((id) -> buffer.append(id + Constant.NEW_LINE));
+			buffer.append(
+					"There is no GUI_Links2.csv record for the following control IDs defined in the GUI XML files: "
+							+ Constant.NEW_LINE);
+			errorControlsIds.forEach((id) -> buffer.append(" - " + id + Constant.NEW_LINE));
+			buffer.append(Constant.NEW_LINE + Constant.NEW_LINE
+					+ "Add records to GUI_Links2.csv if the control is valid, or modify the exclusion list in VerifyControlsDeleImp.verifyGUIToSeedData and recompile.");
 			errorHandlingSvc.displayErrorMessageBeforeTheUI(new CalLiteGUIException(buffer.toString(), false));
 		}
 	}

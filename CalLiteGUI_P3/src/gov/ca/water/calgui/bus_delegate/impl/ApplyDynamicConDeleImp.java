@@ -385,9 +385,13 @@ public class ApplyDynamicConDeleImp implements IApplyDynamicConDele {
 			}
 			// }
 		} catch (NullPointerException ex) {
+			String message = "The control id " + itemName
+					+ " doesn't have the proper data in TriggerForDynamicDisplay.csv.";
+			if (itemName.startsWith("ckbReg_"))
+				message = message + "\nYou may be missing the entries '" + itemName + ",on,reg_panTab,on' and '"
+						+ itemName + ",off,reg_panTab,off'";
 			errorHandlingSvc.businessErrorHandler((JFrame) swingEngine.find(Constant.MAIN_FRAME_NAME),
-					new CalLiteGUIException("The control id " + itemName
-							+ " don't have the proper data in the TriggerForDynamicDisplay File", ex));
+					new CalLiteGUIException(message, ex));
 		}
 		if (toDisplayMessage) {
 			scrRegValues.setVisible(false);
